@@ -150,7 +150,12 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '{levelname} {asctime} {module} {funcName} {lineno} {message}',
+            'format': (
+                '[{asctime}] [{levelname:<8}] [PID:{process}:TID:{thread}] '
+                '[{pathname}:{lineno}] [{module}.{funcName}] '
+                '{message}'
+            ),
+            'datefmt': '%Y-%m-%d %H:%M:%S',
             'style': '{',
         },
         'simple': {
