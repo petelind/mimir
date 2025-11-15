@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Mimir - Methodology Explorer{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-light p-5 rounded" data-testid="methodology-explorer">
+            <h1 class="display-4">
+                <i class="fas fa-book-open text-primary"></i> Welcome to Mimir
+            </h1>
+            <p class="lead">Your AI-driven methodology management system</p>
+            <hr class="my-4">
+            <p>
+                Mimir helps you manage and evolve software development methodologies through AI-driven continuous improvement.
+                View methodologies, review Process Improvement Proposals (PIPs), and customize your local methodology library.
+            </p>
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg" href="#" role="button" data-testid="explore-methodologies-button">
+                    <i class="fas fa-folder-open"></i> Explore Methodologies
+                </a>
+                <a class="btn btn-outline-secondary btn-lg ms-2" href="/pip/list/" role="button" data-testid="view-pips-button">
+                    <i class="fas fa-lightbulb"></i> View PIPs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-book text-info"></i> Methodologies
+                </h5>
+                <p class="card-text">
+                    Browse and explore your local methodology library. View workflows, activities, and howtos.
+                </p>
+                <a href="#" class="btn btn-sm btn-outline-info">View All</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-lightbulb text-warning"></i> Process Improvements
+                </h5>
+                <p class="card-text">
+                    Review and approve Process Improvement Proposals (PIPs) from AI assistants and team feedback.
+                </p>
+                <a href="/pip/list/" class="btn btn-sm btn-outline-warning">Review PIPs</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-code-branch text-success"></i> Versions
+                </h5>
+                <p class="card-text">
+                    Track methodology versions and see how your processes evolve over time.
+                </p>
+                <a href="#" class="btn btn-sm btn-outline-success">Version History</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5 class="alert-heading">
+                <i class="fas fa-info-circle"></i> Getting Started
+            </h5>
+            <p class="mb-0">
+                This is your FOB (Forward Operating Base) - a single-user desktop application for methodology management.
+                The MCP interface allows AI assistants to query methodologies, while this web interface lets you review PIPs and customize methodologies.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

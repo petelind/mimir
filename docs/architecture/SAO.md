@@ -1,0 +1,1412 @@
+# Mimir: System Architecture Overview
+
+## Executive Summary
+
+Mimir is a two-part system for managing and evolving software development methodologies through AI-driven continuous improvement. It consists of:
+
+1. **HOMEBASE**: Centralized methodology repository with access control for distribution
+2. **FOB (Forward Operating Base)**: Django-based desktop application providing web UI and MCP interface for methodology consumption and evolution
+
+**Key Design Decisions**:
+- **FastMCP Integration**: Services map directly to MCP tools via `@tool` decorators - zero protocol boilerplate
+- **Repository Pattern**: Storage-agnostic architecture (SQLite for FOB, Neo4j for HOMEBASE)
+- **Read-Only MCP**: All changes via Process Improvement Proposals (PIPs) - prevents sync conflicts
+- **Shared Services**: Same business logic serves both MCP and Web UI - DRY and type-safe
+- **HTMX + Graphviz for FOB**: Server-rendered UI with minimal JS - testable with standard Django tests, no browser automation needed
+
+## System Architecture
+
+### High-Level Components
+
+```
+┌─────────────────────────────────────────┐
+│   HOMEBASE (Methodology Repository)     │
+│                                         │
+│   ├─ Neo4J (graph database)            │
+│   ├─ FastAPI + OpenAPI                 │
+│   ├─ React + Vite + Tailwind UI        │
+│   ├─ Access control (Family + Level)   │
+│   └─ Methodology distribution           │
+│       (e.g., SE/Basic → LITE version)   │
+└─────────────────────────────────────────┘
+              ↓ download/sync
+┌─────────────────────────────────────────┐
+│   FOB - Forward Operating Base (Django) │
+│                                         │
+│   Process 1: MCP Server (stdio)         │
+│   ├─ python manage.py mcp_server        │
+│   ├─ Standard MCP protocol              │
+│   ├─ Read-only methodology access       │
+│   └─ Creates PIPs (proposals)           │
+│                                         │
+│   Process 2: Web Server (HTTP)          │
+│   ├─ python manage.py runserver 8000    │
+│   ├─ Django views for UI                │
+│   ├─ PIP review & approval              │
+│   └─ Methodology editing/viewing        │
+│                                         │
+│   Shared Layer:                         │
+│   ├─ SQLite database                    │
+│   ├─ Repository pattern (abstraction)   │
+│   ├─ Services (business logic)          │
+│   └─ Models (Node, Edge, Version, PIP)  │
+└─────────────────────────────────────────┘
+```
+
+## Design Principles
+
+### 1. Two-Part Architecture
+
+**HOMEBASE (Methodology Repository)**
+Tried-and-true approaches accumulating most recent howtos and experiences from the boots on the ground.
+
+- Centralized repository of methodologies
+- Access control based on:
+  - **Family**: Methodology category (e.g., "Software Engineering", "UX Design")
+  - **Access Level**: Determines version tier (Basic → LITE, Standard → FULL, Premium → EXTENDED)
+- Distribution point for methodology downloads
+- Aggregates Process Improvement Proposals (PIPs) from FOBs
+- Technology: Neo4j + FastAPI + React
+
+**FOB (Forward Operating Base)**
+This is where howtos are consumed, judged practical/impractical, refined, and expanded.
+
+- Single-user desktop application
+- Downloads methodologies from HOMEBASE
+- Provides two interfaces:
+  - **Web UI**: For viewing methodologies, reviewing PIPs, editing local customizations
+  - **MCP Interface**: For AI assistants to query methodology and create work plans
+- Technology: Django + SQLite + MCP (stdio)
+
+### 2. Read-Only MCP + PIP Workflow
+
+**Problem Solved**: Prevents synchronization conflicts between AI edits and human edits.
+
+**Solution**: MCP provides read-only access; all changes go through Process Improvement Proposals (PIPs).
+
+**Workflow**:
+```
+AI/Engineer via MCP
+    ↓ discovers issue during work
+Creates PIP (Process Improvement Proposal)
+    ↓ includes: what failed, why, proposed fix
+Engineer reviews in Web UI
+    ↓ approves or rejects with reasoning
+If approved → New methodology version created
+    ↓ optional
+Transmit PIP to HOMEBASE for global consideration
+```
+
+**Benefits**:
+- No race conditions between MCP and Web UI
+- Complete audit trail of methodology evolution
+- Human oversight of all changes
+- AI learns from approval/rejection patterns
+- Successful improvements can propagate globally
+
+### 3. Repository Pattern for Storage Abstraction
+
+**Goal**: Decouple business logic from storage implementation.
+
+**Pattern**:
+```python
+class MethodologyRepository(ABC):
+    """Abstract interface - storage agnostic"""
+    @abstractmethod
+    def get_activity(self, id: str) -> Activity:
+        """
+        Retrieve activity by ID.
+        
+        :param id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        :return: Activity instance. Example: Activity(id="a1b2c3d4", name="Design Component")
+        :raises NotFoundError: If activity does not exist.
+        """
+        pass
+    
+    @abstractmethod
+    def get_workflow(self, id: str) -> List[Activity]:
+        """
+        Retrieve all activities in a workflow.
+        
+        :param id: workflow UUID as str. Example: "b2c3d4e5-f6a7-8901-bcde-f1234567890a"
+        :return: List of Activity instances. Example: [Activity(id="a1", name="Design"), Activity(id="a2", name="Implement")]
+        :raises NotFoundError: If workflow does not exist.
+        """
+        pass
+    
+    @abstractmethod
+    def get_predecessors(self, activity_id: str) -> List[Activity]:
+        """
+        Get all predecessor activities for an activity.
+        
+        :param activity_id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        :return: List of predecessor activities. Example: [Activity(id="p1", name="Design")]
+        """
+        pass
+    
+    # ... more methods
+
+# FOB implementation
+class DjangoORMRepository(MethodologyRepository):
+    """Uses Django ORM + SQLite for FOB"""
+    def get_activity(self, id: str) -> Activity:
+        """
+        Retrieve activity from SQLite database.
+        
+        :param id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        :return: Activity instance. Example: Activity(id="a1b2c3d4", name="Design Component")
+        :raises NodeModel.DoesNotExist: If activity does not exist.
+        """
+        node = NodeModel.objects.get(id=id, type='activity')
+        return Activity.from_orm(node)
+
+# HOMEBASE implementation  
+class Neo4jRepository(MethodologyRepository):
+    """Uses Neo4j for HOMEBASE graph queries"""
+    def get_activity(self, id: str) -> Activity:
+        """
+        Retrieve activity from Neo4j graph database.
+        
+        :param id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        :return: Activity instance. Example: Activity(id="a1b2c3d4", name="Design Component")
+        :raises Neo4jError: If query fails or activity does not exist.
+        """
+        query = "MATCH (a:Activity {id: $id}) RETURN a"
+        result = self.driver.execute_query(query, id=id)
+        return Activity.from_neo4j(result)
+```
+
+**Services Layer**:
+```python
+class MethodologyService:
+    def __init__(self, repo: MethodologyRepository):
+        """
+        Initialize methodology service with repository.
+        
+        :param repo: methodology repository instance. Example: DjangoORMRepository()
+        """
+        self.repo = repo
+    
+    def plan_feature(self, feature_spec: str) -> List[WorkOrders]:
+        """
+        Create work plan for feature implementation.
+        
+        :param feature_spec: feature specification as str. Example: "Implement user authentication with OAuth2"
+        :return: List of work orders. Example: [WorkOrder(id=1, title="Design auth UI", deliverables=["Login mockup"]), WorkOrder(id=2, title="Implement OAuth", deliverables=["Auth service"])]
+        """
+        # Business logic independent of storage
+        workflow = self.repo.get_workflow('Build feature')
+        task_list = self.repo.get_activities_for_workflow(workflow.id)
+        return self._create_work_plan(workflow, task_list, feature_spec)
+```
+
+**Benefits**:
+- FOB uses lightweight SQLite
+- HOMEBASE uses powerful Neo4j graph queries
+- Same business logic works with both
+- Easy to test with mock repositories
+- Future-proof for storage changes
+
+### 4. Version Management
+
+**Every methodology entity is versioned**:
+
+```
+Methodology Node
+    ↓ has_version
+Version Node (v1.0)
+    ↓ contains
+Activity_A 
+    ↓ has_successor
+Activity_B 
+Version Node (v1.0)
+    ↓ contains
+Activity_B:
+    ↓ has_predecessor
+Activity_A
+
+# After PIP approval:
+Methodology Node
+    ↓ has_version
+Version Node (v1.1) ← created_from_pip ← PIP #42
+    ↓ contains
+Activity_A (modified)
+    ↓ has_predecessor
+Activity_B (reused)
+```
+
+**Capabilities**:
+- Track what changed between versions
+- Link changes to specific PIPs (why it changed)
+- Diff between any two versions
+- Rollback to previous versions
+- Work on multiple version branches concurrently
+
+### 5. Hybrid Transport Layer
+
+**Why Not HTTP for MCP?**
+- MCP standard primarily uses stdio
+- HTTP requires custom client implementation
+- stdio provides process-level isolation (no auth complexity)
+
+**Solution: Run Two Processes**
+
+**Process 1: MCP Server (stdio)**
+```bash
+python manage.py mcp_server
+```
+- Launched by IDE (Claude Desktop, Cursor, Windsurf)
+- Standard MCP protocol over stdin/stdout
+- No authentication needed (process isolation)
+- Read-only access to methodologies
+
+**Process 2: Web Server (HTTP)**
+```bash
+python manage.py runserver 8000
+```
+- Launched separately by engineer
+- Standard Django web interface
+- Methodology viewing and editing
+- PIP review and approval
+
+**Shared SQLite Database**:
+- Both processes connect to same `mimir.db`
+- SQLite handles concurrent access (timeout: 20s)
+- Minimal write conflicts (MCP reads, Web UI writes)
+- No complex coordination needed
+
+### 6. FastMCP Server Setup
+
+**Complete MCP Server Implementation**:
+
+```python
+# mcp/tools.py
+from fastmcp import FastMCP
+from typing import Literal
+from methodology.services import (
+    MethodologyService, 
+    PlanningService, 
+    AssessmentService
+)
+from methodology.repository import DjangoORMRepository
+
+# Initialize FastMCP
+mcp = FastMCP("Mimir Methodology Assistant")
+
+def get_repository():
+    """
+    Factory function for repository - returns Django ORM implementation.
+    
+    :return: Repository instance. Example: DjangoORMRepository()
+    """
+    return DjangoORMRepository()
+
+@mcp.tool()
+def query_methodology(
+    question: str,
+    methodology: str,
+    context: str | None = None
+) -> dict:
+    """
+    Query methodology for guidance on how to perform tasks.
+    
+    :param question: natural language question as str. Example: "How do I build a TSX component per FDD?"
+    :param methodology: methodology name as str. Example: "FDD"
+    :param context: current work context as str or None. Example: "Working on user profile feature"
+    :return: Guidance dict with answer and resources. Example: {"answer": "To build a TSX component...", "relevant_activities": ["SE1"], "relevant_howtos": ["howto-tsx"]}
+    """
+    service = MethodologyService(get_repository())
+    return service.query_guidance(question, methodology, context)
+
+@mcp.tool()
+def plan_execution(
+    methodology: str,
+    scope: str,
+    target_system: Literal["github", "jira"]
+) -> dict:
+    """
+    Generate work plan from methodology and create tasks.
+    
+    :param methodology: methodology name as str. Example: "FDD"
+    :param scope: feature/scenario scope as str. Example: "Implement user login with OAuth"
+    :param target_system: task creation system as Literal. Example: "github"
+    :return: Work plan dict with created issues. Example: {"workflow": "Build Feature", "tasks": [{"id": "#123", "title": "Design login UI"}]}
+    """
+    service = PlanningService(get_repository())
+    return service.create_execution_plan(methodology, scope, target_system)
+
+@mcp.tool()
+def assess_progress(
+    phase: str,
+    methodology: str
+) -> dict:
+    """
+    Assess project state against methodology phase requirements.
+    
+    :param phase: phase name as str. Example: "inception"
+    :param methodology: methodology name as str. Example: "FDD"
+    :return: Assessment dict with deliverable status and gaps. Example: {"phase": "inception", "can_proceed": False, "gaps": ["Login screen missing"]}
+    """
+    service = AssessmentService(get_repository())
+    return service.assess_phase_completion(phase, methodology)
+```
+
+**Django Management Command**:
+
+```python
+# mcp/management/commands/mcp_server.py
+import os
+import django
+from django.core.management.base import BaseCommand
+
+# Setup Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mimir.settings')
+django.setup()
+
+from mcp.tools import mcp
+
+class Command(BaseCommand):
+    help = 'Run the MCP server'
+    
+    def handle(self, *args, **options):
+        # FastMCP handles everything
+        mcp.run()
+```
+
+**Project Structure**:
+
+```
+mimir/
+├── mimir/                      # Django project
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── methodology/                # Core app
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── node.py
+│   │   ├── edge.py
+│   │   ├── version.py
+│   │   └── pip.py
+│   ├── repository/
+│   │   ├── __init__.py
+│   │   ├── base.py             # Abstract base
+│   │   └── django_orm.py       # SQLite implementation
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── methodology_service.py
+│   │   ├── planning_service.py
+│   │   └── assessment_service.py
+│   └── views/                  # Django web UI
+│       ├── __init__.py
+│       ├── methodology_views.py
+│       └── pip_views.py
+├── mcp/                        # MCP integration
+│   ├── __init__.py
+│   ├── tools.py                # FastMCP @tool decorators
+│   └── management/
+│       └── commands/
+│           └── mcp_server.py   # Django command
+├── manage.py
+└── requirements.txt
+```
+
+**requirements.txt**:
+```
+django>=5.0
+fastmcp>=0.1.0
+graphviz>=0.20
+python-dotenv>=1.0.0
+# For AI features (optional)
+openai>=1.0.0
+```
+
+**System dependency**:
+```bash
+# macOS
+brew install graphviz
+
+# Ubuntu/Debian
+apt-get install graphviz
+```
+
+## Web UI Architecture
+
+### Technology Choice: HTMX + Graphviz
+
+**Motivation**: 
+
+The FOB web UI needs to display complex graph structures (workflows, activity dependencies, goal hierarchies) while remaining:
+1. **Easy to test** - Standard Django test framework without browser automation
+2. **Simple to maintain** - Minimal JavaScript, no build toolchain
+3. **Server-rendered** - Fast initial load, SEO-friendly
+4. **Interactive** - Dynamic updates without full page reloads
+
+**Solution**: HTMX for interactivity + Graphviz for graph visualization
+
+### Why Not JavaScript Frameworks?
+
+**Rejected: React/Vue/Svelte**
+- ❌ Requires complex build toolchain (webpack, vite)
+- ❌ Testing requires browser automation (Playwright, Selenium)
+- ❌ State management complexity
+- ❌ Hydration and SSR complexity
+- ❌ Large bundle sizes
+
+**Rejected: Plain JavaScript + D3.js/Cytoscape.js**
+- ❌ Still requires significant JS code
+- ❌ Testing graph interactions complex
+- ❌ Layout algorithms need manual tuning
+- ❌ Accessibility harder to implement
+
+**Chosen: HTMX + Graphviz**
+- ✅ Zero build step - just include HTMX script tag
+- ✅ Standard Django tests work (no browser needed)
+- ✅ Server-side graph layout (Graphviz)
+- ✅ Progressive enhancement
+- ✅ 14KB library (HTMX), very stable
+
+### Architecture Pattern
+
+```
+User Action (click, select)
+    ↓
+HTMX intercepts → Makes HTTP request
+    ↓
+Django View (standard Django code)
+    ↓
+Service Layer (business logic)
+    ↓
+Repository (data access)
+    ↓
+Django Template (renders HTML fragment)
+    ↓
+HTMX swaps fragment into DOM
+```
+
+**Key Insight**: From testing perspective, HTMX endpoints are just Django views returning HTML. Test them like any Django view.
+
+### Component Patterns
+
+#### Pattern 1: Navigation with HTMX
+
+**Use Case**: Methodology/version selector, tree navigation
+
+```python
+# views.py
+def methodology_version_view(request, methodology_id, version_id):
+    """
+    HTMX endpoint - returns version content HTML fragment.
+    
+    :param request: Django request object. Example: HttpRequest(method='GET')
+    :param methodology_id: methodology UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    :param version_id: version UUID as str. Example: "b2c3d4e5-f6a7-8901-bcde-f1234567890a"
+    :return: Rendered HTML response. Example: HttpResponse(status=200, content="<div>...</div>")
+    :raises Http404: If version does not exist.
+    """
+    version = get_object_or_404(Version, id=version_id)
+    workflows = version.workflows.all()
+    goals = version.goals.filter(parent__isnull=True)
+    
+    return render(request, 'methodology/partials/version_view.html', {
+        'version': version,
+        'workflows': workflows,
+        'goals': goals
+    })
+```
+
+```html
+<!-- Template -->
+<select hx-get="/methodology/{{ methodology.id }}/version/" 
+        hx-target="#content"
+        hx-swap="innerHTML">
+    {% for version in versions %}
+    <option value="{{ version.id }}">{{ version.version_number }}</option>
+    {% endfor %}
+</select>
+
+<div id="content">
+    <!-- HTMX replaces this content -->
+</div>
+```
+
+**Testing**:
+```python
+def test_version_view(self):
+    url = reverse('version_view', args=[self.methodology.id, self.version.id])
+    response = self.client.get(url)
+    
+    self.assertEqual(response.status_code, 200)
+    self.assertContains(response, self.version.version_number)
+    self.assertTemplateUsed(response, 'methodology/partials/version_view.html')
+```
+
+#### Pattern 2: Graph Visualization with Graphviz
+
+**Use Case**: Workflow diagrams, activity dependencies, goal hierarchies
+
+```python
+# services/graph_service.py
+import graphviz
+
+class GraphService:
+    def __init__(self, repo):
+        """
+        Initialize graph service with repository.
+        
+        :param repo: methodology repository instance. Example: DjangoORMRepository()
+        """
+        self.repo = repo
+    
+    def generate_workflow_graph(self, workflow_id):
+        """
+        Generate SVG graph of workflow activities using Graphviz.
+        
+        :param workflow_id: workflow UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        :return: SVG markup as str. Example: "<svg width='500' height='300'>...</svg>"
+        :raises NotFoundError: If workflow does not exist.
+        """
+        workflow = self.repo.get_workflow(workflow_id)
+        activities = self.repo.get_activities_for_workflow(workflow_id)
+        
+        # Create directed graph
+        dot = graphviz.Digraph(comment=workflow.name)
+        dot.attr(rankdir='TB')  # Top to bottom layout
+        dot.attr('node', shape='box', style='filled', fillcolor='lightblue')
+        
+        # Add activity nodes
+        for activity in activities:
+            label = f"{activity.name}\\n({activity.role.name})"
+            dot.node(
+                str(activity.id), 
+                label,
+                href=f'/activity/{activity.id}/',  # Clickable in SVG
+                target='_top'
+            )
+        
+        # Add dependency edges
+        for activity in activities:
+            for successor in activity.get_successors():
+                # Label edge with deliverable
+                deliverables = activity.get_deliverables_to(successor)
+                label = ', '.join(d.name for d in deliverables[:2])
+                dot.edge(str(activity.id), str(successor.id), label=label)
+        
+        # Generate SVG
+        svg_bytes = dot.pipe(format='svg')
+        return svg_bytes.decode('utf-8')
+
+# views.py
+def workflow_detail(request, workflow_id):
+    """
+    Show workflow with graph visualization.
+    
+    :param request: Django request object. Example: HttpRequest(method='GET')
+    :param workflow_id: workflow UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    :return: Rendered HTML response with SVG graph. Example: HttpResponse(status=200, content="<div><h2>Build Feature</h2><svg>...</svg></div>")
+    :raises Http404: If workflow does not exist.
+    """
+    graph_service = GraphService(DjangoORMRepository())
+    svg = graph_service.generate_workflow_graph(workflow_id)
+    
+    workflow = get_object_or_404(Workflow, id=workflow_id)
+    
+    return render(request, 'methodology/partials/workflow_detail.html', {
+        'workflow': workflow,
+        'svg': svg
+    })
+```
+
+```html
+<!-- Template -->
+<div class="workflow-detail">
+    <h2>{{ workflow.name }}</h2>
+    
+    <div class="graph-container">
+        {{ svg|safe }}
+    </div>
+</div>
+
+<style>
+.graph-container svg {
+    max-width: 100%;
+    height: auto;
+}
+/* SVG links work with HTMX */
+.graph-container svg a {
+    cursor: pointer;
+}
+</style>
+```
+
+**Testing**:
+```python
+def test_workflow_graph_generation(self):
+    # Create test data
+    workflow = Workflow.objects.create(name="Build Feature")
+    activity1 = Activity.objects.create(name="Design", workflow=workflow)
+    activity2 = Activity.objects.create(name="Implement", workflow=workflow)
+    activity1.successors.add(activity2)
+    
+    # Test view
+    url = reverse('workflow_detail', args=[workflow.id])
+    response = self.client.get(url)
+    
+    self.assertEqual(response.status_code, 200)
+    self.assertIn(b'<svg', response.content)  # Contains SVG
+    self.assertContains(response, 'Design')
+    self.assertContains(response, 'Implement')
+```
+
+**No browser needed - just check HTML/SVG content!**
+
+#### Pattern 3: Detail Views with HTMX
+
+**Use Case**: Activity detail, showing all links (predecessors, successors, howtos)
+
+```python
+def activity_detail(request, activity_id):
+    """
+    HTMX endpoint - returns activity detail HTML fragment.
+    
+    :param request: Django request object. Example: HttpRequest(method='GET')
+    :param activity_id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    :return: Rendered HTML response with activity details. Example: HttpResponse(status=200, content="<div data-testid='activity-detail'>...</div>")
+    :raises Http404: If activity does not exist.
+    """
+    activity = get_object_or_404(Activity, id=activity_id)
+    
+    context = {
+        'activity': activity,
+        'predecessors': activity.get_predecessors(),
+        'successors': activity.get_successors(),
+        'howtos': activity.howtos.all(),
+        'deliverables_produced': activity.deliverables_produced.all(),
+        'deliverables_consumed': activity.deliverables_consumed.all(),
+        'role': activity.role
+    }
+    
+    return render(request, 'methodology/partials/activity_detail.html', context)
+```
+
+```html
+<!-- Clicking node in graph loads detail -->
+<div id="detail-panel">
+    <!-- HTMX loads content here -->
+</div>
+
+<script>
+// Minimal JS to make SVG links work with HTMX
+document.body.addEventListener('htmx:afterSettle', function(evt) {
+    // Make SVG links trigger HTMX
+    document.querySelectorAll('.graph-container svg a').forEach(link => {
+        link.setAttribute('hx-get', link.href.pathname);
+        link.setAttribute('hx-target', '#detail-panel');
+        link.setAttribute('hx-swap', 'innerHTML');
+        link.removeAttribute('href');
+        htmx.process(link);
+    });
+});
+</script>
+```
+
+#### Pattern 4: Forms with HTMX
+
+**Use Case**: Add/edit/delete activities, workflows, howtos
+
+```python
+def activity_edit(request, activity_id):
+    """
+    Edit activity - returns form or updated detail view.
+    
+    :param request: Django request object. Example: HttpRequest(method='POST', POST={'name': 'Design Component'})
+    :param activity_id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    :return: Form HTML on GET or detail HTML on successful POST. Example: HttpResponse(status=200, content="<form>...</form>")
+    :raises Http404: If activity does not exist.
+    """
+    activity = get_object_or_404(Activity, id=activity_id)
+    
+    if request.method == 'POST':
+        form = ActivityForm(request.POST, instance=activity)
+        if form.is_valid():
+            form.save()
+            # Return updated detail view (not form)
+            return activity_detail(request, activity_id)
+    else:
+        form = ActivityForm(instance=activity)
+    
+    return render(request, 'methodology/partials/activity_form.html', {
+        'form': form,
+        'activity': activity
+    })
+
+def activity_delete(request, activity_id):
+    """
+    Delete activity and trigger workflow refresh.
+    
+    :param request: Django request object. Example: HttpRequest(method='POST')
+    :param activity_id: activity UUID as str. Example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+    :return: Empty response with HTMX trigger header. Example: HttpResponse(status=200, content='', headers={'HX-Trigger': 'workflowChanged'})
+    :raises Http404: If activity does not exist.
+    """
+    if request.method == 'POST':
+        activity = get_object_or_404(Activity, id=activity_id)
+        workflow_id = activity.workflow.id
+        activity.delete()
+        
+        # Return empty with trigger to refresh workflow
+        response = HttpResponse('')
+        response['HX-Trigger'] = 'workflowChanged'
+        return response
+```
+
+```html
+<!-- Edit button -->
+<button hx-get="/activity/{{ activity.id }}/edit/"
+        hx-target="#detail-panel"
+        hx-swap="innerHTML">
+    Edit Activity
+</button>
+
+<!-- Form template -->
+<form hx-post="/activity/{{ activity.id }}/edit/"
+      hx-target="#detail-panel"
+      hx-swap="innerHTML">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+    <button hx-get="/activity/{{ activity.id }}/"
+            hx-target="#detail-panel">
+        Cancel
+    </button>
+</form>
+```
+
+**Testing**:
+```python
+def test_activity_edit(self):
+    url = reverse('activity_edit', args=[self.activity.id])
+    response = self.client.post(url, {
+        'name': 'Updated Activity',
+        'description': 'New description',
+        'role': self.role.id
+    })
+    
+    self.activity.refresh_from_db()
+    self.assertEqual(self.activity.name, 'Updated Activity')
+    # Check it returns detail view, not form
+    self.assertTemplateUsed(response, 'methodology/partials/activity_detail.html')
+```
+
+### Three-Panel Layout
+
+```
+┌─────────────────────────────────────────────┐
+│  Navigation Panel   │  Main Content  │ Detail │
+│                     │                │        │
+│  - Methodology      │  Graph or      │Activity│
+│    selector         │  Tree view     │details │
+│  - Version select   │                │        │
+│  - Goal tree        │  [SVG Graph]   │Links:  │
+│    • Goal 1         │                │- Preds │
+│      • Goal 1.1     │                │- Succs │
+│    • Goal 2         │                │- Howtos│
+│                     │                │        │
+│                     │                │[Edit]  │
+└─────────────────────────────────────────────┘
+```
+
+Each panel updates independently via HTMX.
+
+### Testing Strategy
+
+**Core Principle**: Test server-side behavior, not browser behavior.
+
+```python
+class MethodologyUITest(TestCase):
+    """Test methodology UI without browser"""
+    
+    def test_navigation_returns_correct_content(self):
+        """Test HTMX navigation endpoint"""
+        response = self.client.get(f'/version/{self.version.id}/')
+        self.assertContains(response, self.version.version_number)
+    
+    def test_graph_contains_all_activities(self):
+        """Test graph generation includes all activities"""
+        response = self.client.get(f'/workflow/{self.workflow.id}/')
+        svg_content = response.content.decode('utf-8')
+        
+        for activity in self.workflow.activities.all():
+            self.assertIn(activity.name, svg_content)
+    
+    def test_activity_edit_updates_and_returns_detail(self):
+        """Test edit form saves and returns detail view"""
+        response = self.client.post(
+            f'/activity/{self.activity.id}/edit/',
+            {'name': 'New Name', 'role': self.role.id}
+        )
+        
+        self.activity.refresh_from_db()
+        self.assertEqual(self.activity.name, 'New Name')
+        self.assertTemplateUsed(response, 'partials/activity_detail.html')
+```
+
+**No Selenium, no Playwright, no browser - just Django test client!**
+
+### File Organization
+
+```
+methodology/
+├── views/
+│   ├── __init__.py
+│   ├── methodology_views.py    # Methodology CRUD
+│   ├── activity_views.py        # Activity CRUD
+│   ├── workflow_views.py        # Workflow + graphs
+│   └── htmx_views.py           # HTMX-specific endpoints
+├── services/
+│   ├── graph_service.py        # Graphviz graph generation
+│   └── methodology_service.py  # Business logic
+├── templates/
+│   └── methodology/
+│       ├── explorer.html       # Main page
+│       └── partials/           # HTMX fragments
+│           ├── version_view.html
+│           ├── workflow_detail.html
+│           ├── activity_detail.html
+│           ├── activity_form.html
+│           └── goal_tree.html
+└── static/
+    └── css/
+        └── methodology.css
+```
+
+### Progressive Enhancement
+
+The UI works without JavaScript:
+- Regular links instead of HTMX (full page loads)
+- Forms submit normally
+- Graphs still render (static SVG)
+
+With HTMX:
+- Smooth partial updates
+- No page flicker
+- Better UX
+
+**This means graceful degradation is built-in.**
+
+## Data Model
+
+### Core Entities
+
+**Node Model**
+```python
+class Node(models.Model):
+    """Base for all methodology entities"""
+    id = models.UUIDField(primary_key=True)
+    type = models.CharField(max_length=50)
+    # 'methodology', 'activity', 'workflow', 'howto', 
+    # 'deliverable', 'role', 'goal'
+    version = models.ForeignKey('Version', on_delete=models.CASCADE)
+    attributes = models.JSONField()
+    # Flexible schema for type-specific properties
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+**Edge Model**
+```python
+class Edge(models.Model):
+    """Relationships between nodes"""
+    id = models.UUIDField(primary_key=True)
+    from_node = models.ForeignKey(Node, related_name='outgoing')
+    to_node = models.ForeignKey(Node, related_name='incoming')
+    relationship_type = models.CharField(max_length=50)
+    # 'has_predecessor', 'produces', 'consumes', 
+    # 'performed_by', 'fulfills', 'guided_by'
+    version = models.ForeignKey('Version', on_delete=models.CASCADE)
+    attributes = models.JSONField(default=dict)
+```
+
+**Version Model**
+```python
+class Version(models.Model):
+    """Tracks methodology versions"""
+    id = models.UUIDField(primary_key=True)
+    methodology = models.ForeignKey('Methodology')
+    version_number = models.CharField(max_length=20)  # "1.0", "1.1"
+    parent_version = models.ForeignKey('self', null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_from_pip = models.ForeignKey('PIP', null=True)
+    description = models.TextField()
+```
+
+**Methodology Model**
+```python
+class Methodology(models.Model):
+    """Top-level methodology container"""
+    id = models.UUIDField(primary_key=True)
+    name = models.CharField(max_length=100)  # "FDD", "Scrum", "BDD"
+    family = models.CharField(max_length=100)  # "Software Engineering"
+    access_level = models.CharField(max_length=20)  # "LITE", "FULL"
+    current_version = models.ForeignKey('Version')
+    source_methodology_id = models.UUIDField(null=True)
+    # Links to HOMEBASE methodology
+    last_synced = models.DateTimeField(null=True)
+```
+
+### Evolution Tracking
+
+**PIP Model (Process Improvement Proposal)**
+```python
+class PIP(models.Model):
+    """Tracks proposed methodology changes"""
+    id = models.UUIDField(primary_key=True)
+    methodology = models.ForeignKey('Methodology')
+    version = models.ForeignKey('Version')
+    
+    # Trigger
+    trigger_type = models.CharField(
+        choices=[('ai_suggestion', 'AI'), ('manual', 'Manual')]
+    )
+    trigger_context = models.JSONField()
+    # Work order ID, files involved, errors encountered, etc.
+    
+    # Proposal
+    change_type = models.CharField(
+        choices=[('modify', 'Modify'), ('add', 'Add'), ('delete', 'Delete')]
+    )
+    target_node = models.ForeignKey(Node, null=True)
+    proposed_changes = models.JSONField()
+    reasoning = models.TextField()
+    
+    # Review
+    status = models.CharField(
+        choices=[
+            ('pending', 'Pending'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected')
+        ],
+        default='pending'
+    )
+    reviewer = models.CharField(max_length=100, blank=True)
+    reviewer_notes = models.TextField(blank=True)
+    reviewed_at = models.DateTimeField(null=True)
+    
+    # Propagation
+    transmitted_to_source = models.BooleanField(default=False)
+    transmitted_at = models.DateTimeField(null=True)
+    source_pip_id = models.UUIDField(null=True)
+    source_status = models.CharField(max_length=20, blank=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+```
+
+## MCP Interface (FastMCP)
+
+**Implementation**: Mimir uses [FastMCP](https://github.com/jlowin/fastmcp) for MCP server implementation. Services map directly to MCP tools via `@tool` decorators.
+
+**Architecture Benefits**:
+- Zero boilerplate - FastMCP handles protocol details
+- Type-safe - Python type hints → JSON Schema automatically
+- DRY - Services used by both MCP and Web UI
+- Testable - Pure business logic, easily mocked
+
+### Tool 1: query_methodology
+
+**Purpose**: Answer questions about how to perform tasks according to methodology.
+
+**Use Cases**:
+- "How do I build a TSX component per FDD methodology?"
+- "What are the acceptance criteria for a screen mockup?"
+- "What howtos are available for unit testing React components?"
+
+**Implementation**:
+```python
+from fastmcp import FastMCP
+from methodology.services import MethodologyService
+from methodology.repository import DjangoORMRepository
+
+mcp = FastMCP("Mimir Methodology Assistant")
+
+@mcp.tool()
+def query_methodology(
+    question: str,
+    methodology: str,
+    context: str | None = None
+) -> dict:
+    """
+    Query methodology for guidance on how to perform tasks.
+    
+    :param question: natural language question as str. Example: "How do I build a TSX component per FDD?"
+    :param methodology: methodology name as str. Example: "FDD"
+    :param context: current work context as str or None. Example: "Working on user profile feature"
+    :return: Guidance dict with answer and resources. Example: {"answer": "To build a TSX component...", "relevant_activities": ["SE1: Create Component Structure"], "relevant_howtos": ["howto-tsx-component-setup"], "related_deliverables": ["Component Specification", "Unit Tests"]}
+    """
+    service = MethodologyService(DjangoORMRepository())
+    return service.query_guidance(question, methodology, context)
+```
+
+**Output Example**:
+```python
+{
+  "answer": "To build a TSX component per FDD...",
+  "relevant_activities": ["SE1: Create Component Structure"],
+  "relevant_howtos": ["howto-tsx-component-setup"],
+  "related_deliverables": ["Component Specification", "Unit Tests"]
+}
+```
+
+### Tool 2: plan_execution
+
+**Purpose**: Generate work plan from methodology and create tasks in issue tracker.
+
+**Use Cases**:
+- "Plan implementation of scenario LOG1.1 and Screen LOG per FDD"
+- "Create inception phase tasks for user profile feature"
+
+**Implementation**:
+```python
+from typing import Literal
+
+@mcp.tool()
+def plan_execution(
+    methodology: str,
+    scope: str,
+    target_system: Literal["github", "jira"]
+) -> dict:
+    """
+    Generate work plan from methodology and create tasks in issue tracker.
+    
+    :param methodology: methodology name as str. Example: "FDD"
+    :param scope: feature/scenario scope as str. Example: "Plan implementation of scenario LOG1.1 and Screen LOG per FDD"
+    :param target_system: issue tracker system as Literal. Example: "github"
+    :return: Work plan dict with created issues. Example: {"workflow": "Build Feature", "tasks": [{"id": "#123", "title": "SE1: Create Component Structure", "url": "https://github.com/user/repo/issues/123"}], "summary": "Created 5 tasks for FDD workflow"}
+    """
+    service = PlanningService(DjangoORMRepository())
+    return service.create_execution_plan(methodology, scope, target_system)
+```
+
+**Behavior**:
+1. Query methodology for relevant workflow
+2. Extract activities and their dependencies
+3. Generate work orders with deliverables
+4. Use GitHub/Jira MCP to create issues
+5. Return work plan summary
+
+**Note**: Depends on 3rd party MCPs (GitHub, Atlassian) being available.
+
+### Tool 3: assess_progress
+
+**Purpose**: Evaluate project state against methodology phase requirements.
+
+**Use Cases**:
+- "I'm supposed to finish inception phase. Did I produce all required artifacts?"
+- "Assess readiness to move from construction to validation phase"
+
+**Implementation**:
+```python
+@mcp.tool()
+def assess_progress(
+    phase: str,
+    methodology: str
+) -> dict:
+    """
+    Assess project state against methodology phase requirements.
+    
+    :param phase: phase name as str. Example: "inception"
+    :param methodology: methodology name as str. Example: "FDD"
+    :return: Assessment dict with deliverable status, gaps, and recommendations. Example: {"phase": "inception", "required_deliverables": [{"name": "Feature List", "status": "complete", "quality": "good"}, {"name": "Screen Mockups", "status": "partial", "quality": "needs_review", "gaps": ["Login screen missing"]}], "recommendations": ["Complete Login screen mockup"], "can_proceed": False}
+    """
+    service = AssessmentService(DjangoORMRepository())
+    return service.assess_phase_completion(phase, methodology)
+```
+
+**Output Example**:
+```python
+{
+  "phase": "inception",
+  "required_deliverables": [
+    {
+      "name": "Feature List",
+      "status": "complete",
+      "quality": "good"
+    },
+    {
+      "name": "Screen Mockups",
+      "status": "partial",
+      "quality": "needs_review",
+      "gaps": ["Login screen missing"]
+    }
+  ],
+  "recommendations": [
+    "Complete Login screen mockup",
+    "Review Security screen for accessibility"
+  ],
+  "can_proceed": False
+}
+```
+
+**Behavior**:
+1. Query methodology for phase deliverables
+2. Scan project (files, issues, PRs) for artifacts
+3. Assess completeness and quality
+4. Generate recommendations
+
+### Services Layer
+
+**Key Insight**: The `@mcp.tool()` functions are thin wrappers around services. All business logic lives in services, which are shared between MCP and Web UI.
+
+```python
+# methodology/services/methodology_service.py
+class MethodologyService:
+    def __init__(self, repo: MethodologyRepository):
+        """
+        Initialize methodology service with repository.
+        
+        :param repo: methodology repository instance. Example: DjangoORMRepository()
+        """
+        self.repo = repo
+    
+    def query_guidance(self, question: str, methodology: str, context: str = None) -> dict:
+        """
+        Query methodology for guidance on tasks - pure business logic.
+        
+        :param question: natural language question as str. Example: "How do I test a Django view?"
+        :param methodology: methodology name as str. Example: "FDD"
+        :param context: optional work context as str or None. Example: "Building user authentication"
+        :return: Guidance dict with answer and related resources. Example: {"answer": "To test a Django view...", "relevant_activities": ["Write Unit Tests"], "relevant_howtos": ["django-test-setup"], "related_deliverables": ["Test Suite"]}
+        """
+        # Load methodology
+        method = self.repo.get_methodology(methodology)
+        
+        # Semantic search across activities, howtos
+        relevant_items = self._search_methodology(method, question, context)
+        
+        # Generate answer
+        return {
+            "answer": self._generate_answer(relevant_items, question),
+            "relevant_activities": [a.name for a in relevant_items['activities']],
+            "relevant_howtos": [h.name for h in relevant_items['howtos']],
+            "related_deliverables": [d.name for d in relevant_items['deliverables']]
+        }
+
+# Can be called from MCP:
+@mcp.tool()
+def query_methodology(question, methodology, context=None):
+    service = MethodologyService(DjangoORMRepository())
+    return service.query_guidance(question, methodology, context)
+
+# Or from Django view:
+def query_view(request):
+    service = MethodologyService(DjangoORMRepository())
+    result = service.query_guidance(
+        request.POST['question'],
+        request.POST['methodology']
+    )
+    return JsonResponse(result)
+```
+
+## Methodology Ontology
+
+### Core Concepts
+
+**Activity**: The *what* - a unit of work with generic guidance
+- Example: "Create screen mockup"
+- Properties: name, description, goals, required skills
+- Produces: Deliverables
+- Consumes: Deliverables (from predecessors)
+- Guided by: Howtos
+
+**Howto**: The *how* - specific implementation instructions
+- Example: "Creating mockups with Figma and Shadcn UI Kit"
+- Properties: name, tool_specific, steps, examples
+- Can be attached to multiple activities
+
+**Workflow**: Sequence of activities for a process
+- Example: "Implement the Feature"
+- Properties: name, phases, entry/exit criteria
+- Contains: Activities with dependency graph
+
+**Deliverable**: Output/input of activities
+- Example: "Featur File", "Acceptance Test", "TSX Component"
+- Properties: name, format, acceptance criteria
+- Purpose: Connect activities (output → input)
+
+**Role**: Who performs activities
+- Example: "Frontend Engineer", "UX Designer"
+- Can be: Human, AI agent, or hybrid
+
+**Goal**: What an activity aims to achieve
+- Example: "Ensure component meets design system"
+- Fulfilled by: Activities
+
+### Extensible Ontology
+
+The ontology can be extended by users:
+
+1. Define new node type in Web UI
+2. Specify properties and relationships
+3. System introspects new type
+4. Auto-generates `/api/{new_type}/*` endpoints
+5. New type available in methodology editor
+
+Example: Add "Decision" type to track architectural decisions made during activities.
+
+## AI-Driven Evolution
+
+### Fitness Function
+
+**Primary Metric**: Number of corrections required to complete work correctly (target: zero)
+
+**What counts as a correction**:
+- Code changes after review feedback
+- Rework due to missing requirements
+- Deliverable doesn't meet acceptance criteria
+- Downstream activity can't proceed
+
+### Root Cause Analysis
+
+When corrections occur, Saga AI analyzes:
+
+1. **Activity definition**: Is the activity poorly defined? Ambiguous?
+2. **Upstream gaps**: Are predecessor activities missing key outputs?
+3. **Downstream needs**: Do successor activities need different inputs?
+4. **Howto effectiveness**: Are the implementation instructions adequate?
+5. **Environmental factors**: Are there external blockers?
+
+### PIP Creation
+
+Saga AI generates PIPs with:
+- **Context**: What work was being done
+- **Problem**: What correction was needed and why
+- **Analysis**: Root cause identification
+- **Proposal**: Specific methodology change to prevent recurrence
+- **Expected impact**: Predicted fitness improvement
+
+### Learning Loop
+
+```
+Work Execution
+    ↓
+Corrections tracked
+    ↓
+Saga analyzes root causes
+    ↓
+Saga proposes PIP
+    ↓
+Human reviews (approve/reject + reasoning)
+    ↓
+Saga learns from decision
+    ↓
+Improved PIP proposals next time
+```
+
+## Implementation Phases
+
+### Phase 1: MVP - Stand-alone FOB
+- Django project setup
+- Install FastMCP: `pip install fastmcp`
+- Node/Edge/Version/Methodology/PIP models
+- Repository interface + Django ORM implementation
+- Services layer (MethodologyService, PlanningService, AssessmentService)
+- FastMCP tools module with `@mcp.tool()` decorators
+- MCP server management command: `mcp.run()`
+- Implement `query_methodology` tool
+- Simple web UI for viewing Methodologies, Goals, Activities, Howtos, Deliverables, Roles
+
+### Phase 2: Evolution Workflow
+- PIP creation interface (manual)
+- PIP review UI (approve/reject)
+- Version creation on PIP approval
+- Version diff viewer
+- Methodology sync from source (management command)
+
+### Phase 3: Advanced MCP Tools
+- `plan_execution` tool
+- Integration with GitHub/Jira MCPs
+- `assess_progress` tool
+- Project scanning and analysis
+- AI-generated PIP creation from MCP
+
+### Phase 4: HOMEBASE
+- Neo4j repository implementation
+- FastAPI endpoints for methodology CRUD
+- Access control system (Family + Level)
+- Methodology distribution endpoints
+- PIP aggregation from FOBs
+- React UI for HOMEBASE management
+
+### Phase 5: AI Evolution (Saga AI)
+- Work order tracking integration
+- Correction detection and logging
+- Root cause analysis engine
+- Automated PIP generation
+- Learning from human feedback
+- Fitness metric tracking and visualization
+
+## Technology Stack
+
+### FOB (Forward Operating Base)
+- **Framework**: Django 5.x
+- **Database**: SQLite 3
+- **MCP Library**: FastMCP (stdio transport)
+- **Web UI**: Django templates + HTMX + Graphviz
+- **Graph Visualization**: Graphviz (server-side SVG generation)
+- **Python Version**: 3.11+
+- **Key Dependencies**: `fastmcp`, `django`, `graphviz`, `htmx` (CDN)
+
+### HOMEBASE (Methodology Repository)
+- **Database**: Neo4j 5.x
+- **API**: FastAPI 0.104+
+- **Web UI**: React 18 + Vite + Zustand + Tailwind + shadcn/ui
+- **Python Version**: 3.11+
+
+### AI Components
+- **Default Model**: GPT-4o (configurable)
+- **Tyr AI**: Task planning and work order generation
+- **Saga AI**: Retrospection and improvement suggestions
+
+## Security & Access Control
+
+### HOMEBASE
+
+**Authentication**: OAuth2 / API Keys
+
+**Authorization Levels**:
+- **Free**: Access to LITE versions of public methodologies
+- **Basic**: Access to LITE versions of specific families
+- **Standard**: Access to FULL versions
+- **Premium**: Access to EXTENDED versions + custom methodologies
+
+**Family-Based Access**:
+- User granted access to families (e.g., "Software Engineering", "UX Design")
+- Can download any methodology within granted families at their access level
+
+### FOB
+
+**No Authentication**: Single-user desktop app
+
+**PIP Transmission**: Uses API key to transmit PIPs to HOMEBASE
+
+**Data Privacy**: All work orders and execution data stay local
+
+## Future Considerations
+
+### Multi-FOB Collaboration
+- Multiple engineers working on same methodology
+- Conflict resolution for concurrent PIPs
+- Shared version branches
+
+### Marketplace
+- Community-contributed methodologies
+- Methodology ratings and reviews
+- PIP effectiveness tracking across users
+
+### Analytics
+- Aggregate fitness metrics across projects
+- Identify high-impact PIPs
+- Methodology effectiveness benchmarking
+
+### Advanced AI
+- Proactive suggestion before failures occur
+- Automated A/B testing of methodology variants
+- Transfer learning across methodology families

@@ -1,0 +1,24 @@
+# Django Framework
+django>=5.0
+
+# MCP Integration
+fastmcp>=0.1.0
+
+# Graph Visualization
+graphviz>=0.20
+
+# Configuration
+python-dotenv>=1.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-django>=4.5.0
+playwright>=1.40.0
+pytest-playwright>=0.4.0
+
+# AI Features (optional)
+openai>=1.0.0
+
+# Development
+black>=23.0.0
+ruff>=0.1.0

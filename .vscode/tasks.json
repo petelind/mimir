@@ -1,0 +1,196 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Django: runserver",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "runserver",
+                "127.0.0.1:8000"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                    "PYTHONUNBUFFERED": "1"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Django: migrate",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "migrate"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Django: makemigrations",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "makemigrations"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Django: shell",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "shell"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Django: createsuperuser",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "createsuperuser"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "pytest: All Tests",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "-m",
+                "pytest",
+                "tests/",
+                "-v",
+                "--tb=short"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                    "PYTHONUNBUFFERED": "1"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "pytest: Current File",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "-m",
+                "pytest",
+                "${file}",
+                "-v",
+                "--tb=short"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                    "PYTHONUNBUFFERED": "1"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "MCP Server",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "mcp_server"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                    "PYTHONUNBUFFERED": "1"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "Django: collectstatic",
+            "type": "shell",
+            "command": "${workspaceFolder}/venv/bin/python",
+            "args": [
+                "${workspaceFolder}/manage.py",
+                "collectstatic",
+                "--noinput"
+            ],
+            "options": {
+                "env": {
+                    "DJANGO_SETTINGS_MODULE": "mimir.settings"
+                }
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

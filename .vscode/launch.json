@@ -1,0 +1,144 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Django: runserver",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "runserver",
+                "127.0.0.1:8000"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Django: shell",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "shell"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Django: migrate",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "migrate"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Django: makemigrations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "makemigrations"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Django: createsuperuser",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "createsuperuser"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "pytest: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "${file}",
+                "-v",
+                "--tb=short"
+            ],
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "pytest: All Tests",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "tests/",
+                "-v",
+                "--tb=short"
+            ],
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "MCP Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/manage.py",
+            "args": [
+                "mcp_server"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "env": {
+                "DJANGO_SETTINGS_MODULE": "mimir.settings",
+                "PYTHONUNBUFFERED": "1"
+            },
+            "python": "${workspaceFolder}/venv/bin/python",
+            "console": "integratedTerminal"
+        }
+    ]
+}
