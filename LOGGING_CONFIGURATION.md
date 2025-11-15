@@ -20,17 +20,37 @@ The Mimir project uses Django's logging framework with separate log files for ap
 
 ### Format
 
+**Comprehensive Troubleshooting Format:**
 ```
-{levelname} {asctime} {module} {funcName} {lineno} {message}
+[{timestamp}] [{level}] [PID:{process}:TID:{thread}] [{full_path}:{line}] [{module}.{function}] {message}
 ```
+
+**Format Components:**
+- **Timestamp**: `YYYY-MM-DD HH:MM:SS` - ISO format with seconds
+- **Log Level**: 8-character left-aligned for readability (`INFO    `, `WARNING `, `ERROR   `)
+- **Process ID (PID)**: Identifies which process generated the log
+- **Thread ID (TID)**: Identifies thread in multi-threaded scenarios
+- **Full Pathname**: Complete file path for exact source location
+- **Line Number**: Precise line where log was called
+- **Module.Function**: Clear function context (e.g., `views.form_valid`)
+- **Message**: The actual log message with context
 
 **Example Output**:
 ```
-INFO 2025-11-15 23:39:17,782 create_default_admin handle 26 User "admin" already exists
-INFO 2025-11-15 23:40:23,456 views form_valid 21 Login attempt for user: admin, remember_me: False
-INFO 2025-11-15 23:40:23,458 views form_valid 30 User admin logged in without remember me (2 weeks)
-INFO 2025-11-15 23:41:15,789 views custom_logout_view 41 User admin logged out successfully
+[2025-11-15 23:46:02] [INFO    ] [PID:30038:TID:8297717888] [/Users/denispetelin/GitHub/mimir/accounts/views.py:21] [views.form_valid] User login attempt: username=admin, remember_me=True, ip=127.0.0.1
+[2025-11-15 23:46:02] [WARNING ] [PID:30038:TID:8297717888] [/Users/denispetelin/GitHub/mimir/accounts/views.py:36] [views.form_valid] Failed login attempt: username=hacker, reason=invalid_password, attempts=3
+[2025-11-15 23:46:02] [ERROR   ] [PID:30038:TID:8297717888] [/Users/denispetelin/GitHub/mimir/accounts/views.py:41] [views.custom_logout_view] Database connection failed: host=localhost, port=5432, error=Connection refused
+[2025-11-15 23:46:02] [INFO    ] [PID:30038:TID:8297717888] [/Users/denispetelin/GitHub/mimir/accounts/views.py:65] [views.custom_logout_view] User admin logged out successfully
 ```
+
+**Why This Format?**
+
+This format is designed per `.windsurf/rules/do-informative-logging.md` to answer:
+1. **Where**: Full pathname + line number = exact location
+2. **When**: Timestamp for chronological analysis
+3. **Who**: Process/Thread IDs for concurrent scenarios
+4. **What**: Module.Function + message with context
+5. **Why**: Rich context in message (user IDs, parameters, states)
 
 ### Handlers
 
