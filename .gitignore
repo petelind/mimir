@@ -276,3 +276,7 @@ tests.log
 .windsurf/workflows/ux-2-design-ia.md
 .windsurf/workflows/ux-3-design-mockups.md
 .windsurf/workflows/ux-4-design-feature-files.md
+
+# Application logs
+app.log
+tests.log
