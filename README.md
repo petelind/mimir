@@ -31,7 +31,7 @@ AI: → Generates work orders from methodology → Creates GitHub issues
 Check if you've completed all required deliverables for a phase:
 
 ```
-You: "I'm supposed to finish inception. Did I produce all required artifacts?"
+You: "I'm supposed to finish inception phase next week. Did I produce all required artifacts?"
 AI: → Scans codebase and issues → Reports status and gaps
 ```
 
@@ -82,7 +82,24 @@ Download methodologies from HOMEBASE based on your access level:
    python manage.py migrate
    ```
 
-5. **Download methodologies** (requires HOMEBASE access)
+5. **Run tests**
+   
+   Run unit and integration tests:
+   ```bash
+   pytest tests/
+   ```
+   
+   Run acceptance tests (Behave/BDD):
+   ```bash
+   behave
+   ```
+   
+   For continuous testing during development:
+   ```bash
+   python continuous_test_runner.py
+   ```
+
+6. **Download methodologies** (requires HOMEBASE access)
    ```bash
    python manage.py sync_methodology --family "Software Engineering" --level "Basic"
    ```

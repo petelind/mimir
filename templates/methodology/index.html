@@ -7,7 +7,7 @@
     <div class="col-12">
         <div class="jumbotron bg-light p-5 rounded" data-testid="methodology-explorer">
             <h1 class="display-4">
-                <i class="fas fa-book-open text-primary"></i> Welcome to Mimir
+                <i class="fas fa-brain-circuit text-primary"></i> Welcome to Mimir
             </h1>
             <p class="lead">Your AI-driven methodology management system</p>
             <hr class="my-4">
@@ -16,10 +16,14 @@
                 View methodologies, review Process Improvement Proposals (PIPs), and customize your local methodology library.
             </p>
             <div class="mt-4">
-                <a class="btn btn-primary btn-lg" href="#" role="button" data-testid="explore-methodologies-button">
+                <a class="btn btn-primary btn-lg" href="#" role="button" data-testid="explore-methodologies-button"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="Browse and explore your complete methodology library">
                     <i class="fas fa-folder-open"></i> Explore Methodologies
                 </a>
-                <a class="btn btn-outline-secondary btn-lg ms-2" href="/pip/list/" role="button" data-testid="view-pips-button">
+                <a class="btn btn-outline-secondary btn-lg ms-2" href="/pip/list/" role="button" data-testid="view-pips-button"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="Review and approve Process Improvement Proposals">
                     <i class="fas fa-lightbulb"></i> View PIPs
                 </a>
             </div>
@@ -37,7 +41,11 @@
                 <p class="card-text">
                     Browse and explore your local methodology library. View workflows, activities, and howtos.
                 </p>
-                <a href="#" class="btn btn-sm btn-outline-info">View All</a>
+                <a href="#" class="btn btn-sm btn-outline-info"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="View all methodologies in your library">
+                    <i class="fas fa-list"></i> View All
+                </a>
             </div>
         </div>
     </div>
@@ -51,7 +59,11 @@
                 <p class="card-text">
                     Review and approve Process Improvement Proposals (PIPs) from AI assistants and team feedback.
                 </p>
-                <a href="/pip/list/" class="btn btn-sm btn-outline-warning">Review PIPs</a>
+                <a href="/pip/list/" class="btn btn-sm btn-outline-warning"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="Review pending Process Improvement Proposals">
+                    <i class="fas fa-tasks"></i> Review PIPs
+                </a>
             </div>
         </div>
     </div>
@@ -65,7 +77,11 @@
                 <p class="card-text">
                     Track methodology versions and see how your processes evolve over time.
                 </p>
-                <a href="#" class="btn btn-sm btn-outline-success">Version History</a>
+                <a href="#" class="btn btn-sm btn-outline-success"
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="View version history and track methodology evolution">
+                    <i class="fas fa-history"></i> Version History
+                </a>
             </div>
         </div>
     </div>
