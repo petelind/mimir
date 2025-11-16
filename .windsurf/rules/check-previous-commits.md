@@ -1,0 +1,8 @@
+---
+trigger: always_on
+---
+
+When you encounter missing imports, parts of the files missing, files missing - always check:
+1. Previous commit.
+2. Commit from which branch originates.
+Likely you will find it there and can restore from there.

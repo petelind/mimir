@@ -1,0 +1,26 @@
+---
+trigger: model_decision
+description: When you start working on a scenario, new methods or classes - do it unless user told you to do otherwise.
+---
+
+Every function and method must begin with a test. Core principle: tests prove that your implementation works as intended. As long as tests are not passing - you cannot claim that the scenario/class/method is implemented.
+
+- Review current implementation you are about to start testing to learn methods, properties, fields etc. you can use. 
+- If actual implementation contradicts docstring - ask user what takes precedence, implementation or documentation.
+- Review design documentation to if there is a guidance on how things shall be implemented.
+- Write unit tests before implementing logic. When writing - do not write tests for RaiseNotImplemented; its there simply to fail your tests and remind you about properties/methods which need implementation. Write actual checks that shall pass, using docstrings and your design intent.
+- Look into feature files to identify relevant scenarios explaining what we are doing docs/features and use them to guide your tests.
+- Tests must test main success, border conditions, expected errors, handling of unexpected errors.
+- Start with method-level tests, then go to API, then to integration. 
+- For integration: follow .windsurf/rules/do-not-mock-in-integration-tests.md
+- Make the test fail, then implement logic to pass it.
+- Use pytest for running tests.
+- Do not mock unless absolutely necessary.
+- **All tests must be placed in the `tests/` directory structure:**
+  - Unit tests: [tests/unit/]
+  - Integration tests: [tests/integration/]
+  - API tests: [tests/api/]
+  - End-to-end tests: [tests/e2e/]
+  - Service tests: [tests/services/]
+
+- **Never place test files in the root directory of the repository**

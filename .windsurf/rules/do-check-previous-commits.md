@@ -1,0 +1,12 @@
+---
+trigger: model_decision
+description: When encountering missing parts of the file.
+---
+
+# Rule: Check Previous Commits
+
+When you encounter missing imports, parts of the files missing, or files missing - always check:
+1. Previous commit.
+2. Commit from which branch originates.
+
+Likely you will find it there and can restore from there.

@@ -1,0 +1,5 @@
+---
+trigger: manual
+---
+
+When performing edits - always check docstring and keep them up-to-date with :param:, :raises:, :return: etc.

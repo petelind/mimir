@@ -1,0 +1,11 @@
+---
+trigger: model_decision
+description: When implementing or runninh tests
+---
+
+# Rule: Test Runners
+
+Use the following runners:
+- **Unit and integration tests**: pytest
+- **API view tests**: Django test client
+- **Acceptance (end-to-end) tests**: Playwright

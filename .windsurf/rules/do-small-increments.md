@@ -1,0 +1,10 @@
+---
+trigger: always_on
+---
+
+# Rule: Small Increments
+
+Work in method-by-method steps.
+- Implement small vertical slices.
+- After every change: write → run → test → evaluate → fix.
+- No large PRs or 1000-line commits.
