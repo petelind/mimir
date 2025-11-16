@@ -432,6 +432,19 @@ apt-get install graphviz
 
 ## Web UI Architecture
 
+### UI Design Conventions
+
+**Visual Identity**:
+- **Primary Icon**: `fa-book-sparkles` (Font Awesome Pro) represents playbooks/methodologies throughout the application
+- **Branding**: "Your Self-Evolving Engineering Playbook" - emphasizes practical, modular, AI-enhanced approach
+- **Terminology**: User-facing language uses "playbook" (accessible, modern) while internal code uses "Methodology" models (technical accuracy)
+
+**Icon Usage**:
+- **Playbook/Methodology**: `fa-book-sparkles` - primary identifier across nav, pages, footer
+- **Process Improvements**: `fa-lightbulb` - for PIPs (Process Improvement Proposals)
+- **Versions**: `fa-code-branch` - for version history and tracking
+- **Actions**: All buttons/links include semantic Font Awesome icons per UI guidelines
+
 ### Technology Choice: HTMX + Graphviz
 
 **Motivation**: 

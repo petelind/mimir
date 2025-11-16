@@ -1,19 +1,19 @@
 # Mimir
 
-**Self-evolving methodologies for software engineering**
+**Your Self-Evolving Engineering Playbook**
 
-Mimir helps you work more effectively by providing structured methodologies that your AI assistant can access directly in your IDE. Get guidance, generate work plans, track progress, and continuously improve your development process.
+Mimir helps you work more effectively by providing structured playbooks that your AI assistant can access directly in your IDE. Get guidance, generate work plans, track progress, and continuously improve your development process.
 
 > 📖 For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
 
 ## What Can Mimir Do?
 
-### 🤖 Answer Methodology Questions via MCP
+### 🤖 Answer Playbook Questions via MCP
 
 Your AI assistant can query Mimir directly from your IDE (powered by FastMCP):
 
 ```
-You: "How do I build a TSX component per FDD methodology?"
+You: "How do I build a TSX component per FDD playbook?"
 AI: → Queries Mimir → Returns activity guidance and relevant Howtos
 ```
 
@@ -23,7 +23,7 @@ Automatically create task breakdowns in GitHub or Jira:
 
 ```
 You: "Plan implementation of scenario LOG1.1 and Screen LOG per FDD"
-AI: → Generates work orders from methodology → Creates GitHub issues
+AI: → Generates work orders from playbook → Creates GitHub issues
 ```
 
 ### 📊 Assess Project Progress
@@ -37,16 +37,16 @@ AI: → Scans codebase and issues → Reports status and gaps
 
 ### 🔄 Evolve Through Experience
 
-When AI encounters issues during work, it can propose methodology improvements:
+When AI encounters issues during work, it can propose playbook improvements:
 
 ```
 AI: → Detects repeated corrections → Creates Process Improvement Proposal (PIP)
-You: → Reviews PIP in web UI → Approves with notes → New methodology version created
+You: → Reviews PIP in web UI → Approves with notes → New playbook version created
 ```
 
-### 📚 Access Methodology Library
+### 📚 Access Playbook Library
 
-Download methodologies from HOMEBASE based on your access level:
+Download playbooks from HOMEBASE based on your access level:
 - **Family-based**: Software Engineering, UX Design, Testing, etc.
 - **Version tiers**: LITE (Basic), FULL (Standard), EXTENDED (Premium)
 
@@ -99,12 +99,12 @@ Download methodologies from HOMEBASE based on your access level:
    python continuous_test_runner.py
    ```
 
-6. **Download methodologies** (requires HOMEBASE access)
+6. **Download playbooks** (requires HOMEBASE access)
    ```bash
    python manage.py sync_methodology --family "Software Engineering" --level "Basic"
    ```
 
-   Or load sample methodologies:
+   Or load sample playbooks:
    ```bash
    python manage.py loaddata sample_methodologies
    ```
@@ -120,10 +120,10 @@ python manage.py runserver 8000
 ```
 
 Open http://localhost:8000 in your browser to:
-- **Browse methodologies**: View activities, workflows, howtos, and deliverables
+- **Browse playbooks**: View activities, workflows, howtos, and deliverables
 - **Review PIPs**: Approve or reject Process Improvement Proposals
-- **Compare versions**: See what changed between methodology versions
-- **Edit locally**: Customize methodologies for your team
+- **Compare versions**: See what changed between playbook versions
+- **Edit locally**: Customize playbooks for your team
 
 ### 2. Configure MCP in Your IDE
 
@@ -165,7 +165,7 @@ Once configured, your AI assistant has access to three Mimir tools (implemented 
 #### query_methodology
 Ask questions about how to perform tasks:
 ```
-"How do I create screen mockups per FDD methodology?"
+"How do I create screen mockups per FDD playbook?"
 "What are the acceptance criteria for a component specification?"
 "Show me howtos for React component testing"
 ```
@@ -180,7 +180,7 @@ Generate work plans and create tasks:
 *Requires GitHub or Jira MCP to be configured*
 
 #### assess_progress
-Check progress against methodology phases:
+Check progress against playbook phases:
 ```
 "Am I ready to complete the inception phase?"
 "What deliverables am I missing for construction?"
@@ -209,12 +209,12 @@ Check progress against methodology phases:
 
 4. **Get implementation help**
    ```
-   "How should I structure the TSX component per methodology?"
+   "How should I structure the TSX component per playbook?"
    ```
 
 ### Weekly Review
 
-1. **Check methodology improvements**
+1. **Check playbook improvements**
    - Open http://localhost:8000/pips/
    - Review PIPs created by AI during the week
    - Approve good suggestions, reject with reasoning
@@ -236,7 +236,7 @@ Check progress against methodology phases:
 Create a `.env` file in the project root:
 
 ```bash
-# HOMEBASE (methodology repository)
+# HOMEBASE (playbook repository)
 MIMIR_HOMEBASE_URL=https://methodologies.example.com
 MIMIR_API_KEY=your_api_key_here
 
@@ -247,10 +247,10 @@ MIMIR_DB_PATH=mimir.db
 OPENAI_API_KEY=your_openai_key  # For AI-driven features
 ```
 
-### Methodology Sync
+### Playbook Sync
 
 ```bash
-# Sync specific methodology
+# Sync specific playbook
 python manage.py sync_methodology --name "FDD"
 
 # Sync entire family
@@ -288,7 +288,7 @@ pkill -f "manage.py runserver"
 python manage.py runserver 8000
 ```
 
-### No Methodologies Available
+### No Playbooks Available
 
 ```bash
 # Load sample data
@@ -331,7 +331,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ## Learn More
 
 - **Architecture**: [docs/architecture/SAO.md](docs/architecture/SAO.md) - Complete system design
-- **Methodology Concepts**: [docs/methodology-guide.md](docs/methodology-guide.md) - Understanding activities, workflows, etc.
+- **Playbook Concepts**: [docs/methodology-guide.md](docs/methodology-guide.md) - Understanding activities, workflows, etc.
 - **MCP Protocol**: [Model Context Protocol Specification](https://spec.modelcontextprotocol.io/)
 
 ## Support
