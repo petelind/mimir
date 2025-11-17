@@ -40,7 +40,7 @@ AI: → Scans codebase and issues → Reports status and gaps
 When AI encounters issues during work, it can propose playbook improvements:
 
 ```
-AI: → Detects repeated corrections → Creates Process Improvement Proposal (PIP)
+AI: → Detects repeated corrections → Creates Playbook Improvement Proposal (PIP)
 You: → Reviews PIP in web UI → Approves with notes → New playbook version created
 ```
 
@@ -121,7 +121,7 @@ python manage.py runserver 8000
 
 Open http://localhost:8000 in your browser to:
 - **Browse playbooks**: View activities, workflows, howtos, and deliverables
-- **Review PIPs**: Approve or reject Process Improvement Proposals
+- **Review PIPs**: Approve or reject Playbook Improvement Proposals
 - **Compare versions**: See what changed between playbook versions
 - **Edit locally**: Customize playbooks for your team
 
@@ -300,13 +300,15 @@ python manage.py sync_methodology --family "Software Engineering"
 
 ## Project Structure
 
+> **Note**: Internal code uses `methodology` as the technical term for accuracy (e.g., Django app name, models, commands), while user-facing terminology uses "playbooks" for accessibility. This is intentional - see [SAO.md](docs/architecture/SAO.md) for details.
+
 ```
 mimir/
 ├── docs/
 │   └── architecture/
 │       └── SAO.md           # System architecture & design
 ├── mimir/                   # Django project
-│   ├── methodology/         # Core app
+│   ├── methodology/         # Core app (internal name)
 │   │   ├── models/          # Node, Edge, Version, PIP
 │   │   ├── repository/      # Storage abstraction layer
 │   │   ├── services/        # Business logic
