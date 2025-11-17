@@ -23,4 +23,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", methodology_views.index, name="index"),
+    path("playbooks/", include("methodology.playbook_urls")),
 ]

@@ -1,0 +1,347 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} - Mimir{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>
+                <i class="fas fa-book-sparkles text-primary"></i> {{ page_title }}
+            </h1>
+        </div>
+    </div>
+
+    <!-- Tabbed Form -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header">
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs card-header-tabs" id="formTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" 
+                                    type="button" role="tab" aria-controls="basic" aria-selected="true">
+                                <i class="fas fa-info-circle"></i> Basic Info
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="classification-tab" data-bs-toggle="tab" data-bs-target="#classification" 
+                                    type="button" role="tab" aria-controls="classification" aria-selected="false">
+                                <i class="fas fa-tags"></i> Classification
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="metadata-tab" data-bs-toggle="tab" data-bs-target="#metadata" 
+                                    type="button" role="tab" aria-controls="metadata" aria-selected="false">
+                                <i class="fas fa-file-alt"></i> Metadata
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="relationships-tab" data-bs-toggle="tab" data-bs-target="#relationships" 
+                                    type="button" role="tab" aria-controls="relationships" aria-selected="false">
+                                <i class="fas fa-project-diagram"></i> Relationships
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <form id="playbookForm">
+                        <div class="tab-content" id="formTabsContent">
+                            <!-- Tab 1: Basic Info -->
+                            <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="playbookId" class="form-label fw-bold">
+                                            Playbook ID <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="text" class="form-control" id="playbookId" 
+                                               placeholder="e.g., AGILE-01" required
+                                               value="{% if playbook %}{{ playbook.id }}{% endif %}">
+                                        <div class="form-text">Unique identifier for the playbook</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="version" class="form-label">Version</label>
+                                        <input type="text" class="form-control" id="version" 
+                                               placeholder="e.g., 1.0"
+                                               value="{% if playbook %}{{ playbook.version }}{% endif %}">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="playbookName" class="form-label fw-bold">
+                                        Playbook Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="playbookName" 
+                                           placeholder="e.g., Agile Development" required
+                                           value="{% if playbook %}{{ playbook.name }}{% endif %}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label fw-bold">
+                                        Description <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" id="description" rows="4" 
+                                              placeholder="Describe the playbook..." required>{% if playbook %}{{ playbook.description }}{% endif %}</textarea>
+                                    <div class="form-text">Provide a clear, concise description of what this playbook covers</div>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: Classification -->
+                            <div class="tab-pane fade" id="classification" role="tabpanel" aria-labelledby="classification-tab">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="family" class="form-label">Family</label>
+                                        <select class="form-select" id="family">
+                                            <option value="">Select family...</option>
+                                            {% for fam in families %}
+                                            <option value="{{ fam }}" {% if playbook and playbook.family == fam %}selected{% endif %}>
+                                                {{ fam }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Category or domain of the playbook</div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="type" class="form-label">Type</label>
+                                        <select class="form-select" id="type">
+                                            <option value="">Select type...</option>
+                                            {% for t in types %}
+                                            <option value="{{ t }}" {% if playbook and playbook.type == t %}selected{% endif %}>
+                                                {{ t }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Classification of approach</div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select class="form-select" id="status">
+                                            <option value="">Select status...</option>
+                                            {% for s in statuses %}
+                                            <option value="{{ s }}" {% if playbook and playbook.status == s %}selected{% endif %}>
+                                                {{ s }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Current lifecycle status</div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <strong>Tip:</strong> Use consistent classification to make playbooks easier to find and organize.
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Metadata -->
+                            <div class="tab-pane fade" id="metadata" role="tabpanel" aria-labelledby="metadata-tab">
+                                <div class="mb-3">
+                                    <label for="author" class="form-label">Author</label>
+                                    <input type="text" class="form-control" id="author" 
+                                           placeholder="e.g., Kent Beck"
+                                           value="{% if playbook %}{{ playbook.author }}{% endif %}">
+                                    <div class="form-text">Original creator or primary contributor</div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="createdAt" class="form-label">Created Date</label>
+                                        <input type="date" class="form-control" id="createdAt" 
+                                               value="{% if playbook %}{{ playbook.created_at }}{% endif %}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="updatedAt" class="form-label">Last Updated</label>
+                                        <input type="date" class="form-control" id="updatedAt" 
+                                               value="{% if playbook %}{{ playbook.updated_at }}{% endif %}">
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-secondary">
+                                    <i class="fas fa-lightbulb"></i> 
+                                    <strong>Note:</strong> In the full version, created and updated dates will be automatically tracked.
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Relationships -->
+                            <div class="tab-pane fade" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-project-diagram"></i> 
+                                    <strong>Relationships</strong>
+                                    <p class="mb-0 mt-2">
+                                        This section will allow you to link workflows, activities, deliverables, and other playbooks.
+                                        Full relationship management will be available when the backend is implemented.
+                                    </p>
+                                </div>
+
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Related Items (Coming Soon)</h6>
+                                        <ul class="list-unstyled mb-0">
+                                            <li><i class="fas fa-sitemap text-muted"></i> Workflows</li>
+                                            <li><i class="fas fa-tasks text-muted"></i> Activities</li>
+                                            <li><i class="fas fa-box text-muted"></i> Deliverables</li>
+                                            <li><i class="fas fa-book text-muted"></i> Related Playbooks</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary btn-lg" 
+                                            onclick="confirmCancel()"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Discard changes and go back">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-lg" id="saveBtn" disabled
+                                            onclick="savePlaybook()"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Fill in required fields (ID, Name, Description)">
+                                        <i class="fas fa-save"></i> Save Playbook
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title" id="cancelModalLabel">
+                    <i class="fas fa-exclamation-triangle"></i> Discard changes?
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You have unsaved changes. Are you sure you want to discard them?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Stay on Page
+                </button>
+                <button type="button" class="btn btn-warning" onclick="window.location.href='/playbooks/'">
+                    <i class="fas fa-check"></i> Discard Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="fas fa-check-circle"></i> <span id="successTitle"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="successMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                    <i class="fas fa-check"></i> OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    const tooltips = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    const playbookId = document.getElementById('playbookId');
+    const playbookName = document.getElementById('playbookName');
+    const description = document.getElementById('description');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // Validation function
+    function validateForm() {
+        const isValid = playbookId.value.trim() !== '' && 
+                       playbookName.value.trim() !== '' && 
+                       description.value.trim() !== '';
+        
+        saveBtn.disabled = !isValid;
+        
+        // Update tooltip
+        const tooltip = bootstrap.Tooltip.getInstance(saveBtn);
+        if (tooltip) {
+            if (isValid) {
+                saveBtn.setAttribute('data-bs-original-title', '{% if mode == "edit" %}Save changes to playbook{% else %}Save playbook{% endif %}');
+            } else {
+                saveBtn.setAttribute('data-bs-original-title', 'Fill in required fields (ID, Name, Description)');
+            }
+        }
+    }
+
+    // Add event listeners for validation
+    playbookId.addEventListener('input', validateForm);
+    playbookName.addEventListener('input', validateForm);
+    description.addEventListener('input', validateForm);
+
+    // Initial validation
+    validateForm();
+});
+
+function confirmCancel() {
+    const playbookId = document.getElementById('playbookId').value;
+    const playbookName = document.getElementById('playbookName').value;
+    const description = document.getElementById('description').value;
+
+    // Check if form has any data
+    if (playbookId || playbookName || description) {
+        const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+        cancelModal.show();
+    } else {
+        window.location.href = '/playbooks/';
+    }
+}
+
+function savePlaybook() {
+    const mode = "{{ mode }}";
+    const playbookId = document.getElementById('playbookId').value;
+    const playbookName = document.getElementById('playbookName').value;
+
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    const successTitle = document.getElementById('successTitle');
+    const successMessage = document.getElementById('successMessage');
+
+    if (mode === 'edit') {
+        successTitle.textContent = 'Playbook Updated (Prototype Mode)';
+        successMessage.textContent = `In production, changes to "${playbookId} - ${playbookName}" would be saved.`;
+    } else {
+        successTitle.textContent = 'Playbook Created (Prototype Mode)';
+        successMessage.textContent = `In production, playbook "${playbookId} - ${playbookName}" would be saved.`;
+    }
+
+    successModal.show();
+}
+</script>
+
+{% endblock %}

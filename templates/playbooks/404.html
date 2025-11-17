@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Playbook Not Found - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-warning shadow-lg">
+                <div class="card-body text-center p-5">
+                    <!-- Icon -->
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle fa-5x text-warning"></i>
+                    </div>
+                    
+                    <!-- Title -->
+                    <h1 class="card-title mb-3">
+                        Playbook Not Found
+                    </h1>
+                    
+                    <!-- Message -->
+                    <p class="lead text-muted mb-4">
+                        The playbook with ID <code class="text-danger">{{ playbook_id }}</code> could not be found.
+                    </p>
+                    
+                    <p class="text-muted">
+                        It may have been removed, or the ID might be incorrect.
+                    </p>
+                    
+                    <hr class="my-4">
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="/playbooks/" 
+                           class="btn btn-primary btn-lg"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="Browse all available playbooks">
+                            <i class="fas fa-list"></i> Back to Playbooks
+                        </a>
+                        <a href="/" 
+                           class="btn btn-outline-secondary btn-lg"
+                           data-bs-toggle="tooltip"
+                           data-bs-placement="top"
+                           title="Return to home page">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+
+{% endblock %}
