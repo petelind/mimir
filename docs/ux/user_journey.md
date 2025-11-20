@@ -20,8 +20,12 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 
 **FOB (Forward Operating Base)**: Local containerized application with:
 - **FOB Web GUI**: Custom Django application with full UI for playbook and family management
-- **FOB MCP Server**: Integrates with Windsurf for AI-assisted workflows
+- **Mimir MCP Server**: Provides playbook context, guidance, and PIP suggestions to AI assistants in Windsurf
 - **FOB Database**: Local PostgreSQL with playbook graph storage
+
+**External Integrations**:
+- **Work Item Management**: Handled by external 3rd party MCP servers (GitHub MCP, Jira MCP, GitLab MCP, etc.)
+- **Note**: Mimir MCP provides playbook context; external MCPs handle work item creation/tracking
 
 ---
 
@@ -145,11 +149,14 @@ After verification, Maria is guided through FOB (local workspace) setup:
 - Container includes:
   - Django web application (FOB GUI)
   - PostgreSQL database (local playbook graph storage)
-  - MCP server (Model Context Protocol for AI integration)
+  - Mimir MCP server (provides playbook context to AI assistants)
 - Maria configures the container in Windsurf as a dev container
 - Configures local storage volume mount
 - Connects FOB to Homebase (API authentication)
 - Sets sync preferences (manual vs. notification-based)
+- **Separately configures external MCP servers in Windsurf**:
+  - GitHub MCP for work item management
+  - (Optional: Jira MCP, GitLab MCP, etc.)
 
 **Result**: Maria now has a working FOB connected to Homebase.
 
@@ -409,7 +416,7 @@ Maria clicks on "React Frontend Development" playbook card:
   - Quick stats: 3 Activities, 3 Artifacts, 2 Goals
   - Workflow diagram (visual graph)
   - Recent activity timeline
-  - Connected work items (0)
+  - Connected work items (0) - Links to external GitHub issues/Jira tickets if configured with external MCP
 
 #### Screen: FOB Playbook Detail - Activities Tab
 Maria clicks **Activities tab**:
@@ -435,8 +442,8 @@ Maria clicks [View Details] on "Create Components":
   - **Upstream**: Setup Project
   - **Downstream**: Implement State Management
   - **Artifacts**: Component Library (linked)
-  - **Related work items**: (empty)
-  - Actions: [Create Work Item] [Close]
+  - **Related work items**: (empty) - Note: Links to external work items (GitHub issues, Jira tickets) if configured
+  - Actions: [Create Work Item via MCP] [Close]
 
 #### Screen: FOB Playbook Detail - History Tab
 Maria clicks **History tab**:
@@ -505,23 +512,25 @@ Downstream activities: Create Components, Implement State Management
 Would you like me to create a GitHub issue to track this setup work?
 ```
 
-#### Action: Create Work Item via MCP
+#### Action: Create Work Item via External MCP
 Maria responds:
 
 ```
 > mimir: Yes, create a GitHub issue for project setup
 ```
 
-#### MCP Creates External Work Item
-MCP uses GitHub API to create an issue:
+**Note**: Work item management is handled by **external 3rd party MCP servers** (GitHub MCP, Jira MCP, GitLab MCP, etc.), NOT Mimir's MCP server. Mimir's MCP provides playbook context and guidance, while external MCPs handle actual work item creation and tracking.
+
+#### External GitHub MCP Creates Work Item
+GitHub MCP server (configured in Maria's Windsurf alongside Mimir MCP) uses GitHub API to create an issue:
 - **Repo**: maria/acme-dashboard
 - **Issue #47**: "Setup React project structure per React Frontend Development playbook"
-- **Body**: Includes checklist from the playbook Activity
+- **Body**: Includes checklist from the playbook Activity (context provided by Mimir MCP)
 - **Labels**: setup, react, playbook
 - Link returned to Maria
 
 #### Interface: Windsurf/MCP - Continuing Work
-Later that day, after completing some work, Maria asks MCP:
+Later that day, after completing some work, Maria asks her AI (which coordinates between Mimir MCP for playbook context and GitHub MCP for work item data):
 
 ```
 > mimir: Let's pick up MIMR-47 - assess the codebase and identify what's next per React Frontend Development playbook? What do we do next?
@@ -529,18 +538,18 @@ Later that day, after completing some work, Maria asks MCP:
 
 #### MCP Response - Context-Aware Guidance
 ```
-Checking MIMR-47 status... Project structure is set up.
+Checking MIMR-47 status... (querying GitHub MCP) Project structure is set up.
 
-According to "React Frontend Development" playbook, next activity is:
+According to "React Frontend Development" playbook (from Mimir MCP), next activity is:
 Activity 2: Create Components
 
 Current status: Ready to start component development
 Downstream activities: Implement State Management, Add Testing
 
 Would you like me to:
-1. Show the full Component Creation activity details?
-2. Create a new issue for component development?
-3. Open the playbook in the web interface to see the full workflow?
+1. Show the full Component Creation activity details? (from Mimir MCP)
+2. Create a new issue for component development? (via GitHub MCP)
+3. Open the playbook in the web interface to see the full workflow? (via Mimir MCP)
 ```
 
 #### Action: Navigate to Playbook Detail
@@ -1143,16 +1152,21 @@ Maria clicks **Storage**:
 
 #### Screen: FOB Settings - MCP Configuration
 Maria clicks **MCP Configuration**:
-- **MCP Server Status**: ✓ Running on port 5000
+- **Mimir MCP Server Status**: ✓ Running on port 5000
 - **Windsurf Integration**:
   - Connection string: `localhost:5000`
   - API key: `mcp_***********` [Show] [Regenerate]
   - [Test MCP Connection] button
-- **MCP Features**:
+- **Mimir MCP Features**:
   - Enable playbook context: [On/Off]
   - Enable PIP suggestions: [On/Off]
-  - Enable work item integration: [On/Off]
-- **Restart MCP Server** button
+  - Enable AI-initiated PIPs: [On/Off]
+- **External MCP Servers** (configured separately in Windsurf):
+  - GitHub MCP (for work item management)
+  - Jira MCP (optional)
+  - GitLab MCP (optional)
+  - Note: "Work item creation/tracking handled by external MCPs, not Mimir MCP"
+- **Restart Mimir MCP Server** button
 
 #### Screen: FOB Settings - Notifications
 Maria clicks **Notifications**:
@@ -1297,7 +1311,7 @@ Maria's journey demonstrates the full Mimir experience:
 ✅ **Administered Families** - Reviewed join requests, approved members, managed playbook submissions through custom FOB screens  
 ✅ **Discovered** - Found and downloaded community playbooks with HB Django Admin approval workflow  
 ✅ **Explored** - Drilled into playbook details (activities, artifacts, goals), viewed version history, compared versions  
-✅ **Used** - Worked with playbooks via MCP in Windsurf, created and continued work items  
+✅ **Used** - Worked with playbooks via Mimir MCP in Windsurf; created and tracked work items via external 3rd party MCPs (GitHub, Jira, etc.)  
 ✅ **Navigated Playbooks** - Used MCP to auto-open playbook details in web interface  
 ✅ **Contributed** - Created PIPs (user-initiated and AI-initiated) and shared improvements  
 ✅ **Synced** - Handled clean downloads, uploads, and conflicts with version management  
