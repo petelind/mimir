@@ -268,7 +268,7 @@
   </diagram>
   
   <!-- ACT 0: SYSTEM ENTRY & AUTHENTICATION -->
-  <diagram name="Act 0 - Authentication & Setup" id="act0-authentication">
+  <diagram name="Act 0 - Authentication and Setup" id="act0-authentication">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
         <mxCell id="act0-root-0" />
