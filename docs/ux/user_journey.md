@@ -479,6 +479,77 @@ Maria clicks "Download to FOB":
 
 ---
 
+### Act 3.1: Upload Playbook from JSON
+
+**Context**: Maria has a playbook exported as JSON (from another FOB instance or a backup) and wants to import it into her FOB.
+
+#### Screen: FOB Playbooks List
+Maria navigates to the Playbooks page and sees:
+- List of downloaded playbooks
+- "Sync with Homebase" button
+- **"Upload Playbook" button** (new)
+
+#### Action: Click Upload Playbook
+Maria clicks "Upload Playbook":
+- File upload modal appears
+
+#### Modal: FOB Upload Playbook
+Upload dialog shows:
+- **File Upload Area**: "Drop JSON file here or click to browse"
+- Accepted format: `.json` files only
+- Example: `playbook_react_frontend_v1.0.json`
+- **Note**: "Playbook JSON must follow Mimir schema"
+- [Cancel] [Upload] (disabled until file selected)
+
+#### Action: Select and Upload JSON File
+Maria selects a JSON file from her computer:
+- File name appears: `ux_research_playbook_v2.1.json`
+- [Upload] button becomes active
+- Maria clicks [Upload]
+
+#### Screen: FOB Upload Validation
+System validates the JSON:
+- **Checking**: "Validating playbook structure..."
+- Validates:
+  - Required fields (id, name, description, activities, etc.)
+  - Schema compliance
+  - Version format
+  - Dependencies
+
+**Success Path**:
+- ✓ Validation successful
+- Shows preview:
+  - Playbook Name: "UX Research Methodology"
+  - Version: 2.1
+  - Activities: 12
+  - Artifacts: 8
+  - Author: Maria Rodriguez
+- Message: "This playbook will be added to your local FOB"
+- [Cancel] [Import Playbook]
+
+**Error Path** (if validation fails):
+- ✗ Validation failed
+- Error message: "Invalid playbook format: Missing required field 'activities'"
+- [Close] [Try Another File]
+
+#### Action: Import Playbook
+Maria clicks [Import Playbook]:
+- Progress: "Importing playbook..."
+- Playbook added to local graph
+- Success notification: "UX Research Methodology v2.1 imported successfully"
+
+#### Screen: FOB Playbooks List (Updated)
+Maria sees the imported playbook in her list:
+- **UX Research Methodology** v2.1
+- Status: Local (not synced to Homebase)
+- Source: Imported from JSON
+- Author: Maria Rodriguez
+- Actions: [View] [Edit] [Delete] [Export]
+
+**Result**: Maria successfully imported a playbook from JSON and can now use it locally.
+
+---
+
 ### Act 3.5: Exploring Playbook Details
 
 **Context**: Maria wants to explore the React playbook structure in detail before using it.
@@ -842,6 +913,92 @@ Maria decides the official version is more valuable:
 - Notification: "You can review your draft PIP and submit it when ready"
 
 **Result**: Maria now has the latest official version and can resubmit her additional improvements later.
+
+---
+
+#### Scenario D: Download Playbook as JSON (Export)
+
+**Context**: Maria wants to backup her locally created playbook or share it with a colleague who doesn't have Homebase access.
+
+##### Screen: FOB Playbook Detail - Author View
+Maria views one of her authored playbooks:
+- **UX Research Methodology** v2.1
+- Author: Maria Rodriguez (Local)
+- **Note**: Download button is only visible if:
+  - User is the original author, OR
+  - Playbook is locally created (meaning user is author)
+
+##### Action: Click Download/Export
+Maria clicks the [Export] button in the playbook actions menu:
+- **Icon**: Download icon (fa-download)
+- **Tooltip**: "Download this playbook as JSON file for backup or sharing"
+
+##### Modal: FOB Export Playbook
+Export dialog shows:
+- **Playbook**: UX Research Methodology v2.1
+- **Export Options**:
+  - ☑ Include version history
+  - ☑ Include metadata (author, timestamps)
+  - ☐ Include local PIPs (if any)
+- **File Format**: JSON
+- **Filename**: `ux_research_methodology_v2.1.json` (editable)
+- [Cancel] [Download JSON]
+
+##### Action: Download JSON
+Maria clicks [Download JSON]:
+- Browser downloads file: `ux_research_methodology_v2.1.json`
+- Success notification: "Playbook exported successfully"
+- File size shown: ~45 KB
+
+##### Downloaded JSON Structure (Example)
+```json
+{
+  "schema_version": "1.0",
+  "playbook": {
+    "id": "ux-research-methodology",
+    "name": "UX Research Methodology",
+    "version": "2.1",
+    "description": "Comprehensive guide to UX research...",
+    "author": {
+      "name": "Maria Rodriguez",
+      "email": "maria@uxconsulting.com"
+    },
+    "created_at": "2024-11-15T10:30:00Z",
+    "updated_at": "2024-11-20T14:22:00Z",
+    "activities": [
+      {
+        "id": "define-research-questions",
+        "name": "Define Research Questions",
+        "description": "...",
+        "upstream_dependencies": [],
+        "downstream_dependencies": ["recruit-participants"]
+      }
+    ],
+    "artifacts": [...],
+    "goals": [...]
+  }
+}
+```
+
+##### Use Cases for Exported JSON:
+1. **Backup**: Save local copy before making major changes
+2. **Share offline**: Send to colleague via email/file share
+3. **Import to another FOB**: Colleague can import using Act 3.1 Upload feature
+4. **Version control**: Store in Git repository
+5. **Migration**: Move playbook to different FOB instance
+
+##### Permissions Note:
+**Download button NOT visible** if:
+- User is not the author
+- Playbook is synced from Homebase (authored by someone else)
+- User only has read access to the playbook
+
+**Download button IS visible** if:
+- User is the original author
+- Playbook was created locally by this user
+- Playbook was imported from JSON by this user (becomes author)
+
+**Result**: Maria has a portable JSON backup of her playbook that can be imported into any FOB instance.
 
 ---
 
