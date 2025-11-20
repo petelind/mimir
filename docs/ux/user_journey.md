@@ -10,9 +10,71 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 
 ---
 
+---
+
+## System Architecture Note
+
+**Homebase (HB)**: Central server with two interfaces:
+- **HB Django Admin**: System administrator functions (approvals, user management) - uses standard Django Admin interface
+- **HB Web Interface**: Public-facing registration and information pages
+
+**FOB (Forward Operating Base)**: Local containerized application with:
+- **FOB Web GUI**: Custom Django application with full UI for playbook and family management
+- **FOB MCP Server**: Integrates with Windsurf for AI-assisted workflows
+- **FOB Database**: Local PostgreSQL with playbook graph storage
+
+---
+
 ## Journey: From Discovery to Contribution
 
-### Act 0: The Foundation (Mike's Setup)
+### Act 0: System Entry & Authentication
+
+**Context**: Users need to access the system. FOB and HB have separate authentication flows.
+
+#### Screen: HB Login Page
+Mike navigates to Homebase login at `https://homebase.mimir.io/login`:
+- Email field
+- Password field
+- "Remember me" checkbox
+- "Forgot password?" link
+- "Sign up" link (→ Registration)
+- "Login" button
+
+Mike enters credentials and clicks Login.
+
+#### Screen: HB Django Admin Dashboard (System Admin View)
+Mike (system admin) sees standard Django Admin interface:
+- Django Admin navigation sidebar
+- Recent actions log
+- Quick links to models:
+  - Users
+  - Families
+  - Playbooks (pending approval)
+  - Notifications
+- System health indicators
+
+**Note**: This is Django's built-in admin interface, not custom UI.
+
+#### Screen: FOB Login/Startup
+Maria's FOB container starts automatically with her dev environment:
+- Container initialization screen
+- FOB authentication:
+  - If first time: Setup wizard (covered in Act 1)
+  - If returning: Automatic login with stored credentials
+- Database connection check
+- MCP server status: ✓ Running
+
+#### Error Path: FOB Connection Failed
+If FOB can't reach Homebase:
+- Error modal: "Cannot connect to Homebase"
+- Options:
+  - "Retry Connection"
+  - "Work Offline" (limited features)
+  - "Check Connection Settings"
+
+---
+
+### Act 0.1: The Foundation (Mike's Setup)
 
 **Context**: Mike wants to share his React development methodology with the community.
 
@@ -42,12 +104,17 @@ After publishing, Mike sees:
 - Status: "Pending Admin Approval"
 - Message: "Your playbook has been submitted for review by Homebase administrators"
 
-#### Screen: HB Admin Review (System Administrator)
-Sarah, the Homebase system administrator, receives a notification:
-- Reviews the playbook submission
-- Checks content quality and appropriateness
-- Sees playbook structure, description, target family
-- Clicks "Approve"
+#### Django Admin: HB Playbook Approval (System Administrator)
+Sarah, the Homebase system administrator, receives a notification in Django Admin:
+- Navigates to **Django Admin → Playbooks → Pending Approvals**
+- Sees list view with pending playbooks
+- Clicks on "React Frontend Development" playbook
+- Django Admin detail view shows:
+  - Playbook structure, description, target family
+  - Author information
+  - Submission timestamp
+- Actions dropdown: "Approve", "Reject", "Request Changes"
+- Selects "Approve" and saves
 
 #### Screen: HB Playbook Activated
 Mike receives notification:
@@ -88,7 +155,78 @@ After verification, Maria is guided through FOB (local workspace) setup:
 
 ---
 
-### Act 2: Building Her Compartments
+### Act 1.5: FOB Navigation Structure
+
+**Context**: Understanding the persistent navigation and UI structure of FOB.
+
+#### Screen: FOB Main Interface Layout
+Maria's FOB web GUI (http://localhost:8000) has a consistent layout:
+
+**Top Navigation Bar** (persistent across all screens):
+- **Logo**: "Mimir FOB" (links to Dashboard)
+- **Search**: Global search bar (playbooks, families, activities)
+- **Navigation Menu**:
+  - Dashboard
+  - Playbooks (with count badge)
+  - Families (with count badge)
+  - Sync
+  - Settings
+- **Notifications**: Bell icon with badge count (unread notifications)
+- **User Menu**: Maria Rodriguez dropdown
+  - My Profile
+  - Account Settings
+  - Log Out
+
+**Left Sidebar** (contextual, shown on detail pages):
+- Quick links based on current context
+- Recently viewed playbooks
+- Active playbook indicator
+
+#### Screen: FOB Notification Center
+Maria clicks the bell icon (badge shows "3"):
+- Dropdown panel appears:
+  - "New user wants to join UX family" (12 min ago) [View Request]
+  - "React Frontend Development v1.2 available" (2 hours ago) [Download]
+  - "Tom joined Usability family" (1 day ago) [Dismiss]
+- "Mark all as read" button
+- "View all notifications" link → Full notification page
+
+#### Screen: FOB Notifications (Full View)
+Clicking "View all notifications" opens dedicated page:
+- Tabs: "All", "Pending Actions", "Updates", "Mentions"
+- Filterable list of all notifications
+- Each notification has:
+  - Icon (family, playbook, sync, error, etc.)
+  - Message
+  - Timestamp
+  - Action buttons (context-specific)
+  - Dismiss button
+
+#### Screen: FOB Global Search
+Maria types "React" in search bar:
+- Live dropdown suggestions appear:
+  - **Playbooks** (2):
+    - React Frontend Development (Usability)
+    - React Testing Patterns (Archived)
+  - **Activities** (5):
+    - Setup React Project
+    - Create React Components
+    - ...
+  - **Families** (0)
+- "See all results" link → Full search results page
+
+#### Screen: FOB Search Results
+Full search page with filters:
+- **Left sidebar filters**:
+  - Type: Playbooks, Activities, Artifacts, Goals, Families
+  - Status: Active, Disabled, Archived
+  - Source: Local, Downloaded, Owned
+- **Results list** with relevance ranking
+- **Empty state**: "No results found" with suggestions
+
+---
+
+### Act 2: Building Her Network
 
 **Context**: Maria wants to organize her practice - a public family for UX community, a private one for her client work, and join existing communities.
 
@@ -145,6 +283,82 @@ Maria clicks "Join Family". Because it's set to auto-approve:
 
 ---
 
+### Act 2.5: Family Admin Workflows
+
+**Context**: As Maria's UX family grows, she receives join requests and playbook submissions to review.
+
+#### Screen: FOB Family Admin Dashboard - UX Family
+Maria navigates to **Families → UX → Admin Panel**:
+- **Overview tab**:
+  - Members: 3 (Maria + 2 auto-joins)
+  - Pending join requests: 2 (badge notification)
+  - Playbooks: 0 (none submitted yet)
+  - Activity: Recent joins, no submissions
+- **Tabs**: Overview, Members, Playbooks, Settings
+
+#### Screen: FOB Join Requests Tab
+Maria clicks **Members tab → Join Requests (2)**:
+- List of pending requests:
+  
+**Request 1**:
+  - User: Alex Thompson (alex@design.io)
+  - Requested: 2 hours ago
+  - Message: "Hi! I'm a UX researcher interested in joining your methodology community."
+  - Actions: [Approve] [Reject] [Message]
+  
+**Request 2**:
+  - User: Spam Bot (spam@bot.com)
+  - Requested: 5 minutes ago
+  - Message: "CHECK OUT MY LINKS!!!"
+  - Actions: [Approve] [Reject] [Message]
+
+#### Action: Approve Legitimate Request
+Maria reviews Alex's profile:
+- Clicks on Alex's name → sees profile summary
+- Clicks [Approve] button
+
+#### Modal: Confirm Approval
+- "Approve Alex Thompson's join request?"
+- "They will immediately get access to all family playbooks"
+- [Cancel] [Confirm]
+
+Maria confirms. Alex receives notification and is added to the family.
+
+#### Action: Reject Spam Request
+Maria clicks [Reject] on spam bot request:
+- Modal: "Reject this join request?"
+- Optional: "Reason for rejection" (sent to user)
+- Option: "Block user from future requests"
+- [Cancel] [Reject]
+
+**Result**: Maria manages her family membership actively, maintaining quality.
+
+#### Screen: FOB Playbook Submissions (Future Scenario)
+When someone submits a playbook to Maria's family:
+- **Playbooks tab → Pending Submissions (1)**:
+  - Playbook: "Information Architecture Patterns" by Tom
+  - Submitted: 1 day ago
+  - Description, preview structure
+  - Actions: [Preview Full] [Approve] [Request Changes] [Reject]
+
+#### Action: Review Playbook Submission
+Maria clicks [Preview Full]:
+- Modal opens showing complete playbook structure
+- Activities, Artifacts, Goals all visible
+- Maria can navigate the playbook
+- Bottom actions: [Approve] [Request Changes] [Reject]
+
+Maria clicks [Approve]:
+- Confirmation modal: "Approve 'Information Architecture Patterns'?"
+- "This playbook will be available to all UX family members"
+- [Cancel] [Confirm]
+
+Approved. Tom receives notification, playbook activates in family.
+
+**Result**: Family head admins have full control over membership and content quality through custom FOB screens.
+
+---
+
 ### Act 3: First Sync - Discovering Mike's Playbook
 
 **Context**: Maria wants to download Mike's React playbook to use in her current project. She says in her Windsurf: "Open FOB Command Center." System opens local Django web app with GUI for the local FOB.
@@ -175,6 +389,79 @@ Maria clicks "Download to FOB":
 - Success message: "React Frontend Development v1.0 downloaded"
 
 **Result**: Mike's playbook is now available in Maria's FOB for offline use.
+
+---
+
+### Act 3.5: Exploring Playbook Details
+
+**Context**: Maria wants to explore the React playbook structure in detail before using it.
+
+#### Screen: FOB Playbook Detail - Overview
+Maria clicks on "React Frontend Development" playbook card:
+- **Header**:
+  - Playbook name and description
+  - Version: v1.0
+  - Author: Mike Chen (Usability family)
+  - Status: Active
+  - Actions: [Activate] [Disable] [Export] [...More]
+- **Tabs**: Overview, Activities, Artifacts, Goals, History, Settings
+- **Overview tab** shows:
+  - Quick stats: 3 Activities, 3 Artifacts, 2 Goals
+  - Workflow diagram (visual graph)
+  - Recent activity timeline
+  - Connected work items (0)
+
+#### Screen: FOB Playbook Detail - Activities Tab
+Maria clicks **Activities tab**:
+- List of all activities in sequence:
+  1. ✓ Setup Project (Completed in MIMR-47)
+  2. Create Components → (Next step)
+  3. Implement State Management → (Blocked by #2)
+- Each activity card shows:
+  - Name and description
+  - Upstream/downstream dependencies
+  - Status indicators
+  - [View Details] button
+
+#### Screen: FOB Activity Detail Modal
+Maria clicks [View Details] on "Create Components":
+- Modal opens showing full activity information:
+  - **Description**: Detailed steps for component creation
+  - **Checklist**: 
+    - [ ] Set up component folder structure
+    - [ ] Create base component templates
+    - [ ] Add prop validation
+    - [ ] Write component tests
+  - **Upstream**: Setup Project
+  - **Downstream**: Implement State Management
+  - **Artifacts**: Component Library (linked)
+  - **Related work items**: (empty)
+  - Actions: [Create Work Item] [Close]
+
+#### Screen: FOB Playbook Detail - History Tab
+Maria clicks **History tab**:
+- Version history timeline:
+  - **v1.0** (current) - 2 weeks ago by Mike Chen
+    - Initial release
+    - 3 activities, 3 artifacts, 2 goals
+  - **v0.9** (draft) - 3 weeks ago by Mike Chen
+    - Pre-release testing
+- Each version shows:
+  - [View This Version] button
+  - [Compare with Current] button
+
+#### Screen: FOB Version Comparison
+Maria clicks [Compare with Current] on v0.9:
+- Split view showing differences:
+  - Left: v0.9
+  - Right: v1.0 (current)
+  - Highlighting:
+    - Added items (green)
+    - Removed items (red)
+    - Modified items (yellow)
+  - Diff viewer for activity descriptions
+
+**Result**: Maria has complete visibility into playbook structure, can drill into any element, and track version changes.
 
 ---
 
@@ -803,22 +1090,223 @@ If Maria were to deactivate the family (she didn't, but the feature exists):
 
 ---
 
+### Act 8: Settings & Preferences
+
+**Context**: Maria needs to configure her FOB and account settings.
+
+#### Screen: FOB Settings - Main
+Maria clicks **Settings** in navigation menu:
+- **Sidebar navigation**:
+  - Account
+  - Sync & Connection
+  - Storage
+  - MCP Configuration
+  - Notifications
+  - Privacy
+  - Advanced
+- **Account section** (default):
+  - Profile information
+  - Email: maria@uxconsulting.com
+  - Full name: Maria Rodriguez
+  - [Change Password] button
+  - [Two-Factor Authentication] toggle
+  - [Delete Account] (danger zone)
+
+#### Screen: FOB Settings - Sync & Connection
+Maria clicks **Sync & Connection**:
+- **Homebase Connection**:
+  - Status: ✓ Connected to homebase.mimir.io
+  - Last sync: 5 minutes ago
+  - [Test Connection] button
+  - [Disconnect] button
+- **Sync Preferences**:
+  - Auto-sync: [On/Off] toggle
+  - Sync frequency: Dropdown (Manual, Every 15min, Hourly, Daily)
+  - Sync on startup: [On/Off]
+  - Notification for available updates: [On/Off]
+- **Conflict Resolution**:
+  - Default action: Dropdown (Ask me, Prefer remote, Prefer local)
+
+#### Screen: FOB Settings - Storage
+Maria clicks **Storage**:
+- **Local Database**:
+  - Location: /Users/maria/.mimir/data
+  - Size: 2.3 GB (4 playbooks, 127 activities)
+  - [Change Location] button
+- **Cache**:
+  - Cache size: 142 MB
+  - [Clear Cache] button
+- **Cleanup**:
+  - Orphaned artifacts: 0
+  - Old versions: 12 (keeping latest 5 per playbook)
+  - [Run Cleanup] button
+
+#### Screen: FOB Settings - MCP Configuration
+Maria clicks **MCP Configuration**:
+- **MCP Server Status**: ✓ Running on port 5000
+- **Windsurf Integration**:
+  - Connection string: `localhost:5000`
+  - API key: `mcp_***********` [Show] [Regenerate]
+  - [Test MCP Connection] button
+- **MCP Features**:
+  - Enable playbook context: [On/Off]
+  - Enable PIP suggestions: [On/Off]
+  - Enable work item integration: [On/Off]
+- **Restart MCP Server** button
+
+#### Screen: FOB Settings - Notifications
+Maria clicks **Notifications**:
+- **Notification Preferences**:
+  - Family join requests: [On/Off]
+  - Playbook updates available: [On/Off]
+  - PIP submissions: [On/Off]
+  - Sync conflicts: [On/Off]
+  - System errors: [On/Off] (cannot be disabled)
+- **Notification Method**:
+  - In-app notifications: [On/Off]
+  - Browser notifications: [On/Off]
+  - Email notifications: [On/Off]
+- **Quiet Hours**:
+  - Enable: [On/Off]
+  - From: 22:00
+  - To: 08:00
+
+**Result**: Maria has full control over FOB behavior and preferences.
+
+---
+
+### Act 9: Error Recovery & Edge Cases
+
+**Context**: Maria encounters various error scenarios and learns how to recover.
+
+#### Error Scenario 1: Sync Failure
+
+##### Screen: FOB Sync Dashboard - Error
+Maria clicks "Sync with Homebase" but network is down:
+- Error banner appears: ⚠️ "Sync failed: Cannot connect to Homebase"
+- **Error Details** dropdown:
+  - Error type: Network error
+  - Homebase URL: https://homebase.mimir.io
+  - Error code: CONNECTION_TIMEOUT
+  - Timestamp: 2024-11-20 14:32:15
+- **Recovery Actions**:
+  - [Retry Sync] button
+  - [Check Connection Settings] link → Settings
+  - [Work Offline] button
+  - [View Error Log] link
+
+##### Action: Work Offline
+Maria clicks [Work Offline]:
+- Modal: "Working offline - limited functionality"
+- "You can continue using local playbooks and MCP features"
+- "Sync operations, downloads, and uploads are disabled until connection is restored"
+- "FOB will automatically attempt reconnection"
+- [Continue Offline] [Cancel]
+
+**Result**: Maria continues working with local playbooks while offline.
+
+#### Error Scenario 2: Permission Denied
+
+##### Screen: FOB Playbook Editor - Permission Error
+Maria tries to edit Mike's React playbook:
+- Error modal: 🚫 "Permission Denied"
+- "You don't have permission to edit this playbook"
+- **Reason**: "This playbook is owned by Mike Chen (Usability family)"
+- **Options**:
+  - "You can create a local copy and modify it"
+  - "Submit a PIP to suggest changes"
+- **Actions**:
+  - [Create Local Copy] button
+  - [Submit PIP] button
+  - [Cancel]
+
+Maria clicks [Submit PIP] which opens PIP creation flow.
+
+**Result**: Clear error messaging with actionable recovery paths.
+
+#### Error Scenario 3: Upload Failed
+
+##### Screen: FOB Upload to Homebase - Failed
+Maria tries to upload a large playbook but it fails:
+- Error toast notification: "Upload failed: File size exceeds limit"
+- **Error Details**:
+  - Playbook: "UX Comprehensive Guide"
+  - Size: 125 MB (limit: 100 MB)
+  - Reason: Embedded images too large
+- **Recovery Actions**:
+  - [Compress Images] button (auto-optimize)
+  - [Remove Large Artifacts] button (review what to remove)
+  - [Split into Multiple Playbooks] suggestion
+  - [Contact Support] link
+
+**Result**: Helpful error messages with clear resolution paths.
+
+#### Error Scenario 4: Corrupted Playbook
+
+##### Screen: FOB Dashboard - Playbook Error
+A playbook shows error icon:
+- Warning badge: ⚠️ on "Old Frontend Patterns" playbook card
+- Click reveals: "Data corruption detected"
+- **Details**:
+  - Corrupted activities: 2 of 8
+  - Last successful load: 3 days ago
+  - Cause: Unknown (possibly interrupted sync)
+- **Recovery Actions**:
+  - [Restore from Homebase] button (if available)
+  - [Restore from Local Backup] button
+  - [Delete Corrupted Data] button
+  - [Export Salvageable Content] button
+
+**Result**: Maria can recover from data corruption scenarios.
+
+#### Empty State Scenarios
+
+##### Screen: FOB Dashboard - No Playbooks
+When Maria first starts (empty state):
+- Illustration: Empty box graphic
+- Heading: "No playbooks yet"
+- Subtext: "Get started by creating a playbook, downloading from Homebase, or importing from a file"
+- **Actions**:
+  - [Create Your First Playbook] button (primary)
+  - [Browse Families] button
+  - [Import from File] button
+  - [Watch Tutorial] link
+
+##### Screen: FOB Family Browser - No Results
+Maria searches for non-existent family:
+- Illustration: Magnifying glass
+- Heading: "No families found matching 'blockchain'"
+- Subtext: "Try adjusting your search or browse all families"
+- **Suggestions**:
+  - Similar families: (list of related results)
+  - [Clear Filters] button
+  - [Create New Family] button
+
+**Result**: Every empty or error state provides clear guidance and next steps.
+
+---
+
 ## Journey Complete
 
 Maria's journey demonstrates the full Mimir experience:
 
+✅ **Authenticated** - Logged into both HB and FOB systems with proper authentication flows  
+✅ **Navigated** - Used persistent top nav, sidebar, notification center, and global search  
 ✅ **Onboarded** - Registered and set up FOB container with MCP integration  
 ✅ **Networked** - Created families (public and hidden) and joined existing communities  
-✅ **Discovered** - Found and downloaded community playbooks with admin approval workflow  
+✅ **Administered Families** - Reviewed join requests, approved members, managed playbook submissions through custom FOB screens  
+✅ **Discovered** - Found and downloaded community playbooks with HB Django Admin approval workflow  
+✅ **Explored** - Drilled into playbook details (activities, artifacts, goals), viewed version history, compared versions  
 ✅ **Used** - Worked with playbooks via MCP in Windsurf, created and continued work items  
-✅ **Navigated** - Used MCP to auto-open playbook details in web interface  
+✅ **Navigated Playbooks** - Used MCP to auto-open playbook details in web interface  
 ✅ **Contributed** - Created PIPs (user-initiated and AI-initiated) and shared improvements  
 ✅ **Synced** - Handled clean downloads, uploads, and conflicts with version management  
 ✅ **Created** - Built playbooks via GUI and MCP with varying visibility levels  
 ✅ **Managed Lifecycle** - Enabled, disabled, and deleted playbooks  
 ✅ **Transferred Ownership** - "Sold" playbook IP to client via authorship transfer  
 ✅ **Distributed Offline** - Exported/imported playbooks as .mpa dumps for air-gapped environments  
-✅ **Administered** - Managed family membership, handled member removal consequences, transferred admin rights  
+✅ **Configured** - Set up sync preferences, storage, MCP settings, notifications  
+✅ **Recovered from Errors** - Handled network failures, permission errors, upload failures, data corruption  
 
 Maria experienced critical scenarios:
 - **Admin approval**: Mike's playbook went through Homebase admin review before publication
