@@ -34,6 +34,37 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 
 ---
 
+## ⚠️ Critical Architectural Principle
+
+**Playbooks Are STATIC Reference Material (Like a Book)**
+
+- **Mimir playbooks** = Documentation and guidance ONLY
+  - Show activity structure, descriptions, best practices
+  - NO work item tracking, NO status indicators, NO checkmarks
+  - Think of them as reference books or documentation wiki pages
+
+- **Work item tracking** = Happens ONLY in external systems
+  - GitHub Issues, Jira Tickets, Atlassian boards
+  - Status, progress, assignments managed there
+  - Actual work execution tracked there
+
+- **AI/MCP integration** = Cross-references between the two
+  - Reads static playbook from Mimir: "Activity 1: Setup Project - install dependencies, configure environment"
+  - Reads live status from GitHub: "Issue #47: Setup React project - Status: Closed"
+  - Provides combined context: "According to the playbook, Activity 1 covers setup. GitHub shows issue #47 for this work is complete."
+
+**Example**:
+- **FOB displays**: "Activity 1: Setup Project" with description and guidance (static)
+- **GitHub displays**: "Issue #47: Setup React project structure - Closed on Nov 15" (live tracking)
+- **AI combines**: "Per the React Frontend Development playbook, you need to set up the project. GitHub issue #47 shows this work is complete."
+
+**This separation ensures**:
+- Playbooks remain reusable across projects and teams
+- Work tracking stays in familiar developer tools
+- No duplicate tracking systems
+
+---
+
 ## Journey: From Discovery to Contribution
 
 ### Act 0: System Entry & Authentication
