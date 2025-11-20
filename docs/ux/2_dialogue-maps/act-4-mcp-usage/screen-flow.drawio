@@ -271,11 +271,11 @@
   <diagram name="Act 0 - Authentication & Setup" id="act0-authentication">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
       <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
+        <mxCell id="act0-root-0" />
+        <mxCell id="act0-root-1" parent="act0-root-0" />
         
         <!-- LEGEND -->
-        <mxCell id="legend-act0" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+        <mxCell id="legend-act0" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="act0-root-1">
           <mxGeometry x="40" y="40" width="280" height="150" as="geometry" />
         </mxCell>
         <mxCell id="legend-hb" value="🟩 Green Box = HB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-act0">
@@ -295,29 +295,29 @@
         </mxCell>
         
         <!-- START NODE -->
-        <mxCell id="start-act0" value="START&#xa;Act 0: Authentication" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="start-act0" value="START&#xa;Act 0: Authentication" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="act0-root-1">
           <mxGeometry x="480" y="60" width="200" height="80" as="geometry" />
         </mxCell>
         
         <!-- DECISION: User Type -->
-        <mxCell id="decision-user-type" value="User Type?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="decision-user-type" value="User Type?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="act0-root-1">
           <mxGeometry x="510" y="200" width="140" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: START -> DECISION -->
-        <mxCell id="arrow-start-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="start-act0" target="decision-user-type">
+        <mxCell id="arrow-start-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="act0-root-1" source="start-act0" target="decision-user-type">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- MIKE'S FLOW (LEFT BRANCH - HB Admin) -->
         
         <!-- HB-LOGIN-1 -->
-        <mxCell id="hb-login" value="HB-LOGIN-1&#xa;&#xa;HB Login Page&#xa;&#xa;Email, password, remember me&#xa;'Sign up' link&#xa;'Login' button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-login" value="HB-LOGIN-1&#xa;&#xa;HB Login Page&#xa;&#xa;Email, password, remember me&#xa;'Sign up' link&#xa;'Login' button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="100" y="410" width="220" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: DECISION -> HB-LOGIN (Mike branch) -->
-        <mxCell id="arrow-decision-mike" value="Mike&#xa;(HB Admin)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="decision-user-type" target="hb-login">
+        <mxCell id="arrow-decision-mike" value="Mike&#xa;(HB Admin)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="act0-root-1" source="decision-user-type" target="hb-login">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="400" y="270" />
@@ -328,24 +328,24 @@
         </mxCell>
         
         <!-- HB-ADMIN-DASHBOARD-1 -->
-        <mxCell id="hb-admin-dash" value="HB-ADMIN-DASHBOARD-1&#xa;&#xa;Django Admin Dashboard&#xa;(System Admin View)&#xa;&#xa;- Users, Families, Playbooks&#xa;- Pending approvals&#xa;- System health" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-admin-dash" value="HB-ADMIN-DASHBOARD-1&#xa;&#xa;Django Admin Dashboard&#xa;(System Admin View)&#xa;&#xa;- Users, Families, Playbooks&#xa;- Pending approvals&#xa;- System health" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="100" y="610" width="220" height="160" as="geometry" />
         </mxCell>
         
         <!-- Arrow: HB-LOGIN -> HB-ADMIN-DASHBOARD -->
-        <mxCell id="arrow-login-admin" value="Login success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-login" target="hb-admin-dash">
+        <mxCell id="arrow-login-admin" value="Login success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-login" target="hb-admin-dash">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- MARIA'S FLOW (RIGHT BRANCH - FOB) -->
         
         <!-- FOB-STARTUP-1 -->
-        <mxCell id="fob-startup" value="FOB-STARTUP-1&#xa;&#xa;FOB Login/Startup&#xa;&#xa;Container initialization&#xa;- Database connection check&#xa;- MCP server status: ✓ Running&#xa;- Authentication check" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="fob-startup" value="FOB-STARTUP-1&#xa;&#xa;FOB Login/Startup&#xa;&#xa;Container initialization&#xa;- Database connection check&#xa;- MCP server status: ✓ Running&#xa;- Authentication check" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="act0-root-1">
           <mxGeometry x="800" y="410" width="240" height="160" as="geometry" />
         </mxCell>
         
         <!-- Arrow: DECISION -> FOB-STARTUP (Maria branch) -->
-        <mxCell id="arrow-decision-maria" value="Maria&#xa;(FOB User)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="decision-user-type" target="fob-startup">
+        <mxCell id="arrow-decision-maria" value="Maria&#xa;(FOB User)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="act0-root-1" source="decision-user-type" target="fob-startup">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="760" y="270" />
@@ -356,117 +356,117 @@
         </mxCell>
         
         <!-- DECISION: HB Connection -->
-        <mxCell id="decision-hb-connection" value="Connected to&#xa;Homebase?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="decision-hb-connection" value="Connected to&#xa;Homebase?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="act0-root-1">
           <mxGeometry x="840" y="630" width="160" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: FOB-STARTUP -> DECISION-CONNECTION -->
-        <mxCell id="arrow-startup-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="fob-startup" target="decision-hb-connection">
+        <mxCell id="arrow-startup-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="act0-root-1" source="fob-startup" target="decision-hb-connection">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- FOB-ERROR-CONNECTION-1 -->
-        <mxCell id="fob-error" value="FOB-ERROR-CONNECTION-1&#xa;&#xa;Connection Failed (Error Modal)&#xa;&#xa;'Cannot connect to Homebase'&#xa;&#xa;Options:&#xa;- [Retry Connection]&#xa;- [Work Offline]&#xa;- [Check Settings]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="fob-error" value="FOB-ERROR-CONNECTION-1&#xa;&#xa;Connection Failed (Error Modal)&#xa;&#xa;'Cannot connect to Homebase'&#xa;&#xa;Options:&#xa;- [Retry Connection]&#xa;- [Work Offline]&#xa;- [Check Settings]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="1100" y="640" width="220" height="180" as="geometry" />
         </mxCell>
         
         <!-- Arrow: DECISION -> ERROR (No path) -->
-        <mxCell id="arrow-no-connection" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="decision-hb-connection" target="fob-error">
+        <mxCell id="arrow-no-connection" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;dashed=1;dashPattern=8 8;" edge="1" parent="act0-root-1" source="decision-hb-connection" target="fob-error">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- FOB Dashboard (Success) -->
-        <mxCell id="fob-dashboard-success" value="FOB Dashboard&#xa;(Success - Act 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="fob-dashboard-success" value="FOB Dashboard&#xa;(Success - Act 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="act0-root-1">
           <mxGeometry x="840" y="850" width="160" height="80" as="geometry" />
         </mxCell>
         
         <!-- Arrow: DECISION -> DASHBOARD (Yes path) -->
-        <mxCell id="arrow-yes-connection" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="decision-hb-connection" target="fob-dashboard-success">
+        <mxCell id="arrow-yes-connection" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="act0-root-1" source="decision-hb-connection" target="fob-dashboard-success">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- ACT 0.1 DIVIDER -->
-        <mxCell id="divider-01" value="ACT 0.1: Mike Creates Playbook" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" vertex="1" parent="1">
+        <mxCell id="divider-01" value="ACT 0.1: Mike Creates Playbook" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" vertex="1" parent="act0-root-1">
           <mxGeometry x="40" y="840" width="300" height="40" as="geometry" />
         </mxCell>
         
         <!-- HB-ADMIN-DASHBOARD-2 -->
-        <mxCell id="hb-admin-dash2" value="HB-ADMIN-DASHBOARD-2&#xa;&#xa;HB Admin Dashboard&#xa;&#xa;Mike sees playbook management&#xa;[Create New Playbook] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-admin-dash2" value="HB-ADMIN-DASHBOARD-2&#xa;&#xa;HB Admin Dashboard&#xa;&#xa;Mike sees playbook management&#xa;[Create New Playbook] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="100" y="920" width="220" height="120" as="geometry" />
         </mxCell>
         
         <!-- Arrow: HB-ADMIN-DASHBOARD-1 -> HB-ADMIN-DASHBOARD-2 -->
-        <mxCell id="arrow-admin-to-admin2" value="Mike's action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-admin-dash" target="hb-admin-dash2">
+        <mxCell id="arrow-admin-to-admin2" value="Mike's action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-admin-dash" target="hb-admin-dash2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-PLAYBOOK-CREATE-1 -->
-        <mxCell id="hb-create" value="HB-PLAYBOOK-CREATE-1&#xa;&#xa;Create Playbook Wizard&#xa;&#xa;Name: 'React Frontend Development'&#xa;Description: 'Component architecture...'&#xa;Category: Development" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-create" value="HB-PLAYBOOK-CREATE-1&#xa;&#xa;Create Playbook Wizard&#xa;&#xa;Name: 'React Frontend Development'&#xa;Description: 'Component architecture...'&#xa;Category: Development" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="100" y="1100" width="220" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: DASHBOARD-2 -> CREATE -->
-        <mxCell id="arrow-dash2-create" value="Clicks&#xa;'Create New'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-admin-dash2" target="hb-create">
+        <mxCell id="arrow-dash2-create" value="Clicks&#xa;'Create New'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-admin-dash2" target="hb-create">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-PLAYBOOK-EDITOR-1 -->
-        <mxCell id="hb-editor" value="HB-PLAYBOOK-EDITOR-1&#xa;&#xa;Playbook Editor&#xa;&#xa;Mike structures playbook:&#xa;- Activity: 'Setup Project'&#xa;- Activity: 'Create Components'&#xa;- Artifact: 'Component Library'&#xa;- Links dependencies" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-editor" value="HB-PLAYBOOK-EDITOR-1&#xa;&#xa;Playbook Editor&#xa;&#xa;Mike structures playbook:&#xa;- Activity: 'Setup Project'&#xa;- Activity: 'Create Components'&#xa;- Artifact: 'Component Library'&#xa;- Links dependencies" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="100" y="1300" width="220" height="180" as="geometry" />
         </mxCell>
         
         <!-- Arrow: CREATE -> EDITOR -->
-        <mxCell id="arrow-create-editor" value="Next" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-create" target="hb-editor">
+        <mxCell id="arrow-create-editor" value="Next" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-create" target="hb-editor">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-PLAYBOOK-ASSIGN-1 -->
-        <mxCell id="hb-assign" value="HB-PLAYBOOK-ASSIGN-1&#xa;&#xa;Family Assignment&#xa;&#xa;Family: 'Usability'&#xa;Visibility: 'Public'&#xa;[Publish] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-assign" value="HB-PLAYBOOK-ASSIGN-1&#xa;&#xa;Family Assignment&#xa;&#xa;Family: 'Usability'&#xa;Visibility: 'Public'&#xa;[Publish] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="400" y="1320" width="220" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: EDITOR -> ASSIGN -->
-        <mxCell id="arrow-editor-assign" value="Assign&#xa;to family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-editor" target="hb-assign">
+        <mxCell id="arrow-editor-assign" value="Assign&#xa;to family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-editor" target="hb-assign">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-PLAYBOOK-PENDING-1 -->
-        <mxCell id="hb-pending" value="HB-PLAYBOOK-PENDING-1&#xa;&#xa;Pending Approval&#xa;&#xa;Status: 'Pending Admin Approval'&#xa;Message: 'Submitted for review'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-pending" value="HB-PLAYBOOK-PENDING-1&#xa;&#xa;Pending Approval&#xa;&#xa;Status: 'Pending Admin Approval'&#xa;Message: 'Submitted for review'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="680" y="1330" width="220" height="120" as="geometry" />
         </mxCell>
         
         <!-- Arrow: ASSIGN -> PENDING -->
-        <mxCell id="arrow-assign-pending" value="Publish" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-assign" target="hb-pending">
+        <mxCell id="arrow-assign-pending" value="Publish" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-assign" target="hb-pending">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-ADMIN-APPROVAL-1 -->
-        <mxCell id="hb-approval" value="HB-ADMIN-APPROVAL-1&#xa;&#xa;Django Admin: Playbook Approval&#xa;(Sarah - System Administrator)&#xa;&#xa;Views in Django Admin:&#xa;- Playbook structure&#xa;- Author: Mike Chen&#xa;- Actions: Approve/Reject" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-approval" value="HB-ADMIN-APPROVAL-1&#xa;&#xa;Django Admin: Playbook Approval&#xa;(Sarah - System Administrator)&#xa;&#xa;Views in Django Admin:&#xa;- Playbook structure&#xa;- Author: Mike Chen&#xa;- Actions: Approve/Reject" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="680" y="1520" width="220" height="180" as="geometry" />
         </mxCell>
         
         <!-- Arrow: PENDING -> APPROVAL -->
-        <mxCell id="arrow-pending-approval" value="System admin&#xa;receives notification" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" edge="1" parent="1" source="hb-pending" target="hb-approval">
+        <mxCell id="arrow-pending-approval" value="System admin&#xa;receives notification" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" edge="1" parent="act0-root-1" source="hb-pending" target="hb-approval">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- HB-PLAYBOOK-ACTIVATED-1 -->
-        <mxCell id="hb-activated" value="HB-PLAYBOOK-ACTIVATED-1&#xa;&#xa;Playbook Activated&#xa;&#xa;Mike receives notification:&#xa;'Your playbook has been approved'&#xa;Status: 'Active in Usability family'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+        <mxCell id="hb-activated" value="HB-PLAYBOOK-ACTIVATED-1&#xa;&#xa;Playbook Activated&#xa;&#xa;Mike receives notification:&#xa;'Your playbook has been approved'&#xa;Status: 'Active in Usability family'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="act0-root-1">
           <mxGeometry x="400" y="1560" width="220" height="140" as="geometry" />
         </mxCell>
         
         <!-- Arrow: APPROVAL -> ACTIVATED -->
-        <mxCell id="arrow-approval-activated" value="Approves" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="hb-approval" target="hb-activated">
+        <mxCell id="arrow-approval-activated" value="Approves" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="act0-root-1" source="hb-approval" target="hb-activated">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
         <!-- END NODE -->
-        <mxCell id="end-act0" value="END&#xa;Act 0 Complete&#xa;&#xa;Playbook available&#xa;to Usability family" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="end-act0" value="END&#xa;Act 0 Complete&#xa;&#xa;Playbook available&#xa;to Usability family" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" vertex="1" parent="act0-root-1">
           <mxGeometry x="420" y="1760" width="180" height="100" as="geometry" />
         </mxCell>
         
         <!-- Arrow: ACTIVATED -> END -->
-        <mxCell id="arrow-activated-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hb-activated" target="end-act0">
+        <mxCell id="arrow-activated-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="act0-root-1" source="hb-activated" target="end-act0">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         
