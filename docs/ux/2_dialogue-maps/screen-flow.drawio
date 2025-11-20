@@ -1,0 +1,416 @@
+<mxfile host="65bd71144e">
+    <diagram name="Act 0 - Authentication and Setup" id="act0-authentication">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="act0-root-0"/>
+                <mxCell id="act0-root-1" parent="act0-root-0"/>
+                <mxCell id="legend-act0" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-hb" value="🟩 Green Box = HB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act0" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act0" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-admin" value="🟨 Yellow Box = HB Django Admin" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act0" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-error" value="🔴 Red Box = Error State" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act0" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act0" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act0" vertex="1">
+                    <mxGeometry y="130" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act0" value="START&#10;Act 0: Authentication" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="decision-user-type" value="User Type?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="510" y="200" width="140" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act0-root-1" source="start-act0" target="decision-user-type" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-login" value="HB-LOGIN-1&#10;&#10;HB Login Page&#10;&#10;Email, password, remember me&#10;'Sign up' link&#10;'Login' button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="100" y="410" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-decision-mike" value="Mike&#10;(HB Admin)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="act0-root-1" source="decision-user-type" target="hb-login" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="270"/>
+                            <mxPoint x="400" y="380"/>
+                            <mxPoint x="210" y="380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="hb-admin-dash" value="HB-ADMIN-DASHBOARD-1&#10;&#10;Django Admin Dashboard&#10;(System Admin View)&#10;&#10;- Users, Families, Playbooks&#10;- Pending approvals&#10;- System health" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="100" y="610" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-login-admin" value="Login success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-login" target="hb-admin-dash" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-startup" value="FOB-STARTUP-1&#10;&#10;FOB Login/Startup&#10;&#10;Container initialization&#10;- Database connection check&#10;- MCP server status: ✓ Running&#10;- Authentication check" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="800" y="410" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-decision-maria" value="Maria&#10;(FOB User)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="act0-root-1" source="decision-user-type" target="fob-startup" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="760" y="270"/>
+                            <mxPoint x="760" y="380"/>
+                            <mxPoint x="920" y="380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="decision-hb-connection" value="Connected to&#10;Homebase?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="840" y="630" width="160" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-startup-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act0-root-1" source="fob-startup" target="decision-hb-connection" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-error" value="FOB-ERROR-CONNECTION-1&#10;&#10;Connection Failed (Error Modal)&#10;&#10;'Cannot connect to Homebase'&#10;&#10;Options:&#10;- [Retry Connection]&#10;- [Work Offline]&#10;- [Check Settings]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="1100" y="640" width="220" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-no-connection" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;dashed=1;dashPattern=8 8;" parent="act0-root-1" source="decision-hb-connection" target="fob-error" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-dashboard-success" value="FOB Dashboard&#10;(Success - Act 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="840" y="850" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-yes-connection" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="act0-root-1" source="decision-hb-connection" target="fob-dashboard-success" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="divider-01" value="ACT 0.1: Mike Creates Playbook" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="40" y="840" width="300" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-admin-dash2" value="HB-ADMIN-DASHBOARD-2&#10;&#10;HB Admin Dashboard&#10;&#10;Mike sees playbook management&#10;[Create New Playbook] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="100" y="920" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-admin-to-admin2" value="Mike's action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-admin-dash" target="hb-admin-dash2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-create" value="HB-PLAYBOOK-CREATE-1&#10;&#10;Create Playbook Wizard&#10;&#10;Name: 'React Frontend Development'&#10;Description: 'Component architecture...'&#10;Category: Development" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="100" y="1100" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-dash2-create" value="Clicks&#10;'Create New'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-admin-dash2" target="hb-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-editor" value="HB-PLAYBOOK-EDITOR-1&#10;&#10;Playbook Editor&#10;&#10;Mike structures playbook:&#10;- Activity: 'Setup Project'&#10;- Activity: 'Create Components'&#10;- Artifact: 'Component Library'&#10;- Links dependencies" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="100" y="1300" width="220" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-create-editor" value="Next" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-create" target="hb-editor" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-assign" value="HB-PLAYBOOK-ASSIGN-1&#10;&#10;Family Assignment&#10;&#10;Family: 'Usability'&#10;Visibility: 'Public'&#10;[Publish] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="400" y="1320" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-editor-assign" value="Assign&#10;to family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-editor" target="hb-assign" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-pending" value="HB-PLAYBOOK-PENDING-1&#10;&#10;Pending Approval&#10;&#10;Status: 'Pending Admin Approval'&#10;Message: 'Submitted for review'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="680" y="1330" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-assign-pending" value="Publish" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-assign" target="hb-pending" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-approval" value="HB-ADMIN-APPROVAL-1&#10;&#10;Django Admin: Playbook Approval&#10;(Sarah - System Administrator)&#10;&#10;Views in Django Admin:&#10;- Playbook structure&#10;- Author: Mike Chen&#10;- Actions: Approve/Reject" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="680" y="1520" width="220" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-pending-approval" value="System admin&#10;receives notification" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" parent="act0-root-1" source="hb-pending" target="hb-approval" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-activated" value="HB-PLAYBOOK-ACTIVATED-1&#10;&#10;Playbook Activated&#10;&#10;Mike receives notification:&#10;'Your playbook has been approved'&#10;Status: 'Active in Usability family'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="400" y="1560" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-approval-activated" value="Approves" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-approval" target="hb-activated" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end-act0" value="END&#10;Act 0 Complete&#10;&#10;Playbook available&#10;to Usability family" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act0-root-1" vertex="1">
+                    <mxGeometry x="420" y="1760" width="180" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-activated-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act0-root-1" source="hb-activated" target="end-act0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Act 4 - MCP Usage Flow" id="act4-mcp-usage">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="legend-container" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-ui" value="🟩 Green Box = FOB/HB UI Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-mcp" value="⬜ Grey Box = MCP Tool Call" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-chat" value="🔵 Blue Box = Windsurf Interface" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-ext" value="⬜ Grey Dotted = External MCP" style="text;strokeColor=#808080;strokeWidth=2;dashed=1;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;dashPattern=8 8;" parent="legend-container" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary" value="➡️ Bold Arrow = Primary User Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="130" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-mcp-flow" value="⤏ Grey Dashed = MCP Internal Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="156" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-trigger" value="→ Solid Grey = UI ↔ MCP Trigger" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-container" vertex="1">
+                    <mxGeometry y="182" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-node" value="START&#10;Act 4: MCP Usage" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="60" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-activate" value="FOB-PLAYBOOK-ACTIVATE-1&#10;&#10;FOB Playbook Activation&#10;&#10;User clicks 'Activate Playbook'&#10;on 'React Frontend Development'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=12;align=center;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="200" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-activate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="start-node" target="fob-activate" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-1" value="WINDSURF-CHAT-1&#10;&#10;Windsurf MCP Chat&#10;&#10;User: 'I'm starting a new React&#10;project. How do I set up&#10;the project structure?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="380" width="240" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-activate-chat1" value="Playbook activated" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="1" source="fob-activate" target="windsurf-chat-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-context" value="MCP-GET-CONTEXT-1&#10;&#10;@tool get_playbook_context&#10;&#10;Input: playbook_id='react-frontend-dev'&#10;Output: Playbook structure,&#10;        activities, artifacts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="390" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat1-mcp" value="User question&#10;triggers MCP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-1" target="mcp-context" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-1b" value="WINDSURF-CHAT-1 (Response)&#10;&#10;AI displays guidance:&#10;'Based on React Frontend Dev playbook,&#10;Activity 1: Setup Project...&#10;1. Initialize with Vite&#10;2. Set up folder structure&#10;Would you like me to create a&#10;GitHub issue?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="590" width="240" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-mcp-response" value="MCP returns&#10;context" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="mcp-context" target="windsurf-chat-1b" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="480"/>
+                            <mxPoint x="660" y="680"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="windsurf-chat-2" value="WINDSURF-CHAT-2&#10;&#10;Windsurf MCP Chat&#10;&#10;User: 'Yes, create a&#10;GitHub issue for project setup'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="840" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat1b-chat2" value="User responds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="1" source="windsurf-chat-1b" target="windsurf-chat-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext-mcp-github-create" value="EXT-MCP-GITHUB-CREATE-1&#10;&#10;GitHub MCP create_issue()&#10;&#10;Creates issue #47:&#10;'Setup React project structure&#10;per React Frontend Dev playbook'&#10;&#10;Labels: setup, react, playbook&#10;Repo: maria/acme-dashboard" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#808080;strokeWidth=2;dashed=1;dashPattern=8 8;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="830" width="300" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat2-github" value="External MCP&#10;triggered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-2" target="ext-mcp-github-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-2b" value="WINDSURF-CHAT-2 (Response)&#10;&#10;AI displays:&#10;'✓ Created GitHub issue #47&#10;maria/acme-dashboard/issues/47&#10;&#10;Link: https://github.com/...'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="1040" width="240" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-github-response" value="Issue created" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="ext-mcp-github-create" target="windsurf-chat-2b" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="935"/>
+                            <mxPoint x="660" y="1110"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="windsurf-chat-3" value="WINDSURF-CHAT-3&#10;&#10;Windsurf MCP Chat&#10;&#10;User: 'Let's pick up MIMR-47.&#10;What do we do next?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="1260" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat2b-chat3" value="Later..." style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="1" source="windsurf-chat-2b" target="windsurf-chat-3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext-mcp-github-query" value="EXT-MCP-GITHUB-QUERY-1&#10;&#10;GitHub MCP get_issue(#47)&#10;&#10;Status: Complete" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#808080;strokeWidth=2;dashed=1;dashPattern=8 8;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="1200" width="240" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-get-activity" value="MCP-GET-ACTIVITY-1&#10;&#10;@tool get_activity_details&#10;&#10;Input: activity_id='create-components'&#10;Output: Next activity guidance" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="1310" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat3-github" value="Query issue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-3" target="ext-mcp-github-query" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat3-activity" value="Get next&#10;activity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-3" target="mcp-get-activity" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-github-to-activity" value="Context&#10;sharing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#808080;dashed=1;dashPattern=4 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="ext-mcp-github-query" target="mcp-get-activity" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-3b" value="WINDSURF-CHAT-3 (Response)&#10;&#10;AI displays:&#10;'MIMR-47: ✓ Complete&#10;&#10;Next: Activity 2: Create Components&#10;&#10;Options:&#10;1. Show full activity details&#10;2. Create new issue&#10;3. Open playbook in web interface'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="1470" width="240" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-activity-response" value="Response" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="mcp-get-activity" target="windsurf-chat-3b" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="1385"/>
+                            <mxPoint x="660" y="1570"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="mcp-open-browser" value="MCP-OPEN-BROWSER-1&#10;&#10;@tool open_playbook_browser&#10;&#10;Opens browser to:&#10;http://localhost:8000/playbooks/&#10;react-frontend-dev/workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="1540" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-playbook-detail" value="FOB-PLAYBOOK-DETAIL-1&#10;&#10;FOB Playbook Detail&#10;(Auto-Opened in Browser)&#10;&#10;Shows STATIC playbook structure:&#10;- Activity 1: Setup Project&#10;- Activity 2: Create Components&#10;- Activity 3: State Management&#10;&#10;(No tracking - just reference)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="1710" width="220" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-option3" value="User selects&#10;option 3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-3b" target="mcp-open-browser" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-browser-open" value="Browser&#10;opens" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="mcp-open-browser" target="fob-playbook-detail" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-4" value="WINDSURF-CHAT-4&#10;&#10;Windsurf MCP Chat&#10;&#10;AI observes work patterns:&#10;'I notice you're creating modals&#10;but the playbook doesn't mention&#10;accessibility... Should we add:&#10;- Focus trap for modals&#10;- Keyboard navigation&#10;- ARIA checklist?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="1740" width="240" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat3b-chat4" value="After work&#10;on components" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-3b" target="windsurf-chat-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-suggest-pip" value="MCP-SUGGEST-PIP-1&#10;&#10;@tool suggest_pip&#10;&#10;Analyzes:&#10;- User work patterns&#10;- Playbook gaps&#10;- Best practices&#10;&#10;Generates PIP suggestion" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="1760" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat4-suggest" value="AI analyzes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-4" target="mcp-suggest-pip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-5" value="WINDSURF-CHAT-5&#10;&#10;Windsurf MCP Chat&#10;&#10;User: 'Yes, great idea!&#10;Submit the PIP'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="1990" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat4-chat5" value="User approves" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-4" target="windsurf-chat-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-create-pip" value="MCP-CREATE-PIP-1&#10;&#10;@tool create_pip&#10;&#10;Creates PIP in local FOB:&#10;'Add Accessibility Guidelines&#10;to Component Creation'&#10;Status: Draft" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="1990" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat5-create" value="Create PIP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="windsurf-chat-5" target="mcp-create-pip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-suggest-create" value="PIP data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#808080;dashed=1;dashPattern=4 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="mcp-suggest-pip" target="mcp-create-pip" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="830" y="1950"/>
+                            <mxPoint x="830" y="1950"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-pip-notify" value="FOB-PIP-NOTIFY-1&#10;&#10;FOB PIP Notification&#10;&#10;Toast appears:&#10;'AI submitted PIP:&#10;Add Accessibility Guidelines&#10;Status: Draft (local only)&#10;[View PIP]'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="2180" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-create-notify" value="Notification&#10;triggered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="1" source="mcp-create-pip" target="fob-pip-notify" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="2080"/>
+                            <mxPoint x="660" y="2260"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="end-node-final" value="END&#10;Act 4 Complete" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="2420" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-notify-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="fob-pip-notify" target="end-node-final" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram name="Act 1 - Onboarding" id="act1-onboarding">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+            <root>
+                <mxCell id="act1-root-0"/>
+                <mxCell id="act1-root-1" parent="act1-root-0"/>
+                <mxCell id="legend-act1" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-hb-act1" value="🟩 Green Box = HB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act1" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-act1" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act1" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-decision-act1" value="🟨 Yellow Diamond = Decision" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act1" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act1" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act1" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act1" value="START&#10;Act 1: Maria's Onboarding" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-register" value="HB-REGISTER-1&#10;&#10;HB Registration Page&#10;&#10;Email: maria@uxconsulting.com&#10;Password: (secure)&#10;Full Name: Maria Rodriguez&#10;[Register] button" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="200" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-register" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act1-root-1" source="start-act1" target="hb-register" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-email-verify" value="HB-EMAIL-VERIFY-1&#10;&#10;Email Verification&#10;&#10;Maria receives email&#10;Clicks confirmation link&#10;Redirected to HB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="420" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-register-verify" value="Clicks Register" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act1-root-1" source="hb-register" target="hb-email-verify" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="hb-token-success" value="HB-TOKEN-SUCCESS-1&#10;&#10;Registration Success - Token&#10;&#10;Token: mimir_a8f3d9e2b1c4...&#10;HB URL: https://homebase.mimir.io&#10;&#10;[Copy] [Download Guide]&#10;[Regenerate Token]&#10;[Continue to FOB Setup]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="620" width="260" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-verify-token" value="Email confirmed" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act1-root-1" source="hb-email-verify" target="hb-token-success" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-connect-hb" value="FOB-CONNECT-HB-1&#10;&#10;FOB First Launch - HB Connection&#10;&#10;HB URL: [https://homebase.mimir.io]&#10;Token: [paste here]&#10;[Test Connection]&#10;&#10;Or: [Skip - Work Locally]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="880" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-token-fob" value="Download FOB&#10;container, configure" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act1-root-1" source="hb-token-success" target="fob-connect-hb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="decision-skip" value="Skip or&#10;Connect?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="500" y="1120" width="160" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-fob-decision" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act1-root-1" source="fob-connect-hb" target="decision-skip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-dashboard-local" value="FOB-DASHBOARD-1&#10;&#10;FOB Dashboard&#10;(Local-Only Mode)&#10;&#10;⊝ Local FOB&#10;Sync disabled" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="820" y="1120" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-skip-local" value="Skip" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;" parent="act1-root-1" source="decision-skip" target="fob-dashboard-local" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-sync-prefs" value="FOB-SYNC-PREFS-1&#10;&#10;FOB Sync Preferences&#10;&#10;Auto-sync: [On/Off]&#10;Frequency: [Manual/15min/Hourly]&#10;Sync on startup: [On/Off]&#10;Conflict resolution: [Ask me]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="1320" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-connect-sync" value="Connect&#10;(token verified)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act1-root-1" source="decision-skip" target="fob-sync-prefs" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-mcp-config" value="FOB-MCP-CONFIG-1&#10;&#10;External MCP Configuration&#10;(Guide/Info Screen)&#10;&#10;Configure in Windsurf:&#10;- GitHub MCP&#10;- Jira MCP (optional)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="120" y="1370" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-sync-mcp" value="Configure&#10;external MCPs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act1-root-1" source="fob-sync-prefs" target="fob-mcp-config" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-dashboard-connected" value="FOB-DASHBOARD-1&#10;&#10;FOB Dashboard&#10;(Connected Mode)&#10;&#10;✓ Connected to Homebase&#10;Sync enabled" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="450" y="1560" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-sync-dashboard" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act1-root-1" source="fob-sync-prefs" target="fob-dashboard-connected" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-mcp-dashboard" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act1-root-1" source="fob-mcp-config" target="fob-dashboard-connected" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="1665"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="end-act1" value="END&#10;Act 1 Complete&#10;&#10;Maria ready to use FOB" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act1-root-1" vertex="1">
+                    <mxGeometry x="490" y="1760" width="180" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-dashboard-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act1-root-1" source="fob-dashboard-connected" target="end-act1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-local-end" value="Can add HB&#10;connection later&#10;in Settings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act1-root-1" source="fob-dashboard-local" target="end-act1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="920" y="1810"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
