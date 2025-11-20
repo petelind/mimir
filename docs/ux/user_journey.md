@@ -22,6 +22,11 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 - **FOB Web GUI**: Custom Django application with full UI for playbook and family management
 - **Mimir MCP Server**: Provides playbook context, guidance, and PIP suggestions to AI assistants in Windsurf
 - **FOB Database**: Local PostgreSQL with playbook graph storage
+- **HB Connection**: Optional token-based authentication to sync with Homebase
+  - Can operate standalone (local-only) or connected to one HB
+  - Django DRF token issued upon HB registration
+  - Token can be added, changed, or removed in FOB Settings
+  - **Limitation**: Only one Homebase connection supported per FOB
 
 **External Integrations**:
 - **Work Item Management**: Handled by external 3rd party MCP servers (GitHub MCP, Jira MCP, GitLab MCP, etc.)
@@ -35,13 +40,15 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 
 **Context**: Users need to access the system. FOB and HB have separate authentication flows.
 
+**Background**: Mike previously registered on Homebase and received his Django DRF authentication token (`mimir_x7k9m2...`). As a system administrator, he primarily works through the Django Admin interface on HB and doesn't need a FOB instance.
+
 #### Screen: HB Login Page
 Mike navigates to Homebase login at `https://homebase.mimir.io/login`:
 - Email field
 - Password field
 - "Remember me" checkbox
 - "Forgot password?" link
-- "Sign up" link (→ Registration)
+- "Sign up" link (→ Registration, generates token upon email verification)
 - "Login" button
 
 Mike enters credentials and clicks Login.
@@ -143,8 +150,24 @@ Maria navigates to Mimir's registration page on Homebase and fills out the form:
 #### Screen: HB Email Verification
 Maria receives a verification email and clicks the confirmation link. She's redirected back to Homebase.
 
+#### Screen: HB Registration Success - Authentication Token
+After email verification, Maria sees her account details page:
+- **Congratulations!** Your Mimir account is active.
+- **Your Authentication Token** (copy button):
+  ```
+  Token: mimir_a8f3d9e2b1c4567890abcdef12345678
+  ```
+- **Important**: Save this token securely. You'll need it to connect your FOB to Homebase.
+- **Homebase URL**: `https://homebase.mimir.io`
+- Options:
+  - "Download FOB Setup Guide" (PDF with token and URL)
+  - "Regenerate Token" (invalidates old token)
+  - "Continue to FOB Setup"
+
+**Note**: This Django DRF token authenticates FOB to HB for sync operations.
+
 #### Screen: HB/FOB Setup Wizard
-After verification, Maria is guided through FOB (local workspace) setup:
+After saving her token, Maria is guided through FOB (local workspace) setup:
 - Downloads FOB container image (Docker-based Mimir container)
 - Container includes:
   - Django web application (FOB GUI)
@@ -152,13 +175,33 @@ After verification, Maria is guided through FOB (local workspace) setup:
   - Mimir MCP server (provides playbook context to AI assistants)
 - Maria configures the container in Windsurf as a dev container
 - Configures local storage volume mount
-- Connects FOB to Homebase (API authentication)
-- Sets sync preferences (manual vs. notification-based)
-- **Separately configures external MCP servers in Windsurf**:
-  - GitHub MCP for work item management
-  - (Optional: Jira MCP, GitLab MCP, etc.)
 
-**Result**: Maria now has a working FOB connected to Homebase.
+#### Screen: FOB First Launch - Homebase Connection (Optional)
+FOB starts and shows connection configuration:
+- **Connect to Homebase** (Optional)
+  - Homebase URL: [https://homebase.mimir.io]
+  - Authentication Token: [paste token here]
+  - "Test Connection" button
+- **Or skip this step**:
+  - "Skip - Work Locally" button
+  - Note: "You can always add Homebase connection later in Settings. Without HB connection, you won't be able to sync playbooks from families."
+
+Maria pastes her token and clicks "Test Connection":
+- ✓ Connection successful
+- Shows her account: maria@uxconsulting.com
+- "Continue" button
+
+#### Screen: FOB Sync Preferences
+After connecting to Homebase:
+- Sets sync preferences (manual vs. notification-based)
+- Configures auto-sync settings
+
+#### Screen: FOB External MCP Configuration
+Maria **separately configures external MCP servers in Windsurf**:
+- GitHub MCP for work item management
+- (Optional: Jira MCP, GitLab MCP, etc.)
+
+**Result**: Maria now has a working FOB connected to Homebase with token-based authentication.
 
 ---
 
@@ -171,17 +214,21 @@ Maria's FOB web GUI (http://localhost:8000) has a consistent layout:
 
 **Top Navigation Bar** (persistent across all screens):
 - **Logo**: "Mimir FOB" (links to Dashboard)
+- **Connection Status**: 
+  - If connected to HB: Green indicator "✓ Connected to Homebase"
+  - If local only: Gray indicator "⊝ Local FOB" with tooltip "Not connected to Homebase. Sync disabled."
 - **Search**: Global search bar (playbooks, families, activities)
 - **Navigation Menu**:
   - Dashboard
   - Playbooks (with count badge)
   - Families (with count badge)
-  - Sync
+  - Sync (disabled if no HB connection)
   - Settings
 - **Notifications**: Bell icon with badge count (unread notifications)
 - **User Menu**: Maria Rodriguez dropdown
   - My Profile
   - Account Settings
+  - Homebase Connection (manage token)
   - Log Out
 
 **Left Sidebar** (contextual, shown on detail pages):
@@ -372,9 +419,11 @@ Approved. Tom receives notification, playbook activates in family.
 
 #### Screen: FOB Sync Dashboard
 Maria clicks "Sync with Homebase" from the dashboard. The sync operation starts:
-- FOB connects to Homebase
+- FOB connects to Homebase using her authentication token
 - Status: "Checking for updates..."
 - Homebase reports available playbooks from her families
+
+**Note**: Sync requires active Homebase connection with valid token. If disconnected, the Sync button would be disabled with tooltip: "Connect to Homebase in Settings to enable sync."
 
 #### Screen: FOB Available Playbooks
 After sync completes, Maria sees a list of playbooks she's entitled to:
@@ -674,7 +723,7 @@ Maria reviews the PIP and thinks it's good:
 
 ##### Screen: FOB Sync Dashboard
 Maria clicks "Sync with Homebase":
-- FOB connects to Homebase
+- FOB connects to Homebase using her authentication token
 - Analyzes local changes
 - Detects: "React Frontend Development v1.1 (local) differs from v1.0 (remote)"
 
@@ -1123,17 +1172,42 @@ Maria clicks **Settings** in navigation menu:
 
 #### Screen: FOB Settings - Sync & Connection
 Maria clicks **Sync & Connection**:
+
 - **Homebase Connection**:
-  - Status: ✓ Connected to homebase.mimir.io
-  - Last sync: 5 minutes ago
-  - [Test Connection] button
-  - [Disconnect] button
-- **Sync Preferences**:
+  - **Status**: ✓ Connected to homebase.mimir.io
+  - **Account**: maria@uxconsulting.com
+  - **Last sync**: 5 minutes ago
+  - **Connection Details**:
+    - Homebase URL: `https://homebase.mimir.io` [Edit]
+    - Authentication Token: `mimir_a8f3...45678` [Show] [Copy]
+    - Token created: Nov 15, 2024
+  - **Actions**:
+    - [Test Connection] button
+    - [Regenerate Token] button (requires re-entering password)
+    - [Disconnect from Homebase] button (danger action)
+  
+  **Note**: Only one Homebase connection is supported.
+
+- **If Not Connected** (alternative view when disconnected):
+  - **Status**: ⊝ Not connected to Homebase
+  - **You are working in local-only mode**
+    - You can create and manage playbooks locally
+    - You cannot sync playbooks from families
+    - You cannot publish playbooks to families
+  - **Connect to Homebase**:
+    - Homebase URL: [https://homebase.mimir.io]
+    - Authentication Token: [paste your token here]
+    - [Get Token from Homebase] link (opens homebase.mimir.io/account)
+    - [Test Connection] button
+    - [Save Connection] button
+
+- **Sync Preferences** (only when connected to HB):
   - Auto-sync: [On/Off] toggle
   - Sync frequency: Dropdown (Manual, Every 15min, Hourly, Daily)
   - Sync on startup: [On/Off]
   - Notification for available updates: [On/Off]
-- **Conflict Resolution**:
+
+- **Conflict Resolution** (only when connected to HB):
   - Default action: Dropdown (Ask me, Prefer remote, Prefer local)
 
 #### Screen: FOB Settings - Storage
