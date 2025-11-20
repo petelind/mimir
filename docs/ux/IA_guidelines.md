@@ -451,24 +451,25 @@ Page Structure:
 
 ### 2. Base Layouts
 
-#### 2-Column Layout (Sidebar + Main Content)
+#### 2-Column Layout (Content + Metadata Sidebar)
 
-**Use Case**: Detail pages, settings, admin panels
+**Use Case**: Detail pages with contextual information (NOT for navigation)
+
+**Note**: All navigation happens via top navbar. Sidebars are ONLY for metadata, filters, or related content.
 
 ```html
 <div class="container-fluid">
   <div class="row">
-    <!-- Sidebar: 3 columns on large screens -->
-    <aside class="col-lg-3 col-xl-2">
-      <nav class="sidebar">
-        <!-- Navigation items -->
-      </nav>
-    </aside>
-    
-    <!-- Main content: remaining space -->
+    <!-- Main content: Primary area -->
     <main class="col-lg-9 col-xl-10">
       <!-- Page content -->
     </main>
+    
+    <!-- Metadata sidebar: 3 columns on large screens -->
+    <aside class="col-lg-3 col-xl-2">
+      <!-- Filters, metadata, related info -->
+      <!-- NO navigation links -->
+    </aside>
   </div>
 </div>
 ```
@@ -476,18 +477,21 @@ Page Structure:
 **Sidebar Behavior**:
 - Desktop (lg+): Fixed width sidebar, always visible
 - Tablet (md): Collapsible sidebar, toggle button
-- Mobile (sm): Off-canvas sidebar, hamburger menu
+- Mobile (sm): Stack below content or collapsible panel
 
-#### 3-Column Layout (Sidebar + Content + Meta)
+#### 3-Column Layout (Filters + Content + Metadata)
 
-**Use Case**: Content with contextual information (playbook editor, detailed views)
+**Use Case**: Content with contextual information on both sides (playbook editor with filters and metadata)
+
+**Note**: All navigation still happens via top navbar. Both sidebars are for content organization only.
 
 ```html
 <div class="container-fluid">
   <div class="row">
-    <!-- Left sidebar: Navigation (2-3 columns) -->
+    <!-- Left sidebar: Filters, Quick actions (2-3 columns) -->
     <aside class="col-lg-2">
-      <nav><!-- Nav --></nav>
+      <!-- Filters, tags, quick actions -->
+      <!-- NO navigation links -->
     </aside>
     
     <!-- Main content: Primary area (6-8 columns) -->
@@ -497,7 +501,7 @@ Page Structure:
     
     <!-- Right sidebar: Metadata (2-3 columns) -->
     <aside class="col-lg-2">
-      <!-- Related info, actions, metadata -->
+      <!-- Related info, version history, metadata -->
     </aside>
   </div>
 </div>
@@ -506,7 +510,7 @@ Page Structure:
 **Responsive Behavior**:
 - Desktop: All 3 columns visible
 - Tablet: Left sidebar collapses, 2-column layout
-- Mobile: Stack vertically, hide sidebars initially
+- Mobile: Stack vertically, hide sidebars in collapsible panels
 
 #### Grid Layout (Dashboard Cards)
 
@@ -716,45 +720,33 @@ From dashboard screenshot:
 </nav>
 ```
 
-#### Sidebar Navigation (Tertiary)
+#### Dropdown Menus (For Grouped Navigation)
 
-For apps with deep hierarchies:
+**For apps with deep hierarchies, use navbar dropdowns instead of sidebars**:
 
 ```html
-<nav class="sidebar bg-light">
-  <ul class="nav flex-column">
-    <li class="nav-item">
-      <a class="nav-link active" href="/playbooks">
-        <i class="fa-solid fa-book me-2"></i>
-        Playbooks
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/families">
-        <i class="fa-solid fa-users me-2"></i>
-        Families
-      </a>
-    </li>
-    <!-- Expandable section -->
-    <li class="nav-item">
-      <a class="nav-link" data-bs-toggle="collapse" href="#syncMenu">
-        <i class="fa-solid fa-sync me-2"></i>
-        Sync
-        <i class="fa-solid fa-chevron-down ms-auto"></i>
-      </a>
-      <div class="collapse" id="syncMenu">
-        <ul class="nav flex-column ms-3">
-          <li class="nav-item">
-            <a class="nav-link" href="/sync/status">Status</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/sync/history">History</a>
-          </li>
-        </ul>
-      </div>
-    </li>
+<!-- In top navbar -->
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+    <i class="fa-solid fa-sync me-2"></i>
+    Sync
+  </a>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item" href="/sync/status">
+      <i class="fa-solid fa-circle-check me-2"></i>
+      Status
+    </a></li>
+    <li><a class="dropdown-item" href="/sync/history">
+      <i class="fa-solid fa-clock-rotate-left me-2"></i>
+      History
+    </a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="/sync/settings">
+      <i class="fa-solid fa-gear me-2"></i>
+      Settings
+    </a></li>
   </ul>
-</nav>
+</li>
 ```
 
 #### Tabs (Content Navigation)
@@ -887,7 +879,7 @@ From screenshot analysis:
 <main>        <!-- Primary page content -->
 <article>     <!-- Independent content (blog post, playbook) -->
 <section>     <!-- Thematic grouping of content -->
-<aside>       <!-- Sidebar, related content -->
+<aside>       <!-- Contextual content, metadata (NOT navigation) -->
 <footer>      <!-- Page footer, copyright -->
 
 <!-- Content structure -->
@@ -1067,8 +1059,8 @@ body { background-color: var(--bs-gray-100); /* #f8f9fa */ }
 /* Card/surface */
 .card { background-color: var(--bs-white); }
 
-/* Sidebar */
-.sidebar { background-color: var(--bs-light); /* #f8f9fa */ }
+/* Content sidebars (metadata, filters - NOT navigation) */
+.content-sidebar { background-color: var(--bs-light); /* #f8f9fa */ }
 
 /* Stat cards - colored backgrounds */
 .stat-card-purple { background: linear-gradient(135deg, #5856d6 0%, #7c7aec 100%); }
@@ -2074,21 +2066,26 @@ Templates define the overall page composition using organisms, molecules, and at
 </html>
 ```
 
-#### Detail Page Template (2-column)
+#### Detail Page Template (with Metadata Sidebar)
+
+**Note**: Navigation is in the top navbar. Sidebar is for metadata only.
+
 ```html
-<div class="container-fluid">
+<!-- Top navbar handles all navigation -->
+<header class="navbar sticky-top">...</header>
+
+<div class="container-fluid p-4">
   <div class="row">
-    <!-- Sidebar -->
-    <aside class="col-lg-3 col-xl-2 bg-light p-3">
-      <nav class="sidebar">
-        <!-- Navigation items -->
-      </nav>
-    </aside>
-    
     <!-- Main Content -->
-    <main class="col-lg-9 col-xl-10 p-4">
+    <main class="col-lg-9 p-4">
       <!-- Breadcrumbs -->
-      <nav aria-label="breadcrumb" class="mb-3">...</nav>
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/playbooks">Playbooks</a></li>
+          <li class="breadcrumb-item active">React Frontend Development</li>
+        </ol>
+      </nav>
       
       <!-- Page Header -->
       <div class="d-flex justify-content-between align-items-center mb-4">
@@ -2097,29 +2094,92 @@ Templates define the overall page composition using organisms, molecules, and at
           <div class="text-muted">v1.0 • Updated 2 hours ago</div>
         </div>
         <div class="btn-group">
-          <button class="btn btn-outline-primary">Edit</button>
-          <button class="btn btn-outline-secondary">Share</button>
+          <button class="btn btn-outline-primary" 
+                  data-bs-toggle="tooltip" 
+                  title="Edit this playbook">
+            <i class="fa-solid fa-pen-to-square me-2"></i>
+            Edit
+          </button>
+          <button class="btn btn-outline-secondary"
+                  data-bs-toggle="tooltip"
+                  title="Share with family members">
+            <i class="fa-solid fa-share-nodes me-2"></i>
+            Share
+          </button>
         </div>
       </div>
       
-      <!-- Tabs -->
+      <!-- Tabs for content sections -->
       <ul class="nav nav-tabs mb-4">
         <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="tab">Overview</button>
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            Overview
+          </button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab">Activities</button>
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#activities">
+            <i class="fa-solid fa-list-check me-2"></i>
+            Activities
+          </button>
         </li>
         <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab">Settings</button>
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#settings">
+            <i class="fa-solid fa-gear me-2"></i>
+            Settings
+          </button>
         </li>
       </ul>
       
       <!-- Tab Content -->
       <div class="tab-content">
-        <!-- Content organisms -->
+        <div class="tab-pane fade show active" id="overview">
+          <!-- Content -->
+        </div>
       </div>
     </main>
+    
+    <!-- Metadata Sidebar (NOT navigation) -->
+    <aside class="col-lg-3 bg-light p-3">
+      <h6 class="text-uppercase text-muted small mb-3">Details</h6>
+      
+      <!-- Version info -->
+      <div class="mb-3">
+        <div class="small text-muted">Version</div>
+        <div class="fw-semibold">1.0</div>
+      </div>
+      
+      <!-- Family -->
+      <div class="mb-3">
+        <div class="small text-muted">Family</div>
+        <div><span class="badge bg-info">Usability</span></div>
+      </div>
+      
+      <!-- Author -->
+      <div class="mb-3">
+        <div class="small text-muted">Author</div>
+        <div class="d-flex align-items-center">
+          <img src="/avatar.jpg" class="rounded-circle me-2" width="24" height="24">
+          <span>Maria Chen</span>
+        </div>
+      </div>
+      
+      <!-- Last updated -->
+      <div class="mb-3">
+        <div class="small text-muted">Last Updated</div>
+        <div>2 hours ago</div>
+      </div>
+      
+      <!-- Tags -->
+      <div class="mb-3">
+        <div class="small text-muted">Tags</div>
+        <div class="d-flex flex-wrap gap-1 mt-1">
+          <span class="badge bg-secondary">React</span>
+          <span class="badge bg-secondary">Frontend</span>
+          <span class="badge bg-secondary">Development</span>
+        </div>
+      </div>
+    </aside>
   </div>
 </div>
 ```
@@ -2873,21 +2933,42 @@ observer.observe(document.querySelector('.infinite-scroll-trigger'));
 ### 4. Preferences and Settings
 
 #### Settings Page Pattern
+
+**Use tabs for settings navigation, NOT sidebar**:
+
 ```html
 <div class="settings-page">
-  <!-- Sidebar navigation -->
-  <div class="row">
-    <div class="col-md-3">
-      <nav class="nav flex-column nav-pills">
-        <a class="nav-link active" href="#account">Account</a>
-        <a class="nav-link" href="#sync">Sync & Connection</a>
-        <a class="nav-link" href="#notifications">Notifications</a>
-        <a class="nav-link" href="#privacy">Privacy</a>
-      </nav>
-    </div>
-    
-    <!-- Settings content -->
-    <div class="col-md-9">
+  <!-- Settings tabs -->
+  <ul class="nav nav-tabs mb-4" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#account">
+        <i class="fa-solid fa-user me-2"></i>
+        Account
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sync">
+        <i class="fa-solid fa-sync me-2"></i>
+        Sync & Connection
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#notifications">
+        <i class="fa-solid fa-bell me-2"></i>
+        Notifications
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#privacy">
+        <i class="fa-solid fa-shield me-2"></i>
+        Privacy
+      </button>
+    </li>
+  </ul>
+  
+  <!-- Settings content -->
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="account">
       <div class="card">
         <div class="card-header">
           <h5 class="mb-0">Account Settings</h5>
@@ -2897,6 +2978,7 @@ observer.observe(document.querySelector('.infinite-scroll-trigger'));
         </div>
       </div>
     </div>
+    <!-- Other tabs... -->
   </div>
 </div>
 ```
