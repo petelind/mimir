@@ -1,0 +1,269 @@
+<mxfile host="app.diagrams.net" modified="2024-11-20T22:43:00.000Z" agent="draw.io" version="24.7.17">
+  <diagram name="Act 4 - MCP Usage Flow" id="act4-mcp-usage">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- LEGEND -->
+        <mxCell id="legend-container" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="280" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-ui" value="🟩 Green Box = FOB/HB UI Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="26" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-mcp" value="⬜ Grey Box = MCP Tool Call" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="52" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-chat" value="🔵 Blue Box = Windsurf Interface" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="78" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-ext" value="⬜ Grey Dotted = External MCP" style="text;strokeColor=#808080;strokeWidth=2;dashed=1;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;dashPattern=8 8;" vertex="1" parent="legend-container">
+          <mxGeometry y="104" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-primary" value="➡️ Bold Arrow = Primary User Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="130" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-mcp-flow" value="⤏ Grey Dashed = MCP Internal Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="156" width="280" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend-trigger" value="→ Solid Grey = UI ↔ MCP Trigger" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" vertex="1" parent="legend-container">
+          <mxGeometry y="182" width="280" height="26" as="geometry" />
+        </mxCell>
+        
+        <!-- START NODE -->
+        <mxCell id="start-node" value="START&#xa;Act 4: MCP Usage" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- FOB-PLAYBOOK-ACTIVATE-1 -->
+        <mxCell id="fob-activate" value="FOB-PLAYBOOK-ACTIVATE-1&#xa;&#xa;FOB Playbook Activation&#xa;&#xa;User clicks 'Activate Playbook'&#xa;on 'React Frontend Development'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=12;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="200" width="240" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: START -> FOB-ACTIVATE -->
+        <mxCell id="arrow-start-activate" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="start-node" target="fob-activate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WINDSURF-CHAT-1 -->
+        <mxCell id="windsurf-chat-1" value="WINDSURF-CHAT-1&#xa;&#xa;Windsurf MCP Chat&#xa;&#xa;User: 'I'm starting a new React&#xa;project. How do I set up&#xa;the project structure?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="380" width="240" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: FOB-ACTIVATE -> WINDSURF-CHAT-1 -->
+        <mxCell id="arrow-activate-chat1" value="Playbook activated" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="fob-activate" target="windsurf-chat-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- MCP-GET-CONTEXT-1 -->
+        <mxCell id="mcp-context" value="MCP-GET-CONTEXT-1&#xa;&#xa;@tool get_playbook_context&#xa;&#xa;Input: playbook_id='react-frontend-dev'&#xa;Output: Playbook structure,&#xa;        activities, artifacts" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="280" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-1 -> MCP-CONTEXT (Grey solid trigger) -->
+        <mxCell id="arrow-chat1-mcp" value="User question&#xa;triggers MCP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-1" target="mcp-context">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WINDSURF-CHAT-1B (MCP Response) -->
+        <mxCell id="windsurf-chat-1b" value="WINDSURF-CHAT-1 (Response)&#xa;&#xa;AI displays guidance:&#xa;'Based on React Frontend Dev playbook,&#xa;Activity 1: Setup Project...&#xa;1. Initialize with Vite&#xa;2. Set up folder structure&#xa;Would you like me to create a&#xa;GitHub issue?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="590" width="240" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: MCP-CONTEXT -> WINDSURF-CHAT-1B (Grey solid response) -->
+        <mxCell id="arrow-mcp-response" value="MCP returns&#xa;context" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="mcp-context" target="windsurf-chat-1b">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="480" />
+              <mxPoint x="660" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- INCREMENT 2: Work Item Creation Branch -->
+        
+        <!-- WINDSURF-CHAT-2 -->
+        <mxCell id="windsurf-chat-2" value="WINDSURF-CHAT-2&#xa;&#xa;Windsurf MCP Chat&#xa;&#xa;User: 'Yes, create a&#xa;GitHub issue for project setup'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="840" width="240" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-1B -> WINDSURF-CHAT-2 -->
+        <mxCell id="arrow-chat1b-chat2" value="User responds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="windsurf-chat-1b" target="windsurf-chat-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- EXT-MCP-GITHUB-CREATE-1 -->
+        <mxCell id="ext-mcp-github-create" value="EXT-MCP-GITHUB-CREATE-1&#xa;&#xa;GitHub MCP create_issue()&#xa;&#xa;Creates issue #47:&#xa;'Setup React project structure&#xa;per React Frontend Dev playbook'&#xa;&#xa;Labels: setup, react, playbook&#xa;Repo: maria/acme-dashboard" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#808080;strokeWidth=2;dashed=1;dashPattern=8 8;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="830" width="300" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-2 -> EXT-MCP-GITHUB (Grey solid) -->
+        <mxCell id="arrow-chat2-github" value="External MCP&#xa;triggered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-2" target="ext-mcp-github-create">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WINDSURF-CHAT-2B (GitHub Response) -->
+        <mxCell id="windsurf-chat-2b" value="WINDSURF-CHAT-2 (Response)&#xa;&#xa;AI displays:&#xa;'✓ Created GitHub issue #47&#xa;maria/acme-dashboard/issues/47&#xa;&#xa;Link: https://github.com/...'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1040" width="240" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: EXT-MCP-GITHUB -> WINDSURF-CHAT-2B -->
+        <mxCell id="arrow-github-response" value="Issue created" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="ext-mcp-github-create" target="windsurf-chat-2b">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="935" />
+              <mxPoint x="660" y="1110" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- INCREMENT 3: Continue Work + AI PIP Suggestion -->
+        
+        <!-- WINDSURF-CHAT-3 -->
+        <mxCell id="windsurf-chat-3" value="WINDSURF-CHAT-3&#xa;&#xa;Windsurf MCP Chat&#xa;&#xa;User: 'Let's pick up MIMR-47.&#xa;What do we do next?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=12;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1260" width="240" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-2B -> WINDSURF-CHAT-3 -->
+        <mxCell id="arrow-chat2b-chat3" value="Later..." style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" edge="1" parent="1" source="windsurf-chat-2b" target="windsurf-chat-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- EXT-MCP-GITHUB-QUERY-1 + MCP-GET-ACTIVITY-1 (Side by side) -->
+        <mxCell id="ext-mcp-github-query" value="EXT-MCP-GITHUB-QUERY-1&#xa;&#xa;GitHub MCP get_issue(#47)&#xa;&#xa;Status: Complete" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#808080;strokeWidth=2;dashed=1;dashPattern=8 8;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1200" width="240" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mcp-get-activity" value="MCP-GET-ACTIVITY-1&#xa;&#xa;@tool get_activity_details&#xa;&#xa;Input: activity_id='create-components'&#xa;Output: Next activity guidance" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1310" width="280" height="100" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-3 -> EXT-MCP-GITHUB-QUERY -->
+        <mxCell id="arrow-chat3-github" value="Query issue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-3" target="ext-mcp-github-query">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-3 -> MCP-GET-ACTIVITY -->
+        <mxCell id="arrow-chat3-activity" value="Get next&#xa;activity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-3" target="mcp-get-activity">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- MCP Internal Flow: Query → Activity (Grey dashed) -->
+        <mxCell id="arrow-github-to-activity" value="Context&#xa;sharing" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#808080;dashed=1;dashPattern=4 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" edge="1" parent="1" source="ext-mcp-github-query" target="mcp-get-activity">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WINDSURF-CHAT-3B (Response with options) -->
+        <mxCell id="windsurf-chat-3b" value="WINDSURF-CHAT-3 (Response)&#xa;&#xa;AI displays:&#xa;'MIMR-47: ✓ Complete&#xa;&#xa;Next: Activity 2: Create Components&#xa;&#xa;Options:&#xa;1. Show full activity details&#xa;2. Create new issue&#xa;3. Open playbook in web interface'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1470" width="240" height="200" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: MCP-GET-ACTIVITY -> WINDSURF-CHAT-3B -->
+        <mxCell id="arrow-activity-response" value="Response" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="mcp-get-activity" target="windsurf-chat-3b">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="1385" />
+              <mxPoint x="660" y="1570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- MCP-OPEN-BROWSER-1 + FOB-PLAYBOOK-DETAIL (Option 3) -->
+        <mxCell id="mcp-open-browser" value="MCP-OPEN-BROWSER-1&#xa;&#xa;@tool open_playbook_browser&#xa;&#xa;Opens browser to:&#xa;http://localhost:8000/playbooks/&#xa;react-frontend-dev/workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1540" width="220" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="fob-playbook-detail" value="FOB-PLAYBOOK-DETAIL-1&#xa;&#xa;FOB Playbook Detail&#xa;(Auto-Opened in Browser)&#xa;&#xa;Shows workflow diagram&#xa;✓ Activity 1 complete (MIMR-47)&#xa;→ Activity 2 highlighted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1710" width="220" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-3B -> MCP-OPEN-BROWSER (Option 3) -->
+        <mxCell id="arrow-option3" value="User selects&#xa;option 3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-3b" target="mcp-open-browser">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: MCP-OPEN-BROWSER -> FOB-PLAYBOOK-DETAIL -->
+        <mxCell id="arrow-browser-open" value="Browser&#xa;opens" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="mcp-open-browser" target="fob-playbook-detail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Continue main flow: AI PIP Suggestion -->
+        <mxCell id="windsurf-chat-4" value="WINDSURF-CHAT-4&#xa;&#xa;Windsurf MCP Chat&#xa;&#xa;AI observes work patterns:&#xa;'I notice you're creating modals&#xa;but the playbook doesn't mention&#xa;accessibility... Should we add:&#xa;- Focus trap for modals&#xa;- Keyboard navigation&#xa;- ARIA checklist?'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1740" width="240" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-3B -> WINDSURF-CHAT-4 -->
+        <mxCell id="arrow-chat3b-chat4" value="After work&#xa;on components" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-3b" target="windsurf-chat-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- MCP-SUGGEST-PIP-1 -->
+        <mxCell id="mcp-suggest-pip" value="MCP-SUGGEST-PIP-1&#xa;&#xa;@tool suggest_pip&#xa;&#xa;Analyzes:&#xa;- User work patterns&#xa;- Playbook gaps&#xa;- Best practices&#xa;&#xa;Generates PIP suggestion" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1760" width="260" height="140" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-4 -> MCP-SUGGEST-PIP (AI analyzes) -->
+        <mxCell id="arrow-chat4-suggest" value="AI analyzes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-4" target="mcp-suggest-pip">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- WINDSURF-CHAT-5 -->
+        <mxCell id="windsurf-chat-5" value="WINDSURF-CHAT-5&#xa;&#xa;Windsurf MCP Chat&#xa;&#xa;User: 'Yes, great idea!&#xa;Submit the PIP'" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1990" width="240" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-4 -> WINDSURF-CHAT-5 -->
+        <mxCell id="arrow-chat4-chat5" value="User approves" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-4" target="windsurf-chat-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- MCP-CREATE-PIP-1 -->
+        <mxCell id="mcp-create-pip" value="MCP-CREATE-PIP-1&#xa;&#xa;@tool create_pip&#xa;&#xa;Creates PIP in local FOB:&#xa;'Add Accessibility Guidelines&#xa;to Component Creation'&#xa;Status: Draft" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#A9A9A9;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;fontFamily=Courier New;" vertex="1" parent="1">
+          <mxGeometry x="700" y="1990" width="260" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: WINDSURF-CHAT-5 -> MCP-CREATE-PIP -->
+        <mxCell id="arrow-chat5-create" value="Create PIP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#696969;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="windsurf-chat-5" target="mcp-create-pip">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- MCP Internal Flow: SUGGEST -> CREATE (Grey dashed) -->
+        <mxCell id="arrow-suggest-create" value="PIP data" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#808080;dashed=1;dashPattern=4 4;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" edge="1" parent="1" source="mcp-suggest-pip" target="mcp-create-pip">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="1950" />
+              <mxPoint x="830" y="1950" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- FOB-PIP-NOTIFY-1 -->
+        <mxCell id="fob-pip-notify" value="FOB-PIP-NOTIFY-1&#xa;&#xa;FOB PIP Notification&#xa;&#xa;Toast appears:&#xa;'AI submitted PIP:&#xa;Add Accessibility Guidelines&#xa;Status: Draft (local only)&#xa;[View PIP]'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="360" y="2180" width="240" height="160" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: MCP-CREATE-PIP -> FOB-PIP-NOTIFY -->
+        <mxCell id="arrow-create-notify" value="Notification&#xa;triggered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" edge="1" parent="1" source="mcp-create-pip" target="fob-pip-notify">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="2080" />
+              <mxPoint x="660" y="2260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- FINAL END NODE -->
+        <mxCell id="end-node-final" value="END&#xa;Act 4 Complete" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="2420" width="160" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrow: FOB-PIP-NOTIFY -> END -->
+        <mxCell id="arrow-notify-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="fob-pip-notify" target="end-node-final">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
