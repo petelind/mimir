@@ -174,8 +174,8 @@
           <mxGeometry x="80" y="1540" width="220" height="120" as="geometry" />
         </mxCell>
         
-        <mxCell id="fob-playbook-detail" value="FOB-PLAYBOOK-DETAIL-1&#xa;&#xa;FOB Playbook Detail&#xa;(Auto-Opened in Browser)&#xa;&#xa;Shows workflow diagram&#xa;✓ Activity 1 complete (MIMR-47)&#xa;→ Activity 2 highlighted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
-          <mxGeometry x="80" y="1710" width="220" height="160" as="geometry" />
+        <mxCell id="fob-playbook-detail" value="FOB-PLAYBOOK-DETAIL-1&#xa;&#xa;FOB Playbook Detail&#xa;(Auto-Opened in Browser)&#xa;&#xa;Shows STATIC playbook structure:&#xa;- Activity 1: Setup Project&#xa;- Activity 2: Create Components&#xa;- Activity 3: State Management&#xa;&#xa;(No tracking - just reference)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#90EE90;strokeColor=#2e7d32;fontSize=11;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1710" width="220" height="180" as="geometry" />
         </mxCell>
         
         <!-- Arrow: WINDSURF-CHAT-3B -> MCP-OPEN-BROWSER (Option 3) -->

@@ -7,6 +7,24 @@
 
 ---
 
+## ⚠️ Critical Architectural Note
+
+**Mimir Playbooks = STATIC Reference Material**
+
+- Playbooks in Mimir are **documentation/guidance** (like a book)
+- They show **structure and activities** but **NO work item tracking**
+- Work item tracking happens ONLY in **external systems** (GitHub, Jira, Atlassian)
+- AI/MCP **cross-references** between:
+  - Mimir: Static playbook structure and guidance
+  - GitHub/Jira: Live work item status and progress
+
+**Example**:
+- FOB shows: "Activity 1: Setup Project" (static description)
+- GitHub shows: "Issue #47: Setup React project - Status: Closed" (live tracking)
+- AI combines: "According to playbook, Activity 1 is setup. GitHub shows #47 is complete."
+
+---
+
 ## Screen ID Convention
 
 **Format**: `{SYSTEM}-{SECTION}-{SEQUENCE}`
@@ -25,7 +43,7 @@
 | Screen ID | Screen Name | Description | Journey Reference |
 |-----------|------------|-------------|-------------------|
 | `FOB-PLAYBOOK-ACTIVATE-1` | FOB Playbook Activation | User activates a playbook from dashboard | Line 528-534 |
-| `FOB-PLAYBOOK-DETAIL-1` | FOB Playbook Detail (Auto-Opened) | Browser opens to workflow view, shows activity status | Line 611-617 |
+| `FOB-PLAYBOOK-DETAIL-1` | FOB Playbook Detail (Auto-Opened) | Browser opens showing STATIC playbook reference (no tracking) | Line 611-617 |
 | `FOB-PIP-NOTIFY-1` | FOB PIP Created Notification | Notification toast showing AI-created PIP | Line 644-648 |
 
 ### MCP Tool Flows (Grey)
