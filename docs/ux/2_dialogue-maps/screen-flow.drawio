@@ -1185,6 +1185,20 @@
                 <mxCell id="integrated-root-0"/>
                 <mxCell id="integrated-root-1" parent="integrated-root-0"/>
                 
+                <!-- LAYERS DEFINITION -->
+                <mxCell id="layer-1-main" value="Layer 1: Main Path" style="locked=0;fillColor=#e8f5e9;" parent="integrated-root-0" vertex="1">
+                    <mxGeometry/>
+                </mxCell>
+                <mxCell id="layer-2-modals" value="Layer 2: Modals &amp; Confirmations" style="locked=0;fillColor=#fff3e0;" parent="integrated-root-0" vertex="1">
+                    <mxGeometry/>
+                </mxCell>
+                <mxCell id="layer-3-mcp" value="Layer 3: MCP Processing" style="locked=0;fillColor=#fce4ec;" parent="integrated-root-0" vertex="1">
+                    <mxGeometry/>
+                </mxCell>
+                <mxCell id="layer-4-alternatives" value="Layer 4: Alternative Paths" style="locked=0;fillColor=#e3f2fd;" parent="integrated-root-0" vertex="1">
+                    <mxGeometry/>
+                </mxCell>
+                
                 <!-- Legend -->
                 <mxCell id="legend-integrated" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="integrated-root-1" vertex="1">
                     <mxGeometry x="40" y="40" width="320" height="182" as="geometry"/>
@@ -1218,25 +1232,51 @@
                     <mxGeometry x="40" y="280" width="4720" height="280" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 0 screens -->
-                <mxCell id="hb-register-int" value="HB-AUTH-REGISTER-1&#10;&#10;Register&#10;Email &amp; Password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Main Path Screens -->
+                <mxCell id="hb-register-int" value="HB-AUTH-REGISTER-1&#10;&#10;Register&#10;Email &amp; Password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="320" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="hb-verify-int" value="HB-AUTH-VERIFY-EMAIL-1&#10;&#10;Email Verification&#10;Check inbox" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="hb-verify-int" value="HB-AUTH-VERIFY-EMAIL-1&#10;&#10;Email Verification&#10;Check inbox" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="320" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="hb-token-int" value="HB-AUTH-TOKEN-DISPLAY-1&#10;&#10;Token Generated&#10;Copy token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="hb-token-int" value="HB-AUTH-TOKEN-&#10;DISPLAY-1&#10;&#10;Token Generated&#10;Copy token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="320" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-connect-int" value="FOB-ONBOARDING-&#10;CONNECT-1&#10;&#10;Connect to HB&#10;Paste token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
-                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-startup-int" value="FOB-STARTUP-1&#10;&#10;FOB Initialization&#10;Container start" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1020" y="320" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-token-setup-int" value="FOB-ONBOARDING-&#10;TOKEN-SETUP-1&#10;&#10;Token Setup&#10;Test connection" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
-                    <mxGeometry x="1000" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-connect-int" value="FOB-ONBOARDING-&#10;CONNECT-1&#10;&#10;Connect to HB&#10;Paste token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1240" y="320" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-token-setup-int" value="FOB-ONBOARDING-&#10;TOKEN-SETUP-1&#10;&#10;Token Setup&#10;Test connection" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1460" y="320" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 2: Modals -->
+                <mxCell id="hb-success-modal-int" value="HB-AUTH-SUCCESS-&#10;MODAL-1&#10;&#10;✓ Email Verified!&#10;(Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="590" y="440" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-error-connection-int" value="FOB-ERROR-&#10;CONNECTION-1&#10;&#10;❌ Can't reach HB&#10;(Error Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1030" y="440" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-success-modal-int" value="FOB-ONBOARDING-&#10;SUCCESS-1&#10;&#10;✓ Connected!&#10;(Confirmation)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1470" y="440" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 4: Alternative Paths -->
+                <mxCell id="hb-login-int" value="HB-LOGIN-1&#10;&#10;Login to Homebase&#10;(existing users)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="360" y="200" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="hb-admin-dashboard-int" value="HB-ADMIN-&#10;DASHBOARD-1&#10;&#10;Admin View&#10;(Django Admin)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="810" y="200" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 0 main path arrows -->
