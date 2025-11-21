@@ -1,4 +1,168 @@
 <mxfile host="65bd71144e">
+    <diagram name="📖 README - Start Here!" id="readme-first">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+            <root>
+                <mxCell id="readme-root-0"/>
+                <mxCell id="readme-root-1" parent="readme-root-0"/>
+                
+                <!-- Title -->
+                <mxCell id="readme-title" value="📖 MIMIR UX Documentation Guide" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4a90e2;strokeColor=#2e5c8a;fontSize=24;fontStyle=1;fontColor=#ffffff;align=center;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="80" y="40" width="1240" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Subtitle -->
+                <mxCell id="readme-subtitle" value="How to Navigate: User Journey → Screen Flows → Mockups + Feature Files" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#4a90e2;fontSize=14;fontStyle=2;align=center;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="80" y="140" width="1240" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Section 1: User Journey -->
+                <mxCell id="section-journey" value="1️⃣ USER JOURNEY" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#d4edda;strokeColor=#28a745;fontSize=16;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="80" y="220" width="360" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="journey-location" value="📁 Location: docs/ux/user_journey.md" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontFamily=Courier New;fontColor=#155724;" parent="section-journey" vertex="1">
+                    <mxGeometry y="40" width="360" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="journey-what" value="📝 What: High-level narrative of Maria's&#10;complete journey through 9 acts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="section-journey" vertex="1">
+                    <mxGeometry y="70" width="360" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="journey-who" value="👥 Audience: Product team, stakeholders" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-journey" vertex="1">
+                    <mxGeometry y="120" width="360" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="journey-content" value="📋 Contains:&#10;• Act-by-act story&#10;• User goals &amp; motivations&#10;• Key milestones&#10;• Business value" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-journey" vertex="1">
+                    <mxGeometry y="150" width="360" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="journey-use" value="💡 Use: Understand WHY and WHAT" style="text;strokeColor=none;fillColor=#d4edda;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=3;strokeColor=#28a745;" parent="section-journey" vertex="1">
+                    <mxGeometry y="240" width="360" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow 1 to 2 -->
+                <mxCell id="arrow-1-to-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=4;strokeColor=#4a90e2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="readme-root-1" source="section-journey" target="section-screenflow" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Section 2: Screen Flows -->
+                <mxCell id="section-screenflow" value="2️⃣ SCREEN FLOWS" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#cce5ff;strokeColor=#0066cc;fontSize=16;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="520" y="220" width="380" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="screenflow-location" value="📁 Location: This file! (screen-flow.drawio)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontFamily=Courier New;fontColor=#003d82;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="40" width="380" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="screenflow-what" value="📝 What: Visual flow diagrams showing&#10;all 87 screens across 9 acts" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="70" width="380" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="screenflow-who" value="👥 Audience: UX designers, developers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="120" width="380" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="screenflow-content" value="📋 Contains:&#10;• 4 Toggle Layers (Main/Modals/MCP/Alt)&#10;• Screen IDs &amp; transitions&#10;• System interactions&#10;• Decision points" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="150" width="380" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="screenflow-use" value="💡 Use: Understand HOW screens connect" style="text;strokeColor=none;fillColor=#cce5ff;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=3;strokeColor=#0066cc;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="240" width="380" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow 2 to 3 -->
+                <mxCell id="arrow-2-to-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=4;strokeColor=#4a90e2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="readme-root-1" source="section-screenflow" target="section-artifacts" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Section 3: Mockups + Features -->
+                <mxCell id="section-artifacts" value="3️⃣ MOCKUPS + FEATURE FILES" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#fff3cd;strokeColor=#ffc107;fontSize=16;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="980" y="220" width="340" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="artifacts-location" value="📁 Location: docs/ux/3_mockups/&#10;            docs/ux/4_features/" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontFamily=Courier New;fontColor=#856404;" parent="section-artifacts" vertex="1">
+                    <mxGeometry y="40" width="340" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="artifacts-what" value="📝 What: Detailed UI designs &amp;&#10;BDD test scenarios" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="section-artifacts" vertex="1">
+                    <mxGeometry y="80" width="340" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="artifacts-who" value="👥 Audience: Designers, QA, devs" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-artifacts" vertex="1">
+                    <mxGeometry y="130" width="340" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="artifacts-content" value="📋 Contains:&#10;• Visual mockups (Figma/Draw.io)&#10;• .feature files (Gherkin)&#10;• Acceptance criteria" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-artifacts" vertex="1">
+                    <mxGeometry y="160" width="340" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="artifacts-use" value="💡 Use: Build &amp; test the actual UI" style="text;strokeColor=none;fillColor=#fff3cd;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=3;strokeColor=#ffc107;" parent="section-artifacts" vertex="1">
+                    <mxGeometry y="240" width="340" height="40" as="geometry"/>
+                </mxCell>
+                
+                <!-- How to Use This Diagram -->
+                <mxCell id="usage-box" value="🎯 HOW TO USE THIS FILE" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="80" y="560" width="620" height="380" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-tabs" value="📑 TABS: This file has multiple diagram tabs:" style="text;strokeColor=none;fillColor=#e8e8e8;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="usage-box" vertex="1">
+                    <mxGeometry y="40" width="620" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-tab1" value="   • Acts 0-9: Individual act diagrams (legacy, detailed)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="70" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-tab2" value="   • Integrated Flow: ⭐ ALL 87 screens in one diagram!" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=1;" parent="usage-box" vertex="1">
+                    <mxGeometry y="95" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-layers-title" value="🔲 LAYERS: Toggle visibility (View → Layers):" style="text;strokeColor=none;fillColor=#e8e8e8;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="usage-box" vertex="1">
+                    <mxGeometry y="120" width="620" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-layer1" value="   • Layer 1: Main Path (30 screens) - Always visible" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="150" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-layer2" value="   • Layer 2: Modals &amp; Confirmations (19 screens)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="175" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-layer3" value="   • Layer 3: MCP Processing (14 screens)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="200" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-layer4" value="   • Layer 4: Alternative Paths (24 screens)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="225" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-recommendations" value="💡 RECOMMENDED LAYER COMBINATIONS:" style="text;strokeColor=none;fillColor=#e8e8e8;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="usage-box" vertex="1">
+                    <mxGeometry y="250" width="620" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-rec1" value="   • Product Manager: Layers 1 + 4 (all possible paths)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="280" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-rec2" value="   • UX Designer: Layers 1 + 2 (UI flow + modals)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="305" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-rec3" value="   • Developer: Layers 1 + 2 + 3 (complete system)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="330" width="620" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="usage-rec4" value="   • Architecture: All 4 layers (full system overview)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="usage-box" vertex="1">
+                    <mxGeometry y="355" width="620" height="25" as="geometry"/>
+                </mxCell>
+                
+                <!-- Quick Reference -->
+                <mxCell id="legend-box" value="🎨 COLOR LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="760" y="560" width="560" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-readme" value="🟦 Blue (#4682B4): FOB (Field Operations Base) screens" style="text;strokeColor=#1565c0;fillColor=#4682B4;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                    <mxGeometry y="40" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-hb-readme" value="🟩 Green (#82b366): Homebase (Django backend) screens" style="text;strokeColor=#2e7d32;fillColor=#82b366;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                    <mxGeometry y="70" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-windsurf-readme" value="🟪 Purple (#9370DB): Windsurf IDE interactions" style="text;strokeColor=#6a5acd;fillColor=#9370DB;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                    <mxGeometry y="100" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-mcp-readme" value="🟧 Orange (#FF8C00): MCP processing &amp; AI operations" style="text;strokeColor=#d68000;fillColor=#FF8C00;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                    <mxGeometry y="130" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-modal-readme" value="⬜ Light Grey (#D3D3D3, dashed): Modals &amp; popups" style="text;strokeColor=#999999;fillColor=#D3D3D3;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
+                    <mxGeometry y="160" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-error-readme" value="🟥 Red/Pink (#f8cecc): Error states &amp; alerts" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="legend-box" vertex="1">
+                    <mxGeometry y="190" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-dashed-readme" value="- - - Dashed Border: Alternative/optional paths" style="text;strokeColor=#666666;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
+                    <mxGeometry y="220" width="560" height="30" as="geometry"/>
+                </mxCell>
+                
+                <!-- Next Steps -->
+                <mxCell id="nextsteps-box" value="▶️ NEXT: Click the 'Integrated End-to-End Flow' tab to see all 87 screens!" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4caf50;strokeColor=#2e7d32;fontSize=16;fontStyle=1;fontColor=#ffffff;align=center;" parent="readme-root-1" vertex="1">
+                    <mxGeometry x="760" y="860" width="560" height="80" as="geometry"/>
+                </mxCell>
+                
+            </root>
+        </mxGraphModel>
+    </diagram>
     <diagram name="Act 0 - Authentication and Setup" id="act0-authentication">
         <mxGraphModel dx="1045" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
             <root>
