@@ -1994,11 +1994,6 @@
                     <mxGeometry x="1210" y="2720" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
-                <!-- END marker -->
-                <mxCell id="end-integrated" value="END&#10;&#10;Maria can now:&#10;\u2022 Use playbooks in Windsurf&#10;\u2022 Create PIPs&#10;\u2022 Manage families&#10;\u2022 Create new playbooks" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="680" y="3200" width="220" height="140" as="geometry"/>
-                </mxCell>
-                
             </root>
         </mxGraphModel>
     </diagram>
