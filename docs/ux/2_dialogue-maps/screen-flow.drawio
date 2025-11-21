@@ -1180,7 +1180,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Integrated End-to-End Flow" id="integrated-flow">
-        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2800" pageHeight="2400" math="0" shadow="0">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4800" pageHeight="3200" math="0" shadow="0">
             <root>
                 <mxCell id="integrated-root-0"/>
                 <mxCell id="integrated-root-1" parent="integrated-root-0"/>
@@ -1215,7 +1215,7 @@
                 
                 <!-- ACT 0 Swimlane -->
                 <mxCell id="swimlane-act0" value="ACT 0: Authentication &amp; Setup" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="280" width="2720" height="220" as="geometry"/>
+                    <mxGeometry x="40" y="280" width="4720" height="280" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 0 screens -->
