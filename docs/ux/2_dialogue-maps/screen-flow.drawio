@@ -1074,4 +1074,109 @@
             </root>
         </mxGraphModel>
     </diagram>
+    <diagram name="Acts 8-9 Settings and Errors" id="act8-9">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1400" math="0" shadow="0">
+            <root>
+                <mxCell id="act8-9-root-0"/>
+                <mxCell id="act8-9-root-1" parent="act8-9-root-0"/>
+                <mxCell id="legend-act8-9" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="104" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-act8-9" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act8-9" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-error-act8-9" value="🔴 Red Box = Error/Warning" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act8-9" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act8-9" value="➡️ Bold Arrow = Navigation" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act8-9" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act8-9" value="START&#10;Acts 8 & 9" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="act8-label" value="ACT 8: Settings" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#1565c0;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="40" y="200" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-settings-main" value="FOB-SETTINGS-MAIN-1&#10;&#10;Settings Hub&#10;&#10;Sidebar:&#10;- Account ✓&#10;- Sync & Connection&#10;- Storage&#10;- MCP Config&#10;- Notifications" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="40" y="250" width="220" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-settings" value="Settings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act8-9-root-1" source="start-act8-9" target="fob-settings-main" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="100"/>
+                            <mxPoint x="380" y="220"/>
+                            <mxPoint x="150" y="220"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-settings-sync" value="FOB-SETTINGS-SYNC-1&#10;&#10;Homebase Connection&#10;✓ Connected&#10;Token: mimir_***&#10;&#10;Sync Preferences:&#10;Auto-sync: ON&#10;Frequency: 15min" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="300" y="250" width="200" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-sync-settings" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="act8-9-root-1" source="fob-settings-main" target="fob-settings-sync" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-settings-mcp" value="FOB-SETTINGS-MCP-1&#10;&#10;MCP Server Status:&#10;✓ Running on :5000&#10;&#10;Features:&#10;☑ Playbook context&#10;☑ PIP suggestions&#10;☑ AI-initiated PIPs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="540" y="250" width="200" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-mcp-settings" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-settings-sync" target="fob-settings-mcp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="act9-label" value="ACT 9: Error Recovery" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#b85450;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="400" y="500" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-sync-error" value="FOB-SYNC-ERROR-1&#10;&#10;⚠️ Sync failed:&#10;Cannot connect to HB&#10;&#10;Recovery:&#10;[Retry Sync]&#10;[Work Offline]&#10;[View Error Log]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;verticalAlign=middle;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="40" y="560" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-error1" value="Error" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="start-act8-9" target="fob-sync-error" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="580" y="200"/>
+                            <mxPoint x="40" y="200"/>
+                            <mxPoint x="40" y="530"/>
+                            <mxPoint x="140" y="530"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-permission-error" value="FOB-PERMISSION-ERROR-1&#10;&#10;🚫 Permission Denied&#10;Cannot edit Mike's playbook&#10;&#10;Options:&#10;[Create Local Copy]&#10;[Submit PIP]&#10;[Cancel]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;verticalAlign=middle;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="280" y="560" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-error2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-sync-error" target="fob-permission-error" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-upload-error" value="FOB-UPLOAD-ERROR-1&#10;&#10;Upload failed:&#10;File size exceeds 100MB&#10;&#10;Recovery:&#10;[Compress Images]&#10;[Remove Artifacts]&#10;[Split Playbook]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;verticalAlign=middle;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="540" y="560" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-error3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-permission-error" target="fob-upload-error" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-empty-playbooks" value="FOB-EMPTY-PLAYBOOKS-1&#10;&#10;📦 No playbooks yet&#10;&#10;Get started:&#10;[Create First Playbook]&#10;[Browse Families]&#10;[Import from File]&#10;[Watch Tutorial]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="160" y="790" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-empty" value="Empty&#10;states" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-sync-error" target="fob-empty-playbooks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-empty-search" value="FOB-EMPTY-SEARCH-1&#10;&#10;🔍 No families found&#10;matching 'blockchain'&#10;&#10;Suggestions:&#10;- Similar families&#10;[Clear Filters]&#10;[Create New Family]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="420" y="790" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-empty2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-empty-playbooks" target="fob-empty-search" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end-act8-9" value="END&#10;Acts 8 & 9 Complete&#10;&#10;Settings & Errors&#10;documented" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act8-9-root-1" vertex="1">
+                    <mxGeometry x="430" y="1020" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-settings-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-settings-main" target="end-act8-9" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="150" y="990"/>
+                            <mxPoint x="20" y="990"/>
+                            <mxPoint x="20" y="1070"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-errors-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act8-9-root-1" source="fob-empty-search" target="end-act8-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
