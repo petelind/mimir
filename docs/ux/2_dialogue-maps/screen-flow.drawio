@@ -1446,33 +1446,42 @@
                 
                 <!-- ACT 3 Swimlane -->
                 <mxCell id="swimlane-act3" value="ACT 3: First Sync &amp; Download" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e0f7fa;strokeColor=#00838f;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="1040" width="2720" height="240" as="geometry"/>
+                    <mxGeometry x="40" y="1200" width="4720" height="280" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 3 screens - Main path (Download from HB) -->
-                <mxCell id="fob-sync-start-int" value="FOB-SYNC-&#10;DASHBOARD-1&#10;&#10;Sync with HB&#10;Start sync" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 3 Main Path (4 screens) -->
+                <mxCell id="fob-sync-start-int" value="FOB-SYNC-&#10;DASHBOARD-1&#10;&#10;Sync with HB&#10;Start sync" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="1240" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-available-playbooks-int" value="FOB-SYNC-&#10;AVAILABLE-1&#10;&#10;Available Playbooks&#10;Mike's React playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-available-playbooks-int" value="FOB-SYNC-&#10;AVAILABLE-1&#10;&#10;Available Playbooks&#10;Mike's React playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="1240" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-preview-playbook-int" value="FOB-SYNC-&#10;PREVIEW-1&#10;&#10;Preview Playbook&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-preview-playbook-int" value="FOB-SYNC-&#10;PREVIEW-1&#10;&#10;Preview Playbook&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="1240" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-download-complete-int" value="FOB-SYNC-&#10;SUCCESS-1&#10;&#10;Downloaded!&#10;Playbook ready" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-download-complete-int" value="FOB-SYNC-&#10;SUCCESS-1&#10;&#10;Downloaded!&#10;Playbook ready" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1020" y="1240" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 3 screens - Alternative path (Import JSON) -->
-                <mxCell id="fob-import-json-int" value="FOB-IMPORT-&#10;UPLOAD-1&#10;&#10;Import JSON&#10;Upload file" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="340" y="140" width="140" height="70" as="geometry"/>
+                <!-- LAYER 2: Act 3 Modals (2 screens) -->
+                <mxCell id="fob-import-validate-modal-int" value="FOB-IMPORT-&#10;VALIDATE-MODAL-1&#10;&#10;✓ Valid JSON&#10;(Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="810" y="1360" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-import-validate-int" value="FOB-IMPORT-&#10;VALIDATE-1&#10;&#10;Validate&#10;Check schema" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act3" vertex="1">
-                    <mxGeometry x="540" y="140" width="140" height="70" as="geometry"/>
+                <mxCell id="fob-sync-success-modal-int" value="FOB-SYNC-&#10;SUCCESS-MODAL-1&#10;&#10;✓ Download Complete&#10;(Confirmation)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1030" y="1360" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 4: Act 3 Alternatives (2 screens) -->
+                <mxCell id="fob-import-json-int" value="FOB-IMPORT-&#10;UPLOAD-1&#10;&#10;Import JSON&#10;Upload file" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="590" y="1120" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-import-validate-int" value="FOB-IMPORT-&#10;VALIDATE-1&#10;&#10;Validate&#10;Check schema" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="780" y="1120" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 3 main path arrows -->
@@ -1516,20 +1525,53 @@
                 
                 <!-- ACT 4 Swimlane (Parallel - can happen anytime) -->
                 <mxCell id="swimlane-act4" value="ACT 4: MCP Usage (Parallel Activity)" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="1300" width="2720" height="200" as="geometry"/>
+                    <mxGeometry x="40" y="1500" width="4720" height="320" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 4 screens -->
-                <mxCell id="windsurf-open-int" value="WINDSURF-CHAT-1&#10;&#10;Open Windsurf&#10;Start session" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="swimlane-act4" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 4 Main (3 screens) -->
+                <mxCell id="windsurf-open-int" value="WINDSURF-CHAT-1&#10;&#10;Open Windsurf&#10;Start session" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="1540" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="mcp-context-int" value="MCP-PLAYBOOK-&#10;CONTEXT-1&#10;&#10;Load Playbook&#10;Context available" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="swimlane-act4" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="windsurf-commands-int" value="WINDSURF-&#10;COMMANDS-1&#10;&#10;Use MCP Commands&#10;Work with playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="1540" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="windsurf-commands-int" value="WINDSURF-&#10;COMMANDS-1&#10;&#10;Use MCP Commands&#10;Work with playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act4" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 3: Act 4 MCP Processing (9 screens) -->
+                <mxCell id="mcp-context-int" value="MCP-PLAYBOOK-&#10;CONTEXT-1&#10;&#10;Load Playbook&#10;Context available" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="580" y="1540" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-workitem-github-int" value="MCP-WORKITEM-&#10;CREATE-GITHUB-1&#10;&#10;Create GitHub Issue&#10;Work item" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1000" y="1540" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-workitem-jira-int" value="MCP-WORKITEM-&#10;CREATE-JIRA-1&#10;&#10;Create Jira Ticket&#10;Work item" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1190" y="1540" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-external-github-int" value="MCP-EXTERNAL-&#10;GITHUB-1&#10;&#10;GitHub MCP Server&#10;(External)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1000" y="1660" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-external-jira-int" value="MCP-EXTERNAL-&#10;JIRA-1&#10;&#10;Jira MCP Server&#10;(External)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1190" y="1660" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-open-playbook-mcp-int" value="FOB-OPEN-&#10;PLAYBOOK-1&#10;&#10;Open from MCP&#10;View playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1380" y="1540" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-playbook-detail-mcp-int" value="FOB-PLAYBOOK-&#10;DETAIL-VIEW-1&#10;&#10;Full Detail View&#10;All sections" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1570" y="1540" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="windsurf-workitem-created-int" value="WINDSURF-&#10;WORKITEM-CREATED-1&#10;&#10;\u2713 Created!&#10;Confirmation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1760" y="1540" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="windsurf-mcp-commands-int" value="WINDSURF-MCP-&#10;COMMANDS-LIST-1&#10;&#10;Available Commands&#10;Command palette" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1950" y="1540" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 4 arrows -->
@@ -1554,24 +1596,34 @@
                 
                 <!-- ACT 5 Swimlane -->
                 <mxCell id="swimlane-act5" value="ACT 5: Creating PIPs" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff6f00;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="1520" width="2720" height="220" as="geometry"/>
+                    <mxGeometry x="40" y="1840" width="4720" height="280" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 5 screens -->
-                <mxCell id="windsurf-suggest-pip-int" value="WINDSURF-CHAT-&#10;PIP-SUGGEST-1&#10;&#10;MCP Suggests PIP&#10;Improvement idea" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 5 Main Path (4 screens) -->
+                <mxCell id="windsurf-suggest-pip-int" value="WINDSURF-CHAT-&#10;PIP-SUGGEST-1&#10;&#10;MCP Suggests PIP&#10;Improvement idea" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="1880" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="mcp-generate-pip-int" value="MCP-PIP-&#10;GENERATE-1&#10;&#10;Generate PIP&#10;Create proposal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-pip-review-int" value="FOB-PIP-&#10;REVIEW-DETAIL-1&#10;&#10;Review PIP&#10;Check changes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="1880" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-pip-review-int" value="FOB-PIP-&#10;REVIEW-DETAIL-1&#10;&#10;Review PIP&#10;Check changes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-pip-approve-int" value="FOB-PIP-&#10;APPROVED-1&#10;&#10;Approved!&#10;v1.0 \u2192 v1.1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1020" y="1880" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-pip-approve-int" value="FOB-PIP-&#10;APPROVED-1&#10;&#10;Approved!&#10;v1.0 → v1.1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act5" vertex="1">
-                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 2: Act 5 Modal (1 screen) -->
+                <mxCell id="fob-pip-review-modal-int" value="FOB-PIP-&#10;REVIEW-MODAL-1&#10;&#10;PIP Details&#10;(Modal)\" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="810" y="2000" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 3: Act 5 MCP (2 screens) -->
+                <mxCell id="mcp-pip-analyze-int" value="MCP-PIP-&#10;ANALYZE-1&#10;&#10;Analyze Changes&#10;AI processing" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="580" y="1880" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-generate-pip-int" value="MCP-PIP-&#10;GENERATE-1&#10;&#10;Generate PIP&#10;Create proposal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="580" y="1760" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 5 arrows -->
