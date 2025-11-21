@@ -1296,34 +1296,52 @@
                 
                 <!-- ACT 1 Swimlane -->
                 <mxCell id="swimlane-act1" value="ACT 1: Onboarding" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="520" width="2720" height="220" as="geometry"/>
+                    <mxGeometry x="40" y="580" width="4720" height="280" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 1 screens -->
-                <mxCell id="fob-first-run-int" value="FOB-ONBOARDING-&#10;FIRST-RUN-1&#10;&#10;First Run&#10;Welcome screen" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 1 Main Path (4 screens) -->
+                <mxCell id="fob-first-run-int" value="FOB-ONBOARDING-&#10;FIRST-RUN-1&#10;&#10;First Run&#10;Welcome screen" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="620" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-sync-prefs-int" value="FOB-ONBOARDING-&#10;SYNC-PREFS-1&#10;&#10;Sync Preferences&#10;Auto-sync settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-sync-prefs-int" value="FOB-ONBOARDING-&#10;SYNC-PREFS-1&#10;&#10;Sync Preferences&#10;Auto-sync settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="620" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-mcp-config-int" value="FOB-ONBOARDING-&#10;MCP-CONFIG-1&#10;&#10;MCP Configuration&#10;Setup Mimir MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-mcp-config-int" value="FOB-ONBOARDING-&#10;MCP-CONFIG-1&#10;&#10;MCP Configuration&#10;Setup Mimir MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="620" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-dashboard-int" value="FOB-DASHBOARD-1&#10;&#10;Main Dashboard&#10;Ready to use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act1" vertex="1">
-                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-dashboard-int" value="FOB-DASHBOARD-1&#10;&#10;Main Dashboard&#10;Ready to use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1020" y="620" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 2: Act 1 Modals (2 screens) -->
+                <mxCell id="fob-sync-prefs-modal-int" value="FOB-ONBOARDING-&#10;PREFERENCES-MODAL-1&#10;&#10;Sync Options&#10;(Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="590" y="740" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-mcp-confirm-modal-int" value="FOB-ONBOARDING-&#10;MCP-COMPLETE-1&#10;&#10;✓ MCP Ready&#10;(Confirmation)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="810" y="740" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 3: Act 1 MCP Processing (2 screens) -->
+                <mxCell id="fob-external-mcp-setup-int" value="FOB-ONBOARDING-&#10;EXTERNAL-MCP-1&#10;&#10;External MCP Setup&#10;(GitHub/Jira)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="810" y="500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-external-github-config-int" value="FOB-ONBOARDING-&#10;EXTERNAL-MCP-&#10;GITHUB-1&#10;&#10;GitHub MCP Config" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="1000" y="500" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 1 main path arrows -->
-                <mxCell id="arrow-act1-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-first-run-int" target="fob-sync-prefs-int" edge="1">
+                <mxCell id="arrow-act1-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="layer-1-main" source="fob-first-run-int" target="fob-sync-prefs-int" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-act1-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-sync-prefs-int" target="fob-mcp-config-int" edge="1">
+                <mxCell id="arrow-act1-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="layer-1-main" source="fob-sync-prefs-int" target="fob-mcp-config-int" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-act1-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-mcp-config-int" target="fob-dashboard-int" edge="1">
+                <mxCell id="arrow-act1-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="layer-1-main" source="fob-mcp-config-int" target="fob-dashboard-int" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 
