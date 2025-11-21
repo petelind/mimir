@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Act 0 - Authentication and Setup" id="act0-authentication">
-        <mxGraphModel dx="684" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+        <mxGraphModel dx="1045" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
             <root>
                 <mxCell id="act0-root-0"/>
                 <mxCell id="act0-root-1" parent="act0-root-0"/>
@@ -47,7 +47,7 @@
                 <mxCell id="arrow-login-admin" value="Login success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act0-root-1" source="hb-login" target="hb-admin-dash" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-startup" value="FOB-STARTUP-1&#10;&#10;FOB Login/Startup&#10;&#10;Container initialization&#10;- Database connection check&#10;- MCP server status: ✓ Running&#10;- Authentication check" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
+                <mxCell id="fob-startup" value="FOB-STARTUP-1&lt;br&gt;&lt;br&gt;FOB Login/Startup&lt;br&gt;&lt;br&gt;Container initialization&lt;br&gt;- Database connection check&lt;br&gt;- MCP server status: ✓ Running&lt;br&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
                     <mxGeometry x="800" y="410" width="240" height="160" as="geometry"/>
                 </mxCell>
                 <mxCell id="arrow-decision-maria" value="Maria&#10;(FOB User)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="act0-root-1" source="decision-user-type" target="fob-startup" edge="1">
@@ -69,7 +69,7 @@
                 <mxCell id="arrow-no-connection" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=11;dashed=1;dashPattern=8 8;" parent="act0-root-1" source="decision-hb-connection" target="fob-error" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-dashboard-success" value="FOB Dashboard&#10;(Success - Act 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
+                <mxCell id="fob-dashboard-success" value="&lt;span style=&quot;text-align: left;&quot;&gt;FOB-CONNECT-HB-1&lt;br&gt;&lt;/span&gt;(Success - Act 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act0-root-1" vertex="1">
                     <mxGeometry x="840" y="850" width="160" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="arrow-yes-connection" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=11;" parent="act0-root-1" source="decision-hb-connection" target="fob-dashboard-success" edge="1">
@@ -130,7 +130,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Act 1 - Onboarding" id="act1-onboarding">
-        <mxGraphModel dx="684" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+        <mxGraphModel dx="1045" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
             <root>
                 <mxCell id="act1-root-0"/>
                 <mxCell id="act1-root-1" parent="act1-root-0"/>
@@ -229,8 +229,164 @@
             </root>
         </mxGraphModel>
     </diagram>
+    <diagram name="Act 2 - Family Management" id="act2-family">
+        <mxGraphModel dx="1045" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="2200" math="0" shadow="0">
+            <root>
+                <mxCell id="act2-root-0"/>
+                <mxCell id="act2-root-1" parent="act2-root-0"/>
+                <mxCell id="legend-act2" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-act2" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-modal-act2" value="⬜ Light Grey = Modal/Dialog" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-decision-act2" value="🟨 Yellow Diamond = Decision" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act2" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act2" value="START&#10;Act 2: Family Management" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-dashboard-first" value="FOB-DASHBOARD-FIRST-1&#10;&#10;FOB Dashboard (Empty State)&#10;&#10;[Browse Families]&#10;[Create Family]&#10;[Sync with Homebase]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="450" y="200" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-dashboard" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act2-root-1" source="start-act2" target="fob-dashboard-first" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-family-create-public" value="FOB-FAMILY-CREATE-1&#10;&#10;Create Family: 'UX'&#10;&#10;Name: UX&#10;Visibility: Public&#10;Join Policy: Requires Approval&#10;Category: Design" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="120" y="400" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-dashboard-create" value="Create Family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-dashboard-first" target="fob-family-create-public" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="270"/>
+                            <mxPoint x="380" y="370"/>
+                            <mxPoint x="240" y="370"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-family-create-hidden" value="FOB-FAMILY-CREATE-1&#10;&#10;Create Family: 'Acme, INC'&#10;&#10;Name: Acme, INC&#10;Visibility: Hidden&#10;Join Policy: Invite Only&#10;Category: Private" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="120" y="620" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-create-public-hidden" value="Create 2nd family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-create-public" target="fob-family-create-hidden" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-family-browser" value="FOB-FAMILY-BROWSER-1&#10;&#10;Browse Families&#10;&#10;Search + Category filters&#10;List of public families:&#10;- Usability (127 members)&#10;- Design Patterns (43 members)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="800" y="400" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-dashboard-browse" value="Browse Families" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-dashboard-first" target="fob-family-browser" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="270"/>
+                            <mxPoint x="780" y="370"/>
+                            <mxPoint x="930" y="370"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-family-details" value="FOB-FAMILY-DETAILS-1&#10;&#10;Family: Usability&#10;&#10;Members: 127&#10;Playbooks: 8 available&#10;Join Policy: Auto-approve&#10;&#10;[Join Family]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="800" y="620" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-browser-details" value="Click 'Usability'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-browser" target="fob-family-details" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="decision-join-policy" value="Join Policy?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="850" y="840" width="160" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-details-decision" value="Join Family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-details" target="decision-join-policy" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-family-joined" value="FOB-FAMILY-JOINED-1&#10;&#10;Success Notification&#10;&#10;'You've joined Usability family'&#10;&#10;Playbooks now visible" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="800" y="1040" width="260" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-auto-approve" value="Auto-approve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="decision-join-policy" target="fob-family-joined" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="divider-admin" value="ACT 2.5: Family Admin Workflows" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1240" width="360" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-family-admin" value="FOB-FAMILY-ADMIN-1&#10;&#10;Family Admin Dashboard: UX&#10;&#10;Tabs: Overview | Members | Playbooks&#10;Members: 3&#10;Pending Join Requests: 2 🔴&#10;Playbooks: 0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="450" y="1320" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-create-admin" value="Navigate to&#10;Admin Panel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-create-public" target="fob-family-admin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="1400"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-join-requests" value="FOB-JOIN-REQUESTS-1&#10;&#10;Join Requests (2)&#10;&#10;1. Alex Thompson&#10;   'UX researcher...'&#10;   [Approve] [Reject]&#10;&#10;2. Spam Bot&#10;   'CHECK OUT MY LINKS'&#10;   [Approve] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="450" y="1540" width="260" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-admin-requests" value="Members Tab →&#10;Join Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-admin" target="fob-join-requests" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-approve-modal" value="FOB-APPROVE-MODAL-1&#10;&#10;Confirm Join Approval&#10;&#10;'Approve Alex Thompson?'&#10;'They will get access to&#10;all family playbooks'&#10;&#10;[Cancel] [Confirm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="80" y="1510" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-approve-modal" value="Click [Approve]&#10;for Alex" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;" parent="act2-root-1" source="fob-join-requests" target="fob-approve-modal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-reject-modal" value="FOB-REJECT-MODAL-1&#10;&#10;Reject Join Request&#10;&#10;'Reject Spam Bot?'&#10;Reason: (optional)&#10;☑ Block future requests&#10;&#10;[Cancel] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="780" y="1590" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-reject-modal" value="Click [Reject]&#10;for Spam Bot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;" parent="act2-root-1" source="fob-join-requests" target="fob-reject-modal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-playbook-submissions" value="FOB-PLAYBOOK-SUBMISSIONS-1&#10;&#10;Playbook Submissions (1)&#10;&#10;'Information Architecture&#10;Patterns' by Tom&#10;Submitted: 1 day ago&#10;&#10;[Preview Full] [Approve]&#10;[Request Changes] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="450" y="1820" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-admin-playbooks" value="Playbooks Tab →&#10;Submissions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-admin" target="fob-playbook-submissions" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="760" y="1400"/>
+                            <mxPoint x="760" y="1910"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-playbook-preview" value="FOB-PLAYBOOK-PREVIEW-1&#10;&#10;Playbook Preview Modal&#10;&#10;Shows complete structure:&#10;- Activities&#10;- Artifacts&#10;- Goals&#10;&#10;[Approve] [Request Changes]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="780" y="1830" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-preview-modal" value="[Preview Full]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-playbook-submissions" target="fob-playbook-preview" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-playbook-approve-modal" value="FOB-PLAYBOOK-APPROVE-&#10;MODAL-1&#10;&#10;Confirm Approval&#10;&#10;'Approve IA Patterns?'&#10;'Available to all members'&#10;&#10;[Cancel] [Confirm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="800" y="2050" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-playbook-approve" value="[Approve]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-playbook-preview" target="fob-playbook-approve-modal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end-act2" value="END&#10;Act 2 Complete&#10;&#10;Maria manages&#10;3 families" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act2-root-1" vertex="1">
+                    <mxGeometry x="500" y="2060" width="180" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-joined-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-joined" target="end-act2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="930" y="1200"/>
+                            <mxPoint x="1100" y="1200"/>
+                            <mxPoint x="1100" y="2085"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-approve-end" value="Alex approved" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-approve-modal" target="end-act2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="250" y="2110"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-playbook-approve-end" value="Playbook activated" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-playbook-approve-modal" target="end-act2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
     <diagram name="Act 4 - MCP Usage Flow" id="act4-mcp-usage">
-        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
+        <mxGraphModel dx="1045" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -409,158 +565,132 @@
             </root>
         </mxGraphModel>
     </diagram>
-    <diagram name="Act 2 - Family Management" id="act2-family">
-        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="2200" math="0" shadow="0">
+    <diagram name="Act 3 - Sync and Upload" id="act3-sync">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1900" math="0" shadow="0">
             <root>
-                <mxCell id="act2-root-0"/>
-                <mxCell id="act2-root-1" parent="act2-root-0"/>
-                <mxCell id="legend-act2" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act2-root-1" vertex="1">
+                <mxCell id="act3-root-0"/>
+                <mxCell id="act3-root-1" parent="act3-root-0"/>
+                <mxCell id="legend-act3" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act3-root-1" vertex="1">
                     <mxGeometry x="40" y="40" width="280" height="130" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-fob-act2" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                <mxCell id="legend-fob-act3" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act3" vertex="1">
                     <mxGeometry y="26" width="280" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-modal-act2" value="⬜ Light Grey = Modal/Dialog" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                <mxCell id="legend-modal-act3" value="⬜ Light Grey = Modal/Dialog" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act3" vertex="1">
                     <mxGeometry y="52" width="280" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-decision-act2" value="🟨 Yellow Diamond = Decision" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                <mxCell id="legend-decision-act3" value="🟨 Yellow Diamond = Decision" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act3" vertex="1">
                     <mxGeometry y="78" width="280" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-primary-act2" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act2" vertex="1">
+                <mxCell id="legend-primary-act3" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act3" vertex="1">
                     <mxGeometry y="104" width="280" height="26" as="geometry"/>
                 </mxCell>
-                <mxCell id="start-act2" value="START&#10;Act 2: Family Management" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act2-root-1" vertex="1">
+                <mxCell id="start-act3" value="START&#10;Act 3: Sync &amp; Upload" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act3-root-1" vertex="1">
                     <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-dashboard-first" value="FOB-DASHBOARD-FIRST-1&#10;&#10;FOB Dashboard (Empty State)&#10;&#10;[Browse Families]&#10;[Create Family]&#10;[Sync with Homebase]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="450" y="200" width="260" height="140" as="geometry"/>
+                <mxCell id="fob-playbooks-list" value="FOB-PLAYBOOKS-LIST-1&#10;&#10;Playbooks Page&#10;&#10;[Sync with Homebase]&#10;[Upload Playbook]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="450" y="200" width="260" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-start-dashboard" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act2-root-1" source="start-act2" target="fob-dashboard-first" edge="1">
+                <mxCell id="arrow-start-list" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act3-root-1" source="start-act3" target="fob-playbooks-list" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-family-create-public" value="FOB-FAMILY-CREATE-1&#10;&#10;Create Family: 'UX'&#10;&#10;Name: UX&#10;Visibility: Public&#10;Join Policy: Requires Approval&#10;Category: Design" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="120" y="400" width="240" height="160" as="geometry"/>
+                <mxCell id="fob-sync-dashboard" value="FOB-SYNC-DASHBOARD-1&#10;&#10;Syncing with Homebase&#10;&#10;Status: 'Checking for updates...'&#10;Token authentication" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="800" y="380" width="240" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-dashboard-create" value="Create Family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-dashboard-first" target="fob-family-create-public" edge="1">
+                <mxCell id="arrow-sync-button" value="Click [Sync]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-playbooks-list" target="fob-sync-dashboard" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="380" y="270"/>
-                            <mxPoint x="380" y="370"/>
-                            <mxPoint x="240" y="370"/>
+                            <mxPoint x="780" y="260"/>
+                            <mxPoint x="780" y="350"/>
+                            <mxPoint x="920" y="350"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="fob-family-create-hidden" value="FOB-FAMILY-CREATE-1&#10;&#10;Create Family: 'Acme, INC'&#10;&#10;Name: Acme, INC&#10;Visibility: Hidden&#10;Join Policy: Invite Only&#10;Category: Private" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="120" y="620" width="240" height="160" as="geometry"/>
+                <mxCell id="fob-available-playbooks" value="FOB-AVAILABLE-PLAYBOOKS-1&#10;&#10;Available Playbooks&#10;&#10;'React Frontend Development'&#10;  Usability family | v1.0&#10;  by Mike Chen&#10;  Status: Not downloaded&#10;&#10;+ 7 other playbooks" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="800" y="580" width="240" height="200" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-create-public-hidden" value="Create 2nd family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-create-public" target="fob-family-create-hidden" edge="1">
+                <mxCell id="arrow-sync-complete" value="Sync complete" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-sync-dashboard" target="fob-available-playbooks" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-family-browser" value="FOB-FAMILY-BROWSER-1&#10;&#10;Browse Families&#10;&#10;Search + Category filters&#10;List of public families:&#10;- Usability (127 members)&#10;- Design Patterns (43 members)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="800" y="400" width="260" height="160" as="geometry"/>
+                <mxCell id="fob-playbook-preview" value="FOB-PLAYBOOK-PREVIEW-1&#10;&#10;Preview: React Frontend Dev&#10;&#10;Activities, Artifacts, Goals&#10;Version: v1.0&#10;Author: Mike Chen&#10;&#10;[Download to FOB]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="800" y="840" width="240" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-dashboard-browse" value="Browse Families" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-dashboard-first" target="fob-family-browser" edge="1">
+                <mxCell id="arrow-click-playbook" value="Click playbook" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-available-playbooks" target="fob-playbook-preview" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-download-progress" value="FOB-DOWNLOAD-PROGRESS-1&#10;&#10;Downloading playbook...&#10;&#10;Progress: 75%&#10;&#10;Success: 'React Frontend&#10;Development v1.0 downloaded'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="800" y="1080" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-download" value="Download" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-playbook-preview" target="fob-download-progress" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="divider-upload" value="ACT 3.1: Upload Playbook from JSON" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="40" y="380" width="360" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-upload-modal" value="FOB-UPLOAD-MODAL-1&#10;&#10;Upload Playbook&#10;&#10;Drop JSON file or browse&#10;Accepted: .json only&#10;&#10;File: (none selected)&#10;[Cancel] [Upload - disabled]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=11;align=left;verticalAlign=middle;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="120" y="480" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-upload-button" value="Click [Upload&#10;Playbook]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-playbooks-list" target="fob-upload-modal" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="780" y="270"/>
-                            <mxPoint x="780" y="370"/>
-                            <mxPoint x="930" y="370"/>
+                            <mxPoint x="380" y="260"/>
+                            <mxPoint x="380" y="450"/>
+                            <mxPoint x="250" y="450"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="fob-family-details" value="FOB-FAMILY-DETAILS-1&#10;&#10;Family: Usability&#10;&#10;Members: 127&#10;Playbooks: 8 available&#10;Join Policy: Auto-approve&#10;&#10;[Join Family]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="800" y="620" width="260" height="160" as="geometry"/>
+                <mxCell id="fob-upload-validation-success" value="FOB-UPLOAD-VALIDATION-1&#10;(Success Path)&#10;&#10;✓ Validation successful&#10;&#10;Preview:&#10;- UX Research Methodology&#10;- Version: 2.1&#10;- Activities: 12&#10;- Author: Maria Rodriguez&#10;&#10;[Cancel] [Import Playbook]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="120" y="720" width="260" height="220" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-browser-details" value="Click 'Usability'" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-browser" target="fob-family-details" edge="1">
+                <mxCell id="arrow-file-selected" value="Select file,&#10;click [Upload]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-upload-modal" target="fob-upload-validation-success" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="decision-join-policy" value="Join Policy?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="850" y="840" width="160" height="140" as="geometry"/>
+                <mxCell id="fob-upload-validation-error" value="FOB-UPLOAD-VALIDATION-1&#10;(Error Path)&#10;&#10;✗ Validation failed&#10;&#10;Error: 'Missing required&#10;field: activities'&#10;&#10;[Close] [Try Another File]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="420" y="720" width="220" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-details-decision" value="Join Family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-details" target="decision-join-policy" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fob-family-joined" value="FOB-FAMILY-JOINED-1&#10;&#10;Success Notification&#10;&#10;'You've joined Usability family'&#10;&#10;Playbooks now visible" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="800" y="1040" width="260" height="120" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-auto-approve" value="Auto-approve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="decision-join-policy" target="fob-family-joined" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="divider-admin" value="ACT 2.5: Family Admin Workflows" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#d79b00;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="40" y="1240" width="360" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="fob-family-admin" value="FOB-FAMILY-ADMIN-1&#10;&#10;Family Admin Dashboard: UX&#10;&#10;Tabs: Overview | Members | Playbooks&#10;Members: 3&#10;Pending Join Requests: 2 🔴&#10;Playbooks: 0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="450" y="1320" width="260" height="160" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-create-admin" value="Navigate to&#10;Admin Panel" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-create-public" target="fob-family-admin" edge="1">
+                <mxCell id="arrow-validation-error" value="Validation&#10;error" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#b85450;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act3-root-1" source="fob-upload-modal" target="fob-upload-validation-error" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="240" y="1400"/>
+                            <mxPoint x="410" y="615"/>
+                            <mxPoint x="410" y="690"/>
+                            <mxPoint x="530" y="690"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="fob-join-requests" value="FOB-JOIN-REQUESTS-1&#10;&#10;Join Requests (2)&#10;&#10;1. Alex Thompson&#10;   'UX researcher...'&#10;   [Approve] [Reject]&#10;&#10;2. Spam Bot&#10;   'CHECK OUT MY LINKS'&#10;   [Approve] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="450" y="1540" width="260" height="200" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-admin-requests" value="Members Tab →&#10;Join Requests" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-family-admin" target="fob-join-requests" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fob-approve-modal" value="FOB-APPROVE-MODAL-1&#10;&#10;Confirm Join Approval&#10;&#10;'Approve Alex Thompson?'&#10;'They will get access to&#10;all family playbooks'&#10;&#10;[Cancel] [Confirm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="140" y="1580" width="220" height="160" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-approve-modal" value="Click [Approve]&#10;for Alex" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;" parent="act2-root-1" source="fob-join-requests" target="fob-approve-modal" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fob-reject-modal" value="FOB-REJECT-MODAL-1&#10;&#10;Reject Join Request&#10;&#10;'Reject Spam Bot?'&#10;Reason: (optional)&#10;☑ Block future requests&#10;&#10;[Cancel] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="780" y="1590" width="220" height="160" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-reject-modal" value="Click [Reject]&#10;for Spam Bot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;" parent="act2-root-1" source="fob-join-requests" target="fob-reject-modal" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="fob-playbook-submissions" value="FOB-PLAYBOOK-SUBMISSIONS-1&#10;&#10;Playbook Submissions (1)&#10;&#10;'Information Architecture&#10;Patterns' by Tom&#10;Submitted: 1 day ago&#10;&#10;[Preview Full] [Approve]&#10;[Request Changes] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="450" y="1820" width="260" height="180" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-admin-playbooks" value="Playbooks Tab →&#10;Submissions" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-admin" target="fob-playbook-submissions" edge="1">
+                <mxCell id="arrow-try-again" value="Try another" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act3-root-1" source="fob-upload-validation-error" target="fob-upload-modal" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="760" y="1400"/>
-                            <mxPoint x="760" y="1910"/>
+                            <mxPoint x="400" y="810"/>
+                            <mxPoint x="400" y="615"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="fob-playbook-preview" value="FOB-PLAYBOOK-PREVIEW-1&#10;&#10;Playbook Preview Modal&#10;&#10;Shows complete structure:&#10;- Activities&#10;- Artifacts&#10;- Goals&#10;&#10;[Approve] [Request Changes]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="780" y="1830" width="260" height="160" as="geometry"/>
+                <mxCell id="fob-playbooks-updated" value="FOB-PLAYBOOKS-UPDATED-1&#10;&#10;Playbooks List&#10;&#10;UX Research Methodology v2.1&#10;Status: Local (not synced)&#10;Source: Imported from JSON&#10;Author: Maria Rodriguez&#10;[View] [Edit] [Export]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="120" y="1000" width="260" height="180" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-preview-modal" value="[Preview Full]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-playbook-submissions" target="fob-playbook-preview" edge="1">
+                <mxCell id="arrow-import-success" value="Import" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act3-root-1" source="fob-upload-validation-success" target="fob-playbooks-updated" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-playbook-approve-modal" value="FOB-PLAYBOOK-APPROVE-&#10;MODAL-1&#10;&#10;Confirm Approval&#10;&#10;'Approve IA Patterns?'&#10;'Available to all members'&#10;&#10;[Cancel] [Confirm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="800" y="2050" width="220" height="140" as="geometry"/>
+                <mxCell id="end-act3" value="END&#10;Act 3 Complete&#10;&#10;Playbooks synced&#10;&amp; imported" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act3-root-1" vertex="1">
+                    <mxGeometry x="490" y="1360" width="180" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="arrow-playbook-approve" value="[Approve]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act2-root-1" source="fob-playbook-preview" target="fob-playbook-approve-modal" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="end-act2" value="END&#10;Act 2 Complete&#10;&#10;Maria manages&#10;3 families" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act2-root-1" vertex="1">
-                    <mxGeometry x="500" y="2060" width="180" height="100" as="geometry"/>
-                </mxCell>
-                <mxCell id="arrow-joined-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-family-joined" target="end-act2" edge="1">
+                <mxCell id="arrow-download-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act3-root-1" source="fob-download-progress" target="end-act3" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="930" y="1200"/>
-                            <mxPoint x="1100" y="1200"/>
-                            <mxPoint x="1100" y="2085"/>
+                            <mxPoint x="920" y="1300"/>
+                            <mxPoint x="1080" y="1300"/>
+                            <mxPoint x="1080" y="1410"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="arrow-approve-end" value="Alex approved" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-approve-modal" target="end-act2" edge="1">
+                <mxCell id="arrow-upload-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="act3-root-1" source="fob-playbooks-updated" target="end-act3" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="250" y="2110"/>
+                            <mxPoint x="250" y="1300"/>
+                            <mxPoint x="80" y="1300"/>
+                            <mxPoint x="80" y="1410"/>
                         </Array>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="arrow-playbook-approve-end" value="Playbook activated" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act2-root-1" source="fob-playbook-approve-modal" target="end-act2" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
