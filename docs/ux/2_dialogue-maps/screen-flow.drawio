@@ -899,4 +899,179 @@
             </root>
         </mxGraphModel>
     </diagram>
+    <diagram name="Act 7 - Create Playbooks" id="act7-create">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1800" math="0" shadow="0">
+            <root>
+                <mxCell id="act7-root-0"/>
+                <mxCell id="act7-root-1" parent="act7-root-0"/>
+                <mxCell id="legend-act7" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-act7" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act7" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-windsurf-act7" value="🟪 Purple Box = Windsurf/MCP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act7" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-method-act7" value="🟨 Yellow = Creation Method" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act7" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act7" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act7" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act7" value="START&#10;Act 7: Create Playbooks" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-create-entry" value="FOB-CREATE-PLAYBOOK-1&#10;&#10;Dashboard&#10;&#10;[Create New Playbook]&#10;[Import from Notes]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="460" y="200" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act7-root-1" source="start-act7" target="fob-create-entry" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="method1-label" value="METHOD 1: Manual Wizard" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#d79b00;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="40" y="360" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-wizard-basic" value="FOB-PLAYBOOK-WIZARD-&#10;BASIC-1&#10;&#10;Name: 'My Goals'&#10;Description: 'Personal...'&#10;Category: Personal&#10;&#10;[Next]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="40" y="420" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-manual" value="Manual" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act7-root-1" source="fob-create-entry" target="fob-wizard-basic" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="260"/>
+                            <mxPoint x="380" y="390"/>
+                            <mxPoint x="140" y="390"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-editor" value="FOB-PLAYBOOK-EDITOR-1&#10;&#10;Add:&#10;- Goals (3)&#10;- Activities (5)&#10;- Dependencies&#10;&#10;[Next]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="40" y="640" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-wizard-editor" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act7-root-1" source="fob-wizard-basic" target="fob-editor" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-wizard-publish" value="FOB-PLAYBOOK-WIZARD-&#10;PUBLISH-1&#10;&#10;Visibility: Private&#10;Location: Local only&#10;&#10;[Create Playbook]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="40" y="840" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-editor-publish" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act7-root-1" source="fob-editor" target="fob-wizard-publish" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="method2-label" value="METHOD 2: AI from Notes" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#d79b00;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="300" y="360" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-import-notes" value="FOB-IMPORT-NOTES-1&#10;&#10;Paste markdown notes:&#10;'# User Research&#10;- Interview...&#10;# Wireframing...'&#10;&#10;[Analyze]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="300" y="420" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-import" value="Import" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act7-root-1" source="fob-create-entry" target="fob-import-notes" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-ai-structure" value="FOB-AI-STRUCTURE-1&#10;&#10;AI detected:&#10;- Activities: 12&#10;- Artifacts: 8&#10;- Goals: 5&#10;&#10;[Review and Edit]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="300" y="640" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-ai-analyze" value="AI" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act7-root-1" source="fob-import-notes" target="fob-ai-structure" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-ai-editor" value="Edit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-ai-structure" target="fob-editor" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-upload-homebase" value="FOB-UPLOAD-HOMEBASE-1&#10;&#10;Uploading to Homebase...&#10;&#10;Success: Published to&#10;UX family&#10;&#10;Members notified" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=center;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="300" y="840" width="200" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-publish-upload" value="Family&#10;playbook" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;" parent="act7-root-1" source="fob-wizard-publish" target="fob-upload-homebase" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="method3-label" value="METHOD 3: Template" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#d79b00;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="560" y="360" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-template-select" value="FOB-TEMPLATE-SELECT-1&#10;&#10;Templates:&#10;⦿ Consulting Project&#10;○ Research Study&#10;○ Design System&#10;&#10;[Next]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="560" y="420" width="200" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-template" value="Template" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act7-root-1" source="fob-create-entry" target="fob-template-select" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="260"/>
+                            <mxPoint x="780" y="390"/>
+                            <mxPoint x="660" y="390"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-template-editor" value="Customize" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-template-select" target="fob-editor" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="530" y="540"/>
+                            <mxPoint x="530" y="675"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fob-member-mgmt" value="FOB-MEMBER-&#10;MANAGEMENT-1&#10;&#10;Hidden Family: Acme INC&#10;&#10;Add members:&#10;sarah@ux...&#10;james@ux...&#10;&#10;[Send Invites]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="560" y="640" width="200" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-hidden-members" value="Hidden&#10;family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-wizard-publish" target="fob-member-mgmt" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="520" y="910"/>
+                            <mxPoint x="520" y="730"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="method4-label" value="METHOD 4: MCP" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#d79b00;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="820" y="360" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-create-mcp" value="WINDSURF-CREATE-&#10;PLAYBOOK-1&#10;&#10;'mimir: Create playbook&#10;Design System Management&#10;with activities 1-4,&#10;private, local only'&#10;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="820" y="420" width="220" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-mcp-create" value="MCP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-create-entry" target="windsurf-create-mcp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="290"/>
+                            <mxPoint x="780" y="390"/>
+                            <mxPoint x="930" y="390"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="mcp-created" value="MCP-PLAYBOOK-CREATED-1&#10;&#10;✓ Created playbook&#10;✓ Added 4 activities&#10;✓ Visibility: Private&#10;&#10;Playbook ID: ds-mgmt-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="820" y="640" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-mcp-response" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act7-root-1" source="windsurf-create-mcp" target="mcp-created" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end-act7" value="END&#10;Act 7 Complete&#10;&#10;4 creation methods&#10;demonstrated" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act7-root-1" vertex="1">
+                    <mxGeometry x="470" y="1100" width="180" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-manual-end" value="Private" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-wizard-publish" target="end-act7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="140" y="1060"/>
+                            <mxPoint x="40" y="1060"/>
+                            <mxPoint x="40" y="1125"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-upload-end" value="Family" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-upload-homebase" target="end-act7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="400" y="1060"/>
+                            <mxPoint x="515" y="1060"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-hidden-end" value="Hidden" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="fob-member-mgmt" target="end-act7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="660" y="1060"/>
+                            <mxPoint x="605" y="1060"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="arrow-mcp-end" value="MCP" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=9;dashed=1;dashPattern=8 8;" parent="act7-root-1" source="mcp-created" target="end-act7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="930" y="1060"/>
+                            <mxPoint x="1100" y="1060"/>
+                            <mxPoint x="1100" y="1125"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
