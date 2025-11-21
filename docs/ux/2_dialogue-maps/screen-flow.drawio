@@ -1179,4 +1179,422 @@
             </root>
         </mxGraphModel>
     </diagram>
+    <diagram name="Integrated End-to-End Flow" id="integrated-flow">
+        <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2800" pageHeight="2400" math="0" shadow="0">
+            <root>
+                <mxCell id="integrated-root-0"/>
+                <mxCell id="integrated-root-1" parent="integrated-root-0"/>
+                
+                <!-- Legend -->
+                <mxCell id="legend-integrated" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="320" height="182" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-main-path" value="━━━ Bold 3px Arrow = Main Success Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="26" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-alt-path" value="╌╌╌ Dashed 2px = Alternative Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="52" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-error-path" value="╌╌╌ Red Dashed = Error/Recovery" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="78" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-int" value="🟦 Blue = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="104" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-hb-int" value="🟩 Green = Homebase Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="130" width="320" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-windsurf-int" value="🟪 Purple = Windsurf/MCP" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;fontSize=10;" parent="legend-integrated" vertex="1">
+                    <mxGeometry y="156" width="320" height="26" as="geometry"/>
+                </mxCell>
+                
+                <!-- START marker -->
+                <mxCell id="start-integrated" value="START&#10;Maria's Journey" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="440" y="80" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- ACT 0 Swimlane -->
+                <mxCell id="swimlane-act0" value="ACT 0: Authentication &amp; Setup" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="280" width="2720" height="220" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 0 screens -->
+                <mxCell id="hb-register-int" value="HB-AUTH-REGISTER-1&#10;&#10;Register&#10;Email &amp; Password" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="hb-verify-int" value="HB-AUTH-VERIFY-EMAIL-1&#10;&#10;Email Verification&#10;Check inbox" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="hb-token-int" value="HB-AUTH-TOKEN-DISPLAY-1&#10;&#10;Token Generated&#10;Copy token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-connect-int" value="FOB-ONBOARDING-&#10;CONNECT-1&#10;&#10;Connect to HB&#10;Paste token" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
+                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-token-setup-int" value="FOB-ONBOARDING-&#10;TOKEN-SETUP-1&#10;&#10;Token Setup&#10;Test connection" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act0" vertex="1">
+                    <mxGeometry x="1000" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 0 main path arrows -->
+                <mxCell id="arrow-act0-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act0" source="hb-register-int" target="hb-verify-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act0-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act0" source="hb-verify-int" target="hb-token-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act0-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act0" source="hb-token-int" target="fob-connect-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act0-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act0" source="fob-connect-int" target="fob-token-setup-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow from START to Act 0 -->
+                <mxCell id="arrow-start-act0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="start-integrated" target="hb-register-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="520" y="200"/>
+                            <mxPoint x="80" y="200"/>
+                            <mxPoint x="80" y="360"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 1 Swimlane -->
+                <mxCell id="swimlane-act1" value="ACT 1: Onboarding" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="520" width="2720" height="220" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 1 screens -->
+                <mxCell id="fob-first-run-int" value="FOB-ONBOARDING-&#10;FIRST-RUN-1&#10;&#10;First Run&#10;Welcome screen" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-sync-prefs-int" value="FOB-ONBOARDING-&#10;SYNC-PREFS-1&#10;&#10;Sync Preferences&#10;Auto-sync settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-mcp-config-int" value="FOB-ONBOARDING-&#10;MCP-CONFIG-1&#10;&#10;MCP Configuration&#10;Setup Mimir MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act1" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-dashboard-int" value="FOB-DASHBOARD-1&#10;&#10;Main Dashboard&#10;Ready to use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act1" vertex="1">
+                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 1 main path arrows -->
+                <mxCell id="arrow-act1-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-first-run-int" target="fob-sync-prefs-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act1-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-sync-prefs-int" target="fob-mcp-config-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act1-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act1" source="fob-mcp-config-int" target="fob-dashboard-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow from Act 0 to Act 1 -->
+                <mxCell id="arrow-act0-act1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="fob-token-setup-int" target="fob-first-run-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1300" y="360"/>
+                            <mxPoint x="1300" y="480"/>
+                            <mxPoint x="80" y="480"/>
+                            <mxPoint x="80" y="600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 2 Swimlane -->
+                <mxCell id="swimlane-act2" value="ACT 2: Family Management" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="760" width="2720" height="260" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 2 screens - Main path (Join Family) -->
+                <mxCell id="fob-browse-families-int" value="FOB-FAMILY-&#10;BROWSE-1&#10;&#10;Browse Families&#10;Public listings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-family-detail-int" value="FOB-FAMILY-&#10;DETAIL-1&#10;&#10;Usability Family&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-join-request-int" value="FOB-FAMILY-&#10;JOIN-REQUEST-1&#10;&#10;Request to Join&#10;Submit request" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-join-approved-int" value="FOB-FAMILY-&#10;JOIN-APPROVED-1&#10;&#10;Joined!&#10;Access granted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 2 screens - Alternative path (Create Family) -->
+                <mxCell id="fob-create-family-int" value="FOB-FAMILY-&#10;CREATE-1&#10;&#10;Create Family&#10;New community" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="340" y="150" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-family-admin-int" value="FOB-FAMILY-&#10;ADMIN-DASHBOARD-1&#10;&#10;Admin Panel&#10;Manage family" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act2" vertex="1">
+                    <mxGeometry x="540" y="150" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 2 main path arrows -->
+                <mxCell id="arrow-act2-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act2" source="fob-browse-families-int" target="fob-family-detail-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act2-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act2" source="fob-family-detail-int" target="fob-join-request-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act2-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act2" source="fob-join-request-int" target="fob-join-approved-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 2 alternative path arrows -->
+                <mxCell id="arrow-act2-alt-1" value="OR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;" parent="swimlane-act2" source="fob-browse-families-int" target="fob-create-family-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act2-alt-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;" parent="swimlane-act2" source="fob-create-family-int" target="fob-family-admin-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow from Act 1 to Act 2 -->
+                <mxCell id="arrow-act1-act2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="fob-dashboard-int" target="fob-browse-families-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1060" y="600"/>
+                            <mxPoint x="1060" y="720"/>
+                            <mxPoint x="80" y="720"/>
+                            <mxPoint x="80" y="840"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 3 Swimlane -->
+                <mxCell id="swimlane-act3" value="ACT 3: First Sync &amp; Download" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e0f7fa;strokeColor=#00838f;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="1040" width="2720" height="240" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 3 screens - Main path (Download from HB) -->
+                <mxCell id="fob-sync-start-int" value="FOB-SYNC-&#10;DASHBOARD-1&#10;&#10;Sync with HB&#10;Start sync" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-available-playbooks-int" value="FOB-SYNC-&#10;AVAILABLE-1&#10;&#10;Available Playbooks&#10;Mike's React playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-preview-playbook-int" value="FOB-SYNC-&#10;PREVIEW-1&#10;&#10;Preview Playbook&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-download-complete-int" value="FOB-SYNC-&#10;SUCCESS-1&#10;&#10;Downloaded!&#10;Playbook ready" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 3 screens - Alternative path (Import JSON) -->
+                <mxCell id="fob-import-json-int" value="FOB-IMPORT-&#10;UPLOAD-1&#10;&#10;Import JSON&#10;Upload file" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="340" y="140" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-import-validate-int" value="FOB-IMPORT-&#10;VALIDATE-1&#10;&#10;Validate&#10;Check schema" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act3" vertex="1">
+                    <mxGeometry x="540" y="140" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 3 main path arrows -->
+                <mxCell id="arrow-act3-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act3" source="fob-sync-start-int" target="fob-available-playbooks-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act3-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act3" source="fob-available-playbooks-int" target="fob-preview-playbook-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act3-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act3" source="fob-preview-playbook-int" target="fob-download-complete-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 3 alternative path arrows -->
+                <mxCell id="arrow-act3-alt-1" value="OR" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;" parent="swimlane-act3" source="fob-sync-start-int" target="fob-import-json-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act3-alt-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;" parent="swimlane-act3" source="fob-import-json-int" target="fob-import-validate-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act3-alt-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;" parent="swimlane-act3" source="fob-import-validate-int" target="fob-download-complete-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="700" y="175"/>
+                            <mxPoint x="700" y="80"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- Arrow from Act 2 to Act 3 -->
+                <mxCell id="arrow-act2-act3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="fob-join-approved-int" target="fob-sync-start-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1060" y="840"/>
+                            <mxPoint x="1060" y="1000"/>
+                            <mxPoint x="80" y="1000"/>
+                            <mxPoint x="80" y="1120"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 4 Swimlane (Parallel - can happen anytime) -->
+                <mxCell id="swimlane-act4" value="ACT 4: MCP Usage (Parallel Activity)" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#7b1fa2;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="1300" width="2720" height="200" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 4 screens -->
+                <mxCell id="windsurf-open-int" value="WINDSURF-CHAT-1&#10;&#10;Open Windsurf&#10;Start session" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="swimlane-act4" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-context-int" value="MCP-PLAYBOOK-&#10;CONTEXT-1&#10;&#10;Load Playbook&#10;Context available" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="swimlane-act4" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="windsurf-commands-int" value="WINDSURF-&#10;COMMANDS-1&#10;&#10;Use MCP Commands&#10;Work with playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act4" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 4 arrows -->
+                <mxCell id="arrow-act4-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act4" source="windsurf-open-int" target="mcp-context-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act4-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act4" source="mcp-context-int" target="windsurf-commands-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Parallel indicator from Act 3 to Act 4 -->
+                <mxCell id="arrow-act3-act4" value="Parallel&#10;Activity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;dashed=1;dashPattern=8 8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;fontStyle=1;" parent="integrated-root-1" source="fob-download-complete-int" target="windsurf-open-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1060" y="1120"/>
+                            <mxPoint x="1060" y="1260"/>
+                            <mxPoint x="80" y="1260"/>
+                            <mxPoint x="80" y="1380"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 5 Swimlane -->
+                <mxCell id="swimlane-act5" value="ACT 5: Creating PIPs" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff6f00;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="1520" width="2720" height="220" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 5 screens -->
+                <mxCell id="windsurf-suggest-pip-int" value="WINDSURF-CHAT-&#10;PIP-SUGGEST-1&#10;&#10;MCP Suggests PIP&#10;Improvement idea" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-generate-pip-int" value="MCP-PIP-&#10;GENERATE-1&#10;&#10;Generate PIP&#10;Create proposal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-pip-review-int" value="FOB-PIP-&#10;REVIEW-DETAIL-1&#10;&#10;Review PIP&#10;Check changes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act5" vertex="1">
+                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-pip-approve-int" value="FOB-PIP-&#10;APPROVED-1&#10;&#10;Approved!&#10;v1.0 → v1.1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act5" vertex="1">
+                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 5 arrows -->
+                <mxCell id="arrow-act5-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act5" source="windsurf-suggest-pip-int" target="mcp-generate-pip-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act5-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act5" source="mcp-generate-pip-int" target="fob-pip-review-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-act5-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act5" source="fob-pip-review-int" target="fob-pip-approve-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow from Act 4 to Act 5 -->
+                <mxCell id="arrow-act4-act5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="windsurf-commands-int" target="windsurf-suggest-pip-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="820" y="1380"/>
+                            <mxPoint x="820" y="1480"/>
+                            <mxPoint x="80" y="1480"/>
+                            <mxPoint x="80" y="1600"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- ACT 6 Swimlane -->
+                <mxCell id="swimlane-act6" value="ACT 6: Sync Scenarios" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="1760" width="2720" height="240" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 6 screens - Main path (Upload PIP) -->
+                <mxCell id="fob-sync-upload-pip-int" value="FOB-SYNC-&#10;ANALYSIS-1&#10;&#10;Sync Analysis&#10;Local v1.1 > HB v1.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-pip-submit-int" value="FOB-SYNC-&#10;PIP-SUBMIT-1&#10;&#10;Submit PIP&#10;Upload to HB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 6 screens - Alternative scenarios -->
+                <mxCell id="fob-clean-download-int" value="FOB-SYNC-&#10;AVAILABLE-UPDATES-1&#10;&#10;Clean Download&#10;New playbook v1.2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="560" y="40" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-conflict-resolve-int" value="FOB-SYNC-&#10;CONFLICT-1&#10;&#10;Conflict!&#10;Choose resolution" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="750" y="40" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-export-json-int" value="FOB-PLAYBOOK-&#10;EXPORT-1&#10;&#10;Export JSON&#10;(Authors only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="940" y="40" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 6 main path arrows -->
+                <mxCell id="arrow-act6-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="swimlane-act6" source="fob-sync-upload-pip-int" target="fob-pip-submit-int" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                
+                <!-- Act 6 alternative scenarios (side by side) -->
+                <mxCell id="note-act6" value="4 Sync Scenarios:&#10;A) Upload PIP (main)&#10;B) Clean Download&#10;C) Conflict Resolution&#10;D) Export JSON" style="text;html=1;strokeColor=#ffc107;fillColor=#fff9c4;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontStyle=2;" parent="swimlane-act6" vertex="1">
+                    <mxGeometry x="560" y="140" width="200" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow from Act 5 to Act 6 -->
+                <mxCell id="arrow-act5-act6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="integrated-root-1" source="fob-pip-approve-int" target="fob-sync-upload-pip-int" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1060" y="1600"/>
+                            <mxPoint x="1060" y="1720"/>
+                            <mxPoint x="80" y="1720"/>
+                            <mxPoint x="80" y="1840"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- END marker -->
+                <mxCell id="end-integrated" value="END&#10;Main Success Path&#10;Complete!&#10;&#10;Maria can now:&#10;• Create playbooks (Act 7)&#10;• Configure settings (Act 8)&#10;• Handle errors (Act 9)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;align=center;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="560" y="2060" width="240" height="140" as="geometry"/>
+                </mxCell>
+                
+                <!-- Arrow to END -->
+                <mxCell id="arrow-act6-end" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="integrated-root-1" source="fob-pip-submit-int" target="end-integrated" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="580" y="1840"/>
+                            <mxPoint x="580" y="2020"/>
+                            <mxPoint x="680" y="2020"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                
+                <!-- Annotation for optional Acts 7-9 -->
+                <mxCell id="note-optional" value="Optional & Side Paths:&#10;&#10;ACT 7: Create New Playbooks&#10;(4 methods: Manual, AI, Template, MCP)&#10;&#10;ACTS 8-9: Settings & Error Recovery&#10;(Accessible anytime during journey)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=2;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="880" y="2040" width="340" height="140" as="geometry"/>
+                </mxCell>
+                
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
