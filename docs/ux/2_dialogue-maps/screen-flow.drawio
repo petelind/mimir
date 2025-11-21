@@ -695,4 +695,75 @@
             </root>
         </mxGraphModel>
     </diagram>
+    <diagram name="Act 5 - Creating PIPs" id="act5-pips">
+        <mxGraphModel dx="639" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1400" math="0" shadow="0">
+            <root>
+                <mxCell id="act5-root-0"/>
+                <mxCell id="act5-root-1" parent="act5-root-0"/>
+                <mxCell id="legend-act5" value="LEGEND" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="280" height="156" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-windsurf-act5" value="🟪 Purple Box = Windsurf Chat" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act5" vertex="1">
+                    <mxGeometry y="26" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-mcp-act5" value="🟧 Orange Box = MCP Internal" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act5" vertex="1">
+                    <mxGeometry y="52" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-fob-act5" value="🟦 Blue Box = FOB Screen" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act5" vertex="1">
+                    <mxGeometry y="78" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-modal-act5" value="⬜ Light Grey = Modal/Dialog" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act5" vertex="1">
+                    <mxGeometry y="104" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-primary-act5" value="➡️ Bold Arrow = Primary Path" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontFamily=Courier New;" parent="legend-act5" vertex="1">
+                    <mxGeometry y="130" width="280" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="start-act5" value="START&#10;Act 5: Creating PIPs" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="480" y="60" width="200" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="windsurf-chat-pip" value="WINDSURF-CHAT-PIP-1&#10;&#10;Maria: 'mimir: This playbook is&#10;great, but doesn't mention&#10;accessibility testing. Can you&#10;help me create a PIP for&#10;Accessibility Audit?'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="450" y="200" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-start-chat" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="act5-root-1" source="start-act5" target="windsurf-chat-pip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-pip-proposal" value="MCP-PIP-PROPOSAL-1&#10;&#10;MCP Response:&#10;'I'll help create PIP.&#10;&#10;Proposed:&#10;- Type: Extension&#10;- Activity: Accessibility Audit&#10;- Position: After testing setup&#10;- Dependencies defined&#10;&#10;Shall I create this PIP?'" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="450" y="400" width="260" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-chat-proposal" value="MCP analyzes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="windsurf-chat-pip" target="mcp-pip-proposal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="mcp-create-pip" value="MCP-CREATE-PIP-1&#10;&#10;User: 'Yes, create the PIP'&#10;&#10;MCP: Creating PIP...&#10;Calling FOB API: POST /pips/&#10;Status: Draft (local only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="450" y="660" width="260" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-confirm-create" value="User confirms" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="mcp-pip-proposal" target="mcp-create-pip" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-pip-notify" value="FOB-PIP-NOTIFY-1&#10;&#10;Notification Toast:&#10;&#10;'New PIP created: Add&#10;Accessibility Audit activity'&#10;Status: Draft (local only)&#10;&#10;[View PIP]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=11;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="450" y="860" width="260" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-create-notify" value="FOB notification" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="mcp-create-pip" target="fob-pip-notify" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-pip-review" value="FOB-PIP-REVIEW-1&#10;&#10;PIP Review Interface&#10;&#10;Diff View:&#10;Original vs. Proposed structure&#10;- Activities: 10 → 11&#10;- New: Accessibility Audit&#10;&#10;Rationale: (pre-filled)&#10;&#10;[Approve] [Edit] [Reject]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;align=left;verticalAlign=middle;fontColor=#ffffff;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="120" y="860" width="260" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-view-pip" value="Click [View PIP]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="fob-pip-notify" target="fob-pip-review" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fob-pip-approve-modal" value="FOB-PIP-APPROVE-MODAL-1&#10;&#10;Confirm PIP Approval&#10;&#10;'PIP approved locally.&#10;Your FOB now uses v1.1 (local).&#10;&#10;To contribute back to original&#10;playbook, sync with Homebase.'&#10;&#10;[Cancel] [Confirm]" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#666666;fontSize=10;align=left;verticalAlign=middle;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="120" y="1140" width="260" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-approve-pip" value="Click [Approve]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="fob-pip-review" target="fob-pip-approve-modal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="end-act5" value="END&#10;Act 5 Complete&#10;&#10;Playbook v1.1 (local)&#10;PIP ready to submit" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" parent="act5-root-1" vertex="1">
+                    <mxGeometry x="490" y="1180" width="180" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="arrow-confirm-end" value="Confirmed&#10;v1.0 → v1.1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;" parent="act5-root-1" source="fob-pip-approve-modal" target="end-act5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
 </mxfile>
