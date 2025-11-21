@@ -1651,29 +1651,42 @@
                 
                 <!-- ACT 6 Swimlane -->
                 <mxCell id="swimlane-act6" value="ACT 6: Sync Scenarios" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e0f2f1;strokeColor=#00695c;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="1760" width="2720" height="240" as="geometry"/>
+                    <mxGeometry x="40" y="2140" width="4720" height="300" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 6 screens - Main path (Upload PIP) -->
-                <mxCell id="fob-sync-upload-pip-int" value="FOB-SYNC-&#10;ANALYSIS-1&#10;&#10;Sync Analysis&#10;Local v1.1 > HB v1.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act6" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 6 Main Path (2 screens) -->
+                <mxCell id="fob-sync-upload-pip-int" value="FOB-SYNC-&#10;ANALYSIS-1&#10;&#10;Sync Analysis&#10;Local v1.1 > HB v1.0" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="2180" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-pip-submit-int" value="FOB-SYNC-&#10;PIP-SUBMIT-1&#10;&#10;Submit PIP&#10;Upload to HB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act6" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-pip-submit-int" value="FOB-SYNC-&#10;PIP-SUBMIT-1&#10;&#10;Submit PIP&#10;Upload to HB" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="2180" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 6 screens - Alternative scenarios -->
-                <mxCell id="fob-clean-download-int" value="FOB-SYNC-&#10;AVAILABLE-UPDATES-1&#10;&#10;Clean Download&#10;New playbook v1.2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
-                    <mxGeometry x="560" y="40" width="140" height="70" as="geometry"/>
+                <!-- LAYER 2: Act 6 Modals (2 screens) -->
+                <mxCell id="fob-conflict-modal-int" value="FOB-SYNC-&#10;CONFLICT-MODAL-1&#10;&#10;Conflict Details&#10;(Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="810" y="2300" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-conflict-resolve-int" value="FOB-SYNC-&#10;CONFLICT-1&#10;&#10;Conflict!&#10;Choose resolution" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
-                    <mxGeometry x="750" y="40" width="140" height="70" as="geometry"/>
+                <mxCell id="fob-export-modal-int" value="FOB-PLAYBOOK-&#10;EXPORT-MODAL-1&#10;&#10;Export Options&#10;(Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1000" y="2300" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-export-json-int" value="FOB-PLAYBOOK-&#10;EXPORT-1&#10;&#10;Export JSON&#10;(Authors only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act6" vertex="1">
-                    <mxGeometry x="940" y="40" width="140" height="70" as="geometry"/>
+                <!-- LAYER 4: Act 6 Alternative Scenarios (4 screens) -->
+                <mxCell id="fob-clean-download-int" value="FOB-SYNC-&#10;AVAILABLE-UPDATES-1&#10;&#10;Clean Download&#10;New playbook v1.2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="590" y="2060" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-conflict-resolve-int" value="FOB-SYNC-&#10;CONFLICT-1&#10;&#10;Conflict!&#10;Choose resolution" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="780" y="2060" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-export-json-int" value="FOB-PLAYBOOK-&#10;EXPORT-1&#10;&#10;Export JSON&#10;(Authors only)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="970" y="2060" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-distribute-dump-int" value="FOB-PLAYBOOK-&#10;DUMP-DISTRIBUTE-1&#10;&#10;Distribute Dump&#10;Share offline" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1160" y="2060" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 6 main path arrows -->
@@ -1714,9 +1727,112 @@
                     </mxGeometry>
                 </mxCell>
                 
-                <!-- Annotation for optional Acts 7-9 -->
-                <mxCell id="note-optional" value="Optional &amp; Side Paths:&#10;&#10;ACT 7: Create New Playbooks&#10;(4 methods: Manual, AI, Template, MCP)&#10;&#10;ACTS 8-9: Settings &amp; Error Recovery&#10;(Accessible anytime during journey)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=2;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="880" y="2040" width="340" height="140" as="geometry"/>
+                <!-- ACT 7 Swimlane -->
+                <mxCell id="swimlane-act7" value="ACT 7: Create New Playbooks (Optional)" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff8f00;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="2460" width="4720" height="320" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 4: Act 7 - All Alternative Creation Methods (11 screens) -->
+                <mxCell id="fob-create-playbook-start-int" value="FOB-CREATE-&#10;PLAYBOOK-1&#10;&#10;Create New&#10;Dashboard entry" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="360" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-playbook-wizard-basic-int" value="FOB-PLAYBOOK-&#10;WIZARD-BASIC-1&#10;&#10;Wizard Step 1&#10;Basic info" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="550" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-playbook-editor-int" value="FOB-PLAYBOOK-&#10;EDITOR-1&#10;&#10;Manual Editor&#10;(Method 1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="740" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-import-notes-int" value="FOB-IMPORT-&#10;NOTES-1&#10;&#10;Import Notes&#10;(Method 2: AI)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="930" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-ai-structure-int" value="FOB-AI-&#10;STRUCTURE-1&#10;&#10;AI Analysis&#10;Structure notes" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1120" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-template-select-int" value="FOB-TEMPLATE-&#10;SELECT-1&#10;&#10;Select Template&#10;(Method 3)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1310" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-playbook-wizard-publish-int" value="FOB-PLAYBOOK-&#10;WIZARD-PUBLISH-1&#10;&#10;Wizard Step 3&#10;Publish settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1500" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-upload-homebase-int" value="FOB-UPLOAD-&#10;HOMEBASE-1&#10;&#10;Upload to HB&#10;Progress" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1690" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-member-mgmt-int" value="FOB-MEMBER-&#10;MANAGEMENT-1&#10;&#10;Hidden Family&#10;Add members" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1880" y="2500" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 3: Act 7 MCP Method (2 screens) -->
+                <mxCell id="windsurf-create-playbook-int" value="WINDSURF-&#10;CREATE-PLAYBOOK-1&#10;&#10;Create via MCP&#10;(Method 4)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="360" y="2620" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="mcp-playbook-created-int" value="MCP-PLAYBOOK-&#10;CREATED-1&#10;&#10;\u2713 Created!&#10;Confirmation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;" parent="layer-3-mcp" vertex="1">
+                    <mxGeometry x="550" y="2620" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- ACTS 8-9 Swimlane -->
+                <mxCell id="swimlane-act8-9" value="ACTS 8-9: Settings &amp; Error Recovery (Accessible Anytime)" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffebee;strokeColor=#c62828;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="40" y="2800" width="4720" height="340" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 1: Acts 8-9 Main Settings (3 screens) -->
+                <mxCell id="fob-settings-main-final-int" value="FOB-SETTINGS-&#10;MAIN-1&#10;&#10;Settings Hub&#10;All categories" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="2840" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-settings-sync-final-int" value="FOB-SETTINGS-&#10;SYNC-1&#10;&#10;Sync Settings&#10;Auto-sync config" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="2840" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-settings-mcp-final-int" value="FOB-SETTINGS-&#10;MCP-1&#10;&#10;MCP Config&#10;Server settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="2840" width="160" height="80" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 2: Acts 8-9 Error Modals (6 screens) -->
+                <mxCell id="fob-sync-error-modal-int" value="FOB-SYNC-&#10;ERROR-1&#10;&#10;\u274c Sync Failed&#10;(Error Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1020" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-permission-error-modal-int" value="FOB-PERMISSION-&#10;ERROR-1&#10;&#10;\u274c No Access&#10;(Error Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1200" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-upload-error-modal-int" value="FOB-UPLOAD-&#10;ERROR-1&#10;&#10;\u274c Upload Failed&#10;(Error Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1380" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-corruption-error-modal-int" value="FOB-CORRUPTION-&#10;ERROR-1&#10;&#10;\u274c Data Corrupt&#10;(Error Modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1560" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-empty-playbooks-screen-int" value="FOB-EMPTY-&#10;PLAYBOOKS-1&#10;&#10;No Playbooks&#10;(Empty State)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1740" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-empty-search-screen-int" value="FOB-EMPTY-&#10;SEARCH-1&#10;&#10;No Results&#10;(Empty State)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1920" y="2840" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 4: Acts 8-9 Additional Settings (2 screens) -->
+                <mxCell id="fob-settings-storage-alt-int" value="FOB-SETTINGS-&#10;STORAGE-1&#10;&#10;Storage Settings&#10;Cache management" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1020" y="2720" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-settings-notifications-alt-int" value="FOB-SETTINGS-&#10;NOTIFICATIONS-1&#10;&#10;Notifications&#10;Alert preferences" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1210" y="2720" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- END marker -->
+                <mxCell id="end-integrated" value="END&#10;&#10;Maria can now:&#10;\u2022 Use playbooks in Windsurf&#10;\u2022 Create PIPs&#10;\u2022 Manage families&#10;\u2022 Create new playbooks" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" parent="integrated-root-1" vertex="1">
+                    <mxGeometry x="680" y="3200" width="220" height="140" as="geometry"/>
                 </mxCell>
                 
             </root>
