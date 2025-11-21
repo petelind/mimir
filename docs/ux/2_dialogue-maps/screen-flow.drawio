@@ -1359,33 +1359,58 @@
                 
                 <!-- ACT 2 Swimlane -->
                 <mxCell id="swimlane-act2" value="ACT 2: Family Management" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f9a825;fontStyle=1;fontSize=14;startSize=40;" parent="integrated-root-1" vertex="1">
-                    <mxGeometry x="40" y="760" width="2720" height="260" as="geometry"/>
+                    <mxGeometry x="40" y="880" width="4720" height="300" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 2 screens - Main path (Join Family) -->
-                <mxCell id="fob-browse-families-int" value="FOB-FAMILY-&#10;BROWSE-1&#10;&#10;Browse Families&#10;Public listings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="120" y="40" width="160" height="80" as="geometry"/>
+                <!-- LAYER 1: Act 2 Main Path (4 screens) -->
+                <mxCell id="fob-browse-families-int" value="FOB-FAMILY-&#10;BROWSE-1&#10;&#10;Browse Families&#10;Public listings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="360" y="920" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-family-detail-int" value="FOB-FAMILY-&#10;DETAIL-1&#10;&#10;Usability Family&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="340" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-family-detail-int" value="FOB-FAMILY-&#10;DETAIL-1&#10;&#10;Usability Family&#10;View details" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="580" y="920" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-join-request-int" value="FOB-FAMILY-&#10;JOIN-REQUEST-1&#10;&#10;Request to Join&#10;Submit request" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="560" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-join-request-int" value="FOB-FAMILY-&#10;JOIN-REQUEST-1&#10;&#10;Request to Join&#10;Submit request" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="800" y="920" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-join-approved-int" value="FOB-FAMILY-&#10;JOIN-APPROVED-1&#10;&#10;Joined!&#10;Access granted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="780" y="40" width="160" height="80" as="geometry"/>
+                <mxCell id="fob-join-approved-int" value="FOB-FAMILY-&#10;JOIN-APPROVED-1&#10;&#10;Joined!&#10;Access granted" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                    <mxGeometry x="1020" y="920" width="160" height="80" as="geometry"/>
                 </mxCell>
                 
-                <!-- Act 2 screens - Alternative path (Create Family) -->
-                <mxCell id="fob-create-family-int" value="FOB-FAMILY-&#10;CREATE-1&#10;&#10;Create Family&#10;New community" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="340" y="150" width="140" height="70" as="geometry"/>
+                <!-- LAYER 2: Act 2 Modals (3 screens) -->
+                <mxCell id="fob-join-request-modal-int" value="FOB-FAMILY-&#10;JOIN-MODAL-1&#10;&#10;Join Request&#10;(Confirmation)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="810" y="1040" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
-                <mxCell id="fob-family-admin-int" value="FOB-FAMILY-&#10;ADMIN-DASHBOARD-1&#10;&#10;Admin Panel&#10;Manage family" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="swimlane-act2" vertex="1">
-                    <mxGeometry x="540" y="150" width="140" height="70" as="geometry"/>
+                <mxCell id="hb-admin-approve-modal-int" value="HB-ADMIN-&#10;APPROVE-REQUEST-1&#10;&#10;Admin Approval&#10;(HB Admin)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82b366;strokeColor=#2e7d32;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="950" y="1040" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-join-notification-int" value="FOB-FAMILY-&#10;JOIN-NOTIFICATION-1&#10;&#10;✓ Approved!&#10;(Notification)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=9;dashed=1;dashPattern=8 8;" parent="layer-2-modals" vertex="1">
+                    <mxGeometry x="1030" y="1040" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <!-- LAYER 4: Act 2 Alternatives (5 screens) -->
+                <mxCell id="fob-create-family-int" value="FOB-FAMILY-&#10;CREATE-1&#10;&#10;Create Family&#10;New community" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="590" y="800" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-family-admin-int" value="FOB-FAMILY-&#10;ADMIN-DASHBOARD-1&#10;&#10;Admin Panel&#10;Manage family" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="780" y="800" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-playbook-submit-int" value="FOB-FAMILY-&#10;PLAYBOOK-SUBMIT-1&#10;&#10;Submit Playbook&#10;to Family" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="970" y="800" width="140" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-approval-modal-int" value="FOB-FAMILY-&#10;ADMIN-APPROVAL-&#10;MODAL-1&#10;&#10;Approve Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#D3D3D3;strokeColor=#999999;fontSize=8;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1160" y="800" width="130" height="70" as="geometry"/>
+                </mxCell>
+                
+                <mxCell id="fob-family-settings-int" value="FOB-FAMILY-&#10;SETTINGS-1&#10;&#10;Family Config&#10;Settings" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;dashed=1;dashPattern=8 8;" parent="layer-4-alternatives" vertex="1">
+                    <mxGeometry x="1340" y="800" width="140" height="70" as="geometry"/>
                 </mxCell>
                 
                 <!-- Act 2 main path arrows -->
