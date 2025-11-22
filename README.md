@@ -6,6 +6,18 @@ Mimir helps you work more effectively by providing structured playbooks that you
 
 > 📖 For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
 
+## Core Entities
+
+Mimir organizes your playbooks using **7 core entities**:
+
+1. **Playbook** - Top-level methodology container (e.g., "FDD", "Scrum")
+2. **Workflow** - Sequence of activities for a process (e.g., "Build Feature")
+3. **Phase** *(optional)* - Grouping for activities within workflows (e.g., "Inception", "Construction")
+4. **Activity** - Unit of work with guidance (e.g., "Create screen mockup")
+5. **Artifact** - Inputs/outputs of activities (e.g., "Component Specification", "Unit Tests")
+6. **Role** - Who performs activities (e.g., "Frontend Engineer", "UX Designer")
+7. **Howto** - Specific implementation instructions (e.g., "Creating mockups with Figma")
+
 ## What Can Mimir Do?
 
 ### 🤖 Answer Playbook Questions via MCP
@@ -28,7 +40,7 @@ AI: → Generates work orders from playbook → Creates GitHub issues
 
 ### 📊 Assess Project Progress
 
-Check if you've completed all required deliverables for a phase:
+Check if you've completed all required artifacts for a phase:
 
 ```
 You: "I'm supposed to finish inception phase next week. Did I produce all required artifacts?"
@@ -62,7 +74,7 @@ Download playbooks from HOMEBASE based on your access level:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/mimir.git
+   git clone https://github.com/petelind/mimir.git
    cd mimir
    ```
 
@@ -89,15 +101,12 @@ Download playbooks from HOMEBASE based on your access level:
    pytest tests/
    ```
    
-   Run acceptance tests (Behave/BDD):
-   ```bash
-   behave
-   ```
-   
    For continuous testing during development:
    ```bash
    python continuous_test_runner.py
    ```
+   
+   > **Note**: BDD feature files in `docs/features/act-*/` serve as comprehensive UI specifications (46 files covering Acts 0-15). Step definitions will be implemented during development.
 
 6. **Download playbooks** (requires HOMEBASE access)
    ```bash
@@ -120,7 +129,7 @@ python manage.py runserver 8000
 ```
 
 Open http://localhost:8000 in your browser to:
-- **Browse playbooks**: View activities, workflows, howtos, and deliverables
+- **Browse playbooks**: View activities, workflows, phases, artifacts, roles, and howtos
 - **Review PIPs**: Approve or reject Playbook Improvement Proposals
 - **Compare versions**: See what changed between playbook versions
 - **Edit locally**: Customize playbooks for your team
@@ -305,8 +314,22 @@ python manage.py sync_methodology --family "Software Engineering"
 ```
 mimir/
 ├── docs/
-│   └── architecture/
-│       └── SAO.md           # System architecture & design
+│   ├── architecture/
+│   │   └── SAO.md           # System architecture & design
+│   ├── features/            # BDD specifications (46 files)
+│   │   ├── act-0-auth/      # Authentication, Onboarding, Navigation
+│   │   ├── act-2-playbooks/ # Playbooks CRUDLF (5 files)
+│   │   ├── act-3-workflows/ # Workflows CRUDLF (5 files)
+│   │   ├── act-4-phases/    # Phases CRUDLF (5 files, optional entity)
+│   │   ├── act-5-activities/# Activities CRUDLF (5 files)
+│   │   ├── act-6-artifacts/ # Artifacts CRUDLF (5 files)
+│   │   ├── act-7-roles/     # Roles CRUDLF (5 files)
+│   │   ├── act-8-howtos/    # Howtos CRUDLF (5 files)
+│   │   └── act-9-15/        # PIPs, Import/Export, Family, Sync, MCP, Settings, Errors
+│   └── ux/
+│       ├── user_journey.md  # Complete Acts 0-15 narrative
+│       └── 2_dialogue-maps/
+│           └── screen-flow.drawio  # Visual MVP flow diagram
 ├── mimir/                   # Django project
 │   ├── methodology/         # Core app (internal name)
 │   │   ├── models/          # Node, Edge, Version, PIP
@@ -333,11 +356,14 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ## Learn More
 
 - **Architecture**: [docs/architecture/SAO.md](docs/architecture/SAO.md) - Complete system design
-- **Playbook Concepts**: [docs/methodology-guide.md](docs/methodology-guide.md) - Understanding activities, workflows, etc.
+- **User Journey**: [docs/ux/user_journey.md](docs/ux/user_journey.md) - Complete Acts 0-15 narrative with all screens
+- **Feature Files**: [docs/features/](docs/features/) - 46 BDD specifications covering full CRUDLF for all entities
+- **Screen Flow**: [docs/ux/2_dialogue-maps/screen-flow.drawio](docs/ux/2_dialogue-maps/screen-flow.drawio) - Visual MVP flow diagram
+- **GitHub Issues**: [MVP Milestone](https://github.com/petelind/mimir/milestone/2) - Track development progress
 - **MCP Protocol**: [Model Context Protocol Specification](https://spec.modelcontextprotocol.io/)
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/mimir/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/mimir/discussions)
-- **Documentation**: [Wiki](https://github.com/yourusername/mimir/wiki)
+- **Issues**: [GitHub Issues](https://github.com/petelind/mimir/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/petelind/mimir/discussions)
+- **Project Board**: [MVP Milestone](https://github.com/petelind/mimir/milestone/2)
