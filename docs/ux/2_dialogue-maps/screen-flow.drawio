@@ -2090,7 +2090,7 @@
         </mxGraphModel>
     </diagram>
     <diagram name="Domain Model" id="domain-model">
-        <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="1160" dy="1264" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1200" math="0" shadow="0">
             <root>
                 <mxCell id="dm-root-0"/>
                 <mxCell id="dm-root-1" value="Background" parent="dm-root-0"/>
