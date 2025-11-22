@@ -2205,19 +2205,19 @@
                 <mxCell id="arrow-token-user" value="authenticates" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="dm-root-1" source="dm-token" target="dm-user" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="dm-note-workitems" value="NOTE: Work Items&#10;NOT managed by Mimir!\nTracked externally via:\n• GitHub Issues&#10;• Jira Tickets&#10;• Other 3rd party systems&#10;&#10;Referenced via MCP" style="text;html=1;strokeColor=#d79b00;fillColor=#ffe6cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
+                <mxCell id="dm-note-workitems" value="NOTE: Work Items&#10;NOT managed by Mimir!&#10;Tracked externally via:&#10;• GitHub Issues&#10;• Jira Tickets&#10;• Other 3rd party systems&#10;&#10;Referenced via MCP" style="text;html=1;strokeColor=#d79b00;fillColor=#ffe6cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
                     <mxGeometry x="1040" y="380" width="240" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="dm-note-sync" value="SYNC MODEL\n\nFOB <-> Homebase:\n• Pull: Download playbooks\n• Push: Upload PIPs\n• Conflict: Manual resolution\n  (no auto-merge)" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
+                <mxCell id="dm-note-sync" value="SYNC MODEL&#10;&#10;FOB &lt;-&gt; Homebase:&#10;• Pull: Download playbooks&#10;• Push: Upload PIPs&#10;• Conflict: Manual resolution&#10;  (no auto-merge)" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
                     <mxGeometry x="400" y="380" width="240" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="dm-note-visibility" value="VISIBILITY\n\nFamily types:\n• Public: Browse & join\n• Hidden: Invite-only\n• Auto-approve or\n  Manual approval" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
+                <mxCell id="dm-note-visibility" value="VISIBILITY&#10;&#10;Family types:&#10;• Public: Browse &amp; join&#10;• Hidden: Invite-only&#10;• Auto-approve or&#10;  Manual approval" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;" parent="dm-root-1" vertex="1">
                     <mxGeometry x="400" y="540" width="240" height="120" as="geometry"/>
                 </mxCell>
-                <mxCell id="dm-note-colors" value="LEGEND\n\nBlue: Users & Community\nGreen: Playbook Structure\nYellow: Change Management\nRed: System Support" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="dm-root-1" vertex="1">
+                <mxCell id="dm-note-colors" value="LEGEND&#10;&#10;Blue: Users &amp; Community&#10;Green: Playbook Structure&#10;Yellow: Change Management&#10;Red: System Support" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="dm-root-1" vertex="1">
                     <mxGeometry x="40" y="700" width="260" height="140" as="geometry"/>
                 </mxCell>
-                <mxCell id="dm-note-entities" value="ENTITY COUNT: 12\n\nCore: 11 entities\n• 4 User/Community (User, Family, Notification, AuthToken)\n• 5 Playbook (Playbook, Version, Workflow, Activity, Artifact, Goal)\n• 1 Change (PIP)\n\nExternal: Work Items (not stored)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="dm-root-1" vertex="1">
+                <mxCell id="dm-note-entities" value="ENTITY COUNT: 12&#10;&#10;Core: 11 entities&#10;• 4 User/Community (User, Family, Notification, AuthToken)&#10;• 5 Playbook (Playbook, Version, Workflow, Activity, Artifact, Goal)&#10;• 1 Change (PIP)&#10;&#10;External: Work Items (not stored)" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="dm-root-1" vertex="1">
                     <mxGeometry x="340" y="700" width="300" height="140" as="geometry"/>
                 </mxCell>
             </root>
