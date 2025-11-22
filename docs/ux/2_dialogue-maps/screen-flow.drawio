@@ -2144,11 +2144,11 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="arrow-user-playbook" value="authors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;fontSize=10;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="dm-root-1" source="dm-user" target="dm-playbook" edge="1">
+                <mxCell id="arrow-user-playbook" value="authors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#000000;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="dm-root-1" source="dm-user" target="dm-playbook" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="260" y="250"/>
-                            <mxPoint x="260" y="250"/>
+                            <mxPoint x="140" y="170"/>
+                            <mxPoint x="720" y="170"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
