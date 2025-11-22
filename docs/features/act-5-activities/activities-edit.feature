@@ -1,0 +1,62 @@
+Feature: FOB-ACTIVITIES-EDIT_ACTIVITY-1 Edit Activity
+  As a methodology author (Maria)
+  I want to edit activity details
+  So that I can update work tasks
+
+  Background:
+    Given Maria is authenticated in FOB
+    And she owns workflow "Component Development"
+    And the workflow has activity "Setup component structure"
+
+  Scenario: ACT-EDIT-01 Open edit form
+    Given Maria is viewing the activity
+    When she clicks [Edit Activity]
+    Then she is redirected to FOB-ACTIVITIES-EDIT_ACTIVITY-1
+    And all fields are pre-populated
+
+  Scenario: ACT-EDIT-02 Edit activity name
+    Given Maria is on the edit form
+    When she changes Name to "Initialize component structure"
+    And she clicks [Save Changes]
+    Then the activity is updated
+
+  Scenario: ACT-EDIT-03 Edit activity description
+    Given Maria is on the edit form
+    When she updates the Description
+    And she saves
+    Then the description is updated
+
+  Scenario: ACT-EDIT-04 Change phase assignment
+    Given the activity is in "Planning" phase
+    When she changes phase to "Implementation"
+    And she saves
+    Then the activity is moved to Implementation phase
+
+  Scenario: ACT-EDIT-05 Change activity order
+    Given the activity is at order #3
+    When she changes order to "1"
+    And she saves
+    Then the activity moves to position 1
+
+  Scenario: ACT-EDIT-06 Add dependencies
+    Given the activity has no dependencies
+    When she adds "Define requirements" as dependency
+    And she saves
+    Then the dependency is added
+
+  Scenario: ACT-EDIT-07 Remove dependencies
+    Given the activity has 2 dependencies
+    When she removes one dependency
+    And she saves
+    Then the dependency is removed
+
+  Scenario: ACT-EDIT-08 Manage artifacts
+    Given Maria is on the edit form
+    When she adds or removes artifacts
+    And she saves
+    Then artifact associations are updated
+
+  Scenario: ACT-EDIT-09 Cancel editing
+    Given Maria has made changes
+    When she clicks [Cancel]
+    Then changes are discarded
