@@ -2462,6 +2462,246 @@
                 <mxCell id="v2-arrow-tool-find-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-tool-find-playbooks" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
+                <!-- ACT 3: WORKFLOWS -->
+                <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="500" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-workflows-list" value="FOB-WORKFLOWS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="540" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-workflows-create" value="FOB-WORKFLOWS-&#10;CREATE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="540" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-workflows-view" value="FOB-WORKFLOWS-&#10;VIEW_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="620" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-workflows-edit" value="FOB-WORKFLOWS-&#10;EDIT_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="620" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-workflows-delete" value="FOB-WORKFLOWS-&#10;DELETE_WORKFLOW&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="620" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-workflows-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="700" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-workflow" value="@create_workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="700" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-workflow" value="@get_workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="700" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-workflow" value="@update_workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="700" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-workflow" value="@delete_workflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="700" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-workflows" value="@list_workflows" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="740" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-workflows" value="@find_workflows" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="740" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- ACT 4: PHASES -->
+                <mxCell id="v2-act4-label" value="ACT 4: PHASES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="800" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-phases-list" value="FOB-PHASES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="840" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-phases-create" value="FOB-PHASES-&#10;CREATE_PHASE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="840" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-phases-view" value="FOB-PHASES-&#10;VIEW_PHASE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="920" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-phases-edit" value="FOB-PHASES-&#10;EDIT_PHASE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="920" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-phases-delete" value="FOB-PHASES-&#10;DELETE_PHASE&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="920" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-phases-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1000" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-phase" value="@create_phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1000" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-phase" value="@get_phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1000" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-phase" value="@update_phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="1000" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-phase" value="@delete_phase" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="1000" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-phases" value="@list_phases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1040" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-phases" value="@find_phases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1040" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- ACT 5: ACTIVITIES -->
+                <mxCell id="v2-act5-label" value="ACT 5: ACTIVITIES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1100" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-activities-list" value="FOB-ACTIVITIES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1140" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-activities-create" value="FOB-ACTIVITIES-&#10;CREATE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1140" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-activities-view" value="FOB-ACTIVITIES-&#10;VIEW_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1220" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-activities-edit" value="FOB-ACTIVITIES-&#10;EDIT_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1220" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-activities-delete" value="FOB-ACTIVITIES-&#10;DELETE_ACTIVITY&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="1220" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-activities-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1300" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-activity" value="@create_activity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1300" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-activity" value="@get_activity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1300" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-activity" value="@update_activity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="1300" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-activity" value="@delete_activity" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="1300" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-activities" value="@list_activities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1340" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-activities" value="@find_activities" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1340" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- ACT 6: ARTIFACTS -->
+                <mxCell id="v2-act6-label" value="ACT 6: ARTIFACTS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1400" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-artifacts-list" value="FOB-ARTIFACTS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1440" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-artifacts-create" value="FOB-ARTIFACTS-&#10;CREATE_ARTIFACT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1440" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-artifacts-view" value="FOB-ARTIFACTS-&#10;VIEW_ARTIFACT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1520" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-artifacts-edit" value="FOB-ARTIFACTS-&#10;EDIT_ARTIFACT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1520" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-artifacts-delete" value="FOB-ARTIFACTS-&#10;DELETE_ARTIFACT&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="1520" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-artifacts-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1600" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-artifact" value="@create_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1600" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-artifact" value="@get_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1600" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-artifact" value="@update_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="1600" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-artifact" value="@delete_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="1600" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-artifacts" value="@list_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1640" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-artifacts" value="@find_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1640" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- ACT 7: HOWTOS -->
+                <mxCell id="v2-act7-label" value="ACT 7: HOWTOS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1700" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-howtos-list" value="FOB-HOWTOS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1740" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-howtos-create" value="FOB-HOWTOS-&#10;CREATE_HOWTO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1740" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-howtos-view" value="FOB-HOWTOS-&#10;VIEW_HOWTO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1820" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-howtos-edit" value="FOB-HOWTOS-&#10;EDIT_HOWTO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="1820" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-howtos-delete" value="FOB-HOWTOS-&#10;DELETE_HOWTO&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="1820" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-howtos-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="1900" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-howto" value="@create_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1900" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-howto" value="@get_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1900" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-howto" value="@update_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="1900" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-howto" value="@delete_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="1900" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-howtos" value="@list_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="1940" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-howtos" value="@find_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="1940" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- ACT 8: ROLES -->
+                <mxCell id="v2-act8-label" value="ACT 8: ROLES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="2000" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-roles-list" value="FOB-ROLES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="2040" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-roles-create" value="FOB-ROLES-&#10;CREATE_ROLE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="2040" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-roles-view" value="FOB-ROLES-&#10;VIEW_ROLE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="2120" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-roles-edit" value="FOB-ROLES-&#10;EDIT_ROLE" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="2120" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-roles-delete" value="FOB-ROLES-&#10;DELETE_ROLE&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="2120" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-roles-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="2200" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-role" value="@create_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="2200" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-role" value="@get_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="2200" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-role" value="@update_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="2200" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-role" value="@delete_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="2200" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-roles" value="@list_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="2240" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-roles" value="@find_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="2240" width="110" height="30" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
