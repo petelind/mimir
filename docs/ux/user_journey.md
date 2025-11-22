@@ -1534,6 +1534,344 @@ Confirmation:
 
 ---
 
+### Act 9: PIPs - Playbook Improvement Proposals
+
+**Context**: As Maria uses playbooks (whether her own or downloaded from others), she discovers opportunities for improvement. PIPs (Playbook Improvement Proposals) are the mechanism for suggesting, tracking, and applying changes to playbooks.
+
+**Key Concepts**:
+- PIPs can be created manually by users or suggested by AI
+- Local PIPs: Applied immediately to local playbook versions
+- Submitted PIPs: Sent to original playbook author for review
+- PIPs create versioned changes (e.g., v1.0 → v1.1 local)
+
+#### Creating a PIP
+
+**Trigger**: While using "React Frontend Development" playbook (authored by Mike), Maria notices it lacks accessibility considerations.
+
+**Via AI Assistant (Windsurf/MCP)**:
+
+Maria asks her AI assistant:
+```
+> mimir: This React playbook is great, but it doesn't mention accessibility testing. 
+  I think we should add an Activity for "Accessibility Audit" after testing setup. 
+  Can you help me create a PIP for this?
+```
+
+AI responds:
+```
+I'll help you create a Playbook Improvement Proposal (PIP).
+
+Proposed PIP:
+- Type: Extension (new Activity)
+- Target Playbook: React Frontend Development v1.0 by Mike Chen
+- Change: Add new Activity "Accessibility Audit"
+- Position: After "Component Testing"  
+- Description: "Ensure React components meet WCAG 2.1 AA standards"
+- Includes:
+  • Install axe-core and jest-axe
+  • Add accessibility tests to component suite
+  • Configure automated a11y checks in CI/CD
+
+Shall I create this PIP in your local FOB?
+```
+
+Maria confirms: `> mimir: Yes, create the PIP`
+
+#### Screen: FOB-PIP-CREATE (via MCP or GUI)
+
+System creates PIP:
+- **PIP ID**: PIP-42
+- **Title**: "Add Accessibility Audit Activity"
+- **Type**: Extension
+- **Target**: React Frontend Development v1.0
+- **Author**: Maria Rodriguez
+- **Status**: Draft (local only)
+- **Changes Preview**: Shows diff-style comparison
+  - Current structure (v1.0)
+  - Proposed structure (v1.1 with new activity)
+
+**Actions Available**:
+- [Apply Locally] - Creates local v1.1
+- [Submit to Author] - Sends PIP to Mike for review
+- [Edit PIP] - Modify proposal
+- [Discard] - Delete draft
+
+#### Action: Apply PIP Locally
+
+Maria clicks [Apply Locally]:
+- Confirmation: "This will create React Frontend Development v1.1 (local)"
+- Playbook updated immediately
+- Success: "PIP-42 applied. Playbook updated to v1.1 (local)"
+- Version badge changes: "v1.1 (local)" indicates local modifications
+
+**Result**: Maria now has an enhanced version with accessibility considerations.
+
+#### Action: Submit PIP to Author
+
+Later, Maria decides to share her improvement:
+- Opens PIP-42 details
+- Clicks [Submit to Author]
+- Modal: "Submit PIP to Mike Chen?"
+  - "This will send your proposal for review"
+  - "Mike can accept, request changes, or decline"
+  - Optional message to author
+- Maria adds: "Great playbook! I added a11y audit based on WCAG 2.1 AA standards"
+- Clicks [Submit]
+
+**Notification Flow**:
+- PIP sent to Homebase
+- Mike receives notification: "Maria Rodriguez submitted PIP-42 to React Frontend Development"
+- Maria sees: "PIP-42 submitted for review"
+
+#### Screen: FOB-PIP-LIST (Manage PIPs)
+
+Maria can view all her PIPs:
+- **My Submitted PIPs**: 
+  - PIP-42: Accessibility Audit (Pending Review by Mike)
+  - PIP-38: State Management Patterns (Accepted - merged to v1.2)
+- **Received PIPs** (for her owned playbooks):
+  - PIP-55: Add Figma integration (from Alex - Pending Maria's review)
+- **Local PIPs** (applied but not submitted):
+  - PIP-40: Personal workflow tweaks (UX Research playbook)
+
+**Filters**: Status (Draft, Submitted, Accepted, Declined), Playbook, Author
+
+#### Reviewing Received PIPs (Playbook Owner View)
+
+When Mike reviews Maria's PIP-42:
+
+**Screen: FOB-PIP-REVIEW**:
+- Shows complete PIP details
+- Side-by-side diff view
+- Comments/discussion thread
+- Actions for owner:
+  - [Accept & Merge] - Incorporates changes, publishes new version
+  - [Request Changes] - Sends feedback to Maria
+  - [Decline] - Rejects with reason
+
+Mike clicks [Accept & Merge]:
+- React Frontend Development updates to v1.2
+- All family members notified of new version
+- PIP-42 marked as "Accepted"
+- Maria's contribution credited in version history
+
+**Result**: Collaborative playbook evolution through structured improvement proposals.
+
+#### AI-Initiated PIPs
+
+**Context**: AI observes Maria's work patterns and proactively suggests improvements.
+
+**Scenario**: After Maria completes several components with accessibility features, AI notices the pattern:
+
+```
+✓ Components created: Button, Card, Modal (all with focus traps, ARIA labels)
+✓ Accessibility tests added to each component
+
+I notice you're consistently adding accessibility features, but the playbook 
+doesn't explicitly call for focus trapping in modals. Based on your work patterns, 
+should we update the playbook to include:
+  - Focus trap implementation guidelines
+  - Keyboard navigation requirements  
+  - ARIA attribute checklist
+
+Would you like me to create a PIP for these additions?
+```
+
+Maria: `> mimir: Yes, great observation! Create the PIP`
+
+AI creates PIP-43 automatically, Maria reviews and applies/submits as needed.
+
+---
+
+**Act 9 Summary**: Maria can evolve playbooks through PIPs:
+- ✅ Create PIPs manually or via AI assistance
+- ✅ Apply PIPs locally for immediate use
+- ✅ Submit PIPs to original authors for community contribution
+- ✅ Review and merge PIPs received on owned playbooks
+- ✅ Track PIP status and version history
+- ✅ AI learns from patterns and suggests improvements
+
+**Key Benefits**: Structured change management, version control, collaborative improvement, AI-assisted evolution.
+
+**Next**: Maria manages import/export operations (ACT 10).
+
+---
+
+### Act 10: IMPORT/EXPORT - Playbook Distribution
+
+**Context**: Maria needs to share playbooks outside the Homebase sync system - for backups, offline distribution, cross-instance transfer, or client delivery.
+
+**Key Formats**:
+- **JSON**: Structured data format for programmatic use
+- **MPA** (Mimir Playbook Archive): Compressed package with metadata
+
+#### Export Playbook
+
+**Screen: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1** (from Act 2)
+
+Maria views her "UX Research Methodology" playbook and clicks **[Export]** from top actions.
+
+**Export Modal**:
+- **Format Options**:
+  - ○ JSON (.json) - Raw structured data
+  - ○ Mimir Playbook Archive (.mpa) - Packaged with metadata
+- **Include Options** (checkboxes):
+  - ☑ All workflows and activities
+  - ☑ Artifacts and roles
+  - ☑ Howtos (activity guides)
+  - ☑ Version history
+  - ☐ PIP history (optional)
+- **Security**:
+  - ☐ Password protect (optional)
+  - Password field (if checked)
+- **Filename**: `ux-research-methodology-v2.1` (auto-generated, editable)
+- [Cancel] [Export]
+
+Maria selects **JSON format**, leaves all options checked, clicks [Export]:
+- File saved: `ux-research-methodology-v2.1.json` to ~/Downloads
+- Success notification: "Playbook exported successfully"
+- **Use cases**:
+  - Backup before major changes
+  - Share with colleague via email
+  - Import to another FOB instance
+  - Version control (commit to git)
+
+#### Export Scenarios
+
+**Scenario A: Offline Distribution for Workshop**
+
+Maria's colleague Alex needs the playbook for an offline workshop (no Homebase access):
+- Maria exports as `.mpa` with password protection
+- Emails file to Alex: `ux-research-v2.1.mpa`
+- Alex imports to his FOB (see Import section below)
+
+**Scenario B: Client Delivery (IP Transfer)**
+
+After transferring ownership to Acme client, Maria exports final version:
+- Exports "UX Consulting" playbook as JSON
+- Delivers to client as documentation artifact
+- Client can import to their own FOB instance
+
+**Scenario C: Backup Before Experimentation**
+
+Before applying experimental PIPs:
+- Maria exports current stable version
+- Tests PIPs locally
+- If issues arise: deletes modified version, re-imports from backup
+
+---
+
+#### Import Playbook
+
+**Screen: FOB-PLAYBOOKS-LIST+FIND-1** (from Act 2)
+
+Maria clicks [Import from JSON] button (top actions).
+
+**Import Modal**:
+- **File Upload Area**: "Drop JSON or MPA file here or click to browse"
+- Accepted formats: `.json`, `.mpa`
+- [Cancel] (disabled until file selected)
+
+**Action: Select File**
+
+Maria selects `design-system-patterns-v1.5.json` from downloads:
+- Filename appears in modal
+- System validates file format
+- [Import] button becomes active
+
+**Validation Process**:
+
+System checks:
+- ✓ Valid JSON structure
+- ✓ Required fields present (id, name, version, workflows, activities)
+- ✓ Schema compliance (Mimir data model)
+- ✓ No circular dependencies
+- ✓ Referenced entities exist
+
+**Success Path** - Valid Playbook:
+
+Shows preview:
+- **Playbook**: "Design System Patterns"
+- **Version**: 1.5
+- **Author**: Community Contributors
+- **Contents**:
+  - 3 Workflows
+  - 15 Activities
+  - 12 Artifacts
+  - 5 Roles
+  - 8 Howtos
+- **Conflict Check**: "No conflicts with existing playbooks"
+- Message: "This playbook will be added to your local FOB"
+- [Cancel] [Import Playbook]
+
+Maria clicks [Import Playbook]:
+- Progress: "Importing playbook..."
+- Playbook added to local database
+- Success: "Design System Patterns v1.5 imported successfully"
+
+**Screen: FOB-PLAYBOOKS-LIST+FIND-1** (Updated)
+
+Imported playbook appears:
+- **Design System Patterns** v1.5
+- Status: Local (not synced to Homebase)
+- Source: Imported from JSON
+- Actions: [View] [Edit] [Export] [Delete]
+
+---
+
+**Error Path** - Invalid Playbook:
+
+If validation fails:
+- ✗ Error: "Invalid playbook format"
+- Details: "Missing required field: 'activities'"
+- OR: "Circular dependency detected in workflow 'Component Setup'"
+- OR: "Schema version mismatch: File uses v2.0, FOB supports v1.5"
+- [Close] [Try Another File]
+
+**Error Path** - Conflict Detected:
+
+If playbook with same ID exists:
+- ⚠️ Warning: "Playbook 'Design System Patterns' already exists"
+- **Options**:
+  - ○ Skip import (keep existing)
+  - ○ Replace existing (overwrites local version)
+  - ○ Import as new copy (generates new ID)
+- [Cancel] [Proceed]
+
+---
+
+**Import from MPA (Password Protected)**:
+
+If importing `.mpa` file with password:
+- Password prompt appears: "This archive is password protected"
+- Password field: [____]
+- [Cancel] [Unlock]
+
+After correct password: Standard import flow continues
+
+If wrong password: "Incorrect password. Please try again."
+
+---
+
+**Act 10 Summary**: Maria manages playbook distribution:
+- ✅ Export playbooks as JSON or MPA
+- ✅ Password-protect sensitive playbooks
+- ✅ Import playbooks from files
+- ✅ Validate imported data
+- ✅ Handle conflicts and errors gracefully
+- ✅ Distribute offline without Homebase dependency
+
+**Use Cases Covered**:
+- Backups and version control
+- Offline distribution (workshops, air-gapped environments)
+- Cross-instance transfer
+- Client deliverables
+- Emergency recovery
+
+**Next**: Maria manages her community networks (ACT 11: Family Management).
+
+---
+
 ### Act 11: Building Her Network (Family Management)
 
 **Context**: Maria wants to organize her practice - a public family for UX community, a private one for her client work, and join existing communities.
