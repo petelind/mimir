@@ -192,7 +192,7 @@ class MethodologyService:
         Create work plan for feature implementation.
         
         :param feature_spec: feature specification as str. Example: "Implement user authentication with OAuth2"
-        :return: List of work orders. Example: [WorkOrder(id=1, title="Design auth UI", deliverables=["Login mockup"]), WorkOrder(id=2, title="Implement OAuth", deliverables=["Auth service"])]
+        :return: List of work orders. Example: [WorkOrder(id=1, title="Design auth UI", artifacts=["Login mockup"]), WorkOrder(id=2, title="Implement OAuth", artifacts=["Auth service"])]
         """
         # Business logic independent of storage
         workflow = self.repo.get_workflow('Build feature')
@@ -345,7 +345,7 @@ def assess_progress(
     
     :param phase: phase name as str. Example: "inception"
     :param methodology: methodology name as str. Example: "FDD"
-    :return: Assessment dict with deliverable status and gaps. Example: {"phase": "inception", "can_proceed": False, "gaps": ["Login screen missing"]}
+    :return: Assessment dict with artifact status and gaps. Example: {"phase": "inception", "can_proceed": False, "gaps": ["Login screen missing"]}
     """
     service = AssessmentService(get_repository())
     return service.assess_phase_completion(phase, methodology)
@@ -600,9 +600,9 @@ class GraphService:
         # Add dependency edges
         for activity in activities:
             for successor in activity.get_successors():
-                # Label edge with deliverable
-                deliverables = activity.get_deliverables_to(successor)
-                label = ', '.join(d.name for d in deliverables[:2])
+                # Label edge with artifact
+                artifacts = activity.get_artifacts_to(successor)
+                label = ', '.join(d.name for d in artifacts[:2])
                 dot.edge(str(activity.id), str(successor.id), label=label)
         
         # Generate SVG
@@ -694,8 +694,8 @@ def activity_detail(request, activity_id):
         'predecessors': activity.get_predecessors(),
         'successors': activity.get_successors(),
         'howtos': activity.howtos.all(),
-        'deliverables_produced': activity.deliverables_produced.all(),
-        'deliverables_consumed': activity.deliverables_consumed.all(),
+        'artifacts_produced': activity.artifacts_produced.all(),
+        'artifacts_consumed': activity.artifacts_consumed.all(),
         'role': activity.role
     }
     
@@ -907,6 +907,102 @@ With HTMX:
 
 **This means graceful degradation is built-in.**
 
+## BDD Feature Files & UI Specifications
+
+**Location**: `docs/features/act-*/`
+
+The FOB Web UI is comprehensively documented through **46 BDD-style Gherkin feature files** organized by user journey Acts (0-15). These serve as both specifications and test scenarios.
+
+### Feature File Organization
+
+```
+docs/features/
+├── act-0-auth/              # Authentication, Onboarding, Navigation (3 files)
+├── act-2-playbooks/         # Playbooks CRUDLF (5 files)
+├── act-3-workflows/         # Workflows CRUDLF (5 files)
+├── act-4-phases/            # Phases CRUDLF (5 files) - OPTIONAL entity
+├── act-5-activities/        # Activities CRUDLF (5 files)
+├── act-6-artifacts/         # Artifacts CRUDLF (5 files)
+├── act-7-roles/             # Roles CRUDLF (5 files)
+├── act-8-howtos/            # Howtos CRUDLF (5 files)
+├── act-9-pips/              # PIPs Create & Manage (2 files)
+├── act-10-import-export/    # Import/Export (1 file)
+├── act-11-family/           # Family Management (1 file)
+├── act-12-sync/             # Sync Scenarios (1 file)
+├── act-13-mcp/              # MCP Integration (1 file)
+├── act-14-settings/         # Settings & Configuration (1 file)
+└── act-15-errors/           # Error Recovery (1 file)
+```
+
+### CRUDLF Pattern
+
+**Core entities follow CRUDLF pattern** (5 operations per entity):
+- **C**reate - `FOB-{ENTITY}-CREATE_{ENTITY}-1`
+- **R**ead/View - `FOB-{ENTITY}-VIEW_{ENTITY}-1`
+- **U**pdate/Edit - `FOB-{ENTITY}-EDIT_{ENTITY}-1`
+- **D**elete - `FOB-{ENTITY}-DELETE_{ENTITY}-1`
+- **L**ist + **F**ind - `FOB-{ENTITY}-LIST+FIND-1`
+
+**Example**: Playbooks (Act 2)
+- `playbooks-list-find.feature` - Browse and search playbooks
+- `playbooks-create.feature` - Create new playbook with metadata
+- `playbooks-view.feature` - View playbook details, workflows, versioning
+- `playbooks-edit.feature` - Edit playbook properties
+- `playbooks-delete.feature` - Delete with confirmation and cascade handling
+
+### Screen Naming Convention
+
+All screens follow: **`FOB-{ENTITY}-{ACTION}-{VERSION}`**
+
+Examples:
+- `FOB-PLAYBOOKS-LIST+FIND-1` - Playbooks list/search page
+- `FOB-ACTIVITIES-CREATE_ACTIVITY-1` - Activity creation form
+- `FOB-WORKFLOWS-VIEW_WORKFLOW-1` - Workflow detail page
+- `FOB-PIPS-CREATE_PIP-1` - PIP creation modal
+- `FOB-SETTINGS-1` - Settings page
+
+### Feature File Coverage
+
+**Total Coverage**: 46 feature files, ~3,200 lines of Gherkin
+- **Acts 0-1**: Foundation (auth, onboarding, dashboard, navigation)
+- **Acts 2-8**: Full CRUDLF for 7 core entities (35 files)
+- **Acts 9-15**: Supporting features (PIPs, import/export, family, sync, MCP, settings, errors)
+
+**Scenario Types**:
+- Happy path workflows
+- Form validation and error handling
+- Navigation and state transitions
+- Edge cases and empty states
+- Permission checks
+- Cascade operations (e.g., delete with dependencies)
+
+### Integration with Architecture
+
+**Feature files define**:
+- All UI screens and modals
+- User interactions and workflows
+- Form fields and validation rules
+- Navigation patterns
+- HTMX endpoints (partial updates)
+- Success/error states
+
+**Architecture implements**:
+- Django views returning HTML fragments (HTMX)
+- Service layer for business logic
+- Repository pattern for data access
+- Graphviz for visualizations
+
+**Testing approach**:
+- Feature files → BDD specifications
+- Django test client → Verify HTML responses
+- No browser automation needed (server-side testing)
+
+### Reference Documents
+
+- **User Journey**: `docs/ux/user_journey.md` - Complete Acts 0-15 narrative
+- **Screen Flow**: `docs/ux/2_dialogue-maps/screen-flow.drawio` - Visual flow diagram
+- **Feature Files**: `docs/features/act-*/` - Detailed BDD specifications
+
 ## Data Model
 
 ### Core Entities
@@ -917,8 +1013,9 @@ class Node(models.Model):
     """Base for all methodology entities"""
     id = models.UUIDField(primary_key=True)
     type = models.CharField(max_length=50)
-    # 'methodology', 'activity', 'workflow', 'howto', 
-    # 'deliverable', 'role', 'goal'
+    # 7 Core Entities: 'playbook', 'workflow', 'phase', 'activity', 
+    # 'artifact', 'role', 'howto'
+    # Note: 'phase' is OPTIONAL for grouping activities within workflows
     version = models.ForeignKey('Version', on_delete=models.CASCADE)
     attributes = models.JSONField()
     # Flexible schema for type-specific properties
@@ -933,8 +1030,9 @@ class Edge(models.Model):
     from_node = models.ForeignKey(Node, related_name='outgoing')
     to_node = models.ForeignKey(Node, related_name='incoming')
     relationship_type = models.CharField(max_length=50)
-    # 'has_predecessor', 'produces', 'consumes', 
-    # 'performed_by', 'fulfills', 'guided_by'
+    # 'has_predecessor', 'has_successor', 'produces_artifact', 
+    # 'requires_artifact', 'performed_by_role', 'guided_by_howto', 
+    # 'belongs_to_phase', 'part_of_workflow'
     version = models.ForeignKey('Version', on_delete=models.CASCADE)
     attributes = models.JSONField(default=dict)
 ```
@@ -1052,7 +1150,7 @@ def query_methodology(
     :param question: natural language question as str. Example: "How do I build a TSX component per FDD?"
     :param methodology: methodology name as str. Example: "FDD"
     :param context: current work context as str or None. Example: "Working on user profile feature"
-    :return: Guidance dict with answer and resources. Example: {"answer": "To build a TSX component...", "relevant_activities": ["SE1: Create Component Structure"], "relevant_howtos": ["howto-tsx-component-setup"], "related_deliverables": ["Component Specification", "Unit Tests"]}
+    :return: Guidance dict with answer and resources. Example: {"answer": "To build a TSX component...", "relevant_activities": ["SE1: Create Component Structure"], "relevant_howtos": ["howto-tsx-component-setup"], "related_artifacts": ["Component Specification", "Unit Tests"]}
     """
     service = MethodologyService(DjangoORMRepository())
     return service.query_guidance(question, methodology, context)
@@ -1064,7 +1162,7 @@ def query_methodology(
   "answer": "To build a TSX component per FDD...",
   "relevant_activities": ["SE1: Create Component Structure"],
   "relevant_howtos": ["howto-tsx-component-setup"],
-  "related_deliverables": ["Component Specification", "Unit Tests"]
+  "related_artifacts": ["Component Specification", "Unit Tests"]
 }
 ```
 
@@ -1101,7 +1199,7 @@ def plan_execution(
 **Behavior**:
 1. Query methodology for relevant workflow
 2. Extract activities and their dependencies
-3. Generate work orders with deliverables
+3. Generate work orders with artifacts
 4. Use GitHub/Jira MCP to create issues
 5. Return work plan summary
 
@@ -1127,7 +1225,7 @@ def assess_progress(
     
     :param phase: phase name as str. Example: "inception"
     :param methodology: methodology name as str. Example: "FDD"
-    :return: Assessment dict with deliverable status, gaps, and recommendations. Example: {"phase": "inception", "required_deliverables": [{"name": "Feature List", "status": "complete", "quality": "good"}, {"name": "Screen Mockups", "status": "partial", "quality": "needs_review", "gaps": ["Login screen missing"]}], "recommendations": ["Complete Login screen mockup"], "can_proceed": False}
+    :return: Assessment dict with artifact status, gaps, and recommendations. Example: {"phase": "inception", "required_artifacts": [{"name": "Feature List", "status": "complete", "quality": "good"}, {"name": "Screen Mockups", "status": "partial", "quality": "needs_review", "gaps": ["Login screen missing"]}], "recommendations": ["Complete Login screen mockup"], "can_proceed": False}
     """
     service = AssessmentService(DjangoORMRepository())
     return service.assess_phase_completion(phase, methodology)
@@ -1137,7 +1235,7 @@ def assess_progress(
 ```python
 {
   "phase": "inception",
-  "required_deliverables": [
+  "required_artifacts": [
     {
       "name": "Feature List",
       "status": "complete",
@@ -1159,7 +1257,7 @@ def assess_progress(
 ```
 
 **Behavior**:
-1. Query methodology for phase deliverables
+1. Query methodology for phase artifacts
 2. Scan project (files, issues, PRs) for artifacts
 3. Assess completeness and quality
 4. Generate recommendations
@@ -1186,7 +1284,7 @@ class MethodologyService:
         :param question: natural language question as str. Example: "How do I test a Django view?"
         :param methodology: methodology name as str. Example: "FDD"
         :param context: optional work context as str or None. Example: "Building user authentication"
-        :return: Guidance dict with answer and related resources. Example: {"answer": "To test a Django view...", "relevant_activities": ["Write Unit Tests"], "relevant_howtos": ["django-test-setup"], "related_deliverables": ["Test Suite"]}
+        :return: Guidance dict with answer and related resources. Example: {"answer": "To test a Django view...", "relevant_activities": ["Write Unit Tests"], "relevant_howtos": ["django-test-setup"], "related_artifacts": ["Test Suite"]}
         """
         # Load methodology
         method = self.repo.get_methodology(methodology)
@@ -1199,7 +1297,7 @@ class MethodologyService:
             "answer": self._generate_answer(relevant_items, question),
             "relevant_activities": [a.name for a in relevant_items['activities']],
             "relevant_howtos": [h.name for h in relevant_items['howtos']],
-            "related_deliverables": [d.name for d in relevant_items['deliverables']]
+            "related_artifacts": [d.name for d in relevant_items['artifacts']]
         }
 
 # Can be called from MCP:
@@ -1225,8 +1323,8 @@ def query_view(request):
 **Activity**: The *what* - a unit of work with generic guidance
 - Example: "Create screen mockup"
 - Properties: name, description, goals, required skills
-- Produces: Deliverables
-- Consumes: Deliverables (from predecessors)
+- Produces: Artifacts
+- Consumes: Artifacts (from predecessors)
 - Guided by: Howtos
 
 **Howto**: The *how* - specific implementation instructions
@@ -1239,9 +1337,9 @@ def query_view(request):
 - Properties: name, phases, entry/exit criteria
 - Contains: Activities with dependency graph
 
-**Deliverable**: Output/input of activities
-- Example: "Featur File", "Acceptance Test", "TSX Component"
-- Properties: name, format, acceptance criteria
+**Artifact**: Output/input of activities
+- Example: "Feature File", "Acceptance Test", "TSX Component"
+- Properties: name, type, format, acceptance criteria, required status
 - Purpose: Connect activities (output → input)
 
 **Role**: Who performs activities
@@ -1273,7 +1371,7 @@ Example: Add "Decision" type to track architectural decisions made during activi
 **What counts as a correction**:
 - Code changes after review feedback
 - Rework due to missing requirements
-- Deliverable doesn't meet acceptance criteria
+- Artifact doesn't meet acceptance criteria
 - Downstream activity can't proceed
 
 ### Root Cause Analysis
@@ -1324,7 +1422,7 @@ Improved PIP proposals next time
 - FastMCP tools module with `@mcp.tool()` decorators
 - MCP server management command: `mcp.run()`
 - Implement `query_methodology` tool
-- Simple web UI for viewing Methodologies, Goals, Activities, Howtos, Deliverables, Roles
+- Simple web UI for viewing Playbooks, Workflows, Activities, Howtos, Artifacts, Roles
 
 ### Phase 2: Evolution Workflow
 - PIP creation interface (manual)
