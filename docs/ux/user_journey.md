@@ -1927,14 +1927,305 @@ Maria clicks "Join Family". Because it's set to auto-approve:
 
 **Result**: Maria is now a member of three families - two she created, one she joined.
 
+**Act 11 Summary**: Maria manages her professional network:
+- ✅ Create families (public and hidden)
+- ✅ Browse and join existing families
+- ✅ Review and approve/reject join requests
+- ✅ Manage family playbook submissions
+- ✅ Transfer family admin rights
+- ✅ Remove members (with knowledge loss consequences)
+
+**Next**: Maria syncs playbooks with Homebase (ACT 12).
+
 ---
 
-### Act 2.5: Family Admin Workflows
+### Act 12: SYNC SCENARIOS - Discovering & Sharing Playbooks
 
-**Context**: As Maria's UX family grows, she receives join requests and playbook submissions to review.
+**Context**: Maria downloads community playbooks from Homebase and uploads her improvements back. Sync handles clean downloads, uploads, conflicts, and version management.
 
-#### Screen: FOB Family Admin Dashboard - UX Family
-Maria navigates to **Families → UX → Admin Panel**:
+#### Scenario A: Clean Download - Discovering Mike's Playbook
+
+**Screen: FOB Sync Dashboard**
+
+Maria clicks [Sync with Homebase] from dashboard:
+- FOB connects using authentication token
+- Status: "Checking for updates..."
+- Lists available playbooks from her families
+
+**Screen: FOB Available Playbooks**
+
+Maria sees entitled playbooks:
+- "React Frontend Development" (Usability family) v1.0 by Mike Chen
+- 7 other playbooks from families
+- Status badges: Downloaded / Not Downloaded
+
+**Screen: FOB Playbook Preview**
+
+Maria clicks "React Frontend Development":
+- Shows structure preview (workflows, activities, artifacts)
+- Author: Mike Chen
+- Version history
+- [Download to FOB] button
+
+**Action: Download Playbook**
+
+Maria clicks [Download to FOB]:
+- Progress indicator
+- Playbook added to local database
+- Success: "React Frontend Development v1.0 downloaded"
+- Now available offline with full CRUDLF access (Acts 2-8)
+
+---
+
+#### Scenario B: Upload with PIP - Contributing Back
+
+**Context**: Maria applied PIP-42 locally (Act 9), enhancing React playbook with accessibility audit. She wants to contribute back.
+
+**Screen: FOB Sync Dashboard**
+
+Maria clicks [Sync with Homebase]:
+- Analyzes local changes
+- Detects: "React Frontend Development v1.1 (local) differs from v1.0 (remote)"
+
+**Screen: FOB Sync Analysis**
+
+Shows diff:
+- Local: v1.1 with Accessibility Audit activity (PIP-42 applied)
+- Remote: v1.0 (unchanged)
+- Recommendation: "Upload improvements as PIP to author"
+- [Generate PIP for Homebase] button
+
+**Action: Upload PIP**
+
+Maria clicks [Generate PIP for Homebase]:
+- Creates PIP package with her changes
+- Preview: "PIP-42: Add Accessibility Audit to React Frontend Development"  
+- [Submit to Homebase] button
+
+Maria submits:
+- PIP uploaded to Homebase
+- Notification sent to Mike (author) and family admins
+- Maria sees: "PIP-42 submitted for review by Mike Chen"
+
+Mike reviews and accepts:
+- React Frontend Development updates to v1.2 on Homebase
+- All family members notified
+- Maria's contribution credited
+
+---
+
+#### Scenario C: Download Update - Conflict Resolution
+
+**Context**: Mike accepted PIP-42 and published v1.2. Maria still has local v1.1. She syncs again.
+
+**Screen: FOB Sync Dashboard**
+
+Maria clicks [Sync with Homebase]:
+- Detects: "React Frontend Development v1.2 available (your local: v1.1)"
+
+**Screen: FOB Conflict Resolution**
+
+Shows 3-way comparison:
+- **Your Local v1.1**: Has PIP-42 changes
+- **Remote v1.2**: Has PIP-42 merged + Mike's additional tweaks
+- **Conflict Status**: No conflicts (your changes are superset of remote)
+
+**Resolution Options**:
+- ○ **Download v1.2** (recommended): Replaces local with official version
+- ○ **Keep Local v1.1**: Stay on your version, opt out of updates
+- ○ **Merge**: Combine local + remote changes (advanced)
+
+Maria selects **Download v1.2**:
+- Downloads official version
+- Local v1.1 archived to version history
+- Success: "Updated to React Frontend Development v1.2"
+
+---
+
+#### Scenario D: True Conflict - Divergent Changes
+
+**Context**: Maria modified Activity 2 locally. Mike also changed Activity 2 in v1.3. Changes conflict.
+
+**Screen: FOB Conflict Resolution (Conflict Detected)**
+
+Shows conflicts:
+- **Activity 2**: "Create Components"
+  - Your change: Added accessibility checklist
+  - Remote change: Restructured component architecture
+  - Status: ⚠️ **CONFLICT**
+
+**Resolution Options**:
+- ○ **Accept Remote**: Use Mike's v1.3 (lose your changes)
+- ○ **Keep Local**: Stay on v1.2 with your changes
+- ○ **Manual Merge**: Open editor to combine both
+
+**Actions**:
+- [View Diff] - See line-by-line changes
+- [Accept Remote] - Take Mike's version
+- [Keep Local] - Keep your version
+- [Contact Author] - Message Mike about conflict
+
+Maria chooses [Accept Remote] (trusts Mike's architecture):
+- Downloads v1.3
+- Her local changes archived
+- Can create new PIP later if needed
+
+---
+
+**Act 12 Summary**: Maria syncs playbooks with Homebase:
+- ✅ Download community playbooks from families
+- ✅ Preview before downloading
+- ✅ Upload PIPs to contribute improvements
+- ✅ Handle version updates and conflicts
+- ✅ Resolve conflicts (accept, keep, merge)
+- ✅ Offline resilience (downloaded playbooks work without connection)
+
+**Key Points**:
+- Sync requires Homebase connection and authentication
+- Downloaded playbooks available offline with full CRUDLF
+- PIPs enable structured contribution workflow
+- Version control prevents data loss
+- Conflict resolution preserves user choice
+
+**Next**: Maria uses playbooks via MCP in her IDE (ACT 13).
+
+---
+
+### Act 13: MCP INTEGRATION - AI-Assisted Methodology Execution
+
+**Context**: Maria works in Windsurf IDE with Mimir MCP server providing playbook context. External MCPs (GitHub, Jira) handle work items.
+
+#### Setup: MCP Configuration
+
+Maria's Windsurf has two MCP servers configured:
+1. **Mimir MCP** (localhost:5000): Provides playbook context, activities, artifacts
+2. **GitHub MCP** (external): Creates/tracks GitHub issues
+
+FOB container runs Mimir MCP server, exposing playbook data via Model Context Protocol.
+
+---
+
+#### Using Active Playbook
+
+**Screen: FOB Dashboard**
+
+Maria activates "React Frontend Development" playbook:
+- Clicks on playbook
+- [Activate] button
+- Success: "React Frontend Development v1.2 is now active"
+
+**Windsurf/MCP Chat**
+
+Maria asks her AI assistant:
+```
+> mimir: I'm starting a new React project. How do I set up the project structure?
+```
+
+**MCP Response** (from Mimir MCP):
+```
+Based on "React Frontend Development" playbook, Activity 1: Setup Project:
+
+1. Initialize with Create React App or Vite
+2. Folder structure:
+   - /src/components (reusable UI)
+   - /src/pages (page-level)
+   - /src/hooks (custom hooks)
+   - /src/state (state management)
+3. Configure ESLint and Prettier  
+4. Set up Jest + React Testing Library
+
+Upstream: None
+Downstream: Create Components, Implement State Management
+
+Would you like me to create a GitHub issue to track this?
+```
+
+---
+
+#### Creating Work Items via External MCP
+
+Maria responds:
+```
+> mimir: Yes, create a GitHub issue for project setup
+```
+
+**GitHub MCP** (external server) creates issue:
+- **Repo**: maria/acme-dashboard
+- **Issue #47**: "Setup React project structure per React Frontend Development playbook"
+- **Body**: Includes checklist from Activity 1 (context from Mimir MCP)
+- **Labels**: setup, react, playbook
+
+Link returned to Maria.
+
+---
+
+#### Context-Aware Guidance
+
+After completing work, Maria asks:
+```
+> mimir: What's next per the React playbook?
+```
+
+**MCP Response** (coordinated):
+```
+Checking MIMR-47 status... (GitHub MCP) ✓ Project structure complete.
+
+Next activity per "React Frontend Development" (Mimir MCP):
+Activity 2: Create Components
+
+Prerequisites complete ✓
+Ready to start component development.
+
+Options:
+1. Show full Activity 2 details? (Mimir MCP)
+2. Create GitHub issue for components? (GitHub MCP)
+3. Open playbook in browser? (Mimir MCP)
+```
+
+---
+
+#### Auto-Open Playbook in Browser
+
+Maria: `> mimir: Open playbook in browser`
+
+**MCP Action** (Mimir MCP):
+- Sends command to open browser
+- URL: `http://localhost:8000/playbooks/react-frontend-dev`
+- Browser opens showing FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 (Act 2)
+- Activity 1 marked complete (linked to MIMR-47)
+- Activity 2 highlighted as next step
+
+---
+
+**Act 13 Summary**: Maria uses Mimir MCP for AI-assisted methodology execution:
+- ✅ Activate playbooks in FOB
+- ✅ Query playbook context via AI (Windsurf/MCP)
+- ✅ Get activity-specific guidance
+- ✅ Create work items via external MCPs (GitHub, Jira)
+- ✅ Track progress and dependencies
+- ✅ Auto-open playbook details in browser
+
+**Integration Architecture**:
+- **Mimir MCP**: Playbook context, activities, artifacts (localhost:5000)
+- **External MCPs**: Work item management (GitHub, Jira, GitLab, etc.)
+- **AI Coordination**: Windsurf AI coordinates between MCPs for seamless workflow
+
+**Key Benefits**:
+- Playbook guidance embedded in development workflow
+- No context switching between IDE and playbook docs
+- Automated work item creation with playbook context
+- Dependency tracking and progress visibility
+
+**Next**: Maria configures FOB settings (ACT 14).
+
+---
+
+### Act 14: Settings & Preferences
+
+**Context**: Maria needs to configure her FOB and account settings.
+
+#### Screen: FOB Settings - Main
+Maria clicks **Settings** in navigation menu:
 - **Overview tab**:
   - Members: 3 (Maria + 2 auto-joins)
   - Pending join requests: 2 (badge notification)
