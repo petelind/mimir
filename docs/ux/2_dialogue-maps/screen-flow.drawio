@@ -2368,6 +2368,100 @@
                 <mxCell id="v2-arrow-act1-2" value="Save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;fontSize=9;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-fob-dashboard" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
+                <!-- ACT 2: PLAYBOOKS - Full CRUDLF Example -->
+                <mxCell id="v2-act2-label" value="ACT 2: PLAYBOOKS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="200" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <!-- FOB Pages -->
+                <mxCell id="v2-fob-playbooks-list" value="FOB-PLAYBOOKS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="240" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-playbooks-create" value="FOB-PLAYBOOKS-&#10;CREATE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="240" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-playbooks-view" value="FOB-PLAYBOOKS-&#10;VIEW_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="320" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-playbooks-edit" value="FOB-PLAYBOOKS-&#10;EDIT_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="200" y="320" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-fob-playbooks-delete" value="FOB-PLAYBOOKS-&#10;DELETE_PLAYBOOK&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="320" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <!-- Windsurf Integration -->
+                <mxCell id="v2-windsurf-playbook" value="WINDSURF-&#10;PLAYBOOK-CHAT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#6a5acd;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="360" y="240" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbook-context" value="MCP-PLAYBOOK-&#10;CONTEXT" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF8C00;strokeColor=#d68000;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="480" y="240" width="100" height="50" as="geometry"/>
+                </mxCell>
+                <!-- MCP Tools Section -->
+                <mxCell id="v2-tool-playbooks-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="40" y="400" width="50" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-create-playbook" value="@create_playbook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="400" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-get-playbook" value="@get_playbook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="400" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-update-playbook" value="@update_playbook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="340" y="400" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-delete-playbook" value="@delete_playbook" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="460" y="400" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-list-playbooks" value="@list_playbooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="100" y="440" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-tool-find-playbooks" value="@find_playbooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="220" y="440" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <!-- Flow Arrows -->
+                <mxCell id="v2-arrow-dash-playbooks" value="[Playbooks]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;fontSize=9;" parent="v2-root-1" source="v2-fob-dashboard" target="v2-fob-playbooks-list" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1145" y="180"/>
+                            <mxPoint x="110" y="180"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="v2-arrow-list-create-pb" value="[New]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4682B4;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-fob-playbooks-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-list-view-pb" value="[Select]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4682B4;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-fob-playbooks-view" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-view-edit-pb" value="[Edit]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4682B4;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-fob-playbooks-edit" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-view-delete-pb" value="[Delete]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#b85450;dashed=1;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-fob-playbooks-delete" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="110" y="400"/>
+                            <mxPoint x="430" y="400"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <!-- Tool Connections -->
+                <mxCell id="v2-arrow-tool-create-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-create" target="v2-tool-create-playbook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-tool-get-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-tool-get-playbook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-tool-update-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-edit" target="v2-tool-update-playbook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-tool-delete-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-delete" target="v2-tool-delete-playbook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-tool-list-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-tool-list-playbooks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-tool-find-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-tool-find-playbooks" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
