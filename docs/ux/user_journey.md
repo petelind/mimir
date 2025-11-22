@@ -363,7 +363,7 @@ Maria sees her existing playbooks and can search/filter to find specific ones.
 
 #### Screen: FOB-PLAYBOOKS-CREATE_PLAYBOOK-1
 
-Maria clicks [Create New Playbook]. The creation wizard opens (accessed via «extends» arrow from LIST+FIND in flow diagrams):
+Maria clicks [Create New Playbook]. The creation wizard opens:
 
 **Wizard Step 1: Basic Information**
 - **Name**: Text input (required)
@@ -413,7 +413,7 @@ Maria clicks [Create New Playbook]. The creation wizard opens (accessed via «ex
 
 #### Screen: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1
 
-Maria clicks [View] on "React Frontend Development" from the list. The detail view opens (accessed via «extends» arrow from LIST+FIND):
+Maria clicks [View] on "React Frontend Development" from the list. The detail view opens:
 
 **Layout**:
 - **Header**:
@@ -485,7 +485,7 @@ Maria can explore the complete playbook structure, drill into workflows, view ve
 
 #### Screen: FOB-PLAYBOOKS-EDIT_PLAYBOOK-1
 
-Maria clicks [Edit] on her "Product Discovery Framework" playbook. The edit form opens (accessed via «extends» arrow from VIEW or LIST+FIND):
+Maria clicks [Edit] on her "Product Discovery Framework" playbook. The edit form opens:
 
 **Form Layout** (similar to CREATE wizard but single page):
 - **Basic Information Section**:
@@ -538,7 +538,7 @@ Maria clicks [Edit] on her "Product Discovery Framework" playbook. The edit form
 
 #### Screen: FOB-PLAYBOOKS-DELETE_PLAYBOOK-1 (Confirmation Modal)
 
-Maria clicks [Delete] on an old "Test Playbook 123" she no longer needs. A confirmation modal appears (accessed via «extends» arrow from VIEW or LIST+FIND):
+Maria clicks [Delete] on an old "Test Playbook 123" she no longer needs. A confirmation modal appears:
 
 **Modal Layout**:
 - **Title**: "Delete Playbook?"
