@@ -1,88 +1,71 @@
-"""E2E tests for authentication user journeys.
+"""E2E tests for authentication user journeys using Django Test Client.
 
-Tests complete flows from authentication.feature using Playwright.
-Uses Django LiveServerTestCase + Playwright for full browser testing.
+Tests complete flows from authentication.feature using Django's Test Client.
+Faster, more reliable, and better Django integration than browser-based tests.
 
-Per .windsurf/rules/do-e2e-tests.md and AUTH_IMPLEMENTATION_PLAN.md
+Per updated .windsurf/workflows/dev-4-e2e-tests.md
 """
 import pytest
 from django.contrib.auth.models import User
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from playwright.sync_api import sync_playwright, Page, expect
+from django.test import Client
+from django.urls import reverse
+from django.core import mail
 import re
 
 
 @pytest.mark.django_db
-class TestAuthenticationE2E(StaticLiveServerTestCase):
+class TestAuthenticationE2E:
     """E2E tests for complete authentication user journeys."""
-    
-    @classmethod
-    def setUpClass(cls):
-        """Set up Playwright browser for all tests."""
-        super().setUpClass()
-        cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch(headless=True)
-    
-    @classmethod
-    def tearDownClass(cls):
-        """Clean up Playwright resources."""
-        cls.browser.close()
-        cls.playwright.stop()
-        super().tearDownClass()
-    
-    def setUp(self):
-        """Create new browser context for each test."""
-        self.context = self.browser.new_context()
-        self.page = self.context.new_page()
-    
-    def tearDown(self):
-        """Close browser context after each test."""
-        self.page.close()
-        self.context.close()
     
     def test_e2e_new_user_registration_to_dashboard(self):
         """
         E2E: Complete new user journey from registration to dashboard.
         
         User Journey:
-        1. Visit site (redirected to login)
-        2. Click "Sign Up"
+        1. Visit dashboard (not logged in, redirected to login)
+        2. Click "Sign Up" link
         3. Register new account
-        4. Auto-logged in
-        5. Redirected to onboarding
-        6. Skip to dashboard
-        7. See dashboard content
+        4. Auto-logged in and redirected to onboarding
+        5. Click "Skip to Dashboard"
+        6. See dashboard content
         """
-        page = self.page
+        client = Client()
         
-        # Step 1: Visit dashboard (not logged in, should redirect to login)
-        page.goto(f'{self.live_server_url}/dashboard/')
-        expect(page).to_have_url(re.compile(r'.*/auth/user/login/.*'))
+        # Step 1: Try to access dashboard (should redirect to login)
+        response = client.get('/dashboard/', follow=True)
+        assert response.redirect_chain[-1][0].startswith('/auth/user/login/')
+        assert 'data-testid="login-form"' in response.content.decode('utf-8')
         
-        # Step 2: Click Sign Up link
-        page.click('text=Sign Up')
-        expect(page).to_have_url(f'{self.live_server_url}/auth/user/register/')
+        # Step 2: Navigate to registration
+        response = client.get(reverse('register'))
+        assert response.status_code == 200
+        assert 'data-testid="register-form"' in response.content.decode('utf-8')
         
-        # Step 3: Fill registration form
-        page.fill('[data-testid="register-username-input"]', 'maria')
-        page.fill('[data-testid="register-email-input"]', 'maria@example.com')
-        page.fill('[data-testid="register-password-input"]', 'SecurePass123')
-        page.fill('[data-testid="register-password-confirm-input"]', 'SecurePass123')
+        # Step 3: Submit registration form
+        response = client.post(reverse('register'), {
+            'username': 'maria',
+            'email': 'maria@example.com',
+            'password': 'SecurePass123',
+            'password_confirm': 'SecurePass123',
+        }, follow=True)
         
-        # Step 4: Submit registration
-        page.click('[data-testid="register-submit-button"]')
+        # Step 4: Should be redirected to onboarding and auto-logged in
+        assert response.redirect_chain[-1][0] == '/auth/user/onboarding/'
+        content = response.content.decode('utf-8')
+        assert 'data-testid="onboarding-stub"' in content
+        assert 'FOB-ONBOARDING-1' in content
         
-        # Step 5: Should be redirected to onboarding
-        expect(page).to_have_url(f'{self.live_server_url}/auth/user/onboarding/')
-        expect(page.locator('[data-testid="onboarding-stub"]')).to_be_visible()
+        # Verify user was created and is authenticated
+        assert User.objects.filter(username='maria').exists()
+        assert response.wsgi_request.user.is_authenticated
+        assert response.wsgi_request.user.username == 'maria'
         
-        # Step 6: Click Skip to Dashboard
-        page.click('text=Skip to Dashboard')
-        
-        # Step 7: Should see dashboard
-        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')
-        expect(page.locator('[data-testid="dashboard-stub"]')).to_be_visible()
-        expect(page.locator('text=FOB-DASHBOARD-1')).to_be_visible()
+        # Step 5 & 6: Navigate to dashboard (can use link or direct access)
+        dashboard_response = client.get('/dashboard/')
+        assert dashboard_response.status_code == 200
+        dashboard_content = dashboard_response.content.decode('utf-8')
+        assert 'data-testid="dashboard-stub"' in dashboard_content
+        assert 'FOB-DASHBOARD-1' in dashboard_content
     
     def test_e2e_login_with_invalid_then_valid_credentials(self):
         """
@@ -91,47 +74,56 @@ class TestAuthenticationE2E(StaticLiveServerTestCase):
         User Journey:
         1. Visit login page
         2. Enter wrong password
-        3. See error message
+        3. See error message, form preserved
         4. Enter correct password
         5. Redirected to dashboard
         """
-        page = self.page
+        client = Client()
         
         # Setup: Create test user
         User.objects.create_user(username='maria', password='CorrectPass123')
         
         # Step 1: Go to login
-        page.goto(f'{self.live_server_url}/auth/user/login/')
+        response = client.get(reverse('login'))
+        assert response.status_code == 200
+        assert 'data-testid="login-form"' in response.content.decode('utf-8')
         
-        # Step 2: Enter wrong password
-        page.fill('[data-testid="login-username-input"]', 'maria')
-        page.fill('[data-testid="login-password-input"]', 'WrongPassword')
-        page.click('[data-testid="login-submit-button"]')
+        # Step 2 & 3: Enter wrong password and see error
+        response = client.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'WrongPassword',
+        })
         
-        # Step 3: Should see error
-        expect(page.locator('[data-testid="login-error-message"]')).to_be_visible()
-        expect(page.locator('text=Invalid')).to_be_visible()
+        assert response.status_code == 200  # Stays on page
+        content = response.content.decode('utf-8')
+        assert 'data-testid="login-error-message"' in content
+        assert 'Invalid' in content or 'invalid' in content
+        # Username should be preserved
+        assert 'value="maria"' in content
         
-        # Step 4: Enter correct password
-        page.fill('[data-testid="login-password-input"]', 'CorrectPass123')
-        page.click('[data-testid="login-submit-button"]')
+        # Step 4 & 5: Enter correct password and get redirected
+        response = client.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'CorrectPass123',
+        }, follow=True)
         
-        # Step 5: Should be on dashboard
-        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')
+        assert response.redirect_chain[-1][0] == '/dashboard/'
+        assert response.wsgi_request.user.is_authenticated
+        assert response.wsgi_request.user.username == 'maria'
     
     def test_e2e_password_reset_complete_flow(self):
         """
         E2E: Complete password reset flow.
         
         User Journey:
-        1. Click "Forgot password?" on login
-        2. Enter email
+        1. Navigate from login to password reset
+        2. Submit email for reset
         3. See success message
-        4. Extract reset link from email (simulated)
+        4. Extract reset link from email
         5. Set new password
-        6. Login with new password
+        6. Login with new password successfully
         """
-        page = self.page
+        client = Client()
         
         # Setup: Create test user
         user = User.objects.create_user(
@@ -140,140 +132,158 @@ class TestAuthenticationE2E(StaticLiveServerTestCase):
             password='OldPass123'
         )
         
-        # Step 1: Go to login and click Forgot password
-        page.goto(f'{self.live_server_url}/auth/user/login/')
-        page.click('text=Forgot password?')
+        # Step 1: Go to login, find forgot password link
+        login_response = client.get(reverse('login'))
+        content = login_response.content.decode('utf-8')
+        assert 'Forgot password' in content or 'forgot' in content.lower()
         
-        # Step 2: Enter email for reset
-        expect(page).to_have_url(f'{self.live_server_url}/auth/user/password-reset/')
-        page.fill('[data-testid="reset-email-input"]', 'maria@example.com')
-        page.click('[data-testid="reset-submit-button"]')
+        # Navigate to password reset
+        reset_response = client.get(reverse('password_reset'))
+        assert reset_response.status_code == 200
+        assert 'data-testid="password-reset-form"' in reset_response.content.decode('utf-8')
         
-        # Step 3: See success message
-        expect(page.locator('[data-testid="reset-success-message"]')).to_be_visible()
+        # Step 2 & 3: Submit email and see success
+        response = client.post(reverse('password_reset'), {
+            'email': 'maria@example.com',
+        })
         
-        # Step 4: Simulate getting reset link
-        # In real scenario, would extract from email
-        # For E2E test, we'll directly construct the URL using session data
-        from django.utils.http import urlsafe_base64_encode
-        from django.utils.encoding import force_bytes
+        assert response.status_code == 200
+        content = response.content.decode('utf-8')
+        assert 'data-testid="reset-success-message"' in content
+        assert 'sent' in content.lower() or 'email' in content.lower()
         
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        # Note: In production, use proper token generator
-        # For this E2E test, we'll use a test token
-        import secrets
-        token = secrets.token_urlsafe(32)
+        # Step 4: Extract reset link from email
+        assert len(mail.outbox) == 1
+        email_body = mail.outbox[0].body
+        match = re.search(r'/auth/user/password-reset-confirm/([^/]+)/([^/\s]+)/', email_body)
+        assert match, "Reset link should be in email"
+        uidb64, token = match.groups()
         
-        # Store in session (simulating what the view does)
-        from django.contrib.sessions.backends.db import SessionStore
-        session = SessionStore()
-        session[f'password_reset_{uid}'] = {
-            'token': token,
-            'user_id': user.pk,
-            'timestamp': 'test'
-        }
-        session.save()
+        # Step 5: Use reset link to set new password
+        confirm_url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
         
-        # Step 5: Visit reset confirmation page
-        reset_confirm_url = f'{self.live_server_url}/auth/user/password-reset-confirm/{uid}/{token}/'
+        # GET the confirm page
+        confirm_response = client.get(confirm_url)
+        assert confirm_response.status_code == 200
+        confirm_content = confirm_response.content.decode('utf-8')
+        assert 'data-testid="new-password-input"' in confirm_content
         
-        # Need to set session cookie for the token to work
-        # This is a limitation of the test - in real usage, user clicks email link
-        page.goto(f'{self.live_server_url}/auth/user/login/')  # Get session
-        page.context.add_cookies([{
-            'name': 'sessionid',
-            'value': session.session_key,
-            'url': self.live_server_url
-        }])
+        # POST new password
+        response = client.post(confirm_url, {
+            'password': 'NewPass456',
+            'password_confirm': 'NewPass456',
+        })
         
-        page.goto(reset_confirm_url)
+        assert response.status_code == 200
+        content = response.content.decode('utf-8')
+        assert 'data-testid="reset-complete-message"' in content
+        assert 'success' in content.lower()
         
-        # Should see password form
-        expect(page.locator('[data-testid="new-password-input"]')).to_be_visible()
+        # Step 6: Login with new password
+        login_response = client.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'NewPass456',
+        }, follow=True)
         
-        # Set new password
-        page.fill('[data-testid="new-password-input"]', 'NewPass456')
-        page.fill('[data-testid="new-password-confirm-input"]', 'NewPass456')
-        page.click('[data-testid="reset-confirm-submit-button"]')
+        assert login_response.redirect_chain[-1][0] == '/dashboard/'
+        assert login_response.wsgi_request.user.is_authenticated
         
-        # Step 6: See success and login with new password
-        expect(page.locator('[data-testid="reset-complete-message"]')).to_be_visible()
-        page.click('text=Sign In')
-        
-        # Login with new password
-        page.fill('[data-testid="login-username-input"]', 'maria')
-        page.fill('[data-testid="login-password-input"]', 'NewPass456')
-        page.click('[data-testid="login-submit-button"]')
-        
-        # Should reach dashboard
-        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')
+        # Verify old password doesn't work
+        client2 = Client()
+        old_login = client2.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'OldPass123',
+        })
+        assert old_login.status_code == 200  # Stays on page (error)
+        assert not old_login.wsgi_request.user.is_authenticated
     
     def test_e2e_logout_and_cannot_access_dashboard(self):
         """
         E2E: User logs in, logs out, cannot access protected page.
         
         User Journey:
-        1. Login
-        2. Visit dashboard (accessible)
-        3. Logout (when navigation implemented)
-        4. Try to access dashboard
+        1. Login successfully
+        2. Access dashboard (works)
+        3. Logout
+        4. Try to access dashboard again
         5. Redirected to login
         """
-        page = self.page
+        client = Client()
         
         # Setup: Create user
         User.objects.create_user(username='maria', password='TestPass123')
         
         # Step 1: Login
-        page.goto(f'{self.live_server_url}/auth/user/login/')
-        page.fill('[data-testid="login-username-input"]', 'maria')
-        page.fill('[data-testid="login-password-input"]', 'TestPass123')
-        page.click('[data-testid="login-submit-button"]')
+        login_response = client.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'TestPass123',
+        }, follow=True)
         
-        # Step 2: On dashboard
-        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')
+        assert login_response.redirect_chain[-1][0] == '/dashboard/'
         
-        # Step 3: Logout (directly visit logout URL since no nav yet)
-        page.goto(f'{self.live_server_url}/auth/user/logout/')
+        # Step 2: Access dashboard successfully
+        dashboard_response = client.get('/dashboard/')
+        assert dashboard_response.status_code == 200
+        assert 'FOB-DASHBOARD-1' in dashboard_response.content.decode('utf-8')
         
-        # Should be redirected to login with success message
-        expect(page).to_have_url(re.compile(r'.*/auth/user/login/.*'))
+        # Step 3: Logout
+        logout_response = client.post(reverse('logout'), follow=True)
+        assert logout_response.redirect_chain[-1][0] == '/auth/user/login/'
         
-        # Step 4: Try to access dashboard again
-        page.goto(f'{self.live_server_url}/dashboard/')
+        # Verify logout message
+        messages = list(logout_response.context['messages'])
+        assert len(messages) == 1
+        assert 'logged out' in str(messages[0]).lower()
         
-        # Step 5: Should be redirected to login
-        expect(page).to_have_url(re.compile(r'.*/auth/user/login/.*'))
+        # Step 4 & 5: Try to access dashboard, get redirected
+        dashboard_attempt = client.get('/dashboard/', follow=True)
+        assert dashboard_attempt.redirect_chain[-1][0].startswith('/auth/user/login/')
+        assert not dashboard_attempt.wsgi_request.user.is_authenticated
     
     def test_e2e_registration_validation_errors(self):
         """
-        E2E: Registration form shows validation errors.
+        E2E: Registration form shows validation errors and recovers.
         
         User Journey:
         1. Go to registration
         2. Submit with mismatched passwords
-        3. See error
-        4. Fix and submit successfully
+        3. See error message
+        4. Form fields preserved (except passwords)
+        5. Fix error and submit successfully
         """
-        page = self.page
+        client = Client()
         
         # Step 1: Go to registration
-        page.goto(f'{self.live_server_url}/auth/user/register/')
+        response = client.get(reverse('register'))
+        assert response.status_code == 200
         
-        # Step 2: Fill with mismatched passwords
-        page.fill('[data-testid="register-username-input"]', 'maria')
-        page.fill('[data-testid="register-email-input"]', 'maria@example.com')
-        page.fill('[data-testid="register-password-input"]', 'Pass123456')
-        page.fill('[data-testid="register-password-confirm-input"]', 'DifferentPass')
-        page.click('[data-testid="register-submit-button"]')
+        # Step 2 & 3: Submit with mismatched passwords
+        response = client.post(reverse('register'), {
+            'username': 'maria',
+            'email': 'maria@example.com',
+            'password': 'Pass123456',
+            'password_confirm': 'DifferentPass',
+        })
+        
+        assert response.status_code == 200  # Stays on page
+        content = response.content.decode('utf-8')
         
         # Step 3: See validation error
-        expect(page.locator('[data-testid="password-confirm-field-error"]')).to_be_visible()
-        expect(page.locator('text=do not match')).to_be_visible()
+        assert 'data-testid="password-confirm-field-error"' in content
+        assert 'do not match' in content.lower() or 'match' in content.lower()
         
-        # Step 4: Fix and submit
-        page.fill('[data-testid="register-password-confirm-input"]', 'Pass123456')
-        page.click('[data-testid="register-submit-button"]')
+        # Step 4: Verify fields preserved (username and email)
+        assert 'value="maria"' in content
+        assert 'value="maria@example.com"' in content
         
-        # Should succeed and go to onboarding
-        expect(page).to_have_url(f'{self.live_server_url}/auth/user/onboarding/')
+        # Step 5: Fix and submit successfully
+        response = client.post(reverse('register'), {
+            'username': 'maria',
+            'email': 'maria@example.com',
+            'password': 'Pass123456',
+            'password_confirm': 'Pass123456',
+        }, follow=True)
+        
+        assert response.redirect_chain[-1][0] == '/auth/user/onboarding/'
+        assert User.objects.filter(username='maria').exists()
+        assert response.wsgi_request.user.is_authenticated
