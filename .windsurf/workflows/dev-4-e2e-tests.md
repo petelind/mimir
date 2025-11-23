@@ -1,13 +1,27 @@
 ---
-description: E2E Testing with Django LiveServerTestCase + Playwright
+description: E2E Testing Strategy - Split into Feature ATs and Journey Certification
 auto_execution_mode: 3
 ---
 
-# E2E Test Implementation Workflow
+# E2E Testing Strategy (DEPRECATED - See Split Workflows)
 
-This workflow guides you through implementing E2E tests for Django + HTMX applications using Playwright.
+**⚠️ This workflow has been split into two focused workflows:**
 
-**When implementing tests** - assume app is already working, so if there are discrepancies between feature files and implementation - implementation takes precedence.
+1. **`/dev-4-1-feature-at`** - Feature Acceptance Tests (Django Test Client)
+   - Fast, comprehensive testing of individual features
+   - All scenarios from `.feature` files
+   - Run on every commit
+
+2. **`/dev-4-2-journey-certification`** - User Journey Certification (Playwright + LiveServer)
+   - Browser-based testing of complete user journeys
+   - HTMX, JavaScript, UI validation
+   - Run on PR merge / nightly
+
+**Use the split workflows instead of this one.**
+
+---
+
+## Original Content (For Reference Only)
 
 ---
 
@@ -93,176 +107,204 @@ def setup_test_data(self):
 
 ---
 
-## Step 5: Implement E2E Tests
+## Step 5: Implement E2E Tests with Django Test Client
 
-### 5.1 Test Structure with Playwright
+### 5.1 Test Structure with Django Test Client
 
 ```python
-# tests/e2e/test_workflow.py
+# tests/e2e/test_workflow_e2e.py
 import pytest
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from playwright.sync_api import sync_playwright, expect
+from django.test import Client
+from django.contrib.auth.models import User
+from django.urls import reverse
 
-class WorkflowE2ETest(StaticLiveServerTestCase):
-    """E2E tests for workflow management"""
+@pytest.mark.django_db
+class TestWorkflowE2E:
+    """E2E tests for complete workflow user journeys"""
     
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch(headless=True)
-        cls.context = cls.browser.new_context()
-    
-    @classmethod
-    def tearDownClass(cls):
-        cls.context.close()
-        cls.browser.close()
-        cls.playwright.stop()
-        super().tearDownClass()
-    
-    def test_create_activity(self):
-        """Test activity creation via HTMX form"""
-        page = self.context.new_page()
-        page.goto(f'{self.live_server_url}/workflow/{self.workflow.id}/')
+    def test_create_activity_complete_flow(self):
+        """
+        E2E: User creates a new activity.
         
-        # Wait for page load
-        expect(page.get_by_test_id('workflow-detail')).to_be_visible()
+        Journey:
+        1. Login
+        2. Navigate to workflow
+        3. Click create activity
+        4. Fill form
+        5. Submit
+        6. Verify activity appears in list
+        """
+        # Arrange - Setup test data
+        client = Client()
+        user = User.objects.create_user(username='maria', password='test123')
+        workflow = Workflow.objects.create(name='Test Workflow', created_by=user)
         
-        # Click create button
-        page.get_by_test_id('create-activity-button').click()
+        # Step 1: Login
+        login_response = client.post(reverse('login'), {
+            'username': 'maria',
+            'password': 'test123',
+        })
+        assert login_response.status_code == 302  # Redirect on success
         
-        # Wait for HTMX form to load
-        expect(page.get_by_test_id('activity-form')).to_be_visible()
+        # Step 2: Navigate to workflow
+        workflow_url = reverse('workflow_detail', args=[workflow.id])
+        response = client.get(workflow_url)
+        assert response.status_code == 200
+        assert 'Test Workflow' in response.content.decode('utf-8')
         
-        # Fill form
-        page.get_by_test_id('activity-name-input').fill('New Activity')
+        # Step 3 & 4 & 5: Create activity (simulate form POST)
+        create_response = client.post(
+            reverse('activity_create', args=[workflow.id]),
+            {
+                'name': 'New Activity',
+                'description': 'Test description',
+                'phase': 'planning',
+            },
+            follow=True  # Follow redirects
+        )
         
-        # Submit
-        page.get_by_test_id('save-activity-button').click()
-        
-        # Wait for HTMX update
-        expect(page.get_by_test_id('activity-list')).to_contain_text('New Activity')
+        # Step 6: Verify activity in response
+        assert create_response.status_code == 200
+        content = create_response.content.decode('utf-8')
+        assert 'New Activity' in content
+        assert 'data-testid="activity-list"' in content or 'New Activity' in content
         
         # Verify in database
-        self.assertTrue(Activity.objects.filter(name='New Activity').exists())
-        
-        page.close()
+        assert Activity.objects.filter(name='New Activity', workflow=workflow).exists()
+        activity = Activity.objects.get(name='New Activity')
+        assert activity.description == 'Test description'
 ```
 
-### 5.2 Page Object Pattern (Optional)
+### 5.2 Helper Functions (Optional)
 
 ```python
-# tests/e2e/pages/workflow_page.py
-from playwright.sync_api import Page, expect
+# tests/e2e/helpers.py
+from django.test import Client
+from django.urls import reverse
 
-class WorkflowPage:
-    def __init__(self, page: Page, live_server_url: str):
-        self.page = page
-        self.live_server_url = live_server_url
-    
-    def navigate_to(self, workflow_id):
-        self.page.goto(f'{self.live_server_url}/workflow/{workflow_id}/')
-        expect(self.page.get_by_test_id('workflow-detail')).to_be_visible()
-    
-    def create_activity(self, name: str):
-        self.page.get_by_test_id('create-activity-button').click()
-        expect(self.page.get_by_test_id('activity-form')).to_be_visible()
-        self.page.get_by_test_id('activity-name-input').fill(name)
-        self.page.get_by_test_id('save-activity-button').click()
-        expect(self.page.get_by_test_id('activity-form')).not_to_be_visible()
-    
-    def verify_activity_exists(self, name: str):
-        expect(self.page.get_by_test_id('activity-list')).to_contain_text(name)
+def login_user(client: Client, username: str, password: str):
+    """Helper to login user via Test Client"""
+    response = client.post(reverse('login'), {
+        'username': username,
+        'password': password,
+    })
+    assert response.status_code == 302, "Login should redirect"
+    return client
+
+def create_activity(client: Client, workflow_id: int, name: str, description: str = ''):
+    """Helper to create activity via POST"""
+    response = client.post(
+        reverse('activity_create', args=[workflow_id]),
+        {
+            'name': name,
+            'description': description,
+            'phase': 'planning',
+        },
+        follow=True
+    )
+    assert response.status_code == 200
+    return response
+
+def verify_content_in_response(response, expected_text: str):
+    """Helper to verify text appears in response"""
+    content = response.content.decode('utf-8')
+    assert expected_text in content, f"Expected '{expected_text}' in response"
 ```
 
-### 5.3 Testing HTMX Interactions
+### 5.3 Testing HTMX Endpoints
 
 ```python
-def test_htmx_content_swap(self):
-    """Test HTMX swaps content without page reload"""
-    page = self.context.new_page()
-    page.goto(f'{self.live_server_url}/methodology/{self.methodology.id}/')
+def test_htmx_partial_update(self):
+    """Test HTMX endpoint returns partial HTML"""
+    client = Client()
+    client.login(username='maria', password='test123')
     
-    initial_text = page.get_by_test_id('main-content').text_content()
-    
-    # Trigger HTMX navigation
-    page.get_by_test_id('version-link').click()
-    
-    # Wait for content change
-    page.wait_for_function(
-        f'document.querySelector(\'[data-testid="main-content"]\').textContent !== "{initial_text}"'
+    # Make HTMX request (usually has HX-Request header)
+    response = client.get(
+        reverse('activity_partial', args=[activity.id]),
+        HTTP_HX_REQUEST='true'  # Simulate HTMX request
     )
     
-    # Verify URL didn't change (HTMX update, not navigation)
-    self.assertIn('/methodology/', page.url)
+    assert response.status_code == 200
+    content = response.content.decode('utf-8')
     
-    page.close()
+    # Should return partial HTML, not full page
+    assert '<html' not in content  # No full page
+    assert '<div data-testid="activity-item"' in content  # Partial content
+    assert activity.name in content
 ```
 
 ---
 
 ## Step 6: Run and Debug Tests
 
-**See rule:** `.windsurf/rules/do-django-live-server-tests.md`
-
 ```bash
 # Run specific test
-pytest tests/e2e/test_workflow.py::WorkflowE2ETest::test_create_activity -v
-
-# Run with visible browser
-pytest tests/e2e/test_workflow.py --headed
+pytest tests/e2e/test_workflow_e2e.py::TestWorkflowE2E::test_create_activity_complete_flow -v
 
 # Run all E2E tests
 pytest tests/e2e/ -v
+
+# Run with verbose output
+pytest tests/e2e/ -vv
+
+# Run with print statements visible
+pytest tests/e2e/ -v -s
 ```
 
 **Debugging:**
-- Use `--headed` to see browser
-- Use `page.pause()` for breakpoint
-- Check `test-results/` for screenshots on failure
+- Use `print(response.content.decode())` to see HTML
+- Use `-s` flag to see print output  
+- Check response.status_code for redirects/errors
+- Verify database state with queries
 
 ---
 
 ## Step 7: Document Test Coverage
 
 ```python
-class WorkflowE2ETest(StaticLiveServerTestCase):
+class TestWorkflowE2E:
     """
     ✅ E2E Tests for Workflow Management
     
     Coverage:
-    ✅ Create workflow
-    ✅ Create activity via HTMX
+    ✅ Create workflow complete flow
+    ✅ Create activity via form POST
     ✅ Edit activity
-    ✅ View workflow graph
-    ✅ HTMX dynamic updates
+    ✅ View workflow detail page
+    ✅ HTMX partial endpoint responses
     
     Test Strategy:
-    - Uses LiveServerTestCase + Playwright
-    - Tests Django templates + HTMX interactions
-    - Validates Graphviz SVG rendering
-    - No mocking - real database and server
+    - Uses Django Test Client (pytest)
+    - Tests complete user journeys
+    - Validates HTML responses and redirects
+    - Verifies database state after operations
+    - No mocking - real database
+    - No browser needed - faster and more reliable
     """
 ```
 
 ---
 
-## Decision Tree: TestCase vs LiveServerTestCase
+## Decision Tree: Which Test Approach to Use
 
 ```
-Can you test without browser?
-├─ Yes → Use Django TestCase (90% of tests)
-│         - View returns correct status
-│         - Template context is correct
-│         - Forms submit properly
-│         - HTMX endpoints return HTML
-│
-└─ No → Use LiveServerTestCase + Playwright
-          When you need:
-          - HTMX DOM updates
-          - SVG interactions
-          - JavaScript behavior
-          - Multi-step workflows
+What are you testing?
+├─ Individual views/functions → Use Django TestCase with pytest
+│         - Single view behavior
+│         - Template context validation
+│         - Form validation logic
+│         - Helper function logic
+        
+└─ Complete user journeys → Use pytest + Django Test Client (E2E tests)
+          - Multi-step workflows across multiple views
+          - End-to-end user flows (register → login → action)
+          - Form submissions with redirects and session state
+          - HTMX endpoint validation
+          - Database state verification across operations
+          - NO live server needed
+          - NO browser needed
+          - Faster than browser-based tests
 ```
 
 ---

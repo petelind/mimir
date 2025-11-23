@@ -11,7 +11,7 @@ auto_execution_mode: 3
 
 2. Check docs/features/user_journey.md [if it exists] - understand what we are building and how it integrates with other parts.
 
-3. Read the feature specification thoroughly. If none exists - create one. Use .windsurf/rules/do-write-scenarios.md as guidance. If there are more than 2 scenarios inside and user did not specify scenario we are working on, or there are scenarios longer than 10 lines - suggest that we go scenario-by-scenario.
+3. Read the feature specification thoroughly. If none exists - suggest we create one for starter. Use .windsurf/rules/do-write-scenarios.md as guidance. If there are more than 2 scenarios inside and user did not specify scenario we are working on, or there are scenarios longer than 10 lines - suggest that we go scenario-by-scenario.
 
 4. Assess current state of the codebase:
    a) If there are components/views/services you can reuse/extend/hook to - tell user about that, and ask if we shall integrate them or replace them.

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <h1 class="display-4 mb-4">
+                        <i class="fa-solid fa-gauge-high text-primary"></i>
+                        FOB-DASHBOARD-1
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        This will be the dashboard
+                    </p>
+                    <hr class="my-4">
+                    <p class="text-muted small">
+                        <i class="fa-solid fa-info-circle"></i>
+                        Dashboard implementation tracked in 
+                        <strong>navigation.feature</strong> issues #17-22
+                    </p>
+                    <p class="text-muted small">
+                        Full implementation includes:
+                    </p>
+                    <ul class="list-unstyled text-muted small">
+                        <li><i class="fa-solid fa-check text-success"></i> My Playbooks section with recent playbooks</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Recent Activity feed</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Quick action buttons</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Global search</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test identifier -->
+<div data-testid="dashboard-stub" style="display: none;">FOB-DASHBOARD-1</div>
+{% endblock %}

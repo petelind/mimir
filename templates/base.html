@@ -40,18 +40,76 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Active state: Add 'active' class when on current section -->
+                <!-- Use request.path check for top-level pages, check path contains for sections with sub-pages -->
+                <!-- Add aria-current="page" for accessibility when active -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/playbooks/" data-testid="nav-playbooks"
+                        <a class="nav-link {% if request.path == '/dashboard/' or request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                           href="/dashboard/" 
+                           data-testid="nav-dashboard"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Browse and manage your engineering playbooks">
+                           title="View your overview and key metrics"
+                           {% if request.path == '/dashboard/' or request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
+                            <i class="fas fa-gauge"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if '/playbooks/' in request.path %}active{% endif %}" 
+                           href="/playbooks/" 
+                           data-testid="nav-playbooks"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Browse and manage your engineering playbooks"
+                           {% if '/playbooks/' in request.path %}aria-current="page"{% endif %}>
                             <i class="fas fa-book-sparkles"></i> Playbooks
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pip/list/" data-testid="nav-pips"
+                        <a class="nav-link disabled" href="#" data-testid="nav-workflows"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Review Playbook Improvement Proposals">
+                           title="Coming soon: View workflows across playbooks">
+                            <i class="fas fa-arrow-progress"></i> Workflows
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-phases"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Manage workflow phases">
+                            <i class="fas fa-bars-progress"></i> Phases
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-activities"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Browse all activities">
+                            <i class="fas fa-list-check"></i> Activities
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-artifacts"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Manage artifacts and deliverables">
+                            <i class="fas fa-gift"></i> Artifacts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-roles"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Define and assign roles">
+                            <i class="fas fa-brain"></i> Roles
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-howtos"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Browse how-to guides">
+                            <i class="fas fa-hand-holding-magic"></i> Howtos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" data-testid="nav-pips"
+                           data-bs-toggle="tooltip" data-bs-placement="bottom"
+                           title="Coming soon: Global PIPs list (currently accessed via Playbook tabs)">
                             <i class="fas fa-lightbulb"></i> PIPs
                         </a>
                     </li>
@@ -62,7 +120,7 @@
                         <span class="navbar-text me-2" data-testid="user-display">
                             <i class="fas fa-user"></i> {{ user.username }}
                         </span>
-                        <a class="btn btn-sm btn-outline-light" href="/accounts/logout/" data-testid="logout-link"
+                        <a class="btn btn-sm btn-outline-light" href="{% url 'logout' %}" data-testid="logout-link"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
                            title="Sign out of your Mimir session">
                             <i class="fas fa-sign-out-alt"></i> Logout
@@ -70,7 +128,7 @@
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="btn btn-sm btn-outline-light" href="/accounts/login/" data-testid="login-link"
+                        <a class="btn btn-sm btn-outline-light" href="{% url 'login' %}" data-testid="login-link"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
                            title="Sign in to access Mimir features">
                             <i class="fas fa-sign-in-alt"></i> Login

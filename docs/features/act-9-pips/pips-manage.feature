@@ -42,3 +42,22 @@ Feature: FOB-PIPS-LIST-1 Manage PIPs
     Given Maria views a PIP
     Then she sees status history with timestamps
     And she sees who approved/rejected/implemented it
+  # ============================================================
+  # NAVBAR INTEGRATION - Wire when PIPs block is complete
+  # ============================================================
+
+  Scenario: PIP-NAVBAR-01 PIPs link appears in main navigation
+    Given the PIPs feature is fully implemented
+    And Maria is authenticated in FOB
+    When she views any page in FOB
+    Then she sees "PIPs" link in the main navbar
+    And the link has icon "fa-lightbulb"
+    And the link has tooltip "Review Playbook Improvement Proposals"
+
+  Scenario: PIP-NAVBAR-02 Navigate to PIPs list from any page
+    Given Maria is authenticated in FOB
+    And she is on any page in FOB
+    When she clicks "PIPs" in the main navbar
+    Then she is redirected to FOB-PIPS-LIST-1
+    And she sees all PIPs across all playbooks
+    And the PIPs nav link is highlighted as active

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Mimir{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">
+                    <i class="fa-solid fa-user-plus"></i> Create Account
+                </h2>
+                
+                {% if errors.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" data-testid="register-error-message">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    <strong>Registration failed:</strong> {{ errors.non_field_errors.0 }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endif %}
+                
+                <form method="post" data-testid="register-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">Username <span class="text-danger">*</span></label>
+                        <input 
+                            type="text" 
+                            name="username" 
+                            id="id_username"
+                            class="form-control {% if errors.username %}is-invalid{% endif %}"
+                            data-testid="register-username-input"
+                            value="{{ username }}"
+                            minlength="3"
+                            maxlength="30"
+                            required
+                            autofocus>
+                        <div class="form-text">3-30 characters. Letters, numbers, and @/./+/-/_ only.</div>
+                        {% if errors.username %}
+                        <div class="invalid-feedback d-block" data-testid="username-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.username.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="id_email"
+                            class="form-control {% if errors.email %}is-invalid{% endif %}"
+                            data-testid="register-email-input"
+                            value="{{ email }}"
+                            required>
+                        {% if errors.email %}
+                        <div class="invalid-feedback d-block" data-testid="email-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.email.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <input 
+                            type="password" 
+                            name="password" 
+                            id="id_password"
+                            class="form-control {% if errors.password %}is-invalid{% endif %}"
+                            data-testid="register-password-input"
+                            minlength="8"
+                            required>
+                        <div class="form-text">Minimum 8 characters.</div>
+                        {% if errors.password %}
+                        <div class="invalid-feedback d-block" data-testid="password-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.password.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="id_password_confirm" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                        <input 
+                            type="password" 
+                            name="password_confirm" 
+                            id="id_password_confirm"
+                            class="form-control {% if errors.password_confirm %}is-invalid{% endif %}"
+                            data-testid="register-password-confirm-input"
+                            minlength="8"
+                            required>
+                        {% if errors.password_confirm %}
+                        <div class="invalid-feedback d-block" data-testid="password-confirm-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.password_confirm.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        class="btn btn-success w-100"
+                        data-testid="register-submit-button"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top"
+                        title="Create your account and start onboarding">
+                        <i class="fa-solid fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="text-center mt-3">
+            <p class="text-muted">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-decoration-none">
+                    <i class="fa-solid fa-sign-in-alt"></i> Sign In
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,9 +11,11 @@
                     <i class="fas fa-sign-in-alt"></i> Login
                 </h2>
                 
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert" data-testid="login-error-message">
-                    {{ form.non_field_errors }}
+                {% if errors.non_field_errors %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" data-testid="login-error-message">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    <strong>Login failed:</strong> {{ errors.non_field_errors.0 }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endif %}
                 
@@ -26,14 +28,15 @@
                             type="text" 
                             name="username" 
                             id="id_username"
-                            class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            class="form-control {% if errors.username %}is-invalid{% endif %}"
                             data-testid="login-username-input"
-                            value="{{ form.username.value|default:'' }}"
+                            value="{{ username }}"
                             required
                             autofocus>
-                        {% if form.username.errors %}
-                        <div class="invalid-feedback" data-testid="username-field-error">
-                            {{ form.username.errors|first }}
+                        {% if errors.username %}
+                        <div class="invalid-feedback d-block" data-testid="username-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.username.0 }}
                         </div>
                         {% endif %}
                     </div>
@@ -44,12 +47,13 @@
                             type="password" 
                             name="password" 
                             id="id_password"
-                            class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                            class="form-control {% if errors.password %}is-invalid{% endif %}"
                             data-testid="login-password-input"
                             required>
-                        {% if form.password.errors %}
-                        <div class="invalid-feedback" data-testid="password-field-error">
-                            {{ form.password.errors|first }}
+                        {% if errors.password %}
+                        <div class="invalid-feedback d-block" data-testid="password-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.password.0 }}
                         </div>
                         {% endif %}
                     </div>
@@ -74,11 +78,24 @@
                         title="Sign in with your credentials">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'password_reset' %}" class="text-muted text-decoration-none small">
+                            <i class="fa-solid fa-key"></i> Forgot password?
+                        </a>
+                    </div>
                 </form>
             </div>
         </div>
         
         <div class="text-center mt-3">
+            <p class="text-muted">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-decoration-none">
+                    <i class="fa-solid fa-user-plus"></i> Sign Up
+                </a>
+            </p>
+            <hr class="my-3">
             <p class="text-muted">
                 <i class="fas fa-info-circle"></i> 
                 Default credentials: <strong>admin</strong> / <strong>admin</strong>

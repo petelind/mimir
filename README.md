@@ -94,7 +94,17 @@ Download playbooks from HOMEBASE based on your access level:
    python manage.py migrate
    ```
 
-5. **Run tests**
+5. **Create admin user**
+   ```bash
+   python manage.py createsuperuser
+   ```
+   
+   You'll be prompted for:
+   - Username (required)
+   - Email (optional, for password reset)
+   - Password (minimum 8 characters)
+
+6. **Run tests**
    
    Run unit and integration tests:
    ```bash
@@ -108,7 +118,7 @@ Download playbooks from HOMEBASE based on your access level:
    
    > **Note**: BDD feature files in `docs/features/act-*/` serve as comprehensive UI specifications (46 files covering Acts 0-15). Step definitions will be implemented during development.
 
-6. **Download playbooks** (requires HOMEBASE access)
+7. **Download playbooks** (requires HOMEBASE access)
    ```bash
    python manage.py sync_methodology --family "Software Engineering" --level "Basic"
    ```
@@ -128,7 +138,9 @@ Mimir runs as two processes that work together:
 python manage.py runserver 8000
 ```
 
-Open http://localhost:8000 in your browser to:
+Open http://localhost:8000 in your browser and log in with your credentials.
+
+Once logged in, you can:
 - **Browse playbooks**: View activities, workflows, phases, artifacts, roles, and howtos
 - **Review PIPs**: Approve or reject Playbook Improvement Proposals
 - **Compare versions**: See what changed between playbook versions

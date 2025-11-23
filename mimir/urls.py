@@ -21,7 +21,8 @@ from methodology import views as methodology_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("accounts.urls")),
+    path("auth/", include("accounts.urls")),  # Changed from accounts/ per SAO.md URL convention
+    path("dashboard/", methodology_views.dashboard, name="dashboard"),
     path("", methodology_views.index, name="index"),
     path("playbooks/", include("methodology.playbook_urls")),
 ]

@@ -545,6 +545,8 @@ Page Structure:
 
 **Use Case**: Data entry, settings, user input
 
+**Note**: Mimir does NOT use Django Forms. We build custom views and templates with manual validation.
+
 ```html
 <!-- Vertical form (default) -->
 <form>
@@ -578,6 +580,75 @@ Page Structure:
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
 </form>
+```
+
+#### Form Validation and Error Handling
+
+**Validation Strategy**: Server-side validation in Django views with Bootstrap styling.
+
+**Field-Level Validation Errors**:
+
+Show validation errors **underneath the invalid field** in red with icon.
+
+```html
+<!-- Invalid field with error message -->
+<div class="mb-3">
+  <label for="email" class="form-label">Email address</label>
+  <input type="email" 
+         class="form-control is-invalid" 
+         id="email" 
+         value="invalidemail">
+  <div class="invalid-feedback">
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    This field is required.
+  </div>
+</div>
+
+<!-- Multiple validation errors -->
+<div class="mb-3">
+  <label for="password" class="form-label">Password</label>
+  <input type="password" 
+         class="form-control is-invalid" 
+         id="password">
+  <div class="invalid-feedback">
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    Password must be at least 8 characters long.
+  </div>
+</div>
+
+<!-- Valid field (optional success state) -->
+<div class="mb-3">
+  <label for="username" class="form-label">Username</label>
+  <input type="text" 
+         class="form-control is-valid" 
+         id="username" 
+         value="maria">
+  <div class="valid-feedback">
+    <i class="fa-solid fa-circle-check me-1"></i>
+    Username is available.
+  </div>
+</div>
+```
+
+**Common Validation Messages**:
+- Required fields: `"This field is required."`
+- Invalid email: `"Please enter a valid email address."`
+- Password strength: `"Password must be at least 8 characters long."`
+- Unique constraint: `"This username is already taken."`
+- Number range: `"Value must be between 1 and 100."`
+- Date validation: `"Please enter a valid date."`
+
+**Form-Level Validation Errors**:
+
+For errors that don't belong to specific fields (e.g., "Invalid credentials"):
+
+```html
+<!-- Error alert at top of form -->
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <i class="fa-solid fa-triangle-exclamation me-2"></i>
+  <strong>Authentication failed:</strong> Invalid email or password.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 ```
 
 ---
@@ -704,9 +775,14 @@ From dashboard screenshot:
 ```
 
 **Navigation States**:
-- Active: `.nav-link.active` (bold, primary color)
-- Hover: Background tint
-- Focus: Visible outline for accessibility
+- **Active**: `.nav-link.active` (bold, primary color, lighter background)
+  - Applied dynamically based on current `request.path`
+  - Single page sections: Use exact path match (e.g., `request.path == '/dashboard/'`)
+  - Multi-page sections: Use path contains check (e.g., `'/playbooks/' in request.path`)
+  - Must include `aria-current="page"` attribute for accessibility
+- **Hover**: Background tint (Bootstrap default)
+- **Focus**: Visible outline for accessibility (Bootstrap default)
+- **Disabled**: `.nav-link.disabled` (grayed out, no hover effect, `href="#"`)
 
 #### Breadcrumbs (Secondary)
 
@@ -776,6 +852,99 @@ From dashboard screenshot:
   <div class="tab-pane fade" id="settings"><!-- Content --></div>
 </div>
 ```
+
+#### Navbar Entity Links & Feature Wiring
+
+**Current Navbar Structure** (`templates/base.html`):
+
+**Active Links:**
+- **Mimir** (brand/home) - `/` - ✅ Implemented
+- **Dashboard** - `/dashboard/` - Icon: `fa-gauge` - ✅ Implemented
+- **Playbooks** - `/playbooks/` - Icon: `fa-book-sparkles` - ✅ Implemented
+- **User Menu** - Login/Logout - ✅ Implemented
+
+**Placeholder Links (Disabled - Coming Soon):**
+- **Workflows** - Icon: `fa-arrow-progress` - Tooltip: "Coming soon: View workflows across playbooks"
+- **Phases** - Icon: `fa-bars-progress` - Tooltip: "Coming soon: Manage workflow phases"
+- **Activities** - Icon: `fa-list-check` - Tooltip: "Coming soon: Browse all activities"
+- **Artifacts** - Icon: `fa-gift` - Tooltip: "Coming soon: Manage artifacts and deliverables"
+- **Roles** - Icon: `fa-brain` - Tooltip: "Coming soon: Define and assign roles"
+- **Howtos** - Icon: `fa-hand-holding-magic` - Tooltip: "Coming soon: Browse how-to guides"
+- **PIPs** - Icon: `fa-lightbulb` - Tooltip: "Coming soon: Global PIPs list (currently accessed via Playbook tabs)"
+
+**Feature Wiring Pattern:**
+
+When a feature block is complete, add navbar scenarios to its `.feature` file:
+
+```gherkin
+# ============================================================
+# NAVBAR INTEGRATION - Wire when [Feature] block is complete
+# ============================================================
+
+Scenario: [FEATURE]-NAVBAR-01 [Feature] link appears in main navigation
+  Given the [Feature] feature is fully implemented
+  And Maria is authenticated in FOB
+  When she views any page in FOB
+  Then she sees "[Feature]" link in the main navbar
+  And the link has icon "[fa-icon-name]"
+  And the link has tooltip "[Helpful tooltip text]"
+  
+Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
+  Given Maria is authenticated in FOB
+  And she is on any page in FOB
+  When she clicks "[Feature]" in the main navbar
+  Then she is redirected to FOB-[FEATURE]-[PAGE]-1
+  And the [Feature] nav link is highlighted as active
+```
+
+**Activating Placeholder Links (4 steps):**
+
+1. Remove `disabled` class from `<a>` tag
+2. Change `href="#"` to actual route (e.g., `href="/workflows/"`)
+3. Update tooltip from "Coming soon: ..." to active description
+4. Ensure NAVBAR scenarios pass in integration tests
+
+**Navbar Link Requirements:**
+- ✅ Font Awesome Pro icon (semantically appropriate)
+- ✅ Bootstrap tooltip explaining action/status
+- ✅ `data-testid="nav-[feature]"` attribute
+- ✅ Active state highlighting when on feature pages
+
+**Active State Implementation:**
+
+```django
+{# Single-page section (exact match) #}
+<a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" 
+   href="/dashboard/"
+   {% if request.path == '/dashboard/' %}aria-current="page"{% endif %}>
+    <i class="fas fa-gauge"></i> Dashboard
+</a>
+
+{# Multi-page section (contains check) #}
+<a class="nav-link {% if '/playbooks/' in request.path %}active{% endif %}" 
+   href="/playbooks/"
+   {% if '/playbooks/' in request.path %}aria-current="page"{% endif %}>
+    <i class="fas fa-book-sparkles"></i> Playbooks
+</a>
+```
+
+**Icon Selection:**
+- Dashboard: `fa-gauge` (metrics/overview)
+- Playbooks: `fa-book-sparkles` (curated collections)
+- Workflows: `fa-arrow-progress` (progression through steps)
+- Phases: `fa-bars-progress` (sequential progress through stages)
+- Activities: `fa-list-check` (task checklists)
+- Artifacts: `fa-gift` (deliverables/outputs)
+- Roles: `fa-brain` (knowledge/thinking/expertise)
+- Howtos: `fa-hand-holding-magic` (guidance/teaching)
+- PIPs: `fa-lightbulb` (ideas/improvements)
+
+**Icon Rationale:**
+- **Workflows** (`fa-arrow-progress`): Represents forward movement through a process
+- **Phases** (`fa-bars-progress`): Shows multiple bars for distinct sequential stages
+- **Artifacts** (`fa-gift`): Deliverables are "gifts" produced by the process
+- **Roles** (`fa-brain`): Emphasizes expertise and cognitive work
+- **Howtos** (`fa-hand-holding-magic`): Conveys assistance and enabling knowledge transfer
 
 ---
 
@@ -2610,21 +2779,199 @@ function createRipple(event) {
 </style>
 ```
 
-#### Success Feedback
+#### Success Messages, Validation Errors, and Notifications
+
+**Mimir Messaging Strategy**: Use **Bootstrap Toasts** for success messages, validation errors, and notifications.
+
+**Toast Container Setup**:
 ```html
-<!-- Toast notification -->
-<div class="toast show align-items-center text-bg-success border-0" role="alert">
+<!-- Toast container (fixed position, top-right) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+  <!-- Toasts will be inserted here dynamically -->
+</div>
+```
+
+**Success Toast**:
+```html
+<!-- Success message -->
+<div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
   <div class="d-flex">
     <div class="toast-body">
       <i class="fa-solid fa-circle-check me-2"></i>
       Playbook saved successfully!
     </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
 </div>
 ```
 
-#### Error Feedback
+**Error Toast**:
+```html
+<!-- Error notification -->
+<div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>
+      Failed to save playbook. Please try again.
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Warning Toast**:
+```html
+<!-- Warning notification -->
+<div class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>
+      Some changes may not be saved.
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Info Toast**:
+```html
+<!-- Info notification -->
+<div class="toast align-items-center text-bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-circle-info me-2"></i>
+      Sync completed with 3 new updates.
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Toast with Header**:
+```html
+<!-- Toast with title -->
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header text-bg-success">
+    <i class="fa-solid fa-circle-check me-2"></i>
+    <strong class="me-auto">Success</strong>
+    <small>Just now</small>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    Workflow "Build Feature" has been created successfully.
+  </div>
+</div>
+```
+
+**JavaScript Initialization**:
+```javascript
+// Initialize all toasts
+document.addEventListener('DOMContentLoaded', function() {
+  const toastElList = document.querySelectorAll('.toast');
+  const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {
+    autohide: true,
+    delay: 5000  // Auto-hide after 5 seconds
+  }));
+  
+  // Show all toasts
+  toastList.forEach(toast => toast.show());
+});
+
+// Helper function to show toast programmatically
+function showToast(message, type = 'success') {
+  const toastContainer = document.querySelector('.toast-container');
+  
+  const icons = {
+    success: 'fa-circle-check',
+    error: 'fa-circle-exclamation',
+    warning: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+  };
+  
+  const bgClasses = {
+    success: 'text-bg-success',
+    error: 'text-bg-danger',
+    warning: 'text-bg-warning',
+    info: 'text-bg-info'
+  };
+  
+  const toastHTML = `
+    <div class="toast align-items-center ${bgClasses[type]} border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="fa-solid ${icons[type]} me-2"></i>
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  `;
+  
+  toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+  const toastElement = toastContainer.lastElementChild;
+  const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 5000 });
+  toast.show();
+  
+  // Remove from DOM after hidden
+  toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+}
+
+// Usage examples:
+// showToast('Playbook saved successfully!', 'success');
+// showToast('Failed to delete workflow', 'error');
+// showToast('Sync is in progress', 'info');
+```
+
+**HTMX Integration**:
+```html
+<!-- Server returns toast HTML in response header -->
+<button hx-post="/playbooks/playbook/save/123/"
+        hx-target="#content"
+        hx-on:htmx:after-request="if(event.detail.xhr.getResponseHeader('X-Toast')) {
+          const toast = event.detail.xhr.getResponseHeader('X-Toast');
+          showToast(toast, 'success');
+        }">
+  Save Playbook
+</button>
+```
+
+**Django View Response**:
+```python
+# In Django view
+response = HttpResponse(html_content)
+response['X-Toast'] = 'Playbook saved successfully!'
+response['X-Toast-Type'] = 'success'
+return response
+```
+
+**Toast Positioning Options**:
+```html
+<!-- Top-right (default) -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+
+<!-- Top-center -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+
+<!-- Bottom-right -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+<!-- Bottom-center -->
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+```
+
+**Best Practices**:
+- ✅ Use toasts for non-blocking notifications (success, info, warnings)
+- ✅ Auto-hide after 5 seconds for success/info
+- ✅ Keep error toasts visible longer (10+ seconds) or require manual dismissal
+- ✅ Include clear, actionable messages
+- ✅ Use semantic icons (check, exclamation, info, warning)
+- ✅ Stack multiple toasts vertically
+- ✅ Remove from DOM after dismissal to prevent memory leaks
+
+#### Field-Level Validation Errors
+
+For form field validation, use inline errors **underneath the field** (not toasts):
+
 ```html
 <!-- Inline error -->
 <input type="email" class="form-control is-invalid" value="invalidemail">
