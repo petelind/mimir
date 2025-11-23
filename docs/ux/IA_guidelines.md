@@ -848,6 +848,72 @@ From dashboard screenshot:
 </div>
 ```
 
+#### Navbar Entity Links & Feature Wiring
+
+**Current Navbar Structure** (`templates/base.html`):
+
+**Active Links:**
+- **Mimir** (home) - `/` - Dashboard
+- **Playbooks** - `/playbooks/` - ✅ Implemented
+- **User Menu** - Login/Logout - ✅ Implemented
+
+**Placeholder Links (Disabled - Coming Soon):**
+- **Workflows** - Icon: `fa-diagram-project` - Tooltip: "Coming soon: View workflows across playbooks"
+- **Phases** - Icon: `fa-layer-group` - Tooltip: "Coming soon: Manage workflow phases"
+- **Activities** - Icon: `fa-list-check` - Tooltip: "Coming soon: Browse all activities"
+- **Artifacts** - Icon: `fa-file-lines` - Tooltip: "Coming soon: Manage artifacts and deliverables"
+- **Roles** - Icon: `fa-user-tag` - Tooltip: "Coming soon: Define and assign roles"
+- **Howtos** - Icon: `fa-book-open` - Tooltip: "Coming soon: Browse how-to guides"
+- **PIPs** - Icon: `fa-lightbulb` - Tooltip: "Coming soon: Global PIPs list (currently accessed via Playbook tabs)"
+
+**Feature Wiring Pattern:**
+
+When a feature block is complete, add navbar scenarios to its `.feature` file:
+
+```gherkin
+# ============================================================
+# NAVBAR INTEGRATION - Wire when [Feature] block is complete
+# ============================================================
+
+Scenario: [FEATURE]-NAVBAR-01 [Feature] link appears in main navigation
+  Given the [Feature] feature is fully implemented
+  And Maria is authenticated in FOB
+  When she views any page in FOB
+  Then she sees "[Feature]" link in the main navbar
+  And the link has icon "[fa-icon-name]"
+  And the link has tooltip "[Helpful tooltip text]"
+  
+Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
+  Given Maria is authenticated in FOB
+  And she is on any page in FOB
+  When she clicks "[Feature]" in the main navbar
+  Then she is redirected to FOB-[FEATURE]-[PAGE]-1
+  And the [Feature] nav link is highlighted as active
+```
+
+**Activating Placeholder Links (4 steps):**
+
+1. Remove `disabled` class from `<a>` tag
+2. Change `href="#"` to actual route (e.g., `href="/workflows/"`)
+3. Update tooltip from "Coming soon: ..." to active description
+4. Ensure NAVBAR scenarios pass in integration tests
+
+**Navbar Link Requirements:**
+- ✅ Font Awesome Pro icon (semantically appropriate)
+- ✅ Bootstrap tooltip explaining action/status
+- ✅ `data-testid="nav-[feature]"` attribute
+- ✅ Active state highlighting when on feature pages
+
+**Icon Selection:**
+- Workflows: `fa-diagram-project` (flowcharts)
+- Phases: `fa-layer-group` (stacked layers)
+- Activities: `fa-list-check` (task checklists)
+- Artifacts: `fa-file-lines` (documents)
+- Roles: `fa-user-tag` (tagged users)
+- Howtos: `fa-book-open` (guides)
+- PIPs: `fa-lightbulb` (ideas)
+- Playbooks: `fa-book-sparkles` (collections)
+
 ---
 
 ### 5. Interface Design
