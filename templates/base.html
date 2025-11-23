@@ -40,18 +40,27 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Active state: Add 'active' class when on current section -->
+                <!-- Use request.path check for top-level pages, check path contains for sections with sub-pages -->
+                <!-- Add aria-current="page" for accessibility when active -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard/" data-testid="nav-dashboard"
+                        <a class="nav-link {% if request.path == '/dashboard/' or request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                           href="/dashboard/" 
+                           data-testid="nav-dashboard"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="View your overview and key metrics">
+                           title="View your overview and key metrics"
+                           {% if request.path == '/dashboard/' or request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
                             <i class="fas fa-gauge"></i> Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/playbooks/" data-testid="nav-playbooks"
+                        <a class="nav-link {% if '/playbooks/' in request.path %}active{% endif %}" 
+                           href="/playbooks/" 
+                           data-testid="nav-playbooks"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Browse and manage your engineering playbooks">
+                           title="Browse and manage your engineering playbooks"
+                           {% if '/playbooks/' in request.path %}aria-current="page"{% endif %}>
                             <i class="fas fa-book-sparkles"></i> Playbooks
                         </a>
                     </li>

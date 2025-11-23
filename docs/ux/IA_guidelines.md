@@ -775,9 +775,14 @@ From dashboard screenshot:
 ```
 
 **Navigation States**:
-- Active: `.nav-link.active` (bold, primary color)
-- Hover: Background tint
-- Focus: Visible outline for accessibility
+- **Active**: `.nav-link.active` (bold, primary color, lighter background)
+  - Applied dynamically based on current `request.path`
+  - Single page sections: Use exact path match (e.g., `request.path == '/dashboard/'`)
+  - Multi-page sections: Use path contains check (e.g., `'/playbooks/' in request.path`)
+  - Must include `aria-current="page"` attribute for accessibility
+- **Hover**: Background tint (Bootstrap default)
+- **Focus**: Visible outline for accessibility (Bootstrap default)
+- **Disabled**: `.nav-link.disabled` (grayed out, no hover effect, `href="#"`)
 
 #### Breadcrumbs (Secondary)
 
@@ -904,6 +909,24 @@ Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
 - ✅ Bootstrap tooltip explaining action/status
 - ✅ `data-testid="nav-[feature]"` attribute
 - ✅ Active state highlighting when on feature pages
+
+**Active State Implementation:**
+
+```django
+{# Single-page section (exact match) #}
+<a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" 
+   href="/dashboard/"
+   {% if request.path == '/dashboard/' %}aria-current="page"{% endif %}>
+    <i class="fas fa-gauge"></i> Dashboard
+</a>
+
+{# Multi-page section (contains check) #}
+<a class="nav-link {% if '/playbooks/' in request.path %}active{% endif %}" 
+   href="/playbooks/"
+   {% if '/playbooks/' in request.path %}aria-current="page"{% endif %}>
+    <i class="fas fa-book-sparkles"></i> Playbooks
+</a>
+```
 
 **Icon Selection:**
 - Dashboard: `fa-gauge` (metrics/overview)
