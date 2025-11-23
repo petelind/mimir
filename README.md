@@ -111,22 +111,7 @@ Download playbooks from HOMEBASE based on your access level:
    pytest tests/
    ```
    
-   For continuous testing during development:
-   ```bash
-   python continuous_test_runner.py
-   ```
-   
    > **Note**: BDD feature files in `docs/features/act-*/` serve as comprehensive UI specifications (46 files covering Acts 0-15). Step definitions will be implemented during development.
-
-7. **Download playbooks** (requires HOMEBASE access)
-   ```bash
-   python manage.py sync_methodology --family "Software Engineering" --level "Basic"
-   ```
-
-   Or load sample playbooks:
-   ```bash
-   python manage.py loaddata sample_methodologies
-   ```
 
 ## How to Use
 
