@@ -11,10 +11,10 @@
                     <i class="fas fa-sign-in-alt"></i> Login
                 </h2>
                 
-                {% if errors.__all__ %}
+                {% if errors.non_field_errors %}
                 <div class="alert alert-danger alert-dismissible fade show" role="alert" data-testid="login-error-message">
                     <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                    <strong>Login failed:</strong> {{ errors.__all__.0 }}
+                    <strong>Login failed:</strong> {{ errors.non_field_errors.0 }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endif %}

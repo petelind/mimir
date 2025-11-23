@@ -118,7 +118,7 @@ def login_view(request):
         # Authentication failed
         logger.warning(f"Authentication failed for username: {username}")
         errors = {
-            '__all__': ['Invalid username or password. Please try again.']
+            'non_field_errors': ['Invalid username or password. Please try again.']
         }
         return render(request, 'accounts/login.html', {
             'errors': errors,
