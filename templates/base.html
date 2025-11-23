@@ -62,7 +62,7 @@
                         <span class="navbar-text me-2" data-testid="user-display">
                             <i class="fas fa-user"></i> {{ user.username }}
                         </span>
-                        <a class="btn btn-sm btn-outline-light" href="/accounts/logout/" data-testid="logout-link"
+                        <a class="btn btn-sm btn-outline-light" href="{% url 'logout' %}" data-testid="logout-link"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
                            title="Sign out of your Mimir session">
                             <i class="fas fa-sign-out-alt"></i> Logout
@@ -70,7 +70,7 @@
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="btn btn-sm btn-outline-light" href="/accounts/login/" data-testid="login-link"
+                        <a class="btn btn-sm btn-outline-light" href="{% url 'login' %}" data-testid="login-link"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
                            title="Sign in to access Mimir features">
                             <i class="fas fa-sign-in-alt"></i> Login
