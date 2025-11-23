@@ -1,6 +1,7 @@
 """Authentication views for user login and logout."""
 import logging
 from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -155,3 +156,127 @@ def onboarding(request):
     """
     logger.info(f"User {request.user.username} accessed onboarding stub")
     return render(request, 'accounts/onboarding.html')
+
+
+def _validate_registration_data(username, email, password, password_confirm):
+    """
+    Validate registration form data.
+    
+    Internal helper for register view.
+    
+    :param username: str - Username from form. Example: "maria"
+    :param email: str - Email from form. Example: "maria@example.com"
+    :param password: str - Password from form. Example: "SecurePass123"
+    :param password_confirm: str - Password confirmation. Example: "SecurePass123"
+    :return: dict - Validation errors. Example: {"password": ["Passwords do not match."]}
+    
+    Validation Rules:
+        - Username: Required, non-empty, 3-30 chars, unique
+        - Email: Required, valid format, unique
+        - Password: Required, min 8 chars
+        - Password confirmation: Must match password
+    """
+    errors = {}
+    
+    # Username validation
+    if not username:
+        errors['username'] = ['This field is required.']
+    elif len(username) < 3 or len(username) > 30:
+        errors['username'] = ['Username must be between 3 and 30 characters.']
+    elif User.objects.filter(username=username).exists():
+        errors['username'] = ['This username is already taken.']
+    
+    # Email validation
+    if not email:
+        errors['email'] = ['This field is required.']
+    elif '@' not in email or '.' not in email.split('@')[-1]:
+        errors['email'] = ['Enter a valid email address.']
+    elif User.objects.filter(email=email).exists():
+        errors['email'] = ['This email is already registered.']
+    
+    # Password validation
+    if not password:
+        errors['password'] = ['This field is required.']
+    elif len(password) < 8:
+        errors['password'] = ['Password must be at least 8 characters long.']
+    
+    # Password confirmation
+    if not password_confirm:
+        errors['password_confirm'] = ['This field is required.']
+    elif password and password_confirm and password != password_confirm:
+        errors['password_confirm'] = ['Passwords do not match.']
+    
+    return errors
+
+
+@require_http_methods(["GET", "POST"])
+def register(request):
+    """
+    Display registration form and handle user registration.
+    
+    Custom implementation without Django Forms per SAO.md architecture.
+    
+    Template: accounts/register.html
+    Context:
+        errors: dict - Field-specific and non-field errors
+        username: str - Preserved username on error
+        email: str - Preserved email on error
+    
+    :param request: Django request object
+    :return: Rendered registration template or redirect to onboarding
+    """
+    logger.info(f"Registration page accessed via {request.method}")
+    
+    # GET request - display form
+    if request.method == 'GET':
+        logger.info("Displaying registration form")
+        return render(request, 'accounts/register.html', {
+            'errors': {},
+            'username': '',
+            'email': ''
+        })
+    
+    # POST request - handle registration
+    username = request.POST.get('username', '').strip()
+    email = request.POST.get('email', '').strip()
+    password = request.POST.get('password', '')
+    password_confirm = request.POST.get('password_confirm', '')
+    
+    logger.info(f"Registration attempt for username: {username}, email: {email}")
+    
+    # Validate input
+    errors = _validate_registration_data(username, email, password, password_confirm)
+    if errors:
+        logger.warning(f"Registration validation failed for username: {username}, errors: {list(errors.keys())}")
+        return render(request, 'accounts/register.html', {
+            'errors': errors,
+            'username': username,
+            'email': email
+        })
+    
+    # Create user
+    try:
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+        logger.info(f"User {username} created successfully")
+        
+        # Auto-login
+        auth_login(request, user)
+        logger.info(f"User {username} auto-logged in after registration")
+        
+        # Redirect to onboarding
+        logger.info(f"Redirecting user {username} to onboarding")
+        return redirect('/auth/user/onboarding/')
+    except Exception as e:
+        logger.error(f"Error creating user {username}: {str(e)}")
+        errors = {
+            'non_field_errors': ['An error occurred during registration. Please try again.']
+        }
+        return render(request, 'accounts/register.html', {
+            'errors': errors,
+            'username': username,
+            'email': email
+        })
