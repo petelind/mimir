@@ -1,6 +1,7 @@
 """Authentication views for user login and logout."""
 import logging
 from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -136,3 +137,21 @@ def custom_logout_view(request):
         logger.warning("Logout attempted by unauthenticated user")
     
     return redirect(reverse('login'))
+
+
+@login_required
+def onboarding(request):
+    """
+    Onboarding stub page (FOB-ONBOARDING-1).
+    
+    Placeholder view for first-time user onboarding. Full implementation
+    tracked separately in onboarding.feature issues #12-16.
+    
+    Template: accounts/onboarding.html
+    Context: None
+    
+    :param request: Django request object
+    :return: Rendered onboarding stub template
+    """
+    logger.info(f"User {request.user.username} accessed onboarding stub")
+    return render(request, 'accounts/onboarding.html')

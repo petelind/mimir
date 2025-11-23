@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Onboarding - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <h1 class="display-4 mb-4">
+                        <i class="fa-solid fa-rocket text-success"></i>
+                        FOB-ONBOARDING-1
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        This will be onboarding
+                    </p>
+                    <hr class="my-4">
+                    <p class="text-muted small">
+                        <i class="fa-solid fa-info-circle"></i>
+                        Onboarding implementation tracked in 
+                        <strong>onboarding.feature</strong> issues #12-16
+                    </p>
+                    <p class="text-muted small">
+                        Full implementation includes:
+                    </p>
+                    <ul class="list-unstyled text-muted small mb-4">
+                        <li><i class="fa-solid fa-check text-success"></i> Welcome screen with onboarding steps overview</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Guided creation of first playbook</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Tour of features (Workflows, Activities, Artifacts, Sync)</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Skip tour option</li>
+                        <li><i class="fa-solid fa-check text-success"></i> Complete and redirect to dashboard</li>
+                    </ul>
+                    <div class="mt-4">
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg"
+                           data-bs-toggle="tooltip"
+                           title="Skip onboarding and go to dashboard">
+                            <i class="fa-solid fa-forward"></i> Skip to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test identifier -->
+<div data-testid="onboarding-stub" style="display: none;">FOB-ONBOARDING-1</div>
+{% endblock %}
