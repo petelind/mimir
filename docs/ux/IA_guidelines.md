@@ -864,12 +864,12 @@ From dashboard screenshot:
 - **User Menu** - Login/Logout - ✅ Implemented
 
 **Placeholder Links (Disabled - Coming Soon):**
-- **Workflows** - Icon: `fa-diagram-project` - Tooltip: "Coming soon: View workflows across playbooks"
-- **Phases** - Icon: `fa-layer-group` - Tooltip: "Coming soon: Manage workflow phases"
+- **Workflows** - Icon: `fa-arrow-progress` - Tooltip: "Coming soon: View workflows across playbooks"
+- **Phases** - Icon: `fa-bars-progress` - Tooltip: "Coming soon: Manage workflow phases"
 - **Activities** - Icon: `fa-list-check` - Tooltip: "Coming soon: Browse all activities"
-- **Artifacts** - Icon: `fa-file-lines` - Tooltip: "Coming soon: Manage artifacts and deliverables"
-- **Roles** - Icon: `fa-user-tag` - Tooltip: "Coming soon: Define and assign roles"
-- **Howtos** - Icon: `fa-book-open` - Tooltip: "Coming soon: Browse how-to guides"
+- **Artifacts** - Icon: `fa-gift` - Tooltip: "Coming soon: Manage artifacts and deliverables"
+- **Roles** - Icon: `fa-brain` - Tooltip: "Coming soon: Define and assign roles"
+- **Howtos** - Icon: `fa-hand-holding-magic` - Tooltip: "Coming soon: Browse how-to guides"
 - **PIPs** - Icon: `fa-lightbulb` - Tooltip: "Coming soon: Global PIPs list (currently accessed via Playbook tabs)"
 
 **Feature Wiring Pattern:**
@@ -930,14 +930,21 @@ Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
 
 **Icon Selection:**
 - Dashboard: `fa-gauge` (metrics/overview)
-- Playbooks: `fa-book-sparkles` (collections)
-- Workflows: `fa-diagram-project` (flowcharts)
-- Phases: `fa-layer-group` (stacked layers)
+- Playbooks: `fa-book-sparkles` (curated collections)
+- Workflows: `fa-arrow-progress` (progression through steps)
+- Phases: `fa-bars-progress` (sequential progress through stages)
 - Activities: `fa-list-check` (task checklists)
-- Artifacts: `fa-file-lines` (documents)
-- Roles: `fa-user-tag` (tagged users)
-- Howtos: `fa-book-open` (guides)
-- PIPs: `fa-lightbulb` (ideas)
+- Artifacts: `fa-gift` (deliverables/outputs)
+- Roles: `fa-brain` (knowledge/thinking/expertise)
+- Howtos: `fa-hand-holding-magic` (guidance/teaching)
+- PIPs: `fa-lightbulb` (ideas/improvements)
+
+**Icon Rationale:**
+- **Workflows** (`fa-arrow-progress`): Represents forward movement through a process
+- **Phases** (`fa-bars-progress`): Shows multiple bars for distinct sequential stages
+- **Artifacts** (`fa-gift`): Deliverables are "gifts" produced by the process
+- **Roles** (`fa-brain`): Emphasizes expertise and cognitive work
+- **Howtos** (`fa-hand-holding-magic`): Conveys assistance and enabling knowledge transfer
 
 ---
 
