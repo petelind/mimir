@@ -11,9 +11,11 @@
                     <i class="fas fa-sign-in-alt"></i> Login
                 </h2>
                 
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger" role="alert" data-testid="login-error-message">
-                    {{ form.non_field_errors }}
+                {% if errors.__all__ %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" data-testid="login-error-message">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    <strong>Login failed:</strong> {{ errors.__all__.0 }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 {% endif %}
                 
@@ -26,14 +28,15 @@
                             type="text" 
                             name="username" 
                             id="id_username"
-                            class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            class="form-control {% if errors.username %}is-invalid{% endif %}"
                             data-testid="login-username-input"
-                            value="{{ form.username.value|default:'' }}"
+                            value="{{ username }}"
                             required
                             autofocus>
-                        {% if form.username.errors %}
-                        <div class="invalid-feedback" data-testid="username-field-error">
-                            {{ form.username.errors|first }}
+                        {% if errors.username %}
+                        <div class="invalid-feedback d-block" data-testid="username-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.username.0 }}
                         </div>
                         {% endif %}
                     </div>
@@ -44,12 +47,13 @@
                             type="password" 
                             name="password" 
                             id="id_password"
-                            class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                            class="form-control {% if errors.password %}is-invalid{% endif %}"
                             data-testid="login-password-input"
                             required>
-                        {% if form.password.errors %}
-                        <div class="invalid-feedback" data-testid="password-field-error">
-                            {{ form.password.errors|first }}
+                        {% if errors.password %}
+                        <div class="invalid-feedback d-block" data-testid="password-field-error">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ errors.password.0 }}
                         </div>
                         {% endif %}
                     </div>
