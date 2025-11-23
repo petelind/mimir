@@ -445,6 +445,96 @@ apt-get install graphviz
 - **Versions**: `fa-code-branch` - for version history and tracking
 - **Actions**: All buttons/links include semantic Font Awesome icons per UI guidelines
 
+### Django Implementation Details
+
+**User Model**:
+- Extends Django's standard User model (`AbstractUser`)
+- Custom fields added via `User` model extension
+- Email used as primary identifier for authentication
+- Password hashing via Django's built-in PBKDF2 algorithm
+
+**Forms and Templates**:
+- **No Django Forms**: We build custom views and templates following `docs/ux/IA_guidelines.md`
+- Direct template rendering with manual field handling
+- Server-side validation in views
+- Bootstrap components styled per IA guidelines
+- HTMX for dynamic form interactions
+
+**URL Routing Convention**:
+
+Format: `/{system-part}/{entity}/{action}/{id}`
+
+**Examples**:
+```python
+# Pattern: /{system-part}/{entity}/{action}/{id}
+/playbooks/playbook/list/              # List all playbooks
+/playbooks/playbook/create/            # Create new playbook
+/playbooks/playbook/view/abc-123/      # View specific playbook
+/playbooks/playbook/edit/abc-123/      # Edit specific playbook
+/playbooks/playbook/delete/abc-123/    # Delete specific playbook
+
+/workflows/workflow/list/
+/workflows/workflow/view/xyz-789/
+
+/activities/activity/create/
+/activities/activity/edit/def-456/
+
+/auth/user/login/                      # Authentication endpoints
+/auth/user/logout/
+/auth/user/register/
+```
+
+**URL Structure Rules**:
+- System part: Plural form (e.g., "playbooks", "workflows", "activities")
+- Entity: Singular form (e.g., "playbook", "workflow", "activity")
+- Action: Lowercase verb (e.g., "list", "create", "view", "edit", "delete")
+- ID: UUID or slug (optional, depends on action)
+
+**Testing Infrastructure**:
+- All tests located in `tests/` directory
+- Test runner: **pytest** (not Django's default `unittest`)
+- Configuration: `pytest.ini` or `pyproject.toml`
+- Django integration: `pytest-django` plugin
+- Fixtures: Shared test data in `tests/fixtures/`
+- Test database: SQLite in-memory for speed
+
+**Testing Structure**:
+```
+tests/
+├── conftest.py              # Pytest configuration and fixtures
+├── fixtures/                # Shared test data
+│   ├── users.py
+│   ├── methodologies.py
+│   └── workflows.py
+├── unit/                    # Unit tests for services, repositories
+│   ├── test_methodology_service.py
+│   └── test_repository.py
+├── integration/             # Integration tests for views, HTMX
+│   ├── test_playbook_views.py
+│   ├── test_workflow_views.py
+│   └── test_auth_views.py
+└── e2e/                     # End-to-end scenarios (if needed)
+    └── test_user_journeys.py
+```
+
+**Test Execution**:
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=methodology --cov-report=html
+
+# Run specific test file
+pytest tests/integration/test_playbook_views.py
+
+# Run tests matching pattern
+pytest -k "test_playbook"
+
+# Run with verbose output
+pytest -v
+```
+
 ### Technology Choice: HTMX + Graphviz
 
 **Motivation**: 

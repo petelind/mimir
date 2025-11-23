@@ -1,578 +1,520 @@
-# AUTH - User Authentication and Session Management
-## Implementation Plan
+# Authentication Feature - Implementation Plan
 
-**Feature**: Authentication system for FOB web interface  
-**Feature File**: `docs/features/login.feature`  
-**Scenarios**: 10 scenarios (6 @core, 4 @error)  
-**Branch**: `feature/auth-login`
+**Feature**: FOB-AUTH-LOGIN-1 Authentication and Login  
+**Feature File**: `docs/features/act-0-auth/authentication.feature`  
+**GitHub Issues**: #7, #8, #9, #10, #11 (AUTH-01 through AUTH-05)  
+**Branch**: `feature/auth-scenarios`
 
 ---
 
 ## Current State Assessment
 
-### What Exists
-- ✅ Django 5.2.8 project configured
-- ✅ Bootstrap 5.3.8 + Font Awesome + HTMX in base template
-- ✅ Base template with navbar (includes user auth display placeholders)
-- ✅ Methodology index view (unprotected)
-- ✅ URL routing configured
+### ✅ What Exists (Reusable)
 
-### What's Missing
-- ❌ Custom User model
-- ❌ Authentication views (login, logout)
-- ❌ Login template
-- ❌ Authentication middleware configuration
-- ❌ Login required decorators on protected views
-- ❌ Tests directory and test infrastructure
-- ❌ E2E tests with Playwright
+1. **Login View (Partial)** - `accounts/views.py::CustomLoginView`
+   - Uses Django's `AuthenticationForm` ⚠️ (violates SAO.md "no Django Forms" rule)
+   - Session management with remember me (30 days / 2 weeks)
+   - Proper logging
+   - **Decision**: Rebuild to use custom template validation
 
-### Reusable Components
-- ✅ `base.html` template - already has auth UI elements (`user.username`, logout link)
-- ✅ `templates/methodology/index.html` - needs `@login_required` protection
-- ⚠️ No existing authentication views to reuse - will build from scratch using Django's built-in auth
+2. **Login Template** - `templates/accounts/login.html`
+   - Bootstrap 5 styled
+   - Has `data-testid` attributes
+   - **Decision**: Keep structure, remove Django Form dependencies
+
+3. **Logout View** - `accounts/views.py::custom_logout_view`
+   - ✅ Fully implemented and correct
+   - **Decision**: Keep as-is
+
+4. **Settings Configuration**
+   - LOGIN_URL, LOGIN_REDIRECT_URL configured
+   - Session settings configured
+   - **Decision**: Update URLs to match convention
+
+5. **Base Template** - `templates/base.html`
+   - Bootstrap 5.3.8 + Font Awesome + HTMX
+   - **Decision**: Reuse for all auth templates
+
+### ❌ What's Missing
+
+1. **Custom User Model** - Using Django's default User
+2. **Registration Views/Templates** - AUTH-03
+3. **Password Reset Flow** - AUTH-04  
+4. **Dashboard Stub** - FOB-DASHBOARD-1
+5. **Onboarding Stub** - FOB-ONBOARDING-1
+6. **Integration Tests** - All scenarios
+7. **URL Convention Compliance** - `/auth/user/` pattern
+
+### ⚠️ Issues to Fix
+
+1. **URL Pattern**: `/accounts/` → `/auth/` (violates convention)
+2. **Django Forms**: Remove `AuthenticationForm`, use manual validation
+3. **Missing Stubs**: Dashboard and onboarding pages needed
 
 ---
 
 ## Clarification Questions
 
-### 1. Custom User Model
-**Question**: Do we need a custom User model extending Django's User, or can we use Django's built-in User model?
+### Q1: User Model
+**Question**: SAO.md says "extends Django's standard User model" but no custom fields specified. Start with built-in User?  
+**Answer**: YES - Use Django's built-in User. Email field already exists. Can extend later if needed.
 
-**Context**: Feature spec says "Custom User model extends standard Django User" but doesn't specify what fields we need to add.
+### Q2: Email-based Login
+**Question**: Login form shows "Username" but docs mention email. Use username or email?  
+**Answer**: KEEP USERNAME - Django's default. Email-based login is future enhancement.
 
-**Options**:
-- **A)** Use Django's built-in User model (simpler, faster)
-- **B)** Create custom User model with additional fields (email required, etc.)
-
-**Recommendation**: Start with Django's built-in User (Option A). If we need custom fields later, we can migrate.
-
-### 2. Remember Me Duration
-**Question**: Scenario AUTH 4.2 specifies "30 days" for remember me. Is this the desired session duration?
-
-**Context**: Django default is 2 weeks. 30 days is longer than typical.
-
-**Recommendation**: Confirm 30 days or adjust to Django default (14 days).
-
-### 3. Default Admin User
-**Question**: Should we create a management command to create the default admin user automatically on first run?
-
-**Context**: Feature spec says "default admin user with default admin password exists by default"
-
-**Options**:
-- **A)** Add to README with manual `createsuperuser` command
-- **B)** Create custom management command for automated setup
-- **C)** Use Django fixtures
-
-**Recommendation**: Option B - custom management command for better UX.
-
-### 4. Error Message Customization
-**Question**: Should we use Django's default error messages or customize them?
-
-**Context**: Scenarios specify exact error messages like "Please enter a correct username and password. Note that both fields may be case-sensitive."
-
-**Recommendation**: This IS Django's default message, so we're good.
-
-### 5. Test Strategy
-**Question**: Should we implement E2E tests with Playwright now or defer to later?
-
-**Context**: Feature has 10 scenarios with specific `data-testid` attributes defined. We have pytest-playwright in requirements.
-
-**Options**:
-- **A)** Implement unit + integration tests now, E2E tests later
-- **B)** Implement all tests (unit + integration + E2E) now
-
-**Recommendation**: Option B - implement all tests. Scenarios are well-defined with `data-testid` attributes.
+### Q3: Password Reset Email
+**Question**: AUTH-04 requires "receives a reset link". Use console email backend for MVP?  
+**Answer**: YES - Console backend for now. SMTP later.
 
 ---
 
 ## Implementation Plan
 
-### Phase 0: Setup and Branch Management
+### Phase 0: Preparation
 
-- [ ] **Task 0.1**: Reset plan and create new branch
-  - Check for work in progress per `.windsurf/rules/do-add-todos-for-incomplete-items.md`
-  - Create and checkout branch: `git checkout -b feature/auth-login`
+- [ ] **0.1** Create feature branch
+  ```bash
+  git checkout -b feature/auth-scenarios
+  ```
+
+- [ ] **0.2** Read workflow files
+  - Read `.windsurf/workflows/dev-2-implement-backend.md`
+  - Read `.windsurf/workflows/dev-3-implement-frontend.md`
+  - Read `.windsurf/rules/do-github-issues.md`
+
+---
+
+### Phase 1: Fix URL Convention & Django Forms (AUTH-01, AUTH-02)
+
+**Scenario**: AUTH-01 Login with valid credentials, AUTH-02 Login with invalid credentials  
+**GitHub Issue**: #7, #8
+
+#### Backend Changes
+
+- [ ] **1.1** Update URL routing
+  - **File**: `mimir/urls.py`
+  - Change: `path("accounts/", include("accounts.urls"))` → `path("auth/", include("accounts.urls"))`
   
-- [ ] **Task 0.2**: Create tests directory structure
-  - Create `tests/` directory
-  - Create `tests/__init__.py`
-  - Create `tests/integration/` directory
-  - Create `tests/integration/__init__.py`
-  - Create `tests/unit/` directory
-  - Create `tests/unit/__init__.py`
-  - Create `tests/e2e/` directory
-  - Create `tests/e2e/__init__.py`
+- [ ] **1.2** Update accounts URLs to match convention
+  - **File**: `accounts/urls.py`
+  - Change: `login/` → `user/login/`
+  - Change: `logout/` → `user/logout/`
+  - Result: `/auth/user/login/`, `/auth/user/logout/`
 
-- [ ] **Task 0.3**: Install Playwright browsers
-  - Run: `source venv/bin/activate && playwright install`
-  
-- [ ] **Task 0.4**: Commit initial setup
-  - Commit: `chore(tests): add test directory structure and install Playwright browsers`
-  - Push to remote
+- [ ] **1.3** Rebuild login view without Django Forms
+  - **File**: `accounts/views.py`
+  - Remove: `from django.contrib.auth.views import LoginView`
+  - Remove: `class CustomLoginView(LoginView)`
+  - Create: `def login_view(request)` with manual validation
+  - Implement: POST handler with `authenticate()` and `login()`
+  - Implement: Remember me checkbox handling
+  - Add: Server-side validation errors
+  - Add: Logging for auth attempts
+  - Re-read: `.windsurf/rules/do-docstring-format.md` before implementing
+  - Re-read: `.windsurf/rules/informative-logging.md` before implementing
 
----
+- [ ] **1.4** Update settings.py
+  - **File**: `mimir/settings.py`
+  - Change: `LOGIN_URL = "/auth/user/login/"`
+  - Change: `LOGIN_REDIRECT_URL` (see Phase 2 for dashboard)
+  - Change: `LOGOUT_REDIRECT_URL = "/auth/user/login/"`
 
-### Phase 1: Backend - User Model and Authentication Setup
+#### Frontend Changes
 
-**Scenarios Covered**: Foundation for all scenarios
+- [ ] **1.5** Update login template
+  - **File**: `templates/accounts/login.html`
+  - Remove: Django Form rendering (`{{ form.username }}`)
+  - Add: Manual input fields with Bootstrap classes
+  - Add: Server-side error display using `{% if errors %}`
+  - Keep: `data-testid` attributes
+  - Add: Font Awesome icons per IA guidelines
+  - Add: Bootstrap tooltips on buttons
+  - Ensure: Follows validation pattern from IA_guidelines.md (red errors under fields)
+  - Re-read: `.windsurf/rules/tooltips.md` before implementing
+  - Re-read: `.windsurf/rules/do-semantic-versioning-on-ui-elements.md`
 
-- [ ] **Task 1.1**: Review `.windsurf/rules/do-docstring-format.md` before implementing
+#### Tests
 
-- [ ] **Task 1.2**: Configure authentication settings
-  - Update `mimir/settings.py`:
-    - Add `LOGIN_URL = '/accounts/login/'`
-    - Add `LOGIN_REDIRECT_URL = '/'`
-    - Add `LOGOUT_REDIRECT_URL = '/accounts/login/'`
-    - Configure session settings for remember me (30 days if checkbox checked)
-  - Create docstrings following the format rule
+- [ ] **1.6** Create integration test for AUTH-01
+  - **File**: `tests/integration/test_auth_login.py`
+  - Test: `test_login_with_valid_credentials()`
+    - Create test user
+    - POST to `/auth/user/login/`
+    - Assert: 302 redirect to dashboard
+    - Assert: User is authenticated
+    - Assert: Session created
+  - Re-read: `.windsurf/rules/do-not-mock-in-integration-tests.md` before implementing
 
-- [ ] **Task 1.3**: Create authentication app structure
-  - Run: `python manage.py startapp accounts`
-  - Add `accounts` to `INSTALLED_APPS` in settings
-  - Update `accounts/apps.py` with proper app config
+- [ ] **1.7** Create integration test for AUTH-02
+  - **File**: `tests/integration/test_auth_login.py`
+  - Test: `test_login_with_invalid_credentials()`
+    - POST invalid credentials to `/auth/user/login/`
+    - Assert: 200 status (stays on page)
+    - Assert: Error message in response
+    - Assert: User not authenticated
 
-- [ ] **Task 1.4**: Write unit tests for auth configuration
-  - File: `tests/unit/test_auth_config.py`
-  - Test LOGIN_URL, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
-  - Test session configuration
-
-- [ ] **Task 1.5**: Run tests and verify
-  - Run: `pytest tests/unit/test_auth_config.py -v`
-
-- [ ] **Task 1.6**: Commit auth configuration
-  - Commit: `feat(auth): configure authentication settings and create accounts app`
-  - Push to remote
-
----
-
-### Phase 2: Backend - Authentication Views
-
-**Scenarios Covered**: AUTH 1.1, 1.2, 2.1, 2.2, 2.3, 4.2
-
-- [ ] **Task 2.1**: Review `.windsurf/rules/do-docstring-format.md` before implementing
-
-- [ ] **Task 2.2**: Create login view
-  - File: `accounts/views.py`
-  - Class: `CustomLoginView(LoginView)`
-  - Override to handle "remember me" checkbox
-  - Handle session duration based on remember me
-  - Add proper docstrings with examples
-  - All methods 20-30 lines max (`.windsurf/rules/do-write-concise-methods.md`)
-
-- [ ] **Task 2.3**: Create logout view
-  - File: `accounts/views.py`
-  - Function: `custom_logout_view(request)`
-  - Add success message "You have been logged out successfully"
-  - Add proper docstrings with examples
-
-- [ ] **Task 2.4**: Create URL patterns
-  - File: `accounts/urls.py`
-  - Pattern: `/accounts/login/` → CustomLoginView
-  - Pattern: `/accounts/logout/` → custom_logout_view
-  - Include in main `mimir/urls.py`
-
-- [ ] **Task 2.5**: Write unit tests for authentication views
-  - File: `tests/unit/test_auth_views.py`
-  - Test login view GET (displays form)
-  - Test login view POST with valid credentials
-  - Test login view POST with invalid credentials (wrong password)
-  - Test login view POST with non-existent user
-  - Test login view POST with empty form
-  - Test remember me functionality
-  - Test logout view
-
-- [ ] **Task 2.6**: Run tests and verify
-  - Run: `pytest tests/unit/test_auth_views.py -v`
-
-- [ ] **Task 2.7**: Commit authentication views
-  - Commit: `feat(auth): implement login and logout views with remember me`
-  - Push to remote
+- [ ] **1.8** Commit & Update Issue #7 #8
+  - Re-read: `.windsurf/rules/do-follow-commit-convention.md`
+  - Commit message: `feat(auth): implement login with custom validation (AUTH-01, AUTH-02)`
+  - Body: List changes, mention no Django Forms per SAO.md
+  - Update GitHub issues #7 and #8 with progress
 
 ---
 
-### Phase 3: Frontend - Login Template
+### Phase 2: Create Dashboard & Onboarding Stubs
 
-**Scenarios Covered**: AUTH 1.1, 2.1, 2.2, 2.3
+**Purpose**: Provide redirect targets for authentication flows
 
-- [ ] **Task 3.1**: Review `.windsurf/rules/do-semantic-versioning-on-ui-elements.md` before implementing
+#### Backend - Dashboard Stub
 
-- [ ] **Task 3.2**: Create login template
-  - File: `templates/accounts/login.html`
-  - Extend `base.html`
-  - Bootstrap 5 form styling
-  - Include all `data-testid` attributes from scenarios:
-    - `login-form`
-    - `login-username-input`
-    - `login-password-input`
-    - `login-remember-checkbox`
-    - `login-submit-button`
-    - `login-error-message`
-    - `username-field-error`
-    - `password-field-error`
-  - Display Django form errors
-  - CSRF token included
+- [ ] **2.1** Create dashboard view
+  - **File**: `methodology/views.py` (or new `accounts/views.py`)
+  - Function: `def dashboard(request)`
+  - Decorator: `@login_required`
+  - Return: `render(request, 'dashboard.html')`
+  - Re-read: `.windsurf/rules/do-docstring-format.md`
 
-- [ ] **Task 3.3**: Update base template navbar
-  - File: `templates/base.html`
-  - Ensure `{% if user.is_authenticated %}` block shows username
-  - Ensure logout link has `data-testid="logout-link"`
-  - Ensure login link has `data-testid="login-link"` (for logged out state)
+- [ ] **2.2** Add dashboard URL
+  - **File**: `mimir/urls.py`
+  - Add: `path('dashboard/', views.dashboard, name='dashboard')`
 
-- [ ] **Task 3.4**: Write template rendering tests
-  - File: `tests/integration/test_login_template.py`
-  - Test login template renders correctly
-  - Test all form fields present
-  - Test all `data-testid` attributes present
-  - Test error message display
+#### Frontend - Dashboard Stub
 
-- [ ] **Task 3.5**: Run tests and verify
-  - Run: `pytest tests/integration/test_login_template.py -v`
+- [ ] **2.3** Create dashboard template
+  - **File**: `templates/dashboard.html`
+  - Extends: `base.html`
+  - Content: Simple card with "FOB-DASHBOARD-1 - This will be the dashboard"
+  - Add: `data-testid="dashboard-stub"`
+  - Note: "Dashboard implementation tracked in navigation.feature issues #17-22"
 
-- [ ] **Task 3.6**: Commit login template
-  - Commit: `feat(auth): create login template with Bootstrap styling and test IDs`
-  - Push to remote
+#### Backend - Onboarding Stub
 
----
+- [ ] **2.4** Create onboarding view
+  - **File**: `accounts/views.py`
+  - Function: `def onboarding(request)`
+  - Decorator: `@login_required`
+  - Return: `render(request, 'accounts/onboarding.html')`
 
-### Phase 4: Backend - Access Control (Protected Views)
+- [ ] **2.5** Add onboarding URL
+  - **File**: `accounts/urls.py`
+  - Add: `path('user/onboarding/', views.onboarding, name='onboarding')`
+  - Result: `/auth/user/onboarding/`
 
-**Scenarios Covered**: AUTH 3.1, 3.2, 3.3, 4.1
+#### Frontend - Onboarding Stub
 
-- [ ] **Task 4.1**: Review `.windsurf/rules/do-docstring-format.md` before implementing
+- [ ] **2.6** Create onboarding template
+  - **File**: `templates/accounts/onboarding.html`
+  - Extends: `base.html`
+  - Content: Simple card with "FOB-ONBOARDING-1 - This will be onboarding"
+  - Add: `data-testid="onboarding-stub"`
+  - Note: "Onboarding implementation tracked in onboarding.feature issues #12-16"
 
-- [ ] **Task 4.2**: Add login required decorator to methodology index
-  - File: `methodology/views.py`
-  - Add `@login_required` decorator to `index` view
-  - Update docstring with authentication requirement
+#### Update Settings
 
-- [ ] **Task 4.3**: Create placeholder PIP views (for testing)
-  - File: `methodology/views.py`
-  - Function: `pip_list(request)` - protected
-  - Function: `pip_review(request, pip_id)` - protected
-  - Add proper docstrings
-  - These are stubs for testing auth; full PIP feature comes later
+- [ ] **2.7** Update LOGIN_REDIRECT_URL
+  - **File**: `mimir/settings.py`
+  - Change: `LOGIN_REDIRECT_URL = "/dashboard/"`
 
-- [ ] **Task 4.4**: Add PIP URL patterns
-  - File: `methodology/urls.py` (create if doesn't exist)
-  - Pattern: `/pip/list/` → pip_list
-  - Pattern: `/pip/review/<uuid:pip_id>/` → pip_review
-  - Include in main `mimir/urls.py`
+#### Tests
 
-- [ ] **Task 4.5**: Create placeholder PIP templates (for testing)
-  - File: `templates/methodology/pip_list.html`
-  - File: `templates/methodology/pip_review.html`
-  - Include `data-testid="pip-review-form"` in review template
-  - Minimal content - just for auth testing
+- [ ] **2.8** Test dashboard stub
+  - **File**: `tests/integration/test_dashboard_stub.py`
+  - Test: `test_dashboard_requires_login()`
+  - Test: `test_dashboard_displays_stub()`
 
-- [ ] **Task 4.6**: Write integration tests for access control
-  - File: `tests/integration/test_access_control.py`
-  - Test unauthenticated access to `/` redirects to login
-  - Test unauthenticated access to `/pip/review/...` redirects to login
-  - Test authenticated access to `/` succeeds
-  - Test authenticated access to `/pip/review/...` succeeds
-  - Test `?next=` parameter preserved in redirects
+- [ ] **2.9** Test onboarding stub
+  - **File**: `tests/integration/test_onboarding_stub.py`  
+  - Test: `test_onboarding_requires_login()`
+  - Test: `test_onboarding_displays_stub()`
 
-- [ ] **Task 4.7**: Run tests and verify
-  - Run: `pytest tests/integration/test_access_control.py -v`
-
-- [ ] **Task 4.8**: Commit access control
-  - Commit: `feat(auth): protect views with login_required decorator`
-  - Push to remote
+- [ ] **2.10** Commit stubs
+  - Commit: `feat(stubs): add dashboard and onboarding placeholder pages`
+  - Body: "Stub pages for FOB-DASHBOARD-1 and FOB-ONBOARDING-1. Full implementation tracked separately."
 
 ---
 
-### Phase 5: Backend - Session Management
+### Phase 3: User Registration (AUTH-03)
 
-**Scenarios Covered**: AUTH 4.1, 4.2
+**Scenario**: AUTH-03 First-time user registration  
+**GitHub Issue**: #9
 
-- [ ] **Task 5.1**: Review `.windsurf/rules/do-docstring-format.md` before implementing
+#### Backend
 
-- [ ] **Task 5.2**: Configure session middleware settings
-  - File: `mimir/settings.py`
-  - Set `SESSION_COOKIE_AGE` defaults
-  - Set `SESSION_SAVE_EVERY_REQUEST = True` for session refresh
+- [ ] **3.1** Create registration view
+  - **File**: `accounts/views.py`
+  - Function: `def register(request)`
+  - GET: Show registration form
+  - POST: 
+    - Validate: username, email, password, password_confirm
+    - Check: username/email uniqueness
+    - Create: User with `User.objects.create_user()`
+    - Login: Auto-login new user
+    - Redirect: `/auth/user/onboarding/`
+  - Add: Extensive logging per rules
+  - Re-read: `.windsurf/rules/informative-logging.md`
+  - Re-read: `.windsurf/rules/do-docstring-format.md`
 
-- [ ] **Task 5.3**: Update login view for session duration
-  - File: `accounts/views.py`
-  - Override `form_valid()` in CustomLoginView
-  - Set `request.session.set_expiry()` based on remember me:
-    - If remember me: 30 days (2592000 seconds)
-    - If not: Django default (2 weeks)
+- [ ] **3.2** Add registration URL
+  - **File**: `accounts/urls.py`
+  - Add: `path('user/register/', views.register, name='register')`
 
-- [ ] **Task 5.4**: Write integration tests for session management
-  - File: `tests/integration/test_session_management.py`
-  - Test session persists across page navigations
-  - Test session expiry with remember me (30 days)
-  - Test session expiry without remember me (default)
-  - Test session cookie set on login
-  - Test session cookie deleted on logout
+#### Frontend
 
-- [ ] **Task 5.5**: Run tests and verify
-  - Run: `pytest tests/integration/test_session_management.py -v`
+- [ ] **3.3** Create registration template
+  - **File**: `templates/accounts/register.html`
+  - Extends: `base.html`
+  - Form fields:
+    - Username (required)
+    - Email (required, with email validation)
+    - Password (required, min 8 chars)
+    - Confirm Password (must match)
+  - Add: Field-level validation errors (red text under fields)
+  - Add: Font Awesome icons
+  - Add: Bootstrap tooltips
+  - Add: Link to login page
+  - Add: `data-testid` attributes
+  - Re-read: `.windsurf/rules/tooltips.md`
 
-- [ ] **Task 5.6**: Commit session management
-  - Commit: `feat(auth): implement session management with remember me`
-  - Push to remote
+- [ ] **3.4** Add registration link to login template
+  - **File**: `templates/accounts/login.html`
+  - Add: "Don't have an account? [Sign Up]" link below form
 
----
+#### Tests
 
-### Phase 6: Management Commands
+- [ ] **3.5** Create registration integration tests
+  - **File**: `tests/integration/test_auth_registration.py`
+  - Test: `test_register_new_user()`
+    - POST valid registration data
+    - Assert: User created in database
+    - Assert: User auto-logged in
+    - Assert: Redirected to `/auth/user/onboarding/`
+  - Test: `test_register_duplicate_username()`
+    - Create user
+    - Attempt register with same username
+    - Assert: Error message displayed
+  - Test: `test_register_password_mismatch()`
+    - POST with mismatched passwords
+    - Assert: Error message
+  - Test: `test_register_invalid_email()`
+  - Re-read: `.windsurf/rules/do-not-mock-in-integration-tests.md`
 
-**Scenarios Covered**: Setup for all scenarios (default admin user)
-
-- [ ] **Task 6.1**: Review `.windsurf/rules/do-docstring-format.md` before implementing
-
-- [ ] **Task 6.2**: Create management command for default user
-  - File: `accounts/management/commands/create_default_admin.py`
-  - Create admin user if doesn't exist
-  - Username: `admin`, Password: `admin`
-  - Add proper docstrings
-
-- [ ] **Task 6.3**: Write unit tests for management command
-  - File: `tests/unit/test_management_commands.py`
-  - Test command creates user
-  - Test command is idempotent (doesn't fail if user exists)
-
-- [ ] **Task 6.4**: Update README or setup documentation
-  - Add section on running `python manage.py create_default_admin`
-
-- [ ] **Task 6.5**: Run tests and verify
-  - Run: `pytest tests/unit/test_management_commands.py -v`
-  - Run command manually: `python manage.py create_default_admin`
-
-- [ ] **Task 6.6**: Commit management command
-  - Commit: `feat(auth): add management command for default admin user`
-  - Push to remote
-
----
-
-### Phase 7: E2E Tests with Playwright
-
-**Scenarios Covered**: ALL scenarios (AUTH 1.1 through AUTH 4.2)
-
-- [ ] **Task 7.1**: Review `.windsurf/workflows/dev-4-e2e-tests.md` before implementing
-
-- [ ] **Task 7.2**: Create pytest configuration for Playwright
-  - File: `pytest.ini` or update existing
-  - Configure Django LiveServerTestCase + Playwright
-  - Set up test database
-
-- [ ] **Task 7.3**: Create E2E test base class
-  - File: `tests/e2e/conftest.py`
-  - Configure Playwright fixtures
-  - LiveServerTestCase integration
-  - Helper methods for common actions (login, logout)
-
-- [ ] **Task 7.4**: Implement E2E test: AUTH 1.1 (Valid login)
-  - File: `tests/e2e/test_auth_login.py`
-  - Test class: `TestValidLogin`
-  - Navigate to login page
-  - Enter valid credentials
-  - Click submit
-  - Assert redirect to `/`
-  - Assert methodology-explorer visible
-  - Assert "Logged in as: admin" displayed
-  - Assert session cookie set
-
-- [ ] **Task 7.5**: Implement E2E test: AUTH 1.2 (Logout)
-  - File: `tests/e2e/test_auth_login.py`
-  - Test class: `TestLogout`
-  - Login first (helper method)
-  - Click logout link
-  - Assert redirect to login page
-  - Assert success message
-  - Assert session cookie deleted
-  - Attempt to access `/`, assert redirect to login with `?next=/`
-
-- [ ] **Task 7.6**: Implement E2E tests: AUTH 2.x (Error scenarios)
-  - File: `tests/e2e/test_auth_errors.py`
-  - Test AUTH 2.1: Incorrect password
-  - Test AUTH 2.2: Non-existent user
-  - Test AUTH 2.3: Empty form
-
-- [ ] **Task 7.7**: Implement E2E tests: AUTH 3.x (Access control)
-  - File: `tests/e2e/test_auth_access_control.py`
-  - Test AUTH 3.1: Unauthenticated redirect
-  - Test AUTH 3.2: Authenticated PIP access
-  - Test AUTH 3.3: Unauthenticated PIP redirect
-
-- [ ] **Task 7.8**: Implement E2E tests: AUTH 4.x (Session management)
-  - File: `tests/e2e/test_auth_sessions.py`
-  - Test AUTH 4.1: Session persistence
-  - Test AUTH 4.2: Remember me checkbox
-
-- [ ] **Task 7.9**: Run all E2E tests
-  - Run: `pytest tests/e2e/ -v --headed` (for visual debugging)
-  - Run: `pytest tests/e2e/ -v` (headless for CI)
-
-- [ ] **Task 7.10**: Commit E2E tests
-  - Commit: `test(auth): add comprehensive E2E tests with Playwright`
-  - Push to remote
+- [ ] **3.6** Commit & Update Issue #9
+  - Commit: `feat(auth): implement user registration (AUTH-03)`
+  - Update: GitHub issue #9 with completion status
 
 ---
 
-### Phase 8: Integration Testing and Final Verification
+### Phase 4: Password Reset Flow (AUTH-04)
 
-**Scenarios Covered**: ALL
+**Scenario**: AUTH-04 Password reset flow  
+**GitHub Issue**: #10
 
-- [ ] **Task 8.1**: Run complete test suite
-  - Run: `pytest tests/ -v --tb=short`
-  - Ensure all tests pass
+#### Backend
 
-- [ ] **Task 8.2**: Manual testing checklist
-  - [ ] Login with valid credentials
-  - [ ] Login with invalid credentials (wrong password)
-  - [ ] Login with non-existent user
-  - [ ] Login with empty form
-  - [ ] Logout successfully
-  - [ ] Access protected page without login (redirects)
-  - [ ] Access protected page with login (succeeds)
-  - [ ] Remember me checkbox works
-  - [ ] Session persists across pages
-  - [ ] Navbar shows username when logged in
+- [ ] **4.1** Configure email backend
+  - **File**: `mimir/settings.py`
+  - Add: `EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'`
+  - Note: Console backend for MVP, SMTP for production
 
-- [ ] **Task 8.3**: Code review checklist
-  - [ ] All docstrings follow `.windsurf/rules/do-docstring-format.md`
-  - [ ] All methods follow `.windsurf/rules/do-write-concise-methods.md`
-  - [ ] All UI elements have semantic `data-testid` attributes
-  - [ ] No hardcoded strings - use Django settings
-  - [ ] Logging added per `.windsurf/rules/add-logging.md`
+- [ ] **4.2** Create password reset request view
+  - **File**: `accounts/views.py`
+  - Function: `def password_reset_request(request)`
+  - POST: Generate reset token, send email
+  - Use: Django's `PasswordResetTokenGenerator`
+  - Re-read: `.windsurf/rules/do-docstring-format.md`
 
-- [ ] **Task 8.4**: Update documentation
-  - File: `README.md`
-  - Add authentication section
-  - Document default admin user
-  - Document login URL
+- [ ] **4.3** Create password reset confirm view
+  - **File**: `accounts/views.py`
+  - Function: `def password_reset_confirm(request, uidb64, token)`
+  - Validate: Token and user ID
+  - POST: Set new password
+  - Redirect: Login with success message
 
-- [ ] **Task 8.5**: Run Definition of Done checklist
-  - Follow `.windsurf/workflows/dev-5-check-dod.md`
+- [ ] **4.4** Add password reset URLs
+  - **File**: `accounts/urls.py`
+  - Add: `path('user/password-reset/', views.password_reset_request, name='password_reset')`
+  - Add: `path('user/password-reset/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm')`
 
-- [ ] **Task 8.6**: Final commit and push
-  - Commit: `docs(auth): update README with authentication documentation`
-  - Push to remote
+#### Frontend
 
----
+- [ ] **4.5** Create password reset request template
+  - **File**: `templates/accounts/password_reset.html`
+  - Form: Email input
+  - Message: "Enter your email to receive a reset link"
+  - Add: `data-testid` attributes
 
-### Phase 9: Pull Request and GitHub Issue Management
+- [ ] **4.6** Create password reset confirm template
+  - **File**: `templates/accounts/password_reset_confirm.html`
+  - Form: New password, confirm password
+  - Add: Password strength indicator (optional)
+  - Add: `data-testid` attributes
 
-**Scenarios Covered**: ALL
+- [ ] **4.7** Create password reset email template
+  - **File**: `templates/accounts/password_reset_email.txt`
+  - Content: Plain text with reset link
 
-- [ ] **Task 9.1**: Review `.windsurf/rules/do-github-issues.md` before proceeding
+- [ ] **4.8** Add "Forgot Password" link to login
+  - **File**: `templates/accounts/login.html`
+  - Add: Link below form
 
-- [ ] **Task 9.2**: Create or update GitHub issue
-  - Issue title: `feat(auth): Implement user authentication and session management`
-  - Link to feature file: `docs/features/login.feature`
-  - List all 10 scenarios
-  - Add labels: `enhancement`, `auth`, `core`
+#### Tests
 
-- [ ] **Task 9.3**: Create pull request
-  - Base branch: `main`
-  - Compare branch: `feature/auth-login`
-  - PR title: `feat(auth): Implement user authentication and session management`
-  - PR description:
-    - Link to GitHub issue
-    - Summary of changes
-    - Testing performed
-    - Checklist of completed scenarios
+- [ ] **4.9** Create password reset integration tests
+  - **File**: `tests/integration/test_auth_password_reset.py`
+  - Test: `test_password_reset_request()`
+    - POST email to reset view
+    - Assert: Email sent (check mail.outbox)
+    - Assert: Reset link generated
+  - Test: `test_password_reset_confirm_valid_token()`
+    - Generate token
+    - POST new password
+    - Assert: Password changed
+    - Assert: Can login with new password
+  - Test: `test_password_reset_confirm_invalid_token()`
+  - Re-read: `.windsurf/rules/do-not-mock-in-integration-tests.md`
 
-- [ ] **Task 9.4**: Link PR to issue
-  - Add "Closes #X" or "Fixes #X" in PR description
-
-- [ ] **Task 9.5**: Update implementation plan status
-  - Mark all tasks as complete in this file
-  - Commit: `docs(auth): mark implementation plan as complete`
-
----
-
-## Test Coverage Summary
-
-### Unit Tests (Pure Logic)
-- `tests/unit/test_auth_config.py` - Settings validation
-- `tests/unit/test_auth_views.py` - View logic
-- `tests/unit/test_management_commands.py` - Command logic
-
-### Integration Tests (Database + Views)
-- `tests/integration/test_login_template.py` - Template rendering
-- `tests/integration/test_access_control.py` - Authorization
-- `tests/integration/test_session_management.py` - Session behavior
-
-### E2E Tests (Full Browser)
-- `tests/e2e/test_auth_login.py` - AUTH 1.1, 1.2
-- `tests/e2e/test_auth_errors.py` - AUTH 2.1, 2.2, 2.3
-- `tests/e2e/test_auth_access_control.py` - AUTH 3.1, 3.2, 3.3
-- `tests/e2e/test_auth_sessions.py` - AUTH 4.1, 4.2
-
-**Total Test Files**: 10  
-**Estimated Test Count**: 35-40 tests
+- [ ] **4.10** Commit & Update Issue #10
+  - Commit: `feat(auth): implement password reset flow (AUTH-04)`
+  - Update: GitHub issue #10
 
 ---
 
-## Dependencies Required
+### Phase 5: Logout Tests (AUTH-05)
 
-Already in `requirements.txt`:
-- ✅ Django >= 5.0
-- ✅ pytest >= 8.0
-- ✅ pytest-django >= 4.0
-- ✅ playwright >= 1.40.0
-- ✅ pytest-playwright >= 0.4.0
+**Scenario**: AUTH-05 Logout  
+**GitHub Issue**: #11  
+**Note**: Logout view already implemented, only tests needed
 
-No additional dependencies needed.
+#### Tests
 
----
+- [ ] **5.1** Create logout integration tests
+  - **File**: `tests/integration/test_auth_logout.py`
+  - Test: `test_logout_authenticated_user()`
+    - Login user
+    - GET `/auth/user/logout/`
+    - Assert: User logged out
+    - Assert: Redirected to `/auth/user/login/`
+    - Assert: Success message displayed
+  - Test: `test_logout_unauthenticated_user()`
+    - GET logout without login
+    - Assert: Redirected to login (no error)
 
-## Key Design Decisions
-
-1. **Use Django's Built-in Auth**: No custom User model initially. Keeps things simple.
-
-2. **Remember Me Duration**: 30 days as specified in scenarios (can be adjusted).
-
-3. **Session Management**: Use Django's session framework with custom expiry handling.
-
-4. **Testing Strategy**: Unit → Integration → E2E progression. All tests implemented.
-
-5. **Template Approach**: Extend `base.html`, use Bootstrap 5 styling, include all `data-testid` attributes.
-
-6. **Error Handling**: Use Django's default error messages (they match scenario requirements).
-
-7. **Logging**: Add extensive logging per `.windsurf/rules/add-logging.md`:
-   - Log all login attempts (success/failure)
-   - Log logout actions
-   - Log access control redirects
-   - Use logs/app.log for troubleshooting
+- [ ] **5.2** Commit & Update Issue #11
+  - Commit: `test(auth): add logout integration tests (AUTH-05)`
+  - Update: GitHub issue #11 (mark complete)
 
 ---
 
-## Estimated Complexity
+### Phase 6: E2E Testing
 
-**Total Tasks**: 63 tasks across 9 phases  
-**Complexity**: Medium  
-**Risk Areas**:
-- E2E test setup with Playwright + Django LiveServerTestCase (new territory)
-- Session expiry testing (time-sensitive)
-- Remember me checkbox behavior across browser restarts
+**Purpose**: Test complete user journeys
 
-**Mitigation**:
-- Follow `.windsurf/workflows/dev-4-e2e-tests.md` carefully
-- Use pytest fixtures for E2E test setup
-- Test session behavior with explicit cookie inspection
+- [ ] **6.1** Create E2E test for complete auth flow
+  - **File**: `tests/e2e/test_auth_complete_flow.py`
+  - Use: Django LiveServerTestCase + pytest
+  - Flow:
+    1. Visit login page
+    2. Click "Sign Up"
+    3. Complete registration
+    4. Redirected to onboarding
+    5. Return to dashboard
+    6. Logout
+  - Re-read: `.windsurf/rules/do-runner.md`
+
+- [ ] **6.2** Commit E2E tests
+  - Commit: `test(auth): add E2E tests for complete authentication flow`
+
+---
+
+### Phase 7: Documentation & Cleanup
+
+- [ ] **7.1** Update README if needed
+  - Add: Default user creation command
+  - Add: Testing instructions
+
+- [ ] **7.2** Run all tests
+  ```bash
+  pytest tests/ -v
+  ```
+
+- [ ] **7.3** Check test coverage
+  ```bash
+  pytest --cov=accounts --cov-report=html
+  ```
+
+- [ ] **7.4** Final commit
+  - Commit: `docs(auth): update documentation for authentication implementation`
+
+- [ ] **7.5** Push branch
+  ```bash
+  git push origin feature/auth-scenarios
+  ```
+
+- [ ] **7.6** Create Pull Request
+  - Title: "feat(auth): Implement authentication scenarios (AUTH-01 to AUTH-05)"
+  - Body: Link to issues #7-11, describe changes
+  - Request review per `.windsurf/rules/cp-2-review-copilot-work.md`
+
+---
+
+## Test Summary
+
+### Unit Tests
+- `tests/unit/test_auth_config.py` - ✅ Already exists
+
+### Integration Tests (NEW)
+- `tests/integration/test_auth_login.py` - AUTH-01, AUTH-02
+- `tests/integration/test_auth_registration.py` - AUTH-03
+- `tests/integration/test_auth_password_reset.py` - AUTH-04
+- `tests/integration/test_auth_logout.py` - AUTH-05
+- `tests/integration/test_dashboard_stub.py` - Dashboard stub
+- `tests/integration/test_onboarding_stub.py` - Onboarding stub
+
+### E2E Tests (NEW)
+- `tests/e2e/test_auth_complete_flow.py` - Full user journey
+
+**Total New Tests**: ~20 test functions
 
 ---
 
 ## Success Criteria
 
-- [ ] All 10 scenarios from `login.feature` pass E2E tests
-- [ ] All unit and integration tests pass
-- [ ] Code follows all `.windsurf/rules/` guidelines
-- [ ] Documentation updated
-- [ ] GitHub issue created/updated
-- [ ] Pull request created and linked to issue
-- [ ] Definition of Done checklist complete
+- ✅ All 5 authentication scenarios pass integration tests
+- ✅ No Django Forms used (per SAO.md)
+- ✅ URL conventions followed (`/auth/user/*`)
+- ✅ Dashboard and onboarding stubs in place
+- ✅ Bootstrap toasts for success messages
+- ✅ Field-level validation errors per IA guidelines
+- ✅ Font Awesome icons and tooltips on all buttons
+- ✅ All `data-testid` attributes present for testing
+- ✅ Extensive logging per project rules
+- ✅ Test coverage > 90% for accounts app
+- ✅ Issues #7-11 marked complete
 
 ---
 
-## Notes
+## Dependencies
 
-- This is the first feature implementation for the FOB web UI
-- Sets the pattern for future feature development
-- Authentication is foundational - all other features will depend on it
-- MCP interface intentionally excluded (process isolation = no auth needed)
+**Python Packages** (already in requirements.txt):
+- Django 5.2.8
+- pytest-django
+- No additional packages needed
+
+**Documentation References**:
+- `docs/architecture/SAO.md` - Architecture patterns
+- `docs/ux/IA_guidelines.md` - UI/UX patterns
+- `.windsurf/rules/*.md` - Development rules
+
+---
+
+## Estimated Scope
+
+- **5 Scenarios**: AUTH-01 through AUTH-05
+- **2 Stub Pages**: Dashboard, Onboarding
+- **6 Views**: Login, logout, register, password_reset (2 views), dashboard, onboarding
+- **6 Templates**: Login, register, password_reset (2), email, dashboard, onboarding  
+- **7 Test Files**: ~20 test functions total
+- **URL Updates**: Restructure to `/auth/user/` pattern
+
+**Complexity**: Medium (login already exists, need to rebuild without Forms)

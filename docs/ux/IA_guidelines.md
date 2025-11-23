@@ -545,6 +545,8 @@ Page Structure:
 
 **Use Case**: Data entry, settings, user input
 
+**Note**: Mimir does NOT use Django Forms. We build custom views and templates with manual validation.
+
 ```html
 <!-- Vertical form (default) -->
 <form>
@@ -578,6 +580,75 @@ Page Structure:
     <button type="submit" class="btn btn-primary">Search</button>
   </div>
 </form>
+```
+
+#### Form Validation and Error Handling
+
+**Validation Strategy**: Server-side validation in Django views with Bootstrap styling.
+
+**Field-Level Validation Errors**:
+
+Show validation errors **underneath the invalid field** in red with icon.
+
+```html
+<!-- Invalid field with error message -->
+<div class="mb-3">
+  <label for="email" class="form-label">Email address</label>
+  <input type="email" 
+         class="form-control is-invalid" 
+         id="email" 
+         value="invalidemail">
+  <div class="invalid-feedback">
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    This field is required.
+  </div>
+</div>
+
+<!-- Multiple validation errors -->
+<div class="mb-3">
+  <label for="password" class="form-label">Password</label>
+  <input type="password" 
+         class="form-control is-invalid" 
+         id="password">
+  <div class="invalid-feedback">
+    <i class="fa-solid fa-circle-exclamation me-1"></i>
+    Password must be at least 8 characters long.
+  </div>
+</div>
+
+<!-- Valid field (optional success state) -->
+<div class="mb-3">
+  <label for="username" class="form-label">Username</label>
+  <input type="text" 
+         class="form-control is-valid" 
+         id="username" 
+         value="maria">
+  <div class="valid-feedback">
+    <i class="fa-solid fa-circle-check me-1"></i>
+    Username is available.
+  </div>
+</div>
+```
+
+**Common Validation Messages**:
+- Required fields: `"This field is required."`
+- Invalid email: `"Please enter a valid email address."`
+- Password strength: `"Password must be at least 8 characters long."`
+- Unique constraint: `"This username is already taken."`
+- Number range: `"Value must be between 1 and 100."`
+- Date validation: `"Please enter a valid date."`
+
+**Form-Level Validation Errors**:
+
+For errors that don't belong to specific fields (e.g., "Invalid credentials"):
+
+```html
+<!-- Error alert at top of form -->
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <i class="fa-solid fa-triangle-exclamation me-2"></i>
+  <strong>Authentication failed:</strong> Invalid email or password.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 ```
 
 ---
@@ -2610,21 +2681,199 @@ function createRipple(event) {
 </style>
 ```
 
-#### Success Feedback
+#### Success Messages, Validation Errors, and Notifications
+
+**Mimir Messaging Strategy**: Use **Bootstrap Toasts** for success messages, validation errors, and notifications.
+
+**Toast Container Setup**:
 ```html
-<!-- Toast notification -->
-<div class="toast show align-items-center text-bg-success border-0" role="alert">
+<!-- Toast container (fixed position, top-right) -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1090;">
+  <!-- Toasts will be inserted here dynamically -->
+</div>
+```
+
+**Success Toast**:
+```html
+<!-- Success message -->
+<div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
   <div class="d-flex">
     <div class="toast-body">
       <i class="fa-solid fa-circle-check me-2"></i>
       Playbook saved successfully!
     </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
 </div>
 ```
 
-#### Error Feedback
+**Error Toast**:
+```html
+<!-- Error notification -->
+<div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>
+      Failed to save playbook. Please try again.
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Warning Toast**:
+```html
+<!-- Warning notification -->
+<div class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>
+      Some changes may not be saved.
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Info Toast**:
+```html
+<!-- Info notification -->
+<div class="toast align-items-center text-bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <i class="fa-solid fa-circle-info me-2"></i>
+      Sync completed with 3 new updates.
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+```
+
+**Toast with Header**:
+```html
+<!-- Toast with title -->
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-header text-bg-success">
+    <i class="fa-solid fa-circle-check me-2"></i>
+    <strong class="me-auto">Success</strong>
+    <small>Just now</small>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body">
+    Workflow "Build Feature" has been created successfully.
+  </div>
+</div>
+```
+
+**JavaScript Initialization**:
+```javascript
+// Initialize all toasts
+document.addEventListener('DOMContentLoaded', function() {
+  const toastElList = document.querySelectorAll('.toast');
+  const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, {
+    autohide: true,
+    delay: 5000  // Auto-hide after 5 seconds
+  }));
+  
+  // Show all toasts
+  toastList.forEach(toast => toast.show());
+});
+
+// Helper function to show toast programmatically
+function showToast(message, type = 'success') {
+  const toastContainer = document.querySelector('.toast-container');
+  
+  const icons = {
+    success: 'fa-circle-check',
+    error: 'fa-circle-exclamation',
+    warning: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+  };
+  
+  const bgClasses = {
+    success: 'text-bg-success',
+    error: 'text-bg-danger',
+    warning: 'text-bg-warning',
+    info: 'text-bg-info'
+  };
+  
+  const toastHTML = `
+    <div class="toast align-items-center ${bgClasses[type]} border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="fa-solid ${icons[type]} me-2"></i>
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  `;
+  
+  toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+  const toastElement = toastContainer.lastElementChild;
+  const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 5000 });
+  toast.show();
+  
+  // Remove from DOM after hidden
+  toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+}
+
+// Usage examples:
+// showToast('Playbook saved successfully!', 'success');
+// showToast('Failed to delete workflow', 'error');
+// showToast('Sync is in progress', 'info');
+```
+
+**HTMX Integration**:
+```html
+<!-- Server returns toast HTML in response header -->
+<button hx-post="/playbooks/playbook/save/123/"
+        hx-target="#content"
+        hx-on:htmx:after-request="if(event.detail.xhr.getResponseHeader('X-Toast')) {
+          const toast = event.detail.xhr.getResponseHeader('X-Toast');
+          showToast(toast, 'success');
+        }">
+  Save Playbook
+</button>
+```
+
+**Django View Response**:
+```python
+# In Django view
+response = HttpResponse(html_content)
+response['X-Toast'] = 'Playbook saved successfully!'
+response['X-Toast-Type'] = 'success'
+return response
+```
+
+**Toast Positioning Options**:
+```html
+<!-- Top-right (default) -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+
+<!-- Top-center -->
+<div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+
+<!-- Bottom-right -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+<!-- Bottom-center -->
+<div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+```
+
+**Best Practices**:
+- ✅ Use toasts for non-blocking notifications (success, info, warnings)
+- ✅ Auto-hide after 5 seconds for success/info
+- ✅ Keep error toasts visible longer (10+ seconds) or require manual dismissal
+- ✅ Include clear, actionable messages
+- ✅ Use semantic icons (check, exclamation, info, warning)
+- ✅ Stack multiple toasts vertically
+- ✅ Remove from DOM after dismissal to prevent memory leaks
+
+#### Field-Level Validation Errors
+
+For form field validation, use inline errors **underneath the field** (not toasts):
+
 ```html
 <!-- Inline error -->
 <input type="email" class="form-control is-invalid" value="invalidemail">
