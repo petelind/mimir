@@ -353,12 +353,58 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 [License details here]
 
+## Learning Resources
+
+### New to Django?
+
+**Quick Read** (20 min): [Django at a Glance](https://docs.djangoproject.com/en/stable/intro/overview/)
+- Official Django overview
+- Covers models, views, templates, URL routing
+- Perfect primer before diving into Mimir's codebase
+
+**Video Tutorial** (30 min): [Django For Everybody - Introduction](https://www.youtube.com/watch?v=o0XbHvKxw7Y)
+- Dr. Chuck's accessible introduction
+- Covers request/response cycle and MTV pattern
+- From the popular "Django for Everybody" course
+
+**Bonus Quick Reference**: [Django Cheat Sheet](https://github.com/lucrae/django-cheat-sheet)
+- One-page reference for common patterns
+- Models, views, templates, forms at a glance
+
+### New to HTMX?
+
+**Quick Read** (15 min): [HTMX Documentation - Introduction](https://htmx.org/docs/)
+- Official docs covering core concepts
+- AJAX requests with HTML attributes
+- Swap strategies and event handling
+
+**Video Tutorial** (25 min): [HTMX Crash Course](https://www.youtube.com/watch?v=r-GSGH2RxJs)
+- Practical examples of HTMX in action
+- Progressive enhancement without JavaScript
+- Perfect complement to Mimir's server-side approach
+
+**Interactive Examples** (10 min): [HTMX Examples](https://htmx.org/examples/)
+- Click Delete Row, Edit Row, Infinite Scroll examples
+- Shows patterns Mimir uses for CRUD operations
+- Live demos you can inspect
+
+### How Mimir Uses These Technologies
+
+- **Django**: Custom views (no Django Forms), repository pattern, pytest testing
+- **HTMX**: Partial page updates, form submissions, dynamic content loading
+- **Together**: Server-rendered UI with smooth interactivity, testable without browser automation
+
+See [docs/architecture/SAO.md](docs/architecture/SAO.md) for Mimir's specific implementation patterns.
+
+---
+
 ## Learn More
 
 - **Architecture**: [docs/architecture/SAO.md](docs/architecture/SAO.md) - Complete system design
-- **User Journey**: [docs/ux/user_journey.md](docs/ux/user_journey.md) - Complete Acts 0-15 narrative with all screens
+- **User Journey**: [docs/features/user_journey.md](docs/features/user_journey.md) - Complete Acts 0-15 narrative with all screens
 - **Feature Files**: [docs/features/](docs/features/) - 46 BDD specifications covering full CRUDLF for all entities
 - **Screen Flow**: [docs/ux/2_dialogue-maps/screen-flow.drawio](docs/ux/2_dialogue-maps/screen-flow.drawio) - Visual MVP flow diagram
+- **UI Guidelines**: [docs/ux/IA_guidelines.md](docs/ux/IA_guidelines.md) - Bootstrap design system, forms, validation, toasts
 - **GitHub Issues**: [MVP Milestone](https://github.com/petelind/mimir/milestone/2) - Track development progress
 - **MCP Protocol**: [Model Context Protocol Specification](https://spec.modelcontextprotocol.io/)
 
