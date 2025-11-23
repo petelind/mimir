@@ -1,15 +1,27 @@
 ---
-description: E2E Testing with Django LiveServerTestCase + Playwright
+description: E2E Testing Strategy - Split into Feature ATs and Journey Certification
 auto_execution_mode: 3
 ---
 
-# E2E Test Implementation Workflow
+# E2E Testing Strategy (DEPRECATED - See Split Workflows)
 
-This workflow guides you through implementing E2E tests for Django + HTMX applications using **Django Test Client**.
+**⚠️ This workflow has been split into two focused workflows:**
 
-**Approach:** Use Django's Test Client to simulate complete user journeys. Faster, more reliable, and better Django integration than browser-based tests.
+1. **`/dev-4-1-feature-at`** - Feature Acceptance Tests (Django Test Client)
+   - Fast, comprehensive testing of individual features
+   - All scenarios from `.feature` files
+   - Run on every commit
 
-**When implementing tests** - assume app is already working, so if there are discrepancies between feature files and implementation - implementation takes precedence.
+2. **`/dev-4-2-journey-certification`** - User Journey Certification (Playwright + LiveServer)
+   - Browser-based testing of complete user journeys
+   - HTMX, JavaScript, UI validation
+   - Run on PR merge / nightly
+
+**Use the split workflows instead of this one.**
+
+---
+
+## Original Content (For Reference Only)
 
 ---
 
@@ -274,24 +286,25 @@ class TestWorkflowE2E:
 
 ---
 
-## Decision Tree: TestCase vs LiveServerTestCase
+## Decision Tree: Which Test Approach to Use
 
 ```
-Can you test without browser?
-├─ Yes → Use Django TestCase (90% of tests)
-│         - View returns correct status
-│         - Template context is correct
-│         - Forms submit properly
-│         - Redirects work
+What are you testing?
+├─ Individual views/functions → Use Django TestCase with pytest
+│         - Single view behavior
+│         - Template context validation
+│         - Form validation logic
+│         - Helper function logic
         
-└─ Need live server? → Use pytest + Django Test Client (E2E tests)
-          - Complete user journeys
-          - Multi-step workflows  
-          - Form submissions with redirects
+└─ Complete user journeys → Use pytest + Django Test Client (E2E tests)
+          - Multi-step workflows across multiple views
+          - End-to-end user flows (register → login → action)
+          - Form submissions with redirects and session state
           - HTMX endpoint validation
-          - Database state verification
+          - Database state verification across operations
+          - NO live server needed
+          - NO browser needed
           - Faster than browser-based tests
-          - No Playwright/browser setup needed
 ```
 
 ---
