@@ -853,8 +853,9 @@ From dashboard screenshot:
 **Current Navbar Structure** (`templates/base.html`):
 
 **Active Links:**
-- **Mimir** (home) - `/` - Dashboard
-- **Playbooks** - `/playbooks/` - ✅ Implemented
+- **Mimir** (brand/home) - `/` - ✅ Implemented
+- **Dashboard** - `/dashboard/` - Icon: `fa-gauge` - ✅ Implemented
+- **Playbooks** - `/playbooks/` - Icon: `fa-book-sparkles` - ✅ Implemented
 - **User Menu** - Login/Logout - ✅ Implemented
 
 **Placeholder Links (Disabled - Coming Soon):**
@@ -905,6 +906,8 @@ Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
 - ✅ Active state highlighting when on feature pages
 
 **Icon Selection:**
+- Dashboard: `fa-gauge` (metrics/overview)
+- Playbooks: `fa-book-sparkles` (collections)
 - Workflows: `fa-diagram-project` (flowcharts)
 - Phases: `fa-layer-group` (stacked layers)
 - Activities: `fa-list-check` (task checklists)
@@ -912,7 +915,6 @@ Scenario: [FEATURE]-NAVBAR-02 Navigate to [Feature] from any page
 - Roles: `fa-user-tag` (tagged users)
 - Howtos: `fa-book-open` (guides)
 - PIPs: `fa-lightbulb` (ideas)
-- Playbooks: `fa-book-sparkles` (collections)
 
 ---
 
