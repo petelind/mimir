@@ -280,3 +280,183 @@ def register(request):
             'username': username,
             'email': email
         })
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_request(request):
+    """
+    Display password reset request form and send reset email.
+    
+    Uses console email backend per AUTH_IMPLEMENTATION_PLAN.md.
+    
+    Template: accounts/password_reset.html
+    Context:
+        errors: dict - Field-specific errors
+        email: str - Preserved email on error
+        success: bool - Email sent successfully
+    
+    :param request: Django request object
+    :return: Rendered password reset template
+    """
+    logger.info(f"Password reset page accessed via {request.method}")
+    
+    if request.method == 'GET':
+        logger.info("Displaying password reset form")
+        return render(request, 'accounts/password_reset.html', {
+            'errors': {},
+            'email': '',
+            'success': False
+        })
+    
+    # POST request - send reset email
+    email = request.POST.get('email', '').strip()
+    
+    logger.info(f"Password reset request for email: {email}")
+    
+    # Validate email
+    if not email:
+        logger.warning("Password reset: empty email")
+        return render(request, 'accounts/password_reset.html', {
+            'errors': {'email': ['This field is required.']},
+            'email': email,
+            'success': False
+        })
+    
+    # Check if user exists (security: always show success to prevent enumeration)
+    try:
+        user = User.objects.get(email=email)
+        logger.info(f"Password reset: user found for email {email}")
+        
+        # Generate reset token (simplified - in production use django.contrib.auth.tokens)
+        from django.utils.http import urlsafe_base64_encode
+        from django.utils.encoding import force_bytes
+        import secrets
+        
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = secrets.token_urlsafe(32)
+        
+        # Store token in session (simplified - production should use proper token generator)
+        request.session[f'password_reset_{uid}'] = {
+            'token': token,
+            'user_id': user.pk,
+            'timestamp': str(__import__('datetime').datetime.now())
+        }
+        
+        # Send email (console backend - will print to console)
+        from django.core.mail import send_mail
+        from django.urls import reverse
+        
+        reset_url = request.build_absolute_uri(
+            reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+        )
+        
+        send_mail(
+            subject='Password Reset - Mimir',
+            message=f'Click the link to reset your password:\n\n{reset_url}\n\nIf you did not request this, please ignore this email.',
+            from_email='noreply@mimir.local',
+            recipient_list=[email],
+            fail_silently=False,
+        )
+        
+        logger.info(f"Password reset email sent to {email}")
+    except User.DoesNotExist:
+        # Security: Don't reveal if email exists
+        logger.warning(f"Password reset requested for non-existent email: {email}")
+    
+    # Always show success message (security best practice)
+    return render(request, 'accounts/password_reset.html', {
+        'errors': {},
+        'email': email,
+        'success': True
+    })
+
+
+@require_http_methods(["GET", "POST"])
+def password_reset_confirm(request, uidb64, token):
+    """
+    Confirm password reset and set new password.
+    
+    Template: accounts/password_reset_confirm.html
+    Context:
+        errors: dict - Field-specific errors
+        valid_link: bool - Token is valid
+        success: bool - Password reset successfully
+    
+    :param request: Django request object
+    :param uidb64: str - Base64 encoded user ID
+    :param token: str - Reset token
+    :return: Rendered password reset confirm template
+    """
+    from django.utils.http import urlsafe_base64_decode
+    
+    logger.info(f"Password reset confirm accessed via {request.method}")
+    
+    # Validate token
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        session_data = request.session.get(f'password_reset_{uidb64}')
+        
+        if not session_data or session_data['token'] != token:
+            logger.warning(f"Invalid password reset token for uid {uid}")
+            return render(request, 'accounts/password_reset_confirm.html', {
+                'valid_link': False,
+                'errors': {},
+                'success': False
+            })
+        
+        user = User.objects.get(pk=session_data['user_id'])
+        logger.info(f"Valid password reset token for user {user.username}")
+        
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist, KeyError):
+        logger.error("Invalid password reset link")
+        return render(request, 'accounts/password_reset_confirm.html', {
+            'valid_link': False,
+            'errors': {},
+            'success': False
+        })
+    
+    if request.method == 'GET':
+        return render(request, 'accounts/password_reset_confirm.html', {
+            'valid_link': True,
+            'errors': {},
+            'success': False
+        })
+    
+    # POST - set new password
+    password = request.POST.get('password', '')
+    password_confirm = request.POST.get('password_confirm', '')
+    
+    # Validate passwords
+    errors = {}
+    if not password:
+        errors['password'] = ['This field is required.']
+    elif len(password) < 8:
+        errors['password'] = ['Password must be at least 8 characters long.']
+    
+    if not password_confirm:
+        errors['password_confirm'] = ['This field is required.']
+    elif password and password_confirm and password != password_confirm:
+        errors['password_confirm'] = ['Passwords do not match.']
+    
+    if errors:
+        logger.warning(f"Password reset validation failed for user {user.username}")
+        return render(request, 'accounts/password_reset_confirm.html', {
+            'valid_link': True,
+            'errors': errors,
+            'success': False
+        })
+    
+    # Set new password
+    user.set_password(password)
+    user.save()
+    
+    # Clear session token
+    del request.session[f'password_reset_{uidb64}']
+    
+    logger.info(f"Password reset successful for user {user.username}")
+    
+    return render(request, 'accounts/password_reset_confirm.html', {
+        'valid_link': True,
+        'errors': {},
+        'success': True
+    })
