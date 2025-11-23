@@ -11,7 +11,6 @@ Based on `templates/base.html`, the navbar contains:
 ### Active Links (Implemented)
 - **Mimir** (brand/home) - `/` - Dashboard
 - **Playbooks** - `/playbooks/` - Active ✅
-- **PIPs** - `/pip/list/` - Active ✅
 - **User Menu** - Login/Logout - Active ✅
 
 ### Placeholder Links (Coming Soon - Disabled)
@@ -21,6 +20,7 @@ Based on `templates/base.html`, the navbar contains:
 - **Artifacts** - `#` - Disabled (placeholder) - Icon: `fa-file-lines`
 - **Roles** - `#` - Disabled (placeholder) - Icon: `fa-user-tag`
 - **Howtos** - `#` - Disabled (placeholder) - Icon: `fa-book-open`
+- **PIPs** - `#` - Disabled (placeholder) - Icon: `fa-lightbulb` (accessed via Playbook tabs currently)
 
 **Activating Placeholders:**
 When implementing a feature with a placeholder:
@@ -48,17 +48,24 @@ The following feature files have `NAVBAR` scenarios at the end to ensure navbar 
 
 ### 2. PIPs (`act-9-pips/pips-manage.feature`)
 
+**Status:** 🔜 Placeholder (currently accessed via Playbook tabs)
+
 **Scenarios:**
 - `PIP-NAVBAR-01`: PIPs link appears in main navigation
 - `PIP-NAVBAR-02`: Navigate to PIPs list from any page
 
-**Implementation Checklist:**
+**Implementation Checklist (for global PIPs list):**
 - [ ] Link appears in navbar with `data-testid="nav-pips"`
 - [ ] Icon: `fa-lightbulb`
 - [ ] Tooltip: "Review Playbook Improvement Proposals"
-- [ ] Links to `/pip/list/` → `FOB-PIPS-LIST-1`
+- [ ] Create `/pip/list/` route → `FOB-PIPS-LIST-1`
 - [ ] Shows PIPs across all playbooks (global view)
 - [ ] Active state highlighting when on PIPs pages
+- [ ] Remove `disabled` class when global list is implemented
+
+**Current Implementation:**
+- PIPs are accessed via "PIPs" tab within individual Playbook views
+- Feature file shows: `When she clicks "PIPs" tab` (within playbook context)
 
 ### 3. Settings (`act-14-settings/settings.feature`)
 
