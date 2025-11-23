@@ -36,10 +36,93 @@ def _validate_login_data(username, password):
     return errors
 
 
+def _handle_remember_me(request, remember_me):
+    """
+    Configure session expiry based on remember me checkbox.
+    
+    Internal helper for login_view.
+    
+    :param request: Django request object with authenticated user
+    :param remember_me: bool - Remember me checkbox state. Example: True  
+    :return: None
+    
+    Side Effects:
+        - Sets request.session.set_expiry(2592000) if remember_me=True (30 days)
+        - Sets request.session.set_expiry(1209600) if remember_me=False (2 weeks)
+    """
+    if remember_me:
+        request.session.set_expiry(2592000)  # 30 days
+        logger.info(f"User {request.user.username} logged in with remember me (30 days session)")
+    else:
+        request.session.set_expiry(1209600)  # 2 weeks  
+        logger.info(f"User {request.user.username} logged in without remember me (2 weeks session)")
+
+
 @require_http_methods(["GET", "POST"])
 def login_view(request):
-    """Login view - skeleton only."""
-    raise NotImplementedError("Login view pending")
+    """
+    Display login form and handle authentication.
+    
+    Custom implementation without Django Forms per SAO.md architecture.
+    
+    Template: accounts/login.html
+    Context:
+        errors: dict - Field-specific and non-field errors
+        username: str - Preserved username on error
+    
+    :param request: Django request object
+    :return: Rendered login template or redirect to dashboard
+    """
+    logger.info(f"Login page accessed via {request.method}")
+    
+    # GET request - display form
+    if request.method == 'GET':
+        logger.info("Displaying login form")
+        return render(request, 'accounts/login.html', {
+            'errors': {},
+            'username': ''
+        })
+    
+    # POST request - handle login
+    username = request.POST.get('username', '').strip()
+    password = request.POST.get('password', '')
+    remember_me = request.POST.get('remember_me') == 'on'
+    
+    logger.info(f"Login attempt for username: {username}, remember_me: {remember_me}")
+    
+    # Validate input
+    errors = _validate_login_data(username, password)
+    if errors:
+        logger.warning(f"Login validation failed for username: {username}, errors: {list(errors.keys())}")
+        return render(request, 'accounts/login.html', {
+            'errors': errors,
+            'username': username
+        })
+    
+    # Authenticate
+    user = authenticate(request, username=username, password=password)
+    
+    if user is not None:
+        # Successful authentication
+        auth_login(request, user)
+        logger.info(f"User {username} authenticated successfully")
+        
+        # Handle remember me
+        _handle_remember_me(request, remember_me)
+        
+        # Redirect to dashboard
+        logger.info(f"Redirecting user {username} to dashboard")
+        return redirect('/dashboard/')
+    else:
+        # Authentication failed
+        logger.warning(f"Authentication failed for username: {username}")
+        errors = {
+            '__all__': ['Invalid username or password. Please try again.']
+        }
+        return render(request, 'accounts/login.html', {
+            'errors': errors,
+            'username': username
+        })
 
 
 def custom_logout_view(request):
