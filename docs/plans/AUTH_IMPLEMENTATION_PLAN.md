@@ -406,11 +406,13 @@
 
 ---
 
-### Phase 6: Two-Tier Testing Strategy ✅ COMPLETE (Tier 1) / 🔄 OPTIONAL (Tier 2)
+### Phase 6: Testing Implementation ✅ COMPLETE
 
-**Purpose**: Comprehensive testing with two tiers per `/dev-4-1-feature-at` and `/dev-4-2-journey-certification`
+**Purpose**: Comprehensive testing per two-tier strategy (Tier 1 sufficient for AUTH feature)
 
-#### Tier 1: Feature Acceptance Tests (AT) ✅ COMPLETE
+**Note**: Two-tier testing strategy exists per `/dev-4-1-feature-at` and `/dev-4-2-journey-certification`. For AUTH feature, **Tier 1 provides complete coverage**. Tier 2 (browser-based) reserved for future features with heavy HTMX/JavaScript.
+
+#### Tier 1: Feature Acceptance Tests (AT) ✅ COMPLETE (SATISFIES PHASE 6)
 
 - [x] **6.1** Feature-level integration tests with Django Test Client
   - **Files**: 
@@ -434,22 +436,23 @@
     5. Registration validation errors
   - **Status**: 5 tests passing in 1.5s
 
-#### Tier 2: Journey Certification (Browser-Based) 🔄 OPTIONAL ENHANCEMENT
+#### Tier 2: Journey Certification (Browser-Based) � NOT PART OF AUTH IMPLEMENTATION
 
-- [ ] **6.3** OPTIONAL: Rewrite 1-2 critical journeys with Playwright
-  - **File**: `tests/e2e/test_journey_new_user.py` (to be created)
-  - **Tool**: LiveServerTestCase + Playwright
-  - **Purpose**: Validate HTMX, JavaScript, UI rendering
-  - **Fixture**: `tests/fixtures/journey_seed.json`
-  - **Per workflow**: `.windsurf/workflows/dev-4-2-journey-certification.md`
-  - **When needed**: For features with heavy HTMX/JavaScript
-  - **Current status**: Not needed for AUTH (minimal JavaScript)
-  - **Future**: Consider for dashboard navigation, workflow HTMX interactions
+**Status**: Not implemented for AUTH feature (not needed)
 
-- [ ] **6.4** OPTIONAL: Commit Tier 2 tests (if implemented)
-  - Commit: `test(auth): add browser-based journey certification tests`
+**Rationale**: 
+- AUTH feature has minimal JavaScript/HTMX interactions
+- Tier 1 tests provide complete scenario coverage (34 tests)
+- Django Test Client validates all authentication logic, redirects, sessions
+- No visual/UI complexity requiring browser validation
 
-**Note**: Tier 1 tests (Django Test Client) provide excellent coverage for AUTH feature. Tier 2 (Playwright) optional for future features with complex HTMX/JavaScript interactions.
+**Future Use**:
+- **When needed**: Features with heavy HTMX (e.g., dashboard navigation, dynamic workflow updates)
+- **Tool**: LiveServerTestCase + Playwright
+- **Per workflow**: `.windsurf/workflows/dev-4-2-journey-certification.md`
+- **Example**: Dashboard navigation with HTMX tab switching would benefit from Tier 2 tests
+
+**This is guidance for FUTURE features, not a requirement for AUTH completion.**
 
 ---
 
@@ -489,24 +492,31 @@
 ### Unit Tests
 - `tests/unit/test_auth_config.py` - ✅ Already exists
 
-### Tier 1: Feature Acceptance Tests (Django Test Client) ✅ COMPLETE
+### Tests Implemented for AUTH Feature ✅ COMPLETE
+
+**Tier 1: Feature Acceptance Tests (Django Test Client)**
 - `tests/integration/test_auth_login.py` - AUTH-01, AUTH-02 (8 tests) ✅
 - `tests/integration/test_auth_registration.py` - AUTH-03 (9 tests) ✅
 - `tests/integration/test_auth_password_reset.py` - AUTH-04 (8 tests) ✅
 - `tests/integration/test_auth_logout.py` - AUTH-05 (5 tests) ✅
 - `tests/e2e/test_auth_e2e.py` - Complete user journeys (5 tests) ✅
 
-**Tier 1 Status**: 34 tests passing in ~5 seconds
+**Status**: 34 tests passing in ~5 seconds
 **Per workflow**: `.windsurf/workflows/dev-4-1-feature-at.md`
 
-### Tier 2: Journey Certification (LiveServerTestCase + Playwright) 🔄 OPTIONAL
-- `tests/e2e/test_journey_new_user.py` - Browser-based journey (not yet created)
-- `tests/fixtures/journey_seed.json` - Test data fixture (not yet created)
+### Tier 2: Not Implemented for AUTH (Not Needed) 📋
 
-**Tier 2 Status**: Optional enhancement for future features with heavy HTMX/JS
+**Tier 2** (browser-based with LiveServerTestCase + Playwright) is **not part of AUTH implementation**.
+
+**Why not needed**:
+- AUTH has minimal JavaScript/HTMX
+- Tier 1 provides complete coverage
+- No visual/UI complexity requiring browser validation
+
+**When to use Tier 2**: Future features with heavy HTMX/JavaScript interactions
 **Per workflow**: `.windsurf/workflows/dev-4-2-journey-certification.md`
 
-**Total Tests Implemented**: 34 test functions (all Tier 1)
+**Total Tests Implemented for AUTH**: 34 test functions
 
 ---
 
