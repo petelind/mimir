@@ -4,17 +4,17 @@ from django.conf import settings
 
 def test_login_url_configured():
     """Test LOGIN_URL is set correctly."""
-    assert settings.LOGIN_URL == "/accounts/login/"
+    assert settings.LOGIN_URL == "/auth/user/login/"
 
 
 def test_login_redirect_url_configured():
     """Test LOGIN_REDIRECT_URL is set correctly."""
-    assert settings.LOGIN_REDIRECT_URL == "/"
+    assert settings.LOGIN_REDIRECT_URL == "/dashboard/"
 
 
 def test_logout_redirect_url_configured():
     """Test LOGOUT_REDIRECT_URL is set correctly."""
-    assert settings.LOGOUT_REDIRECT_URL == "/accounts/login/"
+    assert settings.LOGOUT_REDIRECT_URL == "/auth/user/login/"
 
 
 def test_session_cookie_age_default():
