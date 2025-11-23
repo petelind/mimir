@@ -8,10 +8,26 @@ This guide ensures that when a feature block is complete, we don't forget to wir
 
 Based on `templates/base.html`, the navbar contains:
 
-- **Mimir** (brand/home) - `/`
-- **Playbooks** - `/playbooks/` 
-- **PIPs** - `/pip/list/`
-- **User Menu** - Login/Logout
+### Active Links (Implemented)
+- **Mimir** (brand/home) - `/` - Dashboard
+- **Playbooks** - `/playbooks/` - Active ✅
+- **PIPs** - `/pip/list/` - Active ✅
+- **User Menu** - Login/Logout - Active ✅
+
+### Placeholder Links (Coming Soon - Disabled)
+- **Workflows** - `#` - Disabled (placeholder) - Icon: `fa-diagram-project`
+- **Phases** - `#` - Disabled (placeholder) - Icon: `fa-layer-group`
+- **Activities** - `#` - Disabled (placeholder) - Icon: `fa-list-check`
+- **Artifacts** - `#` - Disabled (placeholder) - Icon: `fa-file-lines`
+- **Roles** - `#` - Disabled (placeholder) - Icon: `fa-user-tag`
+- **Howtos** - `#` - Disabled (placeholder) - Icon: `fa-book-open`
+
+**Activating Placeholders:**
+When implementing a feature with a placeholder:
+1. Remove `disabled` class from the `<a>` tag
+2. Change `href="#"` to actual route (e.g., `href="/workflows/"`)
+3. Update tooltip from "Coming soon: ..." to active description
+4. Ensure feature NAVBAR scenarios pass
 
 ## Feature Files with Navbar Scenarios
 
