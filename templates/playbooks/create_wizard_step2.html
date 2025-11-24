@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Playbook - Step 2{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_create' %}">Create New</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Step 2</li>
+        </ol>
+    </nav>
+
+    <!-- Wizard Progress -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-solid fa-circle-check fa-2x text-success"></i>
+                        <p class="mt-2 text-success">Basic Information</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step active">
+                        <i class="fa-solid fa-circle-2 fa-2x text-primary"></i>
+                        <p class="mt-2 fw-bold">Add Workflows</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-regular fa-circle-3 fa-2x text-muted"></i>
+                        <p class="mt-2 text-muted">Publishing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2 Form -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fa-solid fa-sitemap"></i>
+                Step 2: Add Workflows
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info">
+                <i class="fa-solid fa-info-circle"></i>
+                You can add your first workflow now or skip this step and add workflows later.
+            </div>
+
+            <form method="post" action="{% url 'playbook_create_step2' %}" id="workflow-form">
+                {% csrf_token %}
+                
+                <!-- Workflow Name -->
+                <div class="mb-3">
+                    <label for="{{ form.workflow_name.id_for_label }}" class="form-label">
+                        Workflow Name
+                    </label>
+                    {{ form.workflow_name }}
+                    <small class="form-text text-muted">{{ form.workflow_name.help_text }}</small>
+                </div>
+
+                <!-- Workflow Description -->
+                <div class="mb-3">
+                    <label for="{{ form.workflow_description.id_for_label }}" class="form-label">
+                        Workflow Description
+                    </label>
+                    {{ form.workflow_description }}
+                    <small class="form-text text-muted">{{ form.workflow_description.help_text }}</small>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'playbook_create' %}" 
+                       class="btn btn-secondary"
+                       data-testid="back-button"
+                       data-bs-toggle="tooltip"
+                       title="Go back to Basic Information">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                    <div>
+                        <button type="submit" 
+                                name="skip" 
+                                value="true"
+                                class="btn btn-outline-secondary me-2"
+                                data-bs-toggle="tooltip"
+                                title="Skip workflow and proceed to publishing">
+                            <i class="fa-solid fa-forward"></i> Skip
+                        </button>
+                        <button type="submit" 
+                                class="btn btn-primary"
+                                data-bs-toggle="tooltip"
+                                title="Add workflow and proceed to publishing">
+                            Next: Publishing <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .wizard-step {
+        padding: 15px;
+    }
+    .wizard-step.active i {
+        color: #0d6efd !important;
+    }
+</style>
+{% endblock %}
