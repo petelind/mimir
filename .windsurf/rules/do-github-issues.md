@@ -15,6 +15,7 @@ c) easy (simple scenario/screen/modal/component)-medium(avdanced scenario/compon
 2. Start name with the Scenario prefix when available, like "LOG1.1: Scenario A" etc. 
 3. Transfer scenario content to description.
 4. If there is plan for the scenario/features in docs/plans - add plan contents, as approved by the user, to the description. Keep in mind that your developer needs checklist-style guidance giving them a chance to do the right thing even though they can be too lazy to read the docs or to understand them.
+5. Before creating issue - check if issue with this prefix already exists. If yes - stop and inform user.
 
 *When asked to update an Issue:*
 **Main idea: all people working on the issue need to be able to understand what was done, why, and what you intend to do next.**
