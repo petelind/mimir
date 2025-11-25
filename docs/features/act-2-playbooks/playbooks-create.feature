@@ -3,7 +3,7 @@ Feature: FOB-PLAYBOOKS-CREATE_PLAYBOOK-1 Create New Playbook ✅
   I want to create a new playbook using a wizard
   So that I can define and organize my methodology
   
-  Status: ✅ COMPLETE - 23/25 scenarios passing (92%)
+  Status: ✅ COMPLETE - 25/25 tests passing (100%)
   Branch: feature/playbooks-crudv
   Issue: #28
 
