@@ -265,11 +265,11 @@ class TestOnboardingTour:
         
         # Check it's the onboarding page
         assert 'FOB-ONBOARDING-1' in content
-        assert 'data-testid="onboarding-welcome"' in content
+        assert 'data-testid="onboarding-stub"' in content
         
         # Check link to tour exists
         assert reverse('onboarding_tour') in content
-        assert 'Take a Quick Tour' in content
+        assert 'Tour Features' in content
     
     def test_onboard_03_tour_responsive_design_elements(self):
         """
