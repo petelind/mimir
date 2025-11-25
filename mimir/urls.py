@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("accounts.urls")),  # Changed from accounts/ per SAO.md URL convention
     path("dashboard/", methodology_views.dashboard, name="dashboard"),
+    path("dashboard/activities/", methodology_views.dashboard_activities, name="dashboard_activities"),
     path("", methodology_views.index, name="index"),
     path("playbooks/", include("methodology.playbook_urls")),
     path("playbooks/", include("methodology.workflow_urls")),  # Workflow URLs scoped to playbook

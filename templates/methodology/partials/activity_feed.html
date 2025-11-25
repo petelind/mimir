@@ -1,0 +1,38 @@
+{# templates/methodology/partials/activity_feed.html #}
+{# Activity feed partial for HTMX updates #}
+
+{% if recent_activities %}
+    <div class="activity-feed">
+        {% for activity in recent_activities %}
+        <div class="d-flex align-items-start mb-3 pb-2 border-bottom activity-item" 
+             data-testid="activity-item-{{ forloop.counter }}"
+             hx-target="#activity-detail-panel"
+             hx-swap="innerHTML">
+            <div class="me-2">
+                <i class="{{ activity.get_icon_class }} text-muted"></i>
+            </div>
+            <div class="flex-grow-1">
+                <div class="small">
+                    <span class="fw-medium">{{ activity.description }}</span>
+                    {% if activity.playbook %}
+                    <a href="/playbooks/playbook/view/{{ activity.playbook.id }}/" 
+                       class="text-decoration-none"
+                       data-testid="activity-playbook-link-{{ forloop.counter }}">
+                        {{ activity.playbook.name }}
+                    </a>
+                    {% endif %}
+                </div>
+                <small class="text-muted">
+                    {{ activity.timestamp|date:"M d, H:i" }}
+                </small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-4" data-testid="no-activities">
+        <i class="fas fa-clock-rotate-left fa-3x text-muted mb-3"></i>
+        <h6 class="text-muted">No recent activity</h6>
+        <p class="text-muted small">Your activity will appear here as you use Mimir</p>
+    </div>
+{% endif %}

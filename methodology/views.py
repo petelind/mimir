@@ -73,3 +73,44 @@ def dashboard(request):
             'playbook_count': 0,
             'error_message': 'Unable to load some dashboard data'
         })
+
+
+@login_required
+def dashboard_activities(request):
+    """
+    HTMX endpoint for refreshing activity feed.
+    
+    Returns updated activity feed HTML fragment.
+    
+    Args:
+        request: Django request object with optional 'hours' parameter
+        
+    Returns:
+        HttpResponse: HTML fragment for activity feed
+        
+    Example:
+        GET /dashboard/activities/?hours=24
+    """
+    logger.info(f"User {request.user.username} requested activity feed refresh")
+    
+    try:
+        from methodology.services.activity_service import ActivityService
+        activity_service = ActivityService()
+        
+        # Get hours parameter (default to 24)
+        hours = int(request.GET.get('hours', 24))
+        
+        # Get recent activities
+        recent_activities = activity_service.get_recent_activities(request.user, limit=10)
+        
+        logger.info(f"Returned {len(recent_activities)} activities for {request.user.username}")
+        
+        return render(request, 'methodology/partials/activity_feed.html', {
+            'recent_activities': recent_activities,
+        })
+        
+    except Exception as e:
+        logger.error(f"Error refreshing activity feed for {request.user.username}: {e}")
+        return render(request, 'methodology/partials/activity_feed.html', {
+            'recent_activities': [],
+        })

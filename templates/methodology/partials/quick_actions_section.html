@@ -1,0 +1,50 @@
+{# templates/methodology/partials/quick_actions_section.html #}
+{# Quick Actions section partial for dashboard #}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card" data-testid="quick-actions-section">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt text-warning"></i>
+                    Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="/playbooks/playbook/create/" 
+                           class="btn btn-primary btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center text-decoration-none"
+                           data-testid="quick-action-new-playbook"
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="top" 
+                           title="Create a new playbook from scratch">
+                            <i class="fas fa-plus-circle fa-2x mb-2"></i>
+                            <span>+ New Playbook</span>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-outline-secondary btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center disabled"
+                                data-testid="quick-action-import-playbook"
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                title="Import playbook from file (coming soon)">
+                            <i class="fas fa-file-import fa-2x mb-2"></i>
+                            <span>Import Playbook</span>
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-outline-secondary btn-lg w-100 h-100 d-flex flex-column justify-content-center align-items-center disabled"
+                                data-testid="quick-action-sync-homebase"
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                title="Sync with Homebase repository (coming soon)">
+                            <i class="fas fa-sync fa-2x mb-2"></i>
+                            <span>Sync with Homebase</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
