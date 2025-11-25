@@ -5,7 +5,9 @@ auto_execution_mode: 3
 
 # Frontend Implementation Workflow
 
-**IMPORTANT**: Frontend is Django templates with HTMX for interactivity. Server-side rendering with minimal JavaScript.
+**IMPORTANT**: 
+I. Frontend is Django templates with HTMX for interactivity. Server-side rendering with minimal JavaScript.
+II. Read docs/ux/IA_guidelines.md before implementing the form and identify sections which will be applied to the page/component we are working on.
 
 1. Review URL routing and template structure:
    - Check Django URL patterns - does anything need to be added or changed?
@@ -110,6 +112,7 @@ auto_execution_mode: 3
    - Required on: buttons, links, form inputs, containers, error messages
 
 8. Styling:
+   - Read docs/ux/IA_guidelines.md to identify what applies to the page/component we are building and apply them
    - Use simple CSS (no complex frameworks needed)
    - Keep styles in static/css/
    - Use semantic HTML elements

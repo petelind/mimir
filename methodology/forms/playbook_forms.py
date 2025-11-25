@@ -48,6 +48,17 @@ class PlaybookBasicInfoForm(forms.ModelForm):
                 'data-testid': 'visibility-select'
             }),
         }
+        error_messages = {
+            'name': {
+                'required': 'Name is required. Must be 3-100 characters.',
+            },
+            'description': {
+                'required': 'Description is required. Must be 10-500 characters.',
+            },
+            'category': {
+                'required': 'Please select a category.',
+            },
+        }
     
     def clean_name(self):
         """Validate name length and uniqueness."""

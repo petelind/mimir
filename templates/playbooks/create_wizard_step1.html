@@ -151,13 +151,14 @@
 
                 <!-- Action Buttons -->
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="{% url 'playbook_list' %}" 
-                       class="btn btn-secondary"
-                       data-testid="cancel-wizard"
-                       data-bs-toggle="tooltip"
-                       title="Cancel and return to playbooks list">
+                    <button type="button" 
+                            class="btn btn-secondary"
+                            data-testid="cancel-wizard"
+                            data-bs-toggle="modal"
+                            data-bs-target="#cancelConfirmModal"
+                            title="Cancel wizard">
                         <i class="fa-solid fa-times"></i> Cancel
-                    </a>
+                    </button>
                     <button type="submit" 
                             class="btn btn-primary"
                             data-bs-toggle="tooltip"
@@ -166,6 +167,39 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-labelledby="cancelConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelConfirmModalLabel">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>
+                    Cancel Playbook Creation?
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel? All entered information will be lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal"
+                        data-testid="keep-editing">
+                    <i class="fa-solid fa-arrow-left me-1"></i>
+                    Keep Editing
+                </button>
+                <a href="{% url 'playbook_list' %}" 
+                   class="btn btn-danger"
+                   data-testid="confirm-cancel">
+                    <i class="fa-solid fa-times me-1"></i>
+                    Yes, Cancel
+                </a>
+            </div>
         </div>
     </div>
 </div>
