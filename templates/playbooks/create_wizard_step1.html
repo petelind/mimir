@@ -56,13 +56,21 @@
                     <label for="{{ form.name.id_for_label }}" class="form-label">
                         Name <span class="text-danger">*</span>
                     </label>
-                    {{ form.name }}
+                    <input type="text" 
+                           name="name" 
+                           class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                           id="{{ form.name.id_for_label }}"
+                           value="{{ form.name.value|default:'' }}"
+                           placeholder="Enter playbook name (3-100 characters)"
+                           maxlength="100"
+                           required
+                           data-testid="name-input">
                     {% if form.name.errors %}
-                        <div class="text-danger mt-1" data-testid="error-name">
+                        <div class="invalid-feedback" data-testid="error-name">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
                             {{ form.name.errors.0 }}
                         </div>
                     {% endif %}
-                    <small class="form-text text-muted">{{ form.name.help_text }}</small>
                 </div>
 
                 <!-- Description Field -->
@@ -70,13 +78,20 @@
                     <label for="{{ form.description.id_for_label }}" class="form-label">
                         Description <span class="text-danger">*</span>
                     </label>
-                    {{ form.description }}
+                    <textarea name="description"
+                              class="form-control {% if form.description.errors %}is-invalid{% endif %}"
+                              id="{{ form.description.id_for_label }}"
+                              rows="4"
+                              placeholder="Enter playbook description (10-500 characters)"
+                              maxlength="500"
+                              required
+                              data-testid="description-input">{{ form.description.value|default:'' }}</textarea>
                     {% if form.description.errors %}
-                        <div class="text-danger mt-1" data-testid="error-description">
+                        <div class="invalid-feedback" data-testid="error-description">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
                             {{ form.description.errors.0 }}
                         </div>
                     {% endif %}
-                    <small class="form-text text-muted">{{ form.description.help_text }}</small>
                 </div>
 
                 <!-- Category Field -->
@@ -84,9 +99,21 @@
                     <label for="{{ form.category.id_for_label }}" class="form-label">
                         Category <span class="text-danger">*</span>
                     </label>
-                    {{ form.category }}
+                    <select name="category"
+                            class="form-select {% if form.category.errors %}is-invalid{% endif %}"
+                            id="{{ form.category.id_for_label }}"
+                            required
+                            data-testid="category-select">
+                        <option value="">Select a category...</option>
+                        <option value="product" {% if form.category.value == 'product' %}selected{% endif %}>Product</option>
+                        <option value="development" {% if form.category.value == 'development' %}selected{% endif %}>Development</option>
+                        <option value="research" {% if form.category.value == 'research' %}selected{% endif %}>Research</option>
+                        <option value="design" {% if form.category.value == 'design' %}selected{% endif %}>Design</option>
+                        <option value="other" {% if form.category.value == 'other' %}selected{% endif %}>Other</option>
+                    </select>
                     {% if form.category.errors %}
-                        <div class="text-danger mt-1" data-testid="error-category">
+                        <div class="invalid-feedback" data-testid="error-category">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
                             {{ form.category.errors.0 }}
                         </div>
                     {% endif %}
@@ -97,8 +124,14 @@
                     <label for="{{ form.tags.id_for_label }}" class="form-label">
                         Tags
                     </label>
-                    {{ form.tags }}
-                    <small class="form-text text-muted">{{ form.tags.help_text }}</small>
+                    <input type="text"
+                           name="tags"
+                           class="form-control"
+                           id="{{ form.tags.id_for_label }}"
+                           value="{{ form.tags.value|default:'' }}"
+                           placeholder="Enter tags separated by commas"
+                           data-testid="tags-input">
+                    <small class="form-text text-muted">Comma-separated tags (optional)</small>
                 </div>
 
                 <!-- Visibility Field -->
@@ -106,7 +139,14 @@
                     <label for="{{ form.visibility.id_for_label }}" class="form-label">
                         Visibility
                     </label>
-                    {{ form.visibility }}
+                    <select name="visibility"
+                            class="form-select"
+                            id="{{ form.visibility.id_for_label }}"
+                            data-testid="visibility-select">
+                        <option value="private" {% if form.visibility.value == 'private' or not form.visibility.value %}selected{% endif %}>Private (only me)</option>
+                        <option value="family" {% if form.visibility.value == 'family' %}selected{% endif %}>Family</option>
+                        <option value="local" {% if form.visibility.value == 'local' %}selected{% endif %}>Local only (not uploaded to Homebase)</option>
+                    </select>
                 </div>
 
                 <!-- Action Buttons -->

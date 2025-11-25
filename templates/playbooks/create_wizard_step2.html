@@ -62,8 +62,15 @@
                     <label for="{{ form.workflow_name.id_for_label }}" class="form-label">
                         Workflow Name
                     </label>
-                    {{ form.workflow_name }}
-                    <small class="form-text text-muted">{{ form.workflow_name.help_text }}</small>
+                    <input type="text"
+                           name="workflow_name"
+                           class="form-control"
+                           id="{{ form.workflow_name.id_for_label }}"
+                           value="{{ form.workflow_name.value|default:'' }}"
+                           placeholder="Enter workflow name"
+                           maxlength="100"
+                           data-testid="workflow-name-input">
+                    <small class="form-text text-muted">Name of the workflow (optional)</small>
                 </div>
 
                 <!-- Workflow Description -->
@@ -71,8 +78,13 @@
                     <label for="{{ form.workflow_description.id_for_label }}" class="form-label">
                         Workflow Description
                     </label>
-                    {{ form.workflow_description }}
-                    <small class="form-text text-muted">{{ form.workflow_description.help_text }}</small>
+                    <textarea name="workflow_description"
+                              class="form-control"
+                              id="{{ form.workflow_description.id_for_label }}"
+                              rows="3"
+                              placeholder="Enter workflow description"
+                              data-testid="workflow-description-input">{{ form.workflow_description.value|default:'' }}</textarea>
+                    <small class="form-text text-muted">Brief description of the workflow (optional)</small>
                 </div>
 
                 <!-- Action Buttons -->
