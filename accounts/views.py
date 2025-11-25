@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 
@@ -422,8 +423,6 @@ def password_reset_confirm(request, uidb64, token):
     :param token: str - Reset token
     :return: Rendered password reset confirm template
     """
-    from django.utils.http import urlsafe_base64_decode
-    
     logger.info(f"Password reset confirm accessed via {request.method}")
     
     # Validate token
