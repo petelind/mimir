@@ -1,317 +1,122 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}Tour of Features - Mimir{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/onboarding_tour.css' %}">
-{% endblock %}
-
 {% block content %}
-<div data-testid="onboarding-tour" class="container-fluid py-5">
+<div data-testid="onboarding-tour" class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-            <!-- Main Tour Card -->
-            <div class="card shadow-lg border-0 animate-fade-in">
-                <div class="card-body p-4 p-lg-5">
-                    <!-- Enhanced Progress Indicator -->
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body py-5">
+                    <!-- Progress Indicator -->
+                    <div class="text-center mb-4">
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 66.67%;" aria-valuenow="66.67" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-muted mt-2 mb-0">Step {{ current_step }} of {{ total_steps }}</p>
+                    </div>
+                    
+                    <!-- Header -->
                     <div class="text-center mb-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="progress-steps flex-grow-1">
-                                <div class="d-flex align-items-center">
-                                    <div class="step completed" data-step="1">
-                                        <div class="step-circle">
-                                            <i class="fa-solid fa-check"></i>
-                                        </div>
-                                        <span class="step-label">Welcome</span>
-                                    </div>
-                                    <div class="step-line flex-grow-1"></div>
-                                    <div class="step active" data-step="2">
-                                        <div class="step-circle">
-                                            <span>2</span>
-                                        </div>
-                                        <span class="step-label">Tour</span>
-                                    </div>
-                                    <div class="step-line flex-grow-1"></div>
-                                    <div class="step" data-step="3">
-                                        <div class="step-circle">
-                                            <span>3</span>
-                                        </div>
-                                        <span class="step-label">Complete</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress" style="height: 6px;">
-                            <div class="progress-bar bg-success progress-animated" 
-                                 role="progressbar" 
-                                 style="width: 66.67%;" 
-                                 aria-valuenow="66.67" 
-                                 aria-valuemin="0" 
-                                 aria-valuemax="100"></div>
-                        </div>
-                        <p class="text-muted mt-3 mb-0">
-                            <strong>Step {{ current_step }} of {{ total_steps }}</strong> - 
-                            Discover FOB's powerful features
+                        <h2 class="mb-3">
+                            <i class="fa-solid fa-compass text-primary"></i>
+                            Tour of Features
+                        </h2>
+                        <p class="lead text-muted">
+                            Discover how FOB can help you organize your work and collaborate effectively
                         </p>
                     </div>
                     
-                    <!-- Enhanced Header -->
-                    <div class="text-center mb-5">
-                        <div class="mb-4">
-                            <div class="icon-circle bg-primary bg-gradient text-white mx-auto" 
-                                 style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fa-solid fa-compass fa-2x"></i>
-                            </div>
-                        </div>
-                        <h1 class="display-6 mb-3 fw-bold">Tour of Features</h1>
-                        <p class="lead text-muted mx-auto" style="max-width: 600px;">
-                            Discover how FOB can help you organize your work and collaborate effectively. 
-                            Click on any feature to learn more about it.
-                        </p>
-                    </div>
-                    
-                    <!-- Feature Cards with Staggered Animation -->
-                    <div class="row g-4 mb-5 stagger-animation">
+                    <!-- Feature Cards -->
+                    <div class="row g-4 mb-5">
                         <!-- Workflows Card -->
                         <div class="col-md-6">
-                            <div class="card tour-card h-100 border-0 shadow-sm" 
-                                 data-testid="feature-workflows"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#featureModal"
-                                 data-feature="workflows"
-                                 data-title="Workflows"
-                                 data-description="Organize activities into structured processes"
-                                 data-details="Workflows in FOB help you create repeatable processes for your team. Define stages, set up dependencies, and track progress through complex operations.">
+                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-workflows">
                                 <div class="card-body text-center p-4">
-                                    <div class="feature-icon mb-3">
-                                        <div class="icon-wrapper bg-primary bg-gradient text-white rounded-circle mx-auto" 
-                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fa-solid fa-sitemap fa-2x"></i>
-                                        </div>
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-sitemap fa-3x text-primary"></i>
                                     </div>
-                                    <h4 class="card-title mb-3 fw-bold">Workflows</h4>
+                                    <h4 class="card-title mb-3">Workflows</h4>
                                     <p class="card-text text-muted">
                                         Organize activities into structured processes
                                     </p>
-                                    <div class="mt-auto">
-                                        <span class="badge bg-primary bg-gradient">Click to learn more</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Activities Card -->
                         <div class="col-md-6">
-                            <div class="card tour-card h-100 border-0 shadow-sm" 
-                                 data-testid="feature-activities"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#featureModal"
-                                 data-feature="activities"
-                                 data-title="Activities"
-                                 data-description="Define specific tasks"
-                                 data-details="Activities are the building blocks of your workflows. Each activity represents a specific task, deliverable, or milestone that needs to be completed.">
+                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-activities">
                                 <div class="card-body text-center p-4">
-                                    <div class="feature-icon mb-3">
-                                        <div class="icon-wrapper bg-success bg-gradient text-white rounded-circle mx-auto" 
-                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fa-solid fa-tasks fa-2x"></i>
-                                        </div>
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-tasks fa-3x text-success"></i>
                                     </div>
-                                    <h4 class="card-title mb-3 fw-bold">Activities</h4>
+                                    <h4 class="card-title mb-3">Activities</h4>
                                     <p class="card-text text-muted">
                                         Define specific tasks
                                     </p>
-                                    <div class="mt-auto">
-                                        <span class="badge bg-success bg-gradient">Click to learn more</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Artifacts Card -->
                         <div class="col-md-6">
-                            <div class="card tour-card h-100 border-0 shadow-sm" 
-                                 data-testid="feature-artifacts"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#featureModal"
-                                 data-feature="artifacts"
-                                 data-title="Artifacts"
-                                 data-description="Track deliverables"
-                                 data-details="Artifacts represent the tangible outputs of your work. Track documents, files, checklists, and other deliverables that are created and updated throughout your workflows.">
+                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-artifacts">
                                 <div class="card-body text-center p-4">
-                                    <div class="feature-icon mb-3">
-                                        <div class="icon-wrapper bg-warning bg-gradient text-white rounded-circle mx-auto" 
-                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fa-solid fa-folder fa-2x"></i>
-                                        </div>
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-folder fa-3x text-warning"></i>
                                     </div>
-                                    <h4 class="card-title mb-3 fw-bold">Artifacts</h4>
+                                    <h4 class="card-title mb-3">Artifacts</h4>
                                     <p class="card-text text-muted">
                                         Track deliverables
                                     </p>
-                                    <div class="mt-auto">
-                                        <span class="badge bg-warning bg-gradient">Click to learn more</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Sync Card -->
                         <div class="col-md-6">
-                            <div class="card tour-card h-100 border-0 shadow-sm" 
-                                 data-testid="feature-sync"
-                                 data-bs-toggle="modal" 
-                                 data-bs-target="#featureModal"
-                                 data-feature="sync"
-                                 data-title="Sync"
-                                 data-description="Collaborate via Homebase"
-                                 data-details="Sync keeps your team aligned with Homebase integration. Share updates, sync changes, and collaborate seamlessly across different platforms and tools.">
+                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-sync">
                                 <div class="card-body text-center p-4">
-                                    <div class="feature-icon mb-3">
-                                        <div class="icon-wrapper bg-info bg-gradient text-white rounded-circle mx-auto" 
-                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                            <i class="fa-solid fa-sync fa-2x"></i>
-                                        </div>
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-sync fa-3x text-info"></i>
                                     </div>
-                                    <h4 class="card-title mb-3 fw-bold">Sync</h4>
+                                    <h4 class="card-title mb-3">Sync</h4>
                                     <p class="card-text text-muted">
                                         Collaborate via Homebase
                                     </p>
-                                    <div class="mt-auto">
-                                        <span class="badge bg-info bg-gradient">Click to learn more</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Enhanced Action Buttons -->
-                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                        <a href="{% url 'onboarding' %}" 
-                           class="btn btn-outline-secondary btn-lg"
-                           data-bs-toggle="tooltip"
-                           title="Return to previous onboarding step">
-                            <i class="fa-solid fa-arrow-left me-2"></i> Back
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'onboarding' %}" class="btn btn-outline-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Back
                         </a>
                         
-                        <div class="d-flex gap-2 flex-wrap">
-                            <a href="{% url 'dashboard' %}" 
-                               class="btn btn-outline-secondary btn-lg"
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary"
                                data-bs-toggle="tooltip"
                                title="Skip tour and go to dashboard">
-                                <i class="fa-solid fa-forward me-2"></i> Skip Tour
+                                Skip Tour
                             </a>
-                            <a href="#" 
-                               id="continueBtn"
-                               class="btn btn-primary btn-lg btn-continue"
+                            <a href="#" class="btn btn-primary"
                                data-bs-toggle="tooltip"
                                title="Proceed to next step">
                                 Continue
-                                <i class="fa-solid fa-arrow-right ms-2"></i>
+                                <i class="fa-solid fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Feature Detail Modal -->
-<div class="modal fade feature-detail-modal" 
-     id="featureModal" 
-     data-testid="feature-modal"
-     tabindex="-1" 
-     aria-labelledby="featureModalLabel" 
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold" id="featureModalLabel">
-                    <i class="feature-modal-icon me-2"></i>
-                    <span class="feature-modal-title"></span>
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-4">
-                    <div class="feature-modal-icon-large mb-3"></div>
-                    <h4 class="feature-modal-subtitle text-muted"></h4>
-                </div>
-                <div class="feature-modal-details text-muted"></div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="exploreFeature">
-                    <i class="fa-solid fa-external-link-alt me-2"></i> Explore Feature
-                </button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Test identifiers -->
-<div data-testid="onboarding-tour-step">{{ current_step }}</div>
-<div data-testid="onboarding-tour-total-steps">{{ total_steps }}</div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
-    
-    // Handle feature modal
-    const featureModal = document.getElementById('featureModal');
-    const featureModalLabel = document.getElementById('featureModalLabel');
-    const exploreFeatureBtn = document.getElementById('exploreFeature');
-    
-    featureModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget;
-        const feature = button.getAttribute('data-feature');
-        const title = button.getAttribute('data-title');
-        const description = button.getAttribute('data-description');
-        const details = button.getAttribute('data-details');
-        const icon = button.querySelector('.feature-icon i').className;
-        
-        // Update modal content
-        document.querySelector('.feature-modal-title').textContent = title;
-        document.querySelector('.feature-modal-subtitle').textContent = description;
-        document.querySelector('.feature-modal-details').textContent = details;
-        document.querySelector('.feature-modal-icon').className = icon + ' me-2';
-        
-        // Create large icon
-        const iconWrapper = document.querySelector('.feature-modal-icon-large');
-        const colorClass = icon.includes('primary') ? 'text-primary' : 
-                         icon.includes('success') ? 'text-success' : 
-                         icon.includes('warning') ? 'text-warning' : 'text-info';
-        iconWrapper.innerHTML = `<i class="${icon} fa-4x ${colorClass}"></i>`;
-        
-        // Set explore button action
-        exploreFeatureBtn.onclick = function() {
-            bootstrap.Modal.getInstance(featureModal).hide();
-            // Navigate to dashboard where features can be explored
-            window.location.href = '{% url "dashboard" %}';
-        };
-    });
-    
-    // Handle continue button
-    document.getElementById('continueBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        // Navigate to dashboard as next step in onboarding flow
-        window.location.href = '{% url "dashboard" %}';
-    });
-    
-    // Add entrance animations
-    setTimeout(() => {
-        document.querySelectorAll('.tour-card').forEach((card, index) => {
-            card.style.opacity = '1';
-        });
-    }, 100);
-});
-</script>
+<div data-testid="onboarding-tour-step" style="display: none;">{{ current_step }}</div>
+<div data-testid="onboarding-tour-total-steps" style="display: none;">{{ total_steps }}</div>
 {% endblock %}

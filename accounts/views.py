@@ -10,7 +10,6 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
-
 from accounts.models import mark_onboarding_completed
 
 logger = logging.getLogger(__name__)
