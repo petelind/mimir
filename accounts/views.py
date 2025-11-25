@@ -3,10 +3,12 @@ import logging
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django.views.generic import TemplateView
 
 from accounts.models import mark_onboarding_completed
 
@@ -493,3 +495,93 @@ def password_reset_confirm(request, uidb64, token):
         'errors': {},
         'success': True
     })
+
+
+class TourView(LoginRequiredMixin, TemplateView):
+    """
+    Display tour of features for onboarding step 3 (ONBOARD-03).
+    
+    Shows highlights of Workflows, Activities, Artifacts, and Sync features
+    with progress indicator and continue button.
+    
+    Template: onboarding/tour.html
+    Context:
+        features: list - Feature highlight data
+        current_step: int - Current onboarding step (2)
+        total_steps: int - Total onboarding steps (3)
+    
+    :param request: Django request object
+    :return: Rendered tour template
+    :raises: NotImplementedError - Skeleton implementation
+    """
+    template_name = 'onboarding/tour.html'
+    
+    def get_context_data(self, **kwargs):
+        """
+        Prepare context data for the tour template.
+        
+        Returns:
+            dict: Context containing feature highlights and progress info
+        """
+        logger.info(f"User {self.request.user.username} accessing onboarding tour")
+        
+        context = super().get_context_data(**kwargs)
+        
+        # Feature highlights data
+        features = [
+            {
+                'name': 'Workflows',
+                'description': 'Organize activities into structured processes',
+                'icon': 'fa-solid fa-sitemap',
+                'color': 'text-primary',
+                'test_id': 'feature-workflows'
+            },
+            {
+                'name': 'Activities',
+                'description': 'Define specific tasks',
+                'icon': 'fa-solid fa-tasks',
+                'color': 'text-success',
+                'test_id': 'feature-activities'
+            },
+            {
+                'name': 'Artifacts',
+                'description': 'Track deliverables',
+                'icon': 'fa-solid fa-folder',
+                'color': 'text-warning',
+                'test_id': 'feature-artifacts'
+            },
+            {
+                'name': 'Sync',
+                'description': 'Collaborate via Homebase',
+                'icon': 'fa-solid fa-sync',
+                'color': 'text-info',
+                'test_id': 'feature-sync'
+            }
+        ]
+        
+        # Add context data
+        context.update({
+            'features': features,
+            'current_step': 2,
+            'total_steps': 3
+        })
+        
+        logger.info(f"Tour context prepared for user {self.request.user.username}")
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET request for the tour page.
+        
+        Returns:
+            HttpResponse: Rendered tour template
+        """
+        logger.info(f"Tour GET request for user {request.user.username}")
+        
+        try:
+            response = super().get(request, *args, **kwargs)
+            logger.info(f"Tour page rendered successfully for user {request.user.username}")
+            return response
+        except Exception as e:
+            logger.error(f"Error rendering tour page for user {request.user.username}: {str(e)}")
+            raise
