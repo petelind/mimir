@@ -148,14 +148,14 @@ def onboarding(request):
     Placeholder view for first-time user onboarding. Full implementation
     tracked separately in onboarding.feature issues #12-16.
     
-    Template: accounts/onboarding.html
+    Template: onboarding/welcome.html
     Context: None
     
     :param request: Django request object
     :return: Rendered onboarding stub template
     """
     logger.info(f"User {request.user.username} accessed onboarding stub")
-    return render(request, 'accounts/onboarding.html')
+    return render(request, 'onboarding/welcome.html')
 
 
 def _validate_registration_data(username, email, password, password_confirm):
