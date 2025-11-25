@@ -55,6 +55,7 @@ class TestPlaybookCreateWizard:
             'name': 'Product Discovery Framework',
             'description': 'Comprehensive methodology for discovering and validating product opportunities',
             'category': 'product',
+            'visibility': 'private',
             'tags': 'product management, discovery, validation, user research',
             'visibility': 'private'
         }
@@ -75,7 +76,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': '',
             'description': 'Valid description here',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -88,7 +90,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'Valid Name',
             'description': '',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -128,7 +131,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'AB',  # Too short
             'description': 'Valid description',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -140,7 +144,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'A' * 101,  # Too long
             'description': 'Valid description',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -153,7 +158,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'Valid Name',
             'description': 'Short',  # Too short
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -165,7 +171,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'Valid Name',
             'description': 'A' * 501,  # Too long
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
@@ -179,6 +186,7 @@ class TestPlaybookCreateWizard:
             'name': 'Test Playbook',
             'description': 'Test description here',
             'category': 'product',
+            'visibility': 'private',
             'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
@@ -194,6 +202,7 @@ class TestPlaybookCreateWizard:
             'name': 'Test Playbook',
             'description': 'Test description here',
             'category': 'product',
+            'visibility': 'private',
             'tags': 'tag1, tag2, tag3'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
@@ -209,7 +218,8 @@ class TestPlaybookCreateWizard:
         step1_data = {
             'name': 'Test Playbook',
             'description': 'Test description here',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         self.client.post(reverse('playbook_create'), data=step1_data)
         
@@ -226,7 +236,8 @@ class TestPlaybookCreateWizard:
         step1_data = {
             'name': 'Test Playbook',
             'description': 'Test description here',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         self.client.post(reverse('playbook_create'), data=step1_data)
         
@@ -248,7 +259,8 @@ class TestPlaybookCreateWizard:
         step1_data = {
             'name': 'Test Playbook',
             'description': 'Test description here',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         self.client.post(reverse('playbook_create'), data=step1_data)
         
@@ -367,7 +379,8 @@ class TestPlaybookCreateWizard:
         step1_data = {
             'name': 'Test Playbook',
             'description': 'Test description here with enough characters',
-            'category': 'product'
+            'category': 'product',
+            'visibility': 'private'
         }
         self.client.post(reverse('playbook_create'), data=step1_data)
         
