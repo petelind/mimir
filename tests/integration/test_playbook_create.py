@@ -117,7 +117,8 @@ class TestPlaybookCreateWizard:
         data = {
             'name': 'React Frontend Development',  # Exists from setup
             'description': 'Different description but same name',
-            'category': 'development'
+            'category': 'development',
+            'visibility': 'private'
         }
         response = self.client.post(reverse('playbook_create'), data=data)
         
