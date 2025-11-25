@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Onboarding - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-5" data-testid="onboarding-welcome">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <h1 class="display-4 mb-4">
+                        <i class="fa-solid fa-rocket text-success"></i>
+                        Welcome to FOB
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Welcome to FOB – your simple workspace in Mimir for exploring and organizing your playbooks and workflows.
+                    </p>
+                    <hr class="my-4">
+                    <p class="text-muted mb-2">
+                        Your first steps in FOB:
+                    </p>
+                    <div class="d-flex justify-content-center mb-4">
+                        <ol class="list-unstyled text-start mb-0">
+                            <li class="mb-3" data-testid="onboarding-step-1">
+                                <strong>1. Create Playbook</strong>
+                                <div class="text-muted small">
+                                    Start by creating a simple playbook that captures how you like to work.
+                                </div>
+                            </li>
+                            <li class="mb-3" data-testid="onboarding-step-2">
+                                <strong>2. Take a Quick Tour</strong>
+                                <div class="text-muted small">
+                                    Look around key areas like workflows, activities, artifacts, and sync options.
+                                </div>
+                            </li>
+                            <li data-testid="onboarding-step-3">
+                                <strong>3. Get Started</strong>
+                                <div class="text-muted small mb-2">
+                                    When you are ready, head to the dashboard and start using your playbooks.
+                                </div>
+                                <div class="text-center">
+                                    <a href="{% url 'playbook_create' %}" class="btn btn-primary btn-lg mt-2"
+                                       data-testid="onboarding-begin-journey-button"
+                                       data-bs-toggle="tooltip"
+                                       title="Create your first playbook and begin your journey">
+                                        <i class="fa-solid fa-rocket"></i> Begin your journey
+                                    </a>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="mt-2 d-flex justify-content-end">
+                        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary"
+                           data-testid="onboarding-skip-button"
+                           data-bs-toggle="tooltip"
+                           title="Skip tour and go to dashboard">
+                            <i class="fa-solid fa-forward"></i> Skip tour
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feature code marker for traceability -->
+<div data-testid="onboarding-feature-code" style="display: none;">FOB-ONBOARDING-1</div>
+{% endblock %}
