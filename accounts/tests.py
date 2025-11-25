@@ -99,3 +99,20 @@ class TestTourView(TestCase):
         # Check that onboarding page links to tour
         self.assertContains(response, reverse('onboarding_tour'))
         self.assertContains(response, 'Tour Features')
+    
+    def test_tour_view_modal_data_attributes(self):
+        """Test that tour view contains modal data attributes for feature cards."""
+        self.client.login(username='testuser', password='testpass123')
+        response = self.client.get(self.tour_url)
+        
+        # Check for modal attributes on feature cards
+        self.assertContains(response, 'data-bs-toggle="modal"')
+        self.assertContains(response, 'data-bs-target="#featureModal"')
+        self.assertContains(response, 'data-feature="workflows"')
+        self.assertContains(response, 'data-feature="activities"')
+        self.assertContains(response, 'data-feature="artifacts"')
+        self.assertContains(response, 'data-feature="sync"')
+        
+        # Check for modal element
+        self.assertContains(response, 'id="featureModal"')
+        self.assertContains(response, 'feature-detail-modal')

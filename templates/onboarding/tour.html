@@ -2,111 +2,375 @@
 
 {% block title %}Tour of Features - Mimir{% endblock %}
 
+{% block extra_css %}
+<style>
+/* Tour-specific styles */
+.tour-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.tour-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: var(--bs-primary);
+}
+
+.tour-card .feature-icon {
+    transition: all 0.3s ease;
+}
+
+.tour-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+.progress-animated {
+    transition: width 1s ease-in-out;
+}
+
+.feature-detail-modal .modal-dialog {
+    max-width: 600px;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-animation > div {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-in forwards;
+}
+
+.stagger-animation > div:nth-child(1) { animation-delay: 0.1s; }
+.stagger-animation > div:nth-child(2) { animation-delay: 0.2s; }
+.stagger-animation > div:nth-child(3) { animation-delay: 0.3s; }
+.stagger-animation > div:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse animation for primary action */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+}
+
+.btn-continue {
+    animation: pulse 2s infinite;
+}
+
+/* Progress Steps Styles */
+.progress-steps {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 80px;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.step.completed .step-circle {
+    background-color: var(--bs-success);
+    color: white;
+    border: 2px solid var(--bs-success);
+}
+
+.step.active .step-circle {
+    background-color: var(--bs-primary);
+    color: white;
+    border: 2px solid var(--bs-primary);
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+}
+
+.step:not(.completed):not(.active) .step-circle {
+    background-color: var(--bs-gray-200);
+    color: var(--bs-gray-600);
+    border: 2px solid var(--bs-gray-300);
+}
+
+.step-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--bs-gray-600);
+    text-align: center;
+}
+
+.step.active .step-label {
+    color: var(--bs-primary);
+    font-weight: 600;
+}
+
+.step.completed .step-label {
+    color: var(--bs-success);
+    font-weight: 600;
+}
+
+.step-line {
+    height: 2px;
+    background-color: var(--bs-gray-300);
+    position: relative;
+    margin: 0 8px;
+    margin-top: 20px;
+}
+
+.step.completed + .step-line {
+    background-color: var(--bs-success);
+}
+
+/* Dark mode adjustments */
+[data-bs-theme="dark"] .tour-card {
+    background-color: var(--bs-gray-800);
+    color: var(--bs-white);
+}
+
+[data-bs-theme="dark"] .tour-card:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .step:not(.completed):not(.active) .step-circle {
+    background-color: var(--bs-gray-700);
+    color: var(--bs-gray-400);
+    border: 2px solid var(--bs-gray-600);
+}
+
+[data-bs-theme="dark"] .step-line {
+    background-color: var(--bs-gray-600);
+}
+
+[data-bs-theme="dark"] .step-label {
+    color: var(--bs-gray-400);
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div data-testid="onboarding-tour" class="container mt-5">
+<div data-testid="onboarding-tour" class="container-fluid py-5">
     <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm">
-                <div class="card-body py-5">
-                    <!-- Progress Indicator -->
-                    <div class="text-center mb-4">
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 66.67%;" aria-valuenow="66.67" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <p class="text-muted mt-2 mb-0">Step {{ current_step }} of {{ total_steps }}</p>
-                    </div>
-                    
-                    <!-- Header -->
+        <div class="col-lg-10 col-xl-8">
+            <!-- Main Tour Card -->
+            <div class="card shadow-lg border-0 animate-fade-in">
+                <div class="card-body p-4 p-lg-5">
+                    <!-- Enhanced Progress Indicator -->
                     <div class="text-center mb-5">
-                        <h2 class="mb-3">
-                            <i class="fa-solid fa-compass text-primary"></i>
-                            Tour of Features
-                        </h2>
-                        <p class="lead text-muted">
-                            Discover how FOB can help you organize your work and collaborate effectively
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="progress-steps flex-grow-1">
+                                <div class="d-flex align-items-center">
+                                    <div class="step completed" data-step="1">
+                                        <div class="step-circle">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <span class="step-label">Welcome</span>
+                                    </div>
+                                    <div class="step-line flex-grow-1"></div>
+                                    <div class="step active" data-step="2">
+                                        <div class="step-circle">
+                                            <span>2</span>
+                                        </div>
+                                        <span class="step-label">Tour</span>
+                                    </div>
+                                    <div class="step-line flex-grow-1"></div>
+                                    <div class="step" data-step="3">
+                                        <div class="step-circle">
+                                            <span>3</span>
+                                        </div>
+                                        <span class="step-label">Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success progress-animated" 
+                                 role="progressbar" 
+                                 style="width: 66.67%;" 
+                                 aria-valuenow="66.67" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100"></div>
+                        </div>
+                        <p class="text-muted mt-3 mb-0">
+                            <strong>Step {{ current_step }} of {{ total_steps }}</strong> - 
+                            Discover FOB's powerful features
                         </p>
                     </div>
                     
-                    <!-- Feature Cards -->
-                    <div class="row g-4 mb-5">
+                    <!-- Enhanced Header -->
+                    <div class="text-center mb-5">
+                        <div class="mb-4">
+                            <div class="icon-circle bg-primary bg-gradient text-white mx-auto" 
+                                 style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa-solid fa-compass fa-2x"></i>
+                            </div>
+                        </div>
+                        <h1 class="display-6 mb-3 fw-bold">Tour of Features</h1>
+                        <p class="lead text-muted mx-auto" style="max-width: 600px;">
+                            Discover how FOB can help you organize your work and collaborate effectively. 
+                            Click on any feature to learn more about it.
+                        </p>
+                    </div>
+                    
+                    <!-- Feature Cards with Staggered Animation -->
+                    <div class="row g-4 mb-5 stagger-animation">
                         <!-- Workflows Card -->
                         <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-workflows">
+                            <div class="card tour-card h-100 border-0 shadow-sm" 
+                                 data-testid="feature-workflows"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#featureModal"
+                                 data-feature="workflows"
+                                 data-title="Workflows"
+                                 data-description="Organize activities into structured processes"
+                                 data-details="Workflows in FOB help you create repeatable processes for your team. Define stages, set up dependencies, and track progress through complex operations.">
                                 <div class="card-body text-center p-4">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-sitemap fa-3x text-primary"></i>
+                                    <div class="feature-icon mb-3">
+                                        <div class="icon-wrapper bg-primary bg-gradient text-white rounded-circle mx-auto" 
+                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-sitemap fa-2x"></i>
+                                        </div>
                                     </div>
-                                    <h4 class="card-title mb-3">Workflows</h4>
+                                    <h4 class="card-title mb-3 fw-bold">Workflows</h4>
                                     <p class="card-text text-muted">
                                         Organize activities into structured processes
                                     </p>
+                                    <div class="mt-auto">
+                                        <span class="badge bg-primary bg-gradient">Click to learn more</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Activities Card -->
                         <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-activities">
+                            <div class="card tour-card h-100 border-0 shadow-sm" 
+                                 data-testid="feature-activities"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#featureModal"
+                                 data-feature="activities"
+                                 data-title="Activities"
+                                 data-description="Define specific tasks"
+                                 data-details="Activities are the building blocks of your workflows. Each activity represents a specific task, deliverable, or milestone that needs to be completed.">
                                 <div class="card-body text-center p-4">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-tasks fa-3x text-success"></i>
+                                    <div class="feature-icon mb-3">
+                                        <div class="icon-wrapper bg-success bg-gradient text-white rounded-circle mx-auto" 
+                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-tasks fa-2x"></i>
+                                        </div>
                                     </div>
-                                    <h4 class="card-title mb-3">Activities</h4>
+                                    <h4 class="card-title mb-3 fw-bold">Activities</h4>
                                     <p class="card-text text-muted">
                                         Define specific tasks
                                     </p>
+                                    <div class="mt-auto">
+                                        <span class="badge bg-success bg-gradient">Click to learn more</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Artifacts Card -->
                         <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-artifacts">
+                            <div class="card tour-card h-100 border-0 shadow-sm" 
+                                 data-testid="feature-artifacts"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#featureModal"
+                                 data-feature="artifacts"
+                                 data-title="Artifacts"
+                                 data-description="Track deliverables"
+                                 data-details="Artifacts represent the tangible outputs of your work. Track documents, files, checklists, and other deliverables that are created and updated throughout your workflows.">
                                 <div class="card-body text-center p-4">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-folder fa-3x text-warning"></i>
+                                    <div class="feature-icon mb-3">
+                                        <div class="icon-wrapper bg-warning bg-gradient text-white rounded-circle mx-auto" 
+                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-folder fa-2x"></i>
+                                        </div>
                                     </div>
-                                    <h4 class="card-title mb-3">Artifacts</h4>
+                                    <h4 class="card-title mb-3 fw-bold">Artifacts</h4>
                                     <p class="card-text text-muted">
                                         Track deliverables
                                     </p>
+                                    <div class="mt-auto">
+                                        <span class="badge bg-warning bg-gradient">Click to learn more</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <!-- Sync Card -->
                         <div class="col-md-6">
-                            <div class="card h-100 border-0 shadow-sm" data-testid="feature-sync">
+                            <div class="card tour-card h-100 border-0 shadow-sm" 
+                                 data-testid="feature-sync"
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#featureModal"
+                                 data-feature="sync"
+                                 data-title="Sync"
+                                 data-description="Collaborate via Homebase"
+                                 data-details="Sync keeps your team aligned with Homebase integration. Share updates, sync changes, and collaborate seamlessly across different platforms and tools.">
                                 <div class="card-body text-center p-4">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-sync fa-3x text-info"></i>
+                                    <div class="feature-icon mb-3">
+                                        <div class="icon-wrapper bg-info bg-gradient text-white rounded-circle mx-auto" 
+                                             style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-sync fa-2x"></i>
+                                        </div>
                                     </div>
-                                    <h4 class="card-title mb-3">Sync</h4>
+                                    <h4 class="card-title mb-3 fw-bold">Sync</h4>
                                     <p class="card-text text-muted">
                                         Collaborate via Homebase
                                     </p>
+                                    <div class="mt-auto">
+                                        <span class="badge bg-info bg-gradient">Click to learn more</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Action Buttons -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <a href="{% url 'onboarding' %}" class="btn btn-outline-secondary">
-                            <i class="fa-solid fa-arrow-left"></i> Back
+                    <!-- Enhanced Action Buttons -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <a href="{% url 'onboarding' %}" 
+                           class="btn btn-outline-secondary btn-lg"
+                           data-bs-toggle="tooltip"
+                           title="Return to previous onboarding step">
+                            <i class="fa-solid fa-arrow-left me-2"></i> Back
                         </a>
                         
-                        <div class="d-flex gap-2">
-                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary"
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="{% url 'dashboard' %}" 
+                               class="btn btn-outline-secondary btn-lg"
                                data-bs-toggle="tooltip"
                                title="Skip tour and go to dashboard">
-                                Skip Tour
+                                <i class="fa-solid fa-forward me-2"></i> Skip Tour
                             </a>
-                            <a href="#" class="btn btn-primary"
+                            <a href="#" 
+                               id="continueBtn"
+                               class="btn btn-primary btn-lg btn-continue"
                                data-bs-toggle="tooltip"
                                title="Proceed to next step">
                                 Continue
-                                <i class="fa-solid fa-arrow-right"></i>
+                                <i class="fa-solid fa-arrow-right ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -116,7 +380,99 @@
     </div>
 </div>
 
+<!-- Feature Detail Modal -->
+<div class="modal fade feature-detail-modal" 
+     id="featureModal" 
+     tabindex="-1" 
+     aria-labelledby="featureModalLabel" 
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="featureModalLabel">
+                    <i class="feature-modal-icon me-2"></i>
+                    <span class="feature-modal-title"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="feature-modal-icon-large mb-3"></div>
+                    <h4 class="feature-modal-subtitle text-muted"></h4>
+                </div>
+                <div class="feature-modal-details text-muted"></div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="exploreFeature">
+                    <i class="fa-solid fa-external-link-alt me-2"></i> Explore Feature
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Test identifiers -->
 <div data-testid="onboarding-tour-step" style="display: none;">{{ current_step }}</div>
 <div data-testid="onboarding-tour-total-steps" style="display: none;">{{ total_steps }}</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Handle feature modal
+    const featureModal = document.getElementById('featureModal');
+    const featureModalLabel = document.getElementById('featureModalLabel');
+    const exploreFeatureBtn = document.getElementById('exploreFeature');
+    
+    featureModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const feature = button.getAttribute('data-feature');
+        const title = button.getAttribute('data-title');
+        const description = button.getAttribute('data-description');
+        const details = button.getAttribute('data-details');
+        const icon = button.querySelector('.feature-icon i').className;
+        
+        // Update modal content
+        document.querySelector('.feature-modal-title').textContent = title;
+        document.querySelector('.feature-modal-subtitle').textContent = description;
+        document.querySelector('.feature-modal-details').textContent = details;
+        document.querySelector('.feature-modal-icon').className = icon + ' me-2';
+        
+        // Create large icon
+        const iconWrapper = document.querySelector('.feature-modal-icon-large');
+        const colorClass = icon.includes('primary') ? 'text-primary' : 
+                         icon.includes('success') ? 'text-success' : 
+                         icon.includes('warning') ? 'text-warning' : 'text-info';
+        iconWrapper.innerHTML = `<i class="${icon} fa-4x ${colorClass}"></i>`;
+        
+        // Set explore button action (placeholder for now)
+        exploreFeatureBtn.onclick = function() {
+            bootstrap.Modal.getInstance(featureModal).hide();
+            // TODO: Navigate to feature when implemented
+            console.log('Explore feature:', feature);
+        };
+    });
+    
+    // Handle continue button
+    document.getElementById('continueBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        // TODO: Navigate to next onboarding step when implemented
+        console.log('Continue to next step');
+    });
+    
+    // Add entrance animations
+    setTimeout(() => {
+        document.querySelectorAll('.tour-card').forEach((card, index) => {
+            card.style.opacity = '1';
+        });
+    }, 100);
+});
+</script>
 {% endblock %}
