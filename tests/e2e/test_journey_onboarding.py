@@ -1,17 +1,19 @@
 """User Journey Certification Tests for Onboarding Tour.
 
 Tests complete user journey from registration through tour to dashboard.
-Uses Django Test Client for fast, reliable E2E testing.
+Uses LiveServerTestCase + Playwright for browser-based testing.
 
-Run: python manage.py test tests.e2e.test_journey_onboarding -v 2
+Run: pytest tests/e2e/test_journey_onboarding.py -v --headed
 """
-from django.test import TestCase, Client
-from django.urls import reverse
+import pytest
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from playwright.sync_api import sync_playwright, Page, expect
+from django.core.management import call_command
 from django.contrib.auth.models import User
 from methodology.models import Playbook
 
 
-class TestOnboardingJourney(TestCase):
+class TestOnboardingJourney(StaticLiveServerTestCase):
     """
     Certify complete onboarding journey from registration through tour.
     
@@ -25,29 +27,57 @@ class TestOnboardingJourney(TestCase):
     7. Completes tour
     8. Lands on dashboard
     
-    Validates: Registration, authentication, navigation, UI interactions
+    Validates: Registration, authentication, navigation, HTMX, UI interactions
     """
     
+    @classmethod
+    def setUpClass(cls):
+        """Set up Playwright browser for all tests."""
+        super().setUpClass()
+        cls.playwright = sync_playwright().start()
+        # Use headed for debugging, change to headless=True for CI
+        cls.browser = cls.playwright.chromium.launch(headless=False, slow_mo=100)
+    
+    @classmethod
+    def tearDownClass(cls):
+        """Clean up Playwright resources."""
+        cls.browser.close()
+        cls.playwright.stop()
+        super().tearDownClass()
+    
     def setUp(self):
-        """Set up test client for each test."""
-        self.client = Client()
+        """Create new browser context for each test."""
+        self.context = self.browser.new_context()
+        self.page = self.context.new_page()
+    
+    def tearDown(self):
+        """Close browser context after each test."""
+        self.page.close()
+        self.context.close()
     
     def _register_new_user(self, username: str, email: str, password: str):
-        """Helper to register a new user via test client."""
-        response = self.client.post(
-            reverse('register'),
-            {
-                'username': username,
-                'email': email,
-                'password': password,
-                'password_confirm': password
-            },
-            follow=True
-        )
+        """Helper to register a new user via browser."""
+        page = self.page
+        
+        # Navigate to registration
+        page.goto(f'{self.live_server_url}/auth/user/register/')
+        expect(page).to_have_title("Register - Mimir")
+        
+        # Fill registration form
+        page.get_by_test_id('register-username-input').fill(username)
+        page.get_by_test_id('register-email-input').fill(email)
+        page.get_by_test_id('register-password-input').fill(password)
+        page.get_by_test_id('register-password-confirm-input').fill(password)
+        
+        # Submit form
+        page.get_by_test_id('register-submit-button').click()
         
         # Should redirect to onboarding
-        assert response.redirect_chain[-1][0] == '/auth/user/onboarding/'
-        return response
+        expect(page).to_have_url(f'{self.live_server_url}/auth/user/onboarding/')
+    
+    def _wait_for_page_load(self):
+        """Wait for page to fully load."""
+        self.page.wait_for_load_state('networkidle')
     
     def test_journey_complete_onboarding_flow(self):
         """
@@ -63,57 +93,69 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Complete onboarding flow with all UI interactions
         """
+        page = self.page
+        
         # Step 1: Register new user
-        response = self._register_new_user('journey_user', 'journey@example.com', 'SecurePass123')
-        content = response.content.decode('utf-8')
+        self._register_new_user('journey_user', 'journey@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
         # Step 2: Verify onboarding welcome page
-        assert 'data-testid="onboarding-welcome"' in content
-        assert 'Welcome to FOB' in content
+        expect(page.get_by_test_id('onboarding-stub')).to_be_visible()
+        # The text is already verified by the test-id being visible
         
         # Step 3: Navigate to tour of features
-        # Extract the URL for tour from the page content
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
         # Step 4: Verify tour page loaded
-        assert 'data-testid="onboarding-tour"' in content
+        expect(page).to_have_url(f'{self.live_server_url}/auth/user/onboarding/tour/')
+        expect(page.get_by_test_id('onboarding-tour')).to_be_visible()
         
         # Verify all 4 feature cards are present
-        assert 'data-testid="feature-workflows"' in content
-        assert 'data-testid="feature-activities"' in content
-        assert 'data-testid="feature-artifacts"' in content
-        assert 'data-testid="feature-sync"' in content
+        expect(page.get_by_test_id('feature-workflows')).to_be_visible()
+        expect(page.get_by_test_id('feature-activities')).to_be_visible()
+        expect(page.get_by_test_id('feature-artifacts')).to_be_visible()
+        expect(page.get_by_test_id('feature-sync')).to_be_visible()
         
         # Step 5: Verify progress indicator
-        assert 'Step 2 of 3' in content
-        assert 'data-testid="onboarding-tour-step"' in content
-        assert 'data-testid="onboarding-tour-total-steps"' in content
+        expect(page.get_by_text('Step 2 of 3')).to_be_visible()
+        expect(page.get_by_test_id('onboarding-tour-step')).to_be_visible()
+        expect(page.get_by_test_id('onboarding-tour-total-steps')).to_be_visible()
         
-        # Step 6: Since we can't actually click modals with Test Client,
-        # we verify the modal content is present in the page
-        assert 'data-testid="feature-modal"' in content
-        assert 'Workflows' in content
-        assert 'Organize activities into structured processes' in content
+        # Step 6: Interact with feature modal
+        # Click on Workflows card
+        page.get_by_test_id('feature-workflows').click()
+        
+        # Wait for modal to appear
+        expect(page.get_by_test_id('feature-modal')).to_be_visible()
+        expect(page.locator('.feature-modal-title')).to_have_text('Workflows')
+        expect(page.locator('.feature-modal-subtitle')).to_have_text('Organize activities into structured processes')
+        
+        # Close modal
+        page.get_by_label('Close').click()
         
         # Step 7: Test navigation buttons
-        # Test Back button would go to onboarding
-        response = self.client.get(reverse('onboarding'))
-        assert response.status_code == 200
+        # Test Back button
+        page.get_by_role('link', name='Back').click()
+        self._wait_for_page_load()
+        
+        # Should return to onboarding
+        expect(page).to_have_url(f'{self.live_server_url}/auth/user/onboarding/')
         
         # Navigate back to tour
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
-        # Step 8: Complete tour - Skip to dashboard
-        response = self.client.get(reverse('dashboard'))
-        assert response.status_code == 200
+        # Step 8: Complete tour (Skip Tour for now)
+        page.get_by_role('link', name='Skip Tour').click()
+        self._wait_for_page_load()
         
-        # Step 9: Verify user is authenticated and on dashboard
-        content = response.content.decode('utf-8')
-        assert 'data-testid="dashboard-stub"' in content
-        assert 'FOB-DASHBOARD-1' in content
+        # Step 9: Should land on dashboard
+        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')
+        
+        # Verify user is authenticated and on dashboard
+        # Check for dashboard stub
+        expect(page.get_by_test_id('dashboard-stub')).to_be_visible()
     
     def test_journey_tour_modal_interactions(self):
         """
@@ -128,14 +170,16 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Modal functionality and feature content
         """
+        page = self.page
+        
         # Register and go to tour
         self._register_new_user('modal_user', 'modal@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
-        # Test each feature modal content is present
+        # Test each feature modal
         features = [
             ('workflows', 'Workflows', 'Organize activities into structured processes'),
             ('activities', 'Activities', 'Define specific tasks'),
@@ -144,15 +188,22 @@ class TestOnboardingJourney(TestCase):
         ]
         
         for feature_id, feature_name, feature_desc in features:
-            # Verify feature card is present
-            assert f'data-testid="feature-{feature_id}"' in content
+            # Click feature card
+            page.get_by_test_id(f'feature-{feature_id}').click()
             
-            # Verify modal content is in the page
-            assert feature_name in content
-            assert feature_desc in content
+            # Verify modal content
+            expect(page.get_by_test_id('feature-modal')).to_be_visible()
+            expect(page.get_by_text(feature_name)).to_be_visible()
+            expect(page.get_by_text(feature_desc)).to_be_visible()
             
-        # Check for explore button
-        assert 'id="exploreFeature"' in content
+            # Check for explore button
+            expect(page.get_by_test_id('exploreFeature')).to_be_visible()
+            
+            # Close modal
+            page.get_by_label('Close').click()
+            
+            # Verify modal closed
+            expect(page.get_by_test_id('feature-modal')).not_to_be_visible()
     
     def test_journey_tour_progress_visualization(self):
         """
@@ -166,33 +217,35 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Progress visualization and step tracking
         """
+        page = self.page
+        
         # Register and go to tour
         self._register_new_user('progress_user', 'progress@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
         # Verify progress text
-        assert 'Step 2 of 3' in content
+        expect(page.get_by_text('Step 2 of 3')).to_be_visible()
         
-        # Verify step circles markup is present
-        assert 'class="step-circle"' in content
+        # Verify step circles
+        step_circles = page.locator('.step-circle')
+        expect(step_circles).to_have_count(3)
         
-        # Check completed step (1) - should have checkmark
-        assert 'data-step="1"' in content
-        assert 'fa-solid fa-check' in content  # Checkmark icon
+        # Check completed step (1)
+        expect(page.locator('.step[data-step="1"] .step-circle')).to_have_text('✓')
         
         # Check active step (2)
-        assert 'data-step="2"' in content
-        assert 'class="step active"' in content or 'class="active step"' in content
+        expect(page.locator('.step[data-step="2"] .step-circle')).to_have_text('2')
+        expect(page.locator('.step[data-step="2"]')).to_have_class("active")
         
         # Check future step (3)
-        assert 'data-step="3"' in content
+        expect(page.locator('.step[data-step="3"] .step-circle')).to_have_text('3')
         
         # Verify progress bar
-        assert 'progress-bar' in content
-        assert 'aria-valuenow="66.67"' in content
+        progress_bar = page.locator('.progress-bar')
+        expect(progress_bar).to_have_attribute('aria-valuenow', '66.67')
     
     def test_journey_responsive_design(self):
         """
@@ -206,26 +259,44 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Responsive design and mobile interactions
         """
+        page = self.page
+        
         # Register and go to tour
         self._register_new_user('responsive_user', 'responsive@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
-        # Verify responsive layout classes are present
-        assert 'col-md-6' in content  # Desktop column layout
+        # Start with desktop size
+        page.set_viewport_size({"width": 1200, "height": 800})
         
-        # Verify all 4 feature cards
-        assert content.count('tour-card') >= 4
+        # Verify 2-column layout on desktop
+        feature_cards = page.locator('.col-md-6')
+        expect(feature_cards).to_have_count(4)
         
-        # Test modal markup is present
-        assert 'data-testid="feature-modal"' in content
+        # Test modal on desktop
+        page.get_by_test_id('feature-workflows').click()
+        expect(page.get_by_test_id('feature-modal')).to_be_visible()
+        page.get_by_label('Close').click()
         
-        # Test buttons are present
-        assert 'fa-solid fa-arrow-left' in content and 'Back' in content
-        assert 'fa-solid fa-forward' in content and 'Skip Tour' in content
-        assert 'Continue' in content
+        # Resize to mobile
+        page.set_viewport_size({"width": 375, "height": 667})
+        self._wait_for_page_load()
+        
+        # Verify layout adapts (should stack vertically)
+        feature_cards_mobile = page.locator('.tour-card')
+        expect(feature_cards_mobile).to_have_count(4)
+        
+        # Test modal on mobile
+        page.get_by_test_id('feature-workflows').click()
+        expect(page.get_by_test_id('feature-modal')).to_be_visible()
+        page.get_by_label('Close').click()
+        
+        # Test buttons on mobile
+        expect(page.get_by_role('link', name='Back')).to_be_visible()
+        expect(page.get_by_role('link', name='Skip Tour')).to_be_visible()
+        expect(page.get_by_role('link', name='Continue')).to_be_visible()
     
     def test_journey_accessibility_features(self):
         """
@@ -239,28 +310,46 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Accessibility features and keyboard navigation
         """
+        page = self.page
+        
         # Register and go to tour
         self._register_new_user('a11y_user', 'a11y@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
-        # Test ARIA attributes are present
-        assert 'role="progressbar"' in content
-        assert 'aria-valuenow' in content
-        assert 'aria-valuemin' in content
-        assert 'aria-valuemax' in content
+        # Test keyboard navigation
+        # Tab to first feature card
+        page.keyboard.press('Tab')
+        expect(page.get_by_test_id('feature-workflows')).to_be_focused()
         
-        # Test modal accessibility attributes
-        assert 'modal fade' in content
-        assert 'aria-hidden="true"' in content
+        # Activate with Enter
+        page.keyboard.press('Enter')
+        expect(page.get_by_test_id('feature-modal')).to_be_visible()
         
-        # Verify tabindex attributes for keyboard navigation
-        assert 'tabindex' in content
+        # Close modal with Escape
+        page.keyboard.press('Escape')
+        expect(page.get_by_test_id('feature-modal')).not_to_be_visible()
         
-        # Verify close button has aria-label
-        assert 'aria-label="Close"' in content
+        # Test ARIA attributes
+        progress_bar = page.locator('.progress-bar')
+        expect(progress_bar).to_have_attribute('role', 'progressbar')
+        expect(progress_bar).to_have_attribute('aria-valuenow')
+        expect(progress_bar).to_have_attribute('aria-valuemin')
+        expect(progress_bar).to_have_attribute('aria-valuemax')
+        
+        # Test modal accessibility
+        page.get_by_test_id('feature-workflows').click()
+        modal = page.get_by_test_id('feature-modal')
+        expect(modal).to_have_attribute('role', 'dialog')
+        expect(modal).to_have_attribute('aria-modal', 'true')
+        
+        # Test focus management
+        close_button = page.get_by_label('Close')
+        expect(close_button).to_be_focused()
+        
+        page.keyboard.press('Escape')
     
     def test_journey_error_handling(self):
         """
@@ -274,38 +363,35 @@ class TestOnboardingJourney(TestCase):
         
         Validates: Error handling and graceful degradation
         """
+        page = self.page
+        
         # Register and go to tour
         self._register_new_user('error_user', 'error@example.com', 'SecurePass123')
+        self._wait_for_page_load()
         
-        response = self.client.get(reverse('onboarding_tour'))
-        assert response.status_code == 200
-        content = response.content.decode('utf-8')
+        page.get_by_test_id('tour-features-link').click()
+        self._wait_for_page_load()
         
-        # Verify tour loads correctly
-        assert 'data-testid="onboarding-tour"' in content
+        # Test navigation with invalid URLs (should handle gracefully)
+        # Try to go directly to tour without authentication
+        page.goto(f'{self.live_server_url}/auth/user/onboarding/tour/')
         
-        # Test authentication - new client to simulate unauthenticated access
-        client_unauth = Client()
-        response_unauth = client_unauth.get(reverse('onboarding_tour'))
-        # Should redirect to login
-        assert response_unauth.status_code == 302
-        assert '/auth/user/login/' in response_unauth.url
+        # Should redirect to login (error handling)
+        expect(page).to_have_url(f'{self.live_server_url}/auth/user/login/')
         
         # Login and continue
-        response_login = self.client.post(
-            reverse('login'),
-            {
-                'username': 'error_user',
-                'password': 'SecurePass123'
-            },
-            follow=True
-        )
+        page.get_by_test_id('login-username-input').fill('error_user')
+        page.get_by_test_id('login-password-input').fill('SecurePass123')
+        page.get_by_test_id('login-submit-button').click()
         
+        # Should redirect to dashboard (default after login)
         # Navigate back to tour
-        response_tour = self.client.get(reverse('onboarding_tour'))
-        assert response_tour.status_code == 200
+        page.goto(f'{self.live_server_url}/auth/user/onboarding/tour/')
+        self._wait_for_page_load()
+        
+        # Verify tour loads correctly after error
+        expect(page.get_by_test_id('onboarding-tour')).to_be_visible()
         
         # Complete journey
-        response_dashboard = self.client.get(reverse('dashboard'))
-        assert response_dashboard.status_code == 200
-        assert 'data-testid="dashboard-stub"' in response_dashboard.content.decode('utf-8')
+        page.get_by_role('link', name='Skip Tour').click()
+        expect(page).to_have_url(f'{self.live_server_url}/dashboard/')

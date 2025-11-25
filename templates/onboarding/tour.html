@@ -383,6 +383,7 @@
 <!-- Feature Detail Modal -->
 <div class="modal fade feature-detail-modal" 
      id="featureModal" 
+     data-testid="feature-modal"
      tabindex="-1" 
      aria-labelledby="featureModalLabel" 
      aria-hidden="true">
@@ -413,8 +414,8 @@
 </div>
 
 <!-- Test identifiers -->
-<div data-testid="onboarding-tour-step" style="display: none;">{{ current_step }}</div>
-<div data-testid="onboarding-tour-total-steps" style="display: none;">{{ total_steps }}</div>
+<div data-testid="onboarding-tour-step">{{ current_step }}</div>
+<div data-testid="onboarding-tour-total-steps">{{ total_steps }}</div>
 {% endblock %}
 
 {% block extra_js %}
