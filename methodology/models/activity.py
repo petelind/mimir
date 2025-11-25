@@ -196,6 +196,36 @@ class Activity(models.Model):
         
         return f"{icon} {display_text}"
     
+    def get_icon_class(self):
+        """
+        Get just the icon class for the action type.
+        
+        Returns:
+            str: Font Awesome icon class
+            
+        Example:
+            "fa-plus-circle"
+        """
+        # Icon mapping for different action types
+        icon_map = {
+            'playbook_created': 'fa-plus-circle',
+            'playbook_updated': 'fa-edit',
+            'playbook_deleted': 'fa-trash',
+            'playbook_viewed': 'fa-eye',
+            'dashboard_viewed': 'fa-gauge',
+            'workflow_created': 'fa-plus-circle',
+            'workflow_updated': 'fa-edit',
+            'workflow_deleted': 'fa-trash',
+            'activity_created': 'fa-plus-circle',
+            'activity_updated': 'fa-edit',
+            'activity_deleted': 'fa-trash',
+            'pip_created': 'fa-lightbulb',
+            'pip_approved': 'fa-check-circle',
+            'pip_rejected': 'fa-times-circle',
+        }
+        
+        return icon_map.get(self.action_type, 'fa-circle')
+    
     def is_recent(self, minutes=30):
         """
         Check if this activity occurred within the specified minutes.
