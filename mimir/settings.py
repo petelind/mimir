@@ -27,6 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Trust localhost for development (CSRF protection)
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:49819',
+    'http://127.0.0.1:49819',
+]
+
 
 # Application definition
 
