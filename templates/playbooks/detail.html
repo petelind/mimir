@@ -1,209 +1,121 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{ page_title }} - Mimir{% endblock %}
+{% block title %}{{ playbook.name }} - Playbook{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i> Home</a></li>
-            <li class="breadcrumb-item"><a href="/playbooks/">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ playbook.name }}</li>
         </ol>
     </nav>
 
-    <!-- Header with Actions -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <div class="mb-2">
-                        <span class="badge bg-secondary fs-6">{{ playbook.id }}</span>
-                    </div>
-                    <h1 class="mb-0">
-                        <i class="fas fa-book-sparkles text-primary"></i> {{ playbook.name }}
-                    </h1>
-                </div>
-                <div class="btn-group" role="group">
-                    <a href="/playbooks/{{ playbook.id }}/edit/" 
-                       class="btn btn-primary"
-                       data-bs-toggle="tooltip"
-                       data-bs-placement="top"
-                       title="Edit this playbook">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <a href="/playbooks/" 
-                       class="btn btn-outline-secondary"
-                       data-bs-toggle="tooltip"
-                       data-bs-placement="top"
-                       title="Return to playbook list">
-                        <i class="fas fa-arrow-left"></i> Back
-                    </a>
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>
+                <i class="fa-solid fa-book"></i> {{ playbook.name }}
+            </h2>
+            <p class="text-muted">
+                <span class="badge bg-{{ playbook.status }}">{{ playbook.get_status_display }}</span>
+                <span class="badge bg-secondary">v{{ playbook.version }}</span>
+                <span class="badge bg-info">{{ playbook.get_category_display }}</span>
+            </p>
+        </div>
+        <div class="btn-group">
+            {% if can_edit %}
+                <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
+                   class="btn btn-primary"
+                   data-bs-toggle="tooltip"
+                   title="Edit this playbook">
+                    <i class="fa-solid fa-edit"></i> Edit
+                </a>
+            {% endif %}
+            <a href="{% url 'playbook_list' %}" 
+               class="btn btn-outline-secondary"
+               data-bs-toggle="tooltip"
+               title="Back to playbooks list">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="row">
-        <div class="col-lg-8">
-            <!-- Description Card -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-align-left"></i> Description</h5>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">{{ playbook.description }}</p>
-                </div>
-            </div>
+    <!-- Description -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Description</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ playbook.description }}</p>
+        </div>
+    </div>
 
-            <!-- Placeholder for Related Items -->
+    <!-- Metadata & Workflows -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Workflows -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-project-diagram"></i> Related Items</h5>
+                    <h5 class="mb-0">Workflows</h5>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info mb-0">
-                        <i class="fas fa-info-circle"></i> Related workflows, activities, and deliverables will appear here when backend is implemented.
-                    </div>
+                    {% if workflows %}
+                        <ul class="list-group list-group-flush">
+                            {% for workflow in workflows %}
+                                <li class="list-group-item">
+                                    <i class="fa-solid fa-sitemap text-primary"></i>
+                                    <strong>{{ workflow.name }}</strong>
+                                    {% if workflow.description %}
+                                        <p class="mb-0 text-muted small">{{ workflow.description }}</p>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">No workflows added yet.</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <!-- Metadata Card -->
+        <div class="col-md-4">
+            <!-- Metadata -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Metadata</h5>
+                    <h5 class="mb-0">Details</h5>
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
-                        <dt class="col-sm-4">Type:</dt>
-                        <dd class="col-sm-8">
-                            {% if playbook.type == 'Methodology' %}
-                            <span class="badge bg-primary">
-                                <i class="fas fa-book"></i> {{ playbook.type }}
-                            </span>
-                            {% elif playbook.type == 'Framework' %}
-                            <span class="badge bg-info">
-                                <i class="fas fa-cube"></i> {{ playbook.type }}
-                            </span>
-                            {% else %}
-                            <span class="badge bg-success">
-                                <i class="fas fa-tools"></i> {{ playbook.type }}
-                            </span>
-                            {% endif %}
+                        <dt class="col-sm-5">Author:</dt>
+                        <dd class="col-sm-7">{{ playbook.author.username }}</dd>
+
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">{{ playbook.created_at|date:"Y-m-d" }}</dd>
+
+                        <dt class="col-sm-5">Updated:</dt>
+                        <dd class="col-sm-7">{{ playbook.updated_at|date:"Y-m-d" }}</dd>
+
+                        {% if playbook.tags %}
+                        <dt class="col-sm-5">Tags:</dt>
+                        <dd class="col-sm-7">
+                            {% for tag in playbook.tags %}
+                                <span class="badge bg-secondary">{{ tag }}</span>
+                            {% endfor %}
                         </dd>
-
-                        <dt class="col-sm-4">Family:</dt>
-                        <dd class="col-sm-8">{{ playbook.family }}</dd>
-
-                        <dt class="col-sm-4">Status:</dt>
-                        <dd class="col-sm-8">
-                            {% if playbook.status == 'Active' %}
-                            <span class="badge bg-success">{{ playbook.status }}</span>
-                            {% elif playbook.status == 'Draft' %}
-                            <span class="badge bg-warning text-dark">{{ playbook.status }}</span>
-                            {% elif playbook.status == 'Archived' %}
-                            <span class="badge bg-info">{{ playbook.status }}</span>
-                            {% else %}
-                            <span class="badge bg-danger">{{ playbook.status }}</span>
-                            {% endif %}
-                        </dd>
-
-                        <dt class="col-sm-4">Version:</dt>
-                        <dd class="col-sm-8">{{ playbook.version }}</dd>
-
-                        <dt class="col-sm-4">Author:</dt>
-                        <dd class="col-sm-8">{{ playbook.author }}</dd>
-
-                        <dt class="col-sm-4">Created:</dt>
-                        <dd class="col-sm-8">{{ playbook.created_at }}</dd>
-
-                        <dt class="col-sm-4">Updated:</dt>
-                        <dd class="col-sm-8">{{ playbook.updated_at }}</dd>
+                        {% endif %}
                     </dl>
                 </div>
             </div>
-
-            <!-- Quick Actions Card -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-outline-primary" disabled
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="Create a new workflow for this playbook (available in full version)">
-                            <i class="fas fa-plus"></i> Add Workflow
-                        </button>
-                        <button class="btn btn-outline-secondary" disabled
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="Export playbook data (available in full version)">
-                            <i class="fas fa-download"></i> Export
-                        </button>
-                        <button class="btn btn-outline-danger" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#deleteModal"
-                                data-bs-tooltip="tooltip"
-                                data-bs-placement="top"
-                                title="Delete this playbook permanently">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel">
-                    <i class="fas fa-exclamation-triangle"></i> Confirm Delete
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete the playbook:</p>
-                <p class="fw-bold">{{ playbook.id }} - {{ playbook.name }}</p>
-                <p class="text-muted small mb-0">
-                    <i class="fas fa-info-circle"></i> In prototype mode, this action only shows a confirmation message.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
-                    <i class="fas fa-trash"></i> Delete Playbook
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-});
-
-function confirmDelete() {
-    alert('Playbook Deleted (Prototype Mode)\n\nIn production, playbook "{{ playbook.id }} - {{ playbook.name }}" would be deleted.');
-    const deleteModal = bootstrap.Modal.getInstance(document.getElementById('deleteModal'));
-    deleteModal.hide();
-}
-</script>
-
+<style>
+    .badge.bg-active { background-color: #28a745 !important; }
+    .badge.bg-draft { background-color: #6c757d !important; }
+    .badge.bg-disabled { background-color: #dc3545 !important; }
+</style>
 {% endblock %}

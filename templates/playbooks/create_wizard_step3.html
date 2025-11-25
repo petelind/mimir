@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Playbook - Step 3{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_create' %}">Create New</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Step 3</li>
+        </ol>
+    </nav>
+
+    <!-- Wizard Progress -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-solid fa-circle-check fa-2x text-success"></i>
+                        <p class="mt-2 text-success">Basic Information</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-solid fa-circle-check fa-2x text-success"></i>
+                        <p class="mt-2 text-success">Add Workflows</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step active">
+                        <i class="fa-solid fa-circle-3 fa-2x text-primary"></i>
+                        <p class="mt-2 fw-bold">Publishing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="card mb-4" data-testid="summary-card">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-clipboard-check"></i>
+                Review Your Playbook
+            </h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Name:</dt>
+                <dd class="col-sm-9">{{ wizard_data.name }}</dd>
+
+                <dt class="col-sm-3">Description:</dt>
+                <dd class="col-sm-9">{{ wizard_data.description }}</dd>
+
+                <dt class="col-sm-3">Category:</dt>
+                <dd class="col-sm-9">{{ wizard_data.category|title }}</dd>
+
+                {% if wizard_data.tags %}
+                <dt class="col-sm-3">Tags:</dt>
+                <dd class="col-sm-9">
+                    {% for tag in wizard_data.tags %}
+                        <span class="badge bg-secondary">{{ tag }}</span>
+                    {% endfor %}
+                </dd>
+                {% endif %}
+
+                <dt class="col-sm-3">Visibility:</dt>
+                <dd class="col-sm-9">{{ wizard_data.visibility|title }}</dd>
+
+                {% if wizard_data.workflows %}
+                <dt class="col-sm-3">Workflows:</dt>
+                <dd class="col-sm-9">
+                    <ul class="list-unstyled mb-0">
+                        {% for workflow in wizard_data.workflows %}
+                            <li>
+                                <i class="fa-solid fa-sitemap text-primary"></i>
+                                {{ workflow.name }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </dd>
+                {% endif %}
+            </dl>
+        </div>
+    </div>
+
+    <!-- Step 3 Form -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fa-solid fa-rocket"></i>
+                Step 3: Publishing
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="fa-solid fa-exclamation-triangle"></i>
+                Choose how you want to save your playbook. You can change this later.
+            </div>
+
+            <form method="post" action="{% url 'playbook_create_step3' %}">
+                {% csrf_token %}
+                
+                <!-- Status Selection -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Publication Status</label>
+                    {% for radio in form.status %}
+                        <div class="form-check">
+                            {{ radio.tag }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    {% if form.status.errors %}
+                        <div class="text-danger mt-1">
+                            {{ form.status.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'playbook_create_step2' %}" 
+                       class="btn btn-secondary"
+                       data-bs-toggle="tooltip"
+                       title="Go back to workflows">
+                        <i class="fa-solid fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" 
+                            class="btn btn-success btn-lg"
+                            data-bs-toggle="tooltip"
+                            title="Create playbook and save to database">
+                        <i class="fa-solid fa-check"></i> Create Playbook
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .wizard-step {
+        padding: 15px;
+    }
+    .wizard-step.active i {
+        color: #0d6efd !important;
+    }
+</style>
+{% endblock %}

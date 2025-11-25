@@ -1,249 +1,69 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{ page_title }} - Mimir{% endblock %}
+{% block title %}My Playbooks{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-4">
-    <!-- Header Section -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1 class="mb-0">
-                    <i class="fas fa-book-sparkles text-primary"></i> {{ page_title }}
-                </h1>
-                <a href="/playbooks/add/" 
-                   class="btn btn-primary btn-lg"
-                   data-bs-toggle="tooltip"
-                   data-bs-placement="left"
-                   title="Create a new playbook">
-                    <i class="fas fa-plus"></i> Add Playbook
-                </a>
-            </div>
-        </div>
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fa-solid fa-book"></i> My Playbooks
+        </h2>
+        <a href="{% url 'playbook_create' %}" 
+           class="btn btn-primary"
+           data-bs-toggle="tooltip"
+           title="Create a new playbook">
+            <i class="fa-solid fa-plus"></i> Create New Playbook
+        </a>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="input-group input-group-lg">
-                <span class="input-group-text">
-                    <i class="fas fa-search"></i>
-                </span>
-                <input type="text" 
-                       class="form-control" 
-                       id="searchBar" 
-                       placeholder="Search playbooks..."
-                       data-bs-toggle="tooltip"
-                       data-bs-placement="top"
-                       title="Search by playbook name or description">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <select class="form-select form-select-lg" 
-                    id="familyFilter"
-                    data-bs-toggle="tooltip"
-                    data-bs-placement="top"
-                    title="Filter playbooks by family">
-                <option value="">All Families</option>
-                {% for family in families %}
-                <option value="{{ family }}">{{ family }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    </div>
-
-    <!-- Playbooks Grid -->
-    <div class="row" id="playbooksGrid">
-        {% for playbook in playbooks %}
-        <div class="col-12 col-md-6 col-lg-4 mb-4 playbook-card" 
-             data-name="{{ playbook.name|lower }}"
-             data-description="{{ playbook.description|lower }}"
-             data-family="{{ playbook.family }}">
-            <div class="card h-100 shadow-sm hover-shadow">
-                <div class="card-body">
-                    <!-- ID Badge -->
-                    <div class="mb-2">
-                        <span class="badge bg-secondary">{{ playbook.id }}</span>
-                        {% if playbook.status == 'Active' %}
-                        <span class="badge bg-success">{{ playbook.status }}</span>
-                        {% elif playbook.status == 'Draft' %}
-                        <span class="badge bg-warning text-dark">{{ playbook.status }}</span>
-                        {% elif playbook.status == 'Archived' %}
-                        <span class="badge bg-info">{{ playbook.status }}</span>
-                        {% else %}
-                        <span class="badge bg-danger">{{ playbook.status }}</span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Name -->
-                    <h5 class="card-title mb-2">
-                        <a href="/playbooks/{{ playbook.id }}/" class="text-decoration-none">
-                            {{ playbook.name }}
-                        </a>
-                    </h5>
-                    
-                    <!-- Type Badge -->
-                    <div class="mb-3">
-                        {% if playbook.type == 'Methodology' %}
-                        <span class="badge bg-primary">
-                            <i class="fas fa-book"></i> {{ playbook.type }}
-                        </span>
-                        {% elif playbook.type == 'Framework' %}
-                        <span class="badge bg-info">
-                            <i class="fas fa-cube"></i> {{ playbook.type }}
-                        </span>
-                        {% else %}
-                        <span class="badge bg-success">
-                            <i class="fas fa-tools"></i> {{ playbook.type }}
-                        </span>
-                        {% endif %}
-                    </div>
-                    
-                    <!-- Description (truncated to ~120 chars) -->
-                    <p class="card-text text-muted small mb-3">
-                        {% if playbook.description|length > 120 %}
-                            {{ playbook.description|slice:":120" }}...
-                        {% else %}
-                            {{ playbook.description }}
-                        {% endif %}
-                    </p>
-                    
-                    <!-- Metadata -->
-                    <div class="small text-muted">
-                        <div class="mb-1">
-                            <i class="fas fa-tags"></i> <strong>Family:</strong> {{ playbook.family }}
+    <!-- Playbooks List -->
+    {% if playbooks %}
+        <div class="row">
+            {% for playbook in playbooks %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'playbook_detail' pk=playbook.pk %}">
+                                    {{ playbook.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted small">
+                                {{ playbook.description|truncatewords:20 }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="badge bg-{{ playbook.status }}">
+                                    {{ playbook.get_status_display }}
+                                </span>
+                                <small class="text-muted">v{{ playbook.version }}</small>
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <i class="fas fa-user"></i> <strong>Author:</strong> 
-                            {% if playbook.author|length > 25 %}
-                                {{ playbook.author|slice:":25" }}...
-                            {% else %}
-                                {{ playbook.author }}
-                            {% endif %}
+                        <div class="card-footer bg-light">
+                            <small class="text-muted">
+                                Updated {{ playbook.updated_at|timesince }} ago
+                            </small>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Card Footer with Actions -->
-                <div class="card-footer bg-white border-top-0">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            <i class="fas fa-clock"></i> Updated {{ playbook.updated_at }}
-                        </small>
-                        <div>
-                            <a href="/playbooks/{{ playbook.id }}/" 
-                               class="btn btn-sm btn-outline-primary"
-                               data-bs-toggle="tooltip"
-                               data-bs-placement="top"
-                               title="View playbook details">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="/playbooks/{{ playbook.id }}/edit/" 
-                               class="btn btn-sm btn-outline-secondary"
-                               data-bs-toggle="tooltip"
-                               data-bs-placement="top"
-                               title="Edit this playbook">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-
-    <!-- Empty State (hidden by default) -->
-    <div class="row d-none" id="emptyState">
-        <div class="col-12">
-            <div class="card border-warning bg-light">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-search fa-3x text-warning mb-3"></i>
-                    <h4 class="card-title">No playbooks found matching your criteria.</h4>
-                    <p class="card-text text-muted">
-                        Try adjusting your search or filter.
-                    </p>
-                    <button class="btn btn-warning mt-3" id="clearFilters"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Reset all search and filter criteria">
-                        <i class="fas fa-times-circle"></i> Clear Filters
-                    </button>
-                </div>
-            </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <i class="fa-solid fa-info-circle fa-3x mb-3"></i>
+            <h4>No playbooks yet</h4>
+            <p>Create your first playbook to get started!</p>
+            <a href="{% url 'playbook_create' %}" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Create New Playbook
+            </a>
         </div>
-    </div>
+    {% endif %}
 </div>
 
 <style>
-.hover-shadow {
-    transition: box-shadow 0.3s ease;
-}
-.hover-shadow:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-.card-title a:hover {
-    text-decoration: underline !important;
-}
+    .badge.bg-active { background-color: #28a745 !important; }
+    .badge.bg-draft { background-color: #6c757d !important; }
+    .badge.bg-disabled { background-color: #dc3545 !important; }
 </style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    const searchBar = document.getElementById('searchBar');
-    const familyFilter = document.getElementById('familyFilter');
-    const playbooksGrid = document.getElementById('playbooksGrid');
-    const emptyState = document.getElementById('emptyState');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-
-    // Filter function
-    function filterPlaybooks() {
-        const searchTerm = searchBar.value.toLowerCase();
-        const selectedFamily = familyFilter.value;
-        const cards = document.querySelectorAll('.playbook-card');
-        let visibleCount = 0;
-
-        cards.forEach(card => {
-            const name = card.getAttribute('data-name');
-            const description = card.getAttribute('data-description');
-            const family = card.getAttribute('data-family');
-
-            const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm);
-            const matchesFamily = selectedFamily === '' || family === selectedFamily;
-
-            if (matchesSearch && matchesFamily) {
-                card.classList.remove('d-none');
-                visibleCount++;
-            } else {
-                card.classList.add('d-none');
-            }
-        });
-
-        // Show/hide empty state
-        if (visibleCount === 0) {
-            playbooksGrid.classList.add('d-none');
-            emptyState.classList.remove('d-none');
-        } else {
-            playbooksGrid.classList.remove('d-none');
-            emptyState.classList.add('d-none');
-        }
-    }
-
-    // Event listeners
-    searchBar.addEventListener('input', filterPlaybooks);
-    familyFilter.addEventListener('change', filterPlaybooks);
-
-    clearFiltersBtn.addEventListener('click', function() {
-        searchBar.value = '';
-        familyFilter.value = '';
-        filterPlaybooks();
-    });
-});
-</script>
-
 {% endblock %}

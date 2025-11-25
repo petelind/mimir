@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Playbook - Step 1{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create New</li>
+        </ol>
+    </nav>
+
+    <!-- Wizard Progress -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="wizard-step active">
+                        <i class="fa-solid fa-circle-1 fa-2x text-primary"></i>
+                        <p class="mt-2 fw-bold">Basic Information</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-regular fa-circle-2 fa-2x text-muted"></i>
+                        <p class="mt-2 text-muted">Add Workflows</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="wizard-step">
+                        <i class="fa-regular fa-circle-3 fa-2x text-muted"></i>
+                        <p class="mt-2 text-muted">Publishing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 1 Form -->
+    <div class="card" data-testid="wizard-step-1">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fa-solid fa-info-circle"></i>
+                Step 1: Basic Information
+            </h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'playbook_create' %}">
+                {% csrf_token %}
+                
+                <!-- Name Field -->
+                <div class="mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                        Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           name="name" 
+                           class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                           id="{{ form.name.id_for_label }}"
+                           value="{{ form.name.value|default:'' }}"
+                           placeholder="Enter playbook name (3-100 characters)"
+                           maxlength="100"
+                           required
+                           data-testid="name-input">
+                    {% if form.name.errors %}
+                        <div class="invalid-feedback d-block" data-testid="error-name">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ form.name.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">
+                        Description <span class="text-danger">*</span>
+                    </label>
+                    <textarea name="description"
+                              class="form-control {% if form.description.errors %}is-invalid{% endif %}"
+                              id="{{ form.description.id_for_label }}"
+                              rows="4"
+                              placeholder="Enter playbook description (10-500 characters)"
+                              maxlength="500"
+                              required
+                              data-testid="description-input">{{ form.description.value|default:'' }}</textarea>
+                    {% if form.description.errors %}
+                        <div class="invalid-feedback" data-testid="error-description">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ form.description.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Category Field -->
+                <div class="mb-3">
+                    <label for="{{ form.category.id_for_label }}" class="form-label">
+                        Category <span class="text-danger">*</span>
+                    </label>
+                    <select name="category"
+                            class="form-select {% if form.category.errors %}is-invalid{% endif %}"
+                            id="{{ form.category.id_for_label }}"
+                            required
+                            data-testid="category-select">
+                        <option value="">Select a category...</option>
+                        <option value="product" {% if form.category.value == 'product' %}selected{% endif %}>Product</option>
+                        <option value="development" {% if form.category.value == 'development' %}selected{% endif %}>Development</option>
+                        <option value="research" {% if form.category.value == 'research' %}selected{% endif %}>Research</option>
+                        <option value="design" {% if form.category.value == 'design' %}selected{% endif %}>Design</option>
+                        <option value="other" {% if form.category.value == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                    {% if form.category.errors %}
+                        <div class="invalid-feedback" data-testid="error-category">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i>
+                            {{ form.category.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags Field -->
+                <div class="mb-3">
+                    <label for="{{ form.tags.id_for_label }}" class="form-label">
+                        Tags
+                    </label>
+                    <input type="text"
+                           name="tags"
+                           class="form-control"
+                           id="{{ form.tags.id_for_label }}"
+                           value="{{ form.tags.value|default:'' }}"
+                           placeholder="Enter tags separated by commas"
+                           data-testid="tags-input">
+                    <small class="form-text text-muted">Comma-separated tags (optional)</small>
+                </div>
+
+                <!-- Visibility Field -->
+                <div class="mb-3">
+                    <label for="{{ form.visibility.id_for_label }}" class="form-label">
+                        Visibility
+                    </label>
+                    <select name="visibility"
+                            class="form-select"
+                            id="{{ form.visibility.id_for_label }}"
+                            data-testid="visibility-select">
+                        <option value="private" {% if form.visibility.value == 'private' or not form.visibility.value %}selected{% endif %}>Private (only me)</option>
+                        <option value="family" {% if form.visibility.value == 'family' %}selected{% endif %}>Family</option>
+                        <option value="local" {% if form.visibility.value == 'local' %}selected{% endif %}>Local only (not uploaded to Homebase)</option>
+                    </select>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" 
+                            class="btn btn-secondary"
+                            data-testid="cancel-wizard"
+                            data-bs-toggle="modal"
+                            data-bs-target="#cancelConfirmModal"
+                            title="Cancel wizard">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" 
+                            class="btn btn-primary"
+                            data-bs-toggle="tooltip"
+                            title="Proceed to add workflows">
+                        Next: Add Workflows <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-labelledby="cancelConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelConfirmModalLabel">
+                    <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>
+                    Cancel Playbook Creation?
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel? All entered information will be lost.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        data-bs-dismiss="modal"
+                        data-testid="keep-editing">
+                    <i class="fa-solid fa-arrow-left me-1"></i>
+                    Keep Editing
+                </button>
+                <a href="{% url 'playbook_list' %}" 
+                   class="btn btn-danger"
+                   data-testid="confirm-cancel">
+                    <i class="fa-solid fa-times me-1"></i>
+                    Yes, Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .wizard-step {
+        padding: 15px;
+    }
+    .wizard-step.active i {
+        color: #0d6efd !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,265 @@
+[
+    {
+        "model": "accounts.customuser",
+        "pk": 100,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$testpassword",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "maria_test",
+            "first_name": "Maria",
+            "last_name": "Rodriguez",
+            "email": "maria@test.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-01-01T00:00:00Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "accounts.customuser",
+        "pk": 101,
+        "fields": {
+            "password": "pbkdf2_sha256$720000$testpassword",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "mike_test",
+            "first_name": "Mike",
+            "last_name": "Chen",
+            "email": "mike@test.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2024-01-01T00:00:00Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "methodology.playbook",
+        "pk": 1,
+        "fields": {
+            "name": "React Frontend Development",
+            "description": "Comprehensive methodology for building React applications with best practices",
+            "category": "development",
+            "tags": [
+                "react",
+                "frontend",
+                "javascript"
+            ],
+            "visibility": "private",
+            "status": "active",
+            "version": 3,
+            "source": "owned",
+            "author": 100,
+            "created_at": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-15T00:00:00Z"
+        }
+    },
+    {
+        "model": "methodology.playbook",
+        "pk": 2,
+        "fields": {
+            "name": "UX Research Process",
+            "description": "User research methodology covering interviews, surveys, and usability testing",
+            "category": "research",
+            "tags": [
+                "ux",
+                "research",
+                "user-testing"
+            ],
+            "visibility": "private",
+            "status": "draft",
+            "version": 1,
+            "source": "owned",
+            "author": 100,
+            "created_at": "2024-01-10T00:00:00Z",
+            "updated_at": "2024-01-10T00:00:00Z"
+        }
+    },
+    {
+        "model": "methodology.playbook",
+        "pk": 3,
+        "fields": {
+            "name": "Agile Sprint Planning",
+            "description": "Methodology for planning and executing agile sprints in software teams",
+            "category": "product",
+            "tags": [
+                "agile",
+                "scrum",
+                "sprint"
+            ],
+            "visibility": "private",
+            "status": "disabled",
+            "version": 2,
+            "source": "owned",
+            "author": 101,
+            "created_at": "2024-01-05T00:00:00Z",
+            "updated_at": "2024-01-12T00:00:00Z"
+        }
+    },
+    {
+        "model": "methodology.workflow",
+        "pk": 1,
+        "fields": {
+            "name": "Project Setup",
+            "description": "Initialize project structure and dependencies",
+            "playbook": 1,
+            "created_at": "2024-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "methodology.workflow",
+        "pk": 2,
+        "fields": {
+            "name": "Component Development",
+            "description": "Build reusable React components",
+            "playbook": 1,
+            "created_at": "2024-01-01T00:01:00Z"
+        }
+    },
+    {
+        "model": "methodology.workflow",
+        "pk": 3,
+        "fields": {
+            "name": "Testing & QA",
+            "description": "Unit and integration testing",
+            "playbook": 1,
+            "created_at": "2024-01-01T00:02:00Z"
+        }
+    },
+    {
+        "model": "methodology.workflow",
+        "pk": 4,
+        "fields": {
+            "name": "User Interviews",
+            "description": "Conduct one-on-one user interviews",
+            "playbook": 2,
+            "created_at": "2024-01-10T00:00:00Z"
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 1,
+        "fields": {
+            "playbook": 1,
+            "version_number": 1,
+            "snapshot_data": {
+                "name": "React Frontend Development",
+                "description": "Initial version of React methodology",
+                "category": "development",
+                "tags": [
+                    "react",
+                    "frontend"
+                ]
+            },
+            "change_summary": "Initial version",
+            "created_at": "2024-01-01T00:00:00Z",
+            "created_by": 100
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 2,
+        "fields": {
+            "playbook": 1,
+            "version_number": 2,
+            "snapshot_data": {
+                "name": "React Frontend Development",
+                "description": "Added TypeScript guidelines",
+                "category": "development",
+                "tags": [
+                    "react",
+                    "frontend",
+                    "typescript"
+                ]
+            },
+            "change_summary": "Added TypeScript support and guidelines",
+            "created_at": "2024-01-08T00:00:00Z",
+            "created_by": 100
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 3,
+        "fields": {
+            "playbook": 1,
+            "version_number": 3,
+            "snapshot_data": {
+                "name": "React Frontend Development",
+                "description": "Comprehensive methodology for building React applications with best practices",
+                "category": "development",
+                "tags": [
+                    "react",
+                    "frontend",
+                    "javascript"
+                ]
+            },
+            "change_summary": "Updated description and reorganized tags",
+            "created_at": "2024-01-15T00:00:00Z",
+            "created_by": 100
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 4,
+        "fields": {
+            "playbook": 2,
+            "version_number": 1,
+            "snapshot_data": {
+                "name": "UX Research Process",
+                "description": "User research methodology covering interviews, surveys, and usability testing",
+                "category": "research",
+                "tags": [
+                    "ux",
+                    "research",
+                    "user-testing"
+                ]
+            },
+            "change_summary": "Initial version",
+            "created_at": "2024-01-10T00:00:00Z",
+            "created_by": 100
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 5,
+        "fields": {
+            "playbook": 3,
+            "version_number": 1,
+            "snapshot_data": {
+                "name": "Agile Sprint Planning",
+                "description": "Initial methodology for agile sprints",
+                "category": "product",
+                "tags": [
+                    "agile",
+                    "scrum"
+                ]
+            },
+            "change_summary": "Initial version",
+            "created_at": "2024-01-05T00:00:00Z",
+            "created_by": 101
+        }
+    },
+    {
+        "model": "methodology.playbookversion",
+        "pk": 6,
+        "fields": {
+            "playbook": 3,
+            "version_number": 2,
+            "snapshot_data": {
+                "name": "Agile Sprint Planning",
+                "description": "Methodology for planning and executing agile sprints in software teams",
+                "category": "product",
+                "tags": [
+                    "agile",
+                    "scrum",
+                    "sprint"
+                ]
+            },
+            "change_summary": "Expanded description and added sprint tag",
+            "created_at": "2024-01-12T00:00:00Z",
+            "created_by": 101
+        }
+    }
+]
