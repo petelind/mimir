@@ -40,6 +40,35 @@ def playbook_list(request):
 
 # ==================== CREATE WIZARD ====================
 
+def _check_duplicate_playbook(user, name):
+    """Check if playbook name already exists for user."""
+    return Playbook.objects.filter(author=user, name=name).exists()
+
+
+def _save_step1_to_session(request, form_data):
+    """Save Step 1 form data to session."""
+    wizard_data = {
+        'name': form_data['name'],
+        'description': form_data['description'],
+        'category': form_data['category'],
+        'tags': form_data['tags'],
+        'visibility': form_data.get('visibility', 'private'),
+    }
+    request.session['wizard_data'] = wizard_data
+    logger.info(f"Step 1 data saved to session for user {request.user.username}")
+
+
+def _save_workflow_to_session(request, workflow_name, workflow_description):
+    """Save workflow data to wizard session."""
+    wizard_data = request.session['wizard_data']
+    wizard_data['workflows'] = [{
+        'name': workflow_name,
+        'description': workflow_description
+    }]
+    request.session['wizard_data'] = wizard_data
+    logger.info(f"Workflow '{workflow_name}' added to wizard data for user {request.user.username}")
+
+
 @login_required
 def playbook_create(request):
     """
@@ -47,6 +76,11 @@ def playbook_create(request):
     
     Collects name, description, category, tags, and visibility.
     Stores in session and proceeds to Step 2.
+    
+    Template Context:
+        - form: PlaybookBasicInfoForm instance
+        - step: Current wizard step number (1)
+        - step_title: Title for current step
     """
     logger.info(f"User {request.user.username} starting playbook creation wizard - Step 1")
     
@@ -55,31 +89,17 @@ def playbook_create(request):
         
         if form.is_valid():
             logger.info(f"Step 1 form valid for user {request.user.username}")
-            
-            # Check for duplicate name
             name = form.cleaned_data['name']
-            if Playbook.objects.filter(author=request.user, name=name).exists():
+            
+            if _check_duplicate_playbook(request.user, name):
                 logger.warning(f"Duplicate playbook name '{name}' for user {request.user.username}")
                 form.add_error('name', 'A playbook with this name already exists. Please choose a different name.')
             else:
-                # Store in session
-                wizard_data = {
-                    'name': form.cleaned_data['name'],
-                    'description': form.cleaned_data['description'],
-                    'category': form.cleaned_data['category'],
-                    'tags': form.cleaned_data['tags'],
-                    'visibility': form.cleaned_data.get('visibility', 'private'),
-                }
-                request.session['wizard_data'] = wizard_data
-                logger.info(f"Step 1 data saved to session for user {request.user.username}")
-                
+                _save_step1_to_session(request, form.cleaned_data)
                 return redirect('playbook_create_step2')
         else:
             logger.warning(f"Step 1 form invalid for user {request.user.username}: {form.errors}")
     else:
-        # Initialize wizard - clear any previous session data
-        if 'wizard_data' in request.session:
-            del request.session['wizard_data']
         form = PlaybookBasicInfoForm()
     
     context = {
@@ -97,36 +117,30 @@ def playbook_create_step2(request):
     CREATE Wizard - Step 2: Add Workflows.
     
     Optionally add first workflow or skip to Step 3.
+    
+    Template Context:
+        - form: PlaybookWorkflowForm instance
+        - step: Current wizard step number (2)
+        - step_title: Title for current step
+        - wizard_data: Session data from Step 1
     """
     logger.info(f"User {request.user.username} on playbook creation wizard - Step 2")
     
-    # Check if Step 1 was completed
     if 'wizard_data' not in request.session:
         logger.warning(f"User {request.user.username} tried to access Step 2 without completing Step 1")
         messages.warning(request, 'Please complete Step 1 first.')
         return redirect('playbook_create')
     
     if request.method == 'POST':
-        form = PlaybookWorkflowForm(request.POST)
-        
-        # Check if user is skipping
         if request.POST.get('skip') == 'true':
             logger.info(f"User {request.user.username} skipping workflow addition")
             return redirect('playbook_create_step3')
         
+        form = PlaybookWorkflowForm(request.POST)
         if form.is_valid():
             workflow_name = form.cleaned_data.get('workflow_name', '').strip()
-            
             if workflow_name:
-                # Store workflow data in session
-                wizard_data = request.session['wizard_data']
-                wizard_data['workflows'] = [{
-                    'name': workflow_name,
-                    'description': form.cleaned_data.get('workflow_description', '')
-                }]
-                request.session['wizard_data'] = wizard_data
-                logger.info(f"Workflow '{workflow_name}' added to wizard data for user {request.user.username}")
-            
+                _save_workflow_to_session(request, workflow_name, form.cleaned_data.get('workflow_description', ''))
             return redirect('playbook_create_step3')
         else:
             logger.warning(f"Step 2 form invalid for user {request.user.username}: {form.errors}")
@@ -143,6 +157,56 @@ def playbook_create_step2(request):
     return render(request, 'playbooks/create_wizard_step2.html', context)
 
 
+def _create_playbook_from_wizard(wizard_data, status, user):
+    """Create Playbook instance from wizard data."""
+    playbook = Playbook.objects.create(
+        name=wizard_data['name'],
+        description=wizard_data['description'],
+        category=wizard_data['category'],
+        tags=wizard_data.get('tags', []),
+        visibility=wizard_data.get('visibility', 'private'),
+        status=status,
+        version=1,
+        source='owned',
+        author=user
+    )
+    logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {user.username}")
+    return playbook
+
+
+def _create_workflows_for_playbook(wizard_data, playbook):
+    """Create Workflow instances for playbook."""
+    workflows = wizard_data.get('workflows', [])
+    for workflow_data in workflows:
+        workflow = Workflow.objects.create(
+            name=workflow_data['name'],
+            description=workflow_data.get('description', ''),
+            playbook=playbook
+        )
+        logger.info(f"Workflow '{workflow.name}' created for playbook {playbook.pk}")
+
+
+def _create_initial_version(playbook, user):
+    """Create initial version for playbook."""
+    snapshot_data = {
+        'name': playbook.name,
+        'description': playbook.description,
+        'category': playbook.category,
+        'tags': playbook.tags,
+        'visibility': playbook.visibility,
+        'status': playbook.status
+    }
+    
+    PlaybookVersion.objects.create(
+        playbook=playbook,
+        version_number=1,
+        snapshot_data=snapshot_data,
+        change_summary='Initial version',
+        created_by=user
+    )
+    logger.info(f"Version 1 created for playbook {playbook.pk}")
+
+
 @login_required
 @transaction.atomic
 def playbook_create_step3(request):
@@ -151,10 +215,15 @@ def playbook_create_step3(request):
     
     Review and publish playbook as Draft or Active.
     Creates Playbook, Workflows, and initial PlaybookVersion.
+    
+    Template Context:
+        - form: PlaybookPublishingForm instance
+        - step: Current wizard step number (3)
+        - step_title: Title for current step
+        - wizard_data: Complete wizard session data
     """
     logger.info(f"User {request.user.username} on playbook creation wizard - Step 3")
     
-    # Check if previous steps were completed
     if 'wizard_data' not in request.session:
         logger.warning(f"User {request.user.username} tried to access Step 3 without completing previous steps")
         messages.warning(request, 'Please complete previous steps first.')
@@ -170,52 +239,11 @@ def playbook_create_step3(request):
             logger.info(f"User {request.user.username} publishing playbook with status: {status}")
             
             try:
-                # Create playbook
-                playbook = Playbook.objects.create(
-                    name=wizard_data['name'],
-                    description=wizard_data['description'],
-                    category=wizard_data['category'],
-                    tags=wizard_data.get('tags', []),
-                    visibility=wizard_data.get('visibility', 'private'),
-                    status=status,
-                    version=1,
-                    source='owned',
-                    author=request.user
-                )
-                logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {request.user.username}")
+                playbook = _create_playbook_from_wizard(wizard_data, status, request.user)
+                _create_workflows_for_playbook(wizard_data, playbook)
+                _create_initial_version(playbook, request.user)
                 
-                # Create workflows if any
-                workflows = wizard_data.get('workflows', [])
-                for workflow_data in workflows:
-                    workflow = Workflow.objects.create(
-                        name=workflow_data['name'],
-                        description=workflow_data.get('description', ''),
-                        playbook=playbook
-                    )
-                    logger.info(f"Workflow '{workflow.name}' created for playbook {playbook.pk}")
-                
-                # Create initial version
-                snapshot_data = {
-                    'name': playbook.name,
-                    'description': playbook.description,
-                    'category': playbook.category,
-                    'tags': playbook.tags,
-                    'visibility': playbook.visibility,
-                    'status': playbook.status
-                }
-                
-                PlaybookVersion.objects.create(
-                    playbook=playbook,
-                    version_number=1,
-                    snapshot_data=snapshot_data,
-                    change_summary='Initial version',
-                    created_by=request.user
-                )
-                logger.info(f"Version 1 created for playbook {playbook.pk}")
-                
-                # Clear wizard session
                 del request.session['wizard_data']
-                
                 messages.success(request, f"Playbook '{playbook.name}' created successfully!")
                 return redirect('playbook_detail', pk=playbook.pk)
                 
@@ -241,7 +269,15 @@ def playbook_create_step3(request):
 
 @login_required
 def playbook_detail(request, pk):
-    """View playbook details."""
+    """
+    View playbook details.
+    
+    Template Context:
+        - playbook: Playbook instance
+        - workflows: QuerySet of related Workflow instances
+        - versions: QuerySet of latest 5 PlaybookVersion instances
+        - can_edit: Boolean indicating if user can edit playbook
+    """
     logger.info(f"User {request.user.username} viewing playbook {pk}")
     
     playbook = get_object_or_404(Playbook, pk=pk)
