@@ -1,0 +1,18 @@
+---
+description: When implementing methods and/or properties
+alwaysApply: false
+---
+Design each log message so that if something fails, you can find the source and root cause without guessing or needing to reproduce the problem.
+
+When designing log messages, always ask:
+
+What information will I need to precisely pinpoint where the error is occurring?
+What context will I need in the logs to understand why it happened?
+Your log entries should always include:
+
+The exact location (class, method/function, line if possible)
+Key input parameters or identifiers relevant to the operation
+The specific operation or action being attempted
+The error or unexpected condition encountered
+Relevant context or state (e.g., user ID, transaction ID, environment)
+(Optional) Next steps or hints if possible on how to investigate further

@@ -346,6 +346,14 @@ mimir/
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+### IDE-Specific Rules
+
+Mimir maintains project rules in two formats to support different AI-powered IDEs:
+- **`.windsurf/rules/*.md`** - For Windsurf IDE
+- **`.cursor/rules/*.mdc`** - For Cursor IDE
+
+Both rule sets contain identical content with different formatting. **If you use Cursor and modify rules**, ask your IDE to maintain sync between both formats to keep them consistent.
+
 ## License
 
 [License details here]

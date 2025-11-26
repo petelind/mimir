@@ -1,0 +1,14 @@
+---
+alwaysApply: true
+---
+Every time you work on a complex problem - implementing new feature, extending the view, modifying template, etc. - first create the plan and put it into long-term memory:
+
+1. Identify all affected models, views, services, templates etc.
+2. Figure out methods, properties, enums you need and make a memory of what is available and how you will use it.
+3. If there are methods, properties, services, packages etc. missing - note what neeeds to be done.
+
+When you you have the plan - ALWAYS show me the plan and ask for approval or refinenemnts.
+
+Then execute the plan, adjusting the plan as necessary (like you encountered API filter you knew existed, but now it is not there, and then you alter your plan which was using that filter). 
+
+After every step - update the plan, show it to me, show me where we stand, explain next step, then proceed with implementation.
