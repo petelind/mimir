@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Create Playbook - Step 2: Add Workflows - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Wizard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="Playbook creation wizard">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'playbook_create_step1' %}" data-testid="step1-link">Step 1: Basic Information</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <strong>Step 2: Add Workflows</strong>
+                    </li>
+                    <li class="breadcrumb-item text-muted">Step 3: Publishing Settings</li>
+                </ol>
+            </nav>
+            <h1 class="mb-3">
+                <i class="fas fa-sitemap text-primary"></i>
+                Add Workflows
+            </h1>
+            <p class="text-muted">
+                You can add workflows now or later. Workflows help organize activities into logical groups.
+            </p>
+        </div>
+    </div>
+
+    <!-- Playbook Summary -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h5 class="card-title mb-2">
+                        <i class="fas fa-book"></i> {{ step1_data.name }}
+                    </h5>
+                    <p class="text-muted mb-0">{{ step1_data.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workflows Section -->
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <!-- Existing Workflows -->
+            {% if workflows %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-list"></i> Added Workflows ({{ workflows|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for workflow in workflows %}
+                    <div class="d-flex justify-content-between align-items-start mb-3 p-3 border rounded" 
+                         data-testid="workflow-{{ workflow.id }}">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ workflow.name }}</h6>
+                            <p class="text-muted mb-0">{{ workflow.description }}</p>
+                        </div>
+                        <div class="ms-3">
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="remove_workflow">
+                                <input type="hidden" name="workflow_id" value="{{ workflow.id }}">
+                                <button type="submit" 
+                                        class="btn btn-sm btn-outline-danger"
+                                        data-testid="remove-workflow-{{ workflow.id }}"
+                                        onclick="return confirm('Remove this workflow?')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Add Workflow Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus"></i> Add Workflow
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" data-testid="add-workflow-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add_workflow">
+                        
+                        <!-- Workflow Name -->
+                        <div class="mb-3" data-testid="workflow-name-field-group">
+                            <label for="workflow_name" class="form-label">
+                                Workflow Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control {% if form.name_errors %}is-invalid{% endif %}" 
+                                   id="workflow_name" 
+                                   name="workflow_name" 
+                                   value="{{ form.name.value|default:'' }}"
+                                   placeholder="e.g., Discovery Phase, User Research"
+                                   data-testid="workflow-name-input"
+                                   required>
+                            <div class="form-text">
+                                3-200 characters. Must be unique within this playbook.
+                            </div>
+                            {% if form.name_errors %}
+                                <div class="invalid-feedback" data-testid="workflow-name-error">
+                                    {% for error in form.name_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Workflow Description -->
+                        <div class="mb-4" data-testid="workflow-description-field-group">
+                            <label for="workflow_description" class="form-label">
+                                Workflow Description <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control {% if form.description_errors %}is-invalid{% endif %}" 
+                                      id="workflow_description" 
+                                      name="workflow_description" 
+                                      rows="3"
+                                      placeholder="Describe what this workflow accomplishes..."
+                                      data-testid="workflow-description-input"
+                                      required>{{ form.description.value|default:'' }}</textarea>
+                            <div class="form-text">
+                                10-2000 characters. Explain the purpose and scope of this workflow.
+                            </div>
+                            {% if form.description_errors %}
+                                <div class="invalid-feedback" data-testid="workflow-description-error">
+                                    {% for error in form.description_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <button type="button" 
+                                    class="btn btn-secondary"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#skipModal"
+                                    data-testid="skip-button">
+                                <i class="fas fa-forward"></i> Skip for Now
+                            </button>
+                            <div>
+                                <button type="submit" 
+                                        class="btn btn-primary me-2"
+                                        data-testid="add-workflow-button">
+                                    <i class="fas fa-plus"></i> Add Workflow
+                                </button>
+                                {% if workflows %}
+                                <button type="submit" 
+                                        name="action" 
+                                        value="continue"
+                                        class="btn btn-success"
+                                        data-testid="continue-button">
+                                    <i class="fas fa-arrow-right"></i> Continue to Step 3
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Quick Tips
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Workflows are optional:</strong> You can add them now or later.
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Good workflow names:</strong> "Discovery Phase", "User Research", "Design Sprint"
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Description:</strong> Explain what activities this workflow covers.
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Multiple workflows:</strong> Break complex processes into logical steps.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Workflow Examples -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-lightbulb"></i> Example Workflows
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-primary">Discovery Phase</h6>
+                        <p class="text-muted small mb-0">Initial research, user interviews, and validation activities.</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-primary">Design Process</h6>
+                        <p class="text-muted small mb-0">Wireframing, prototyping, and user testing activities.</p>
+                    </div>
+                    <div class="mb-0">
+                        <h6 class="text-primary">Development Sprint</h6>
+                        <p class="text-muted small mb-0">Coding, testing, and deployment procedures.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Skip Confirmation Modal -->
+<div class="modal fade" id="skipModal" tabindex="-1" aria-labelledby="skipModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="skipModalLabel">Skip adding workflows?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You can add workflows later after creating the playbook.</p>
+                <p>Are you sure you want to skip adding workflows for now?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-plus"></i> Add Workflows
+                </button>
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="skip">
+                    <button type="submit" class="btn btn-primary" data-testid="confirm-skip-button">
+                        <i class="fas fa-forward"></i> Skip for Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const workflowNameInput = document.getElementById('workflow_name');
+    const workflowDescriptionInput = document.getElementById('workflow_description');
+    
+    // Auto-focus on workflow name if form is empty
+    if (workflowNameInput && !workflowNameInput.value.trim()) {
+        workflowNameInput.focus();
+    }
+    
+    console.log('Playbook creation Step 2 initialized');
+});
+</script>
+{% endblock %}

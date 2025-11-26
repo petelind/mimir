@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block title %}Create Playbook - Step 3: Publishing Settings - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Wizard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="Playbook creation wizard">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'playbook_create_step1' %}" data-testid="step1-link">Step 1: Basic Information</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'playbook_create_step2' %}" data-testid="step2-link">Step 2: Add Workflows</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <strong>Step 3: Publishing Settings</strong>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="mb-3">
+                <i class="fas fa-cog text-primary"></i>
+                Publishing Settings
+            </h1>
+            <p class="text-muted">
+                Review your playbook and choose publishing settings. You can always change these later.
+            </p>
+        </div>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-eye"></i> Playbook Summary
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Name:</strong></td>
+                                    <td data-testid="summary-name">{{ step1_data.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Description:</strong></td>
+                                    <td data-testid="summary-description">
+                                        {% if step1_data.description|length > 100 %}
+                                            {{ step1_data.description|slice:":100" }}...
+                                        {% else %}
+                                            {{ step1_data.description }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Category:</strong></td>
+                                    <td data-testid="summary-category">{{ step1_data.category|title }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Tags:</strong></td>
+                                    <td data-testid="summary-tags">
+                                        {% if step1_data.tags %}
+                                            {% for tag in step1_data.tags %}
+                                                <span class="badge bg-secondary me-1">{{ tag }}</span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">None</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Visibility:</strong></td>
+                                    <td data-testid="summary-visibility">
+                                        {% for choice in visibility_choices %}
+                                            {% if choice.0 == step1_data.visibility %}
+                                                {{ choice.1 }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Workflows:</strong></td>
+                                    <td data-testid="summary-workflows">
+                                        {% if step2_data.skip_workflows %}
+                                            <span class="text-muted">None added yet</span>
+                                        {% else %}
+                                            {% with workflow_count=step2_data.workflows|length %}
+                                                {% if workflow_count == 0 %}
+                                                    <span class="text-muted">None added yet</span>
+                                                {% elif workflow_count == 1 %}
+                                                    <span class="badge bg-info">1 workflow added</span>
+                                                {% else %}
+                                                    <span class="badge bg-info">{{ workflow_count }} workflows added</span>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publishing Form -->
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <form method="post" 
+                  data-testid="publishing-form"
+                  hx-post="{% url 'playbook_create_step3' %}"
+                  hx-target="#wizard-container"
+                  hx-swap="innerHTML">
+                {% csrf_token %}
+                
+                <!-- Status Selection -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-flag"></i> Status
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check-group">
+                            {% for choice in status_choices %}
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="radio" 
+                                       name="status" 
+                                       id="status_{{ choice.0 }}" 
+                                       value="{{ choice.0 }}"
+                                       {% if choice.0 == 'active' %}checked{% endif %}
+                                       data-testid="status-{{ choice.0 }}">
+                                <label class="form-check-label" for="status_{{ choice.0 }}">
+                                    <strong>{{ choice.1 }}</strong>
+                                    {% if choice.0 == 'active' %}
+                                        <span class="badge bg-success ms-2">Recommended</span>
+                                    {% endif %}
+                                </label>
+                                <div class="form-text text-muted">
+                                    {% if choice.0 == 'active' %}
+                                        Ready to use. Others can see and use this playbook immediately.
+                                    {% elif choice.0 == 'draft' %}
+                                        Work in progress. Only you can see this playbook until you publish it.
+                                    {% elif choice.0 == 'archived' %}
+                                        Not in active use. Preserved for reference but not shown in lists.
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-code-branch"></i> Version
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <label class="form-label">Initial Version</label>
+                                <div class="form-control-plaintext">
+                                    <strong>v1.0.0</strong>
+                                    <span class="text-muted">(auto-set on creation)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Note:</strong> Version numbers are automatically managed. You can create new versions when making significant updates.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" 
+                            class="btn btn-secondary"
+                            onclick="history.back()"
+                            data-testid="back-button">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <div>
+                        <button type="button" 
+                                class="btn btn-outline-danger me-2"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#cancelModal"
+                                data-testid="cancel-button">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" 
+                                class="btn btn-primary btn-lg"
+                                data-testid="create-playbook-button">
+                            <i class="fas fa-plus"></i> Create Playbook
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Publishing Tips
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6><i class="fas fa-flag text-success"></i> Active Status</h6>
+                        <p class="small text-muted">
+                            Choose Active when your playbook is ready for others to use. It will appear in searches and can be shared.
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h6><i class="fas fa-flag text-warning"></i> Draft Status</h6>
+                        <p class="small text-muted">
+                            Choose Draft when you're still working on the playbook. Only you can see it until you change the status.
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h6><i class="fas fa-code-branch text-info"></i> Version Management</h6>
+                        <p class="small text-muted">
+                            Each playbook starts at v1.0.0. You can create new versions when making significant changes.
+                        </p>
+                    </div>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Ready to go!</strong><br>
+                        Your playbook looks great. Click "Create Playbook" to finish.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Discard changes?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your progress will be lost if you cancel now.</p>
+                <p>Are you sure you want to discard your changes?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-testid="keep-editing-button">
+                    <i class="fas fa-edit"></i> Keep Editing
+                </button>
+                <a href="{% url 'playbook_list' %}" class="btn btn-danger" data-testid="discard-changes-button">
+                    <i class="fas fa-trash"></i> Discard Changes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Playbook creation Step 3 initialized');
+});
+</script>
+
+<style>
+.form-check-group .form-check {
+    margin-bottom: 1rem;
+}
+.form-check-group .form-check-label {
+    font-weight: 500;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+
+{% block title %}Create Playbook - Step 1: Basic Information - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Wizard Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="Playbook creation wizard">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <strong>Step 1: Basic Information</strong>
+                    </li>
+                    <li class="breadcrumb-item text-muted">Step 2: Add Workflows</li>
+                    <li class="breadcrumb-item text-muted">Step 3: Publishing Settings</li>
+                </ol>
+            </nav>
+            <h1 class="mb-3">
+                <i class="fas fa-book-sparkles text-primary"></i>
+                Create New Playbook
+            </h1>
+            <p class="text-muted">
+                Let's start with the basic information about your playbook.
+                All fields marked with <span class="text-danger">*</span> are required.
+            </p>
+        </div>
+    </div>
+
+    <!-- Step 1 Form -->
+    <div class="row">
+        <div class="col-12 col-lg-8">
+            <form method="post" 
+                  data-testid="playbook-create-step1-form"
+                  hx-post="{% url 'playbook_create_step1' %}"
+                  hx-target="#wizard-container"
+                  hx-swap="innerHTML">
+                {% csrf_token %}
+                
+                <!-- Name Field -->
+                <div class="mb-4" data-testid="name-field-group">
+                    <label for="id_name" class="form-label">
+                        Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control {% if form.name_errors %}is-invalid{% endif %}" 
+                           id="id_name" 
+                           name="name" 
+                           value="{{ form.name.value|default:'' }}"
+                           maxlength="100"
+                           required
+                           data-testid="name-input"
+                           placeholder="e.g., Product Discovery Framework">
+                    <div class="form-text">
+                        3-100 characters. Must be unique among your playbooks.
+                    </div>
+                    {% if form.name_errors %}
+                        <div class="invalid-feedback" data-testid="name-error">
+                            {% for error in form.name_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-4" data-testid="description-field-group">
+                    <label for="id_description" class="form-label">
+                        Description <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control {% if form.description_errors %}is-invalid{% endif %}" 
+                              id="id_description" 
+                              name="description" 
+                              rows="4"
+                              maxlength="500"
+                              required
+                              data-testid="description-input"
+                              placeholder="Comprehensive methodology for discovering and validating product opportunities">{{ form.description.value|default:'' }}</textarea>
+                    <div class="form-text">
+                        10-500 characters. Explain what this playbook covers.
+                    </div>
+                    {% if form.description_errors %}
+                        <div class="invalid-feedback" data-testid="description-error">
+                            {% for error in form.description_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Category Field -->
+                <div class="mb-4" data-testid="category-field-group">
+                    <label for="id_category" class="form-label">
+                        Category <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select {% if form.category_errors %}is-invalid{% endif %}" 
+                            id="id_category" 
+                            name="category" 
+                            required
+                            data-testid="category-select">
+                        <option value="">Choose a category...</option>
+                        <option value="design" {% if form.category.value == 'design' %}selected{% endif %}>Design</option>
+                        <option value="development" {% if form.category.value == 'development' %}selected{% endif %}>Development</option>
+                        <option value="research" {% if form.category.value == 'research' %}selected{% endif %}>Research</option>
+                        <option value="management" {% if form.category.value == 'management' %}selected{% endif %}>Management</option>
+                        <option value="product" {% if form.category.value == 'product' %}selected{% endif %}>Product</option>
+                        <option value="other" {% if form.category.value == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                    {% if form.category_errors %}
+                        <div class="invalid-feedback" data-testid="category-error">
+                            {% for error in form.category_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Tags Field -->
+                <div class="mb-4" data-testid="tags-field-group">
+                    <label for="id_tags" class="form-label">
+                        Tags <span class="text-muted">(optional)</span>
+                    </label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="id_tags" 
+                           name="tags"
+                           data-testid="tags-input"
+                           placeholder="Enter tags and press Enter (e.g., product management, discovery)">
+                    <div class="form-text">
+                        Press Enter to add tags. Tags help organize and find your playbooks.
+                    </div>
+                    <!-- Tag tokens will be displayed here -->
+                    <div id="tag-container" class="mt-2" data-testid="tag-container">
+                        <!-- Tags will be added dynamically -->
+                    </div>
+                    {% if form.tags_errors %}
+                        <div class="text-danger small mt-1" data-testid="tags-error">
+                            {% for error in form.tags_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Visibility Field -->
+                <div class="mb-4" data-testid="visibility-field-group">
+                    <label class="form-label">
+                        Visibility <span class="text-danger">*</span>
+                    </label>
+                    <div class="form-check-group">
+                        {% for value, label in visibility_choices %}
+                        <div class="form-check">
+                            <input class="form-check-input" 
+                                   type="radio" 
+                                   name="visibility" 
+                                   id="visibility_{{ value }}" 
+                                   value="{{ value }}"
+                                   {% if form.visibility.value == value %}checked{% endif %}
+                                   data-testid="visibility-{{ value }}">
+                            <label class="form-check-label" for="visibility_{{ value }}">
+                                {{ label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.visibility_errors %}
+                        <div class="text-danger small mt-1" data-testid="visibility-error">
+                            {% for error in form.visibility_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form Actions -->
+                <div class="d-flex justify-content-between mt-5">
+                    <button type="button" 
+                            class="btn btn-secondary"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#cancelModal"
+                            data-testid="cancel-button">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" 
+                            class="btn btn-primary btn-lg"
+                            data-testid="next-button">
+                        Next: Add Workflows <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-12 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Quick Tips
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Name:</strong> Choose a descriptive name that clearly indicates what the playbook covers.
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Description:</strong> Explain the purpose, scope, and what users will learn.
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Category:</strong> Select the primary area this playbook belongs to.
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Tags:</strong> Add relevant keywords to make your playbook easier to find.
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            <strong>Visibility:</strong> Private means only you can see it. Family and Local options have different sharing behaviors.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Discard changes?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your progress will be lost if you cancel now.</p>
+                <p>Are you sure you want to discard your changes?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-testid="keep-editing-button">
+                    <i class="fas fa-edit"></i> Keep Editing
+                </button>
+                <a href="{% url 'playbook_list' %}" class="btn btn-danger" data-testid="discard-changes-button">
+                    <i class="fas fa-trash"></i> Discard Changes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tagInput = document.getElementById('id_tags');
+    const tagContainer = document.getElementById('tag-container');
+    let tags = {{ form.tags.value|default:'[]' }};
+    
+    // Render existing tags
+    function renderTags() {
+        tagContainer.innerHTML = '';
+        tags.forEach((tag, index) => {
+            const tagElement = document.createElement('span');
+            tagElement.className = 'badge bg-secondary me-2 mb-2';
+            tagElement.setAttribute('data-testid', `tag-${index}`);
+            tagElement.innerHTML = `
+                ${tag}
+                <button type="button" class="btn-close btn-close-white ms-1" 
+                        data-testid="remove-tag-${index}" 
+                        aria-label="Remove tag">×</button>
+            `;
+            tagContainer.appendChild(tagElement);
+        });
+        
+        // Add event listeners to remove buttons
+        tagContainer.querySelectorAll('[data-testid^="remove-tag-"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = parseInt(this.getAttribute('data-testid').replace('remove-tag-', ''));
+                tags.splice(index, 1);
+                renderTags();
+            });
+        });
+    }
+    
+    // Handle tag input
+    tagInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const tag = this.value.trim();
+            if (tag && !tags.includes(tag)) {
+                tags.push(tag);
+                renderTags();
+                this.value = '';
+            }
+        }
+    });
+    
+    // Initial render
+    renderTags();
+    
+    console.log('Playbook creation Step 1 initialized');
+});
+</script>
+
+<style>
+.form-check-group .form-check {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}
