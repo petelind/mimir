@@ -52,8 +52,9 @@ class TestAuthenticationE2E:
         # Step 4: Should be redirected to onboarding and auto-logged in
         assert response.redirect_chain[-1][0] == '/auth/user/onboarding/'
         content = response.content.decode('utf-8')
-        # Feature traceability marker for FOB-ONBOARDING-1
+# Feature traceability marker for FOB-ONBOARDING-1
         assert 'data-testid="onboarding-feature-code"' in content
+        assert 'data-testid="onboarding-welcome"' in content
         assert 'FOB-ONBOARDING-1' in content
         
         # Verify user was created and is authenticated

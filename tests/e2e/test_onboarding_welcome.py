@@ -7,14 +7,12 @@ Per .windsurf/workflows/dev-4-e2e-tests.md we use Django Test Client
 for fast, reliable end-to-end flows without browser automation.
 """
 
-import pytest
 from django.contrib.auth.models import User
-from django.test import Client
+from django.test import TestCase, Client
 from django.urls import reverse
 
 
-@pytest.mark.django_db
-class TestOnboardingE2E:
+class TestOnboardingE2E(TestCase):
     """E2E tests for onboarding welcome page (FOB-ONBOARDING-1)."""
 
     def test_welcome_screen_display_after_registration(self):
