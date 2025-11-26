@@ -1,172 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Tour of Features - Mimir{% endblock %}
 
 {% block extra_css %}
-<style>
-/* Tour-specific styles */
-.tour-card {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.tour-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-    border-color: var(--bs-primary);
-}
-
-.tour-card .feature-icon {
-    transition: all 0.3s ease;
-}
-
-.tour-card:hover .feature-icon {
-    transform: scale(1.1);
-}
-
-.progress-animated {
-    transition: width 1s ease-in-out;
-}
-
-.feature-detail-modal .modal-dialog {
-    max-width: 600px;
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.6s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.stagger-animation > div {
-    opacity: 0;
-    animation: fadeInUp 0.6s ease-in forwards;
-}
-
-.stagger-animation > div:nth-child(1) { animation-delay: 0.1s; }
-.stagger-animation > div:nth-child(2) { animation-delay: 0.2s; }
-.stagger-animation > div:nth-child(3) { animation-delay: 0.3s; }
-.stagger-animation > div:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Pulse animation for primary action */
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(13, 110, 253, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
-}
-
-.btn-continue {
-    animation: pulse 2s infinite;
-}
-
-/* Progress Steps Styles */
-.progress-steps {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-width: 80px;
-}
-
-.step-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    margin-bottom: 8px;
-}
-
-.step.completed .step-circle {
-    background-color: var(--bs-success);
-    color: white;
-    border: 2px solid var(--bs-success);
-}
-
-.step.active .step-circle {
-    background-color: var(--bs-primary);
-    color: white;
-    border: 2px solid var(--bs-primary);
-    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
-}
-
-.step:not(.completed):not(.active) .step-circle {
-    background-color: var(--bs-gray-200);
-    color: var(--bs-gray-600);
-    border: 2px solid var(--bs-gray-300);
-}
-
-.step-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--bs-gray-600);
-    text-align: center;
-}
-
-.step.active .step-label {
-    color: var(--bs-primary);
-    font-weight: 600;
-}
-
-.step.completed .step-label {
-    color: var(--bs-success);
-    font-weight: 600;
-}
-
-.step-line {
-    height: 2px;
-    background-color: var(--bs-gray-300);
-    position: relative;
-    margin: 0 8px;
-    margin-top: 20px;
-}
-
-.step.completed + .step-line {
-    background-color: var(--bs-success);
-}
-
-/* Dark mode adjustments */
-[data-bs-theme="dark"] .tour-card {
-    background-color: var(--bs-gray-800);
-    color: var(--bs-white);
-}
-
-[data-bs-theme="dark"] .tour-card:hover {
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
-}
-
-[data-bs-theme="dark"] .step:not(.completed):not(.active) .step-circle {
-    background-color: var(--bs-gray-700);
-    color: var(--bs-gray-400);
-    border: 2px solid var(--bs-gray-600);
-}
-
-[data-bs-theme="dark"] .step-line {
-    background-color: var(--bs-gray-600);
-}
-
-[data-bs-theme="dark"] .step-label {
-    color: var(--bs-gray-400);
-}
-</style>
+<link rel="stylesheet" href="{% static 'css/onboarding_tour.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -453,19 +291,19 @@ document.addEventListener('DOMContentLoaded', function() {
                          icon.includes('warning') ? 'text-warning' : 'text-info';
         iconWrapper.innerHTML = `<i class="${icon} fa-4x ${colorClass}"></i>`;
         
-        // Set explore button action (placeholder for now)
+        // Set explore button action
         exploreFeatureBtn.onclick = function() {
             bootstrap.Modal.getInstance(featureModal).hide();
-            // TODO: Navigate to feature when implemented
-            console.log('Explore feature:', feature);
+            // Navigate to dashboard where features can be explored
+            window.location.href = '{% url "dashboard" %}';
         };
     });
     
     // Handle continue button
     document.getElementById('continueBtn').addEventListener('click', function(e) {
         e.preventDefault();
-        // TODO: Navigate to next onboarding step when implemented
-        console.log('Continue to next step');
+        // Navigate to dashboard as next step in onboarding flow
+        window.location.href = '{% url "dashboard" %}';
     });
     
     // Add entrance animations
