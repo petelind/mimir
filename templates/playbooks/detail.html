@@ -33,6 +33,15 @@
                    title="Edit this playbook">
                     <i class="fa-solid fa-edit"></i> Edit
                 </a>
+                <button type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="tooltip"
+                        title="Delete this playbook"
+                        hx-get="{% url 'playbook_delete_confirm' pk=playbook.pk %}"
+                        hx-target="#playbook-delete-modal-container"
+                        hx-swap="innerHTML">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </button>
             {% endif %}
             <a href="{% url 'playbook_list' %}" 
                class="btn btn-outline-secondary"
@@ -118,4 +127,5 @@
     .badge.bg-draft { background-color: #6c757d !important; }
     .badge.bg-disabled { background-color: #dc3545 !important; }
 </style>
+<div id="playbook-delete-modal-container"></div>
 {% endblock %}
