@@ -66,9 +66,13 @@ class TestOnboardingE2E:
         assert 'data-testid="onboarding-step-1"' in content
         assert 'data-testid="onboarding-step-2"' in content
         assert 'data-testid="onboarding-step-3"' in content
-        # CTAs
+        # CTAs and skip tour UI
         assert 'data-testid="onboarding-begin-journey-button"' in content
-        assert 'data-testid="onboarding-skip-button"' in content
+        assert 'data-testid="onboarding-skip-link-top"' in content
+        # Skip confirmation modal markup
+        assert 'id="onboardingSkipModal"' in content
+        assert 'data-testid="onboarding-skip-confirm"' in content
+        assert 'data-testid="onboarding-skip-cancel"' in content
 
         # Step 5: Verify user was created and is authenticated
         assert User.objects.filter(username="maria").exists()
@@ -81,3 +85,40 @@ class TestOnboardingE2E:
         dashboard_content = dashboard_response.content.decode("utf-8")
         assert 'data-testid="dashboard-stub"' in dashboard_content
         assert "FOB-DASHBOARD-1" in dashboard_content
+
+    def test_onboard_04_skip_tour_ui_elements(self):
+        """ONBOARD-04: Skip onboarding UI is present on welcome screen.
+
+        This test focuses on server-rendered HTML:
+        - Skip link is visible on onboarding page
+        - Confirmation modal markup is present
+        - Confirm button points to dashboard
+        """
+
+        client = Client()
+
+        # Pre-create and log in user Maria
+        User.objects.create_user(username="maria", password="TestPass123")
+        login_response = client.post(
+            reverse("login"),
+            {"username": "maria", "password": "TestPass123"},
+            follow=True,
+        )
+        assert login_response.redirect_chain[-1][0] == "/dashboard/"
+
+        # Navigate to onboarding welcome screen
+        response = client.get("/auth/user/onboarding/")
+        assert response.status_code == 200
+        content = response.content.decode("utf-8")
+
+        # Skip link visible on onboarding page
+        assert 'data-testid="onboarding-welcome"' in content
+        assert 'data-testid="onboarding-skip-link-top"' in content
+
+        # Confirmation modal present
+        assert 'id="onboardingSkipModal"' in content
+        assert 'Skip tour?' in content
+        assert 'Are you sure? You can access help anytime.' in content
+
+        # Confirm button exists (form now POSTs to onboarding_skip backend endpoint)
+        assert 'data-testid="onboarding-skip-confirm"' in content

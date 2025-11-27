@@ -7,7 +7,14 @@
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-sm">
-                <div class="card-body text-center py-5">
+                <div class="card-body text-center py-5 position-relative">
+                    <a href="#"
+                       class="small text-muted position-absolute top-0 end-0 m-3"
+                       data-testid="onboarding-skip-link-top"
+                       data-bs-toggle="modal"
+                       data-bs-target="#onboardingSkipModal">
+                        <i class="fa-solid fa-forward"></i> Skip tour
+                    </a>
                     <h1 class="display-4 mb-4">
                         <i class="fa-solid fa-rocket text-success"></i>
                         Welcome to FOB
@@ -49,14 +56,6 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="mt-2 d-flex justify-content-end">
-                        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-outline-secondary"
-                           data-testid="onboarding-skip-button"
-                           data-bs-toggle="tooltip"
-                           title="Skip tour and go to dashboard">
-                            <i class="fa-solid fa-forward"></i> Skip tour
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -65,4 +64,64 @@
 
 <!-- Feature code marker for traceability -->
 <div data-testid="onboarding-feature-code" style="display: none;">FOB-ONBOARDING-1</div>
+
+<!-- Skip Tour Confirmation Modal -->
+<div class="modal fade" id="onboardingSkipModal" tabindex="-1" aria-labelledby="onboardingSkipModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="onboardingSkipModalLabel">Skip tour?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure? You can access help anytime.
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        data-testid="onboarding-skip-cancel">
+                    No, stay in tour
+                </button>
+                <form method="post" action="{% url 'onboarding_skip' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="btn btn-primary"
+                            data-testid="onboarding-skip-confirm">
+                        Yes, skip
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var skipLinkTop = document.querySelector('[data-testid="onboarding-skip-link-top"]');
+        if (skipLinkTop) {
+            skipLinkTop.addEventListener('click', function () {
+                console.log('[ONBOARD-04] Skip link clicked (top-right).');
+            });
+        }
+
+        var skipConfirm = document.querySelector('[data-testid="onboarding-skip-confirm"]');
+        if (skipConfirm) {
+            skipConfirm.addEventListener('click', function () {
+                console.log('[ONBOARD-04] Skip confirmed, redirecting to dashboard.');
+            });
+        }
+
+        var skipCancel = document.querySelector('[data-testid="onboarding-skip-cancel"]');
+        if (skipCancel) {
+            skipCancel.addEventListener('click', function () {
+                console.log('[ONBOARD-04] Skip cancelled, staying in onboarding.');
+            });
+        }
+    });
+</script>
 {% endblock %}

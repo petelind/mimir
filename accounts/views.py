@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
+from accounts.models import mark_onboarding_completed
+
 logger = logging.getLogger(__name__)
 
 
@@ -156,6 +158,37 @@ def onboarding(request):
     """
     logger.info(f"User {request.user.username} accessed onboarding stub")
     return render(request, 'onboarding/welcome.html')
+
+
+@login_required
+@require_http_methods(["POST"])
+def skip_onboarding(request):
+    """Mark onboarding as completed for current user and redirect to dashboard.
+
+    Scenario: ONBOARD-04 Skip onboarding
+
+    Behavior:
+        - Ensures onboarding state exists for request.user
+        - Sets is_completed=True and current_step=0
+        - Redirects to FOB-DASHBOARD-1 (/dashboard/)
+
+    :param request: Django request object
+    :return: Redirect response to dashboard
+    """
+    username = request.user.username
+    logger.info("[ONBOARD-04] Skip onboarding requested by user %s", username)
+
+    state = mark_onboarding_completed(request.user, step=0)
+
+    logger.info(
+        "[ONBOARD-04] Onboarding marked completed for user %s (is_completed=%s, current_step=%s)",
+        username,
+        state.is_completed,
+        state.current_step,
+    )
+
+    logger.info("[ONBOARD-04] Redirecting user %s to dashboard after skip", username)
+    return redirect('/dashboard/')
 
 
 def _validate_registration_data(username, email, password, password_confirm):
