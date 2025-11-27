@@ -7,6 +7,7 @@
       "first_name": "Maria",
       "last_name": "Garcia",
       "email": "maria@example.com",
+      "password": "pbkdf2_sha256$1000000$Mv4n2AaupXGSh39lmSQ8OK$6+weVol3jW0sEwO+htEj/sctwfGFNmpA3fX760CU78Y=",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2024-01-01T00:00:00Z"
@@ -20,6 +21,7 @@
       "first_name": "Alex",
       "last_name": "Chen",
       "email": "alex@example.com",
+      "password": "pbkdf2_sha256$1000000$zzVnkoGcPBEQqfiKNs6T6W$igjGkN4cGN7fTsg/slKpD1oDSSiudlG7W6ukN56zAbc=",
       "is_staff": false,
       "is_active": true,
       "date_joined": "2024-01-01T00:00:00Z"
@@ -32,7 +34,11 @@
       "name": "Agile Development",
       "description": "A comprehensive guide to Agile software development methodologies.",
       "category": "development",
-      "tags": ["agile", "scrum", "kanban"],
+      "tags": [
+        "agile",
+        "scrum",
+        "kanban"
+      ],
       "visibility": "private",
       "status": "active",
       "version": 1,
@@ -49,7 +55,11 @@
       "name": "User Guide Template",
       "description": "Template for creating comprehensive user guides.",
       "category": "documentation",
-      "tags": ["template", "guide", "documentation"],
+      "tags": [
+        "template",
+        "guide",
+        "documentation"
+      ],
       "visibility": "private",
       "status": "draft",
       "version": 1,

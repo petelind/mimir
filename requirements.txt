@@ -1,5 +1,6 @@
 # Django Framework
 django>=5.0
+asgiref>=3.8.0
 
 # MCP Integration
 fastmcp>=0.1.0
@@ -15,6 +16,7 @@ pytest>=7.4.0
 pytest-django>=4.5.0
 playwright>=1.40.0
 pytest-playwright>=0.4.0
+pytest-base-url>=2.1.0
 
 # AI Features (optional)
 openai>=1.0.0
