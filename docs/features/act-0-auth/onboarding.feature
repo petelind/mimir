@@ -1,9 +1,9 @@
-Feature: FOB-ONBOARDING-1 First-Time User Onboarding
+Feature: ✅ FOB-ONBOARDING-1 First-Time User Onboarding
   As a new user (Maria)
   I want to complete onboarding
   So that I understand how to use FOB
 
-  Scenario: ONBOARD-01 Welcome screen
+  Scenario: ✅ ONBOARD-01 Welcome screen
     Given Maria just registered
     When she lands on FOB-ONBOARDING-1
     Then she sees "Welcome to FOB" message
@@ -20,7 +20,7 @@ Feature: FOB-ONBOARDING-1 First-Time User Onboarding
     When she proceeds with tour
     Then she sees highlights of: Workflows, Activities, Artifacts, Sync
 
-  Scenario: ONBOARD-04 Skip onboarding
+  Scenario: ✅ ONBOARD-04 Skip onboarding
     Given Maria is in onboarding
     When she clicks [Skip Tour]
     Then she is redirected to FOB-DASHBOARD-1
