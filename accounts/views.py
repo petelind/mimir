@@ -64,6 +64,169 @@ def _handle_remember_me(request, remember_me):
         logger.info(f"User {request.user.username} logged in without remember me (2 weeks session)")
 
 
+def _handle_login_form_data(request):
+    """
+    Extract and log login form data from POST request.
+    
+    Internal helper for login_view.
+    
+    :param request: Django request object with POST data
+    :return: tuple - (username, password, remember_me)
+    """
+    username = request.POST.get('username', '').strip()
+    password = request.POST.get('password', '')
+    remember_me = request.POST.get('remember_me') == 'on'
+    
+    logger.info(f"Login attempt for username: {username}, remember_me: {remember_me}")
+    return username, password, remember_me
+
+
+def _handle_successful_login(request, username, remember_me):
+    """
+    Handle successful authentication flow.
+    
+    Internal helper for login_view.
+    
+    :param request: Django request object
+    :param username: str - Authenticated username
+    :param remember_me: bool - Remember me preference
+    :return: HttpResponse - Redirect to dashboard
+    """
+    logger.info(f"User {username} authenticated successfully")
+    _handle_remember_me(request, remember_me)
+    logger.info(f"Redirecting user {username} to dashboard")
+    return redirect('/dashboard/')
+
+
+def _handle_failed_login(request, username):
+    """
+    Handle failed authentication flow.
+    
+    Internal helper for login_view.
+    
+    :param request: Django request object
+    :param username: str - Failed username
+    :return: HttpResponse - Render login form with error
+    """
+    logger.warning(f"Authentication failed for username: {username}")
+    errors = {
+        'non_field_errors': ['Invalid username or password. Please try again.']
+    }
+    return render(request, 'accounts/login.html', {
+        'errors': errors,
+        'username': username
+    })
+
+
+def _handle_registration_form_data(request):
+    """
+    Extract and log registration form data from POST request.
+    
+    Internal helper for register view.
+    
+    :param request: Django request object with POST data
+    :return: tuple - (username, email, password, password_confirm)
+    """
+    username = request.POST.get('username', '').strip()
+    email = request.POST.get('email', '').strip()
+    password = request.POST.get('password', '')
+    password_confirm = request.POST.get('password_confirm', '')
+    
+    logger.info(f"Registration attempt for username: {username}, email: {email}")
+    return username, email, password, password_confirm
+
+
+def _create_user_and_login(request, username, email, password):
+    """
+    Create user and auto-login after successful registration.
+    
+    Internal helper for register view.
+    
+    :param request: Django request object
+    :param username: str - New username
+    :param email: str - New email
+    :param password: str - New password
+    :return: HttpResponse - Redirect to onboarding
+    """
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password
+    )
+    logger.info(f"User {username} created successfully")
+    
+    # Auto-login
+    auth_login(request, user)
+    logger.info(f"User {username} auto-logged in after registration")
+    
+    # Redirect to onboarding
+    logger.info(f"Redirecting user {username} to onboarding")
+    return redirect('/auth/user/onboarding/')
+
+
+def _handle_registration_error(request, username, email, error):
+    """
+    Handle registration error flow.
+    
+    Internal helper for register view.
+    
+    :param request: Django request object
+    :param username: str - Attempted username
+    :param email: str - Attempted email
+    :param error: Exception - The error that occurred
+    :return: HttpResponse - Render registration form with error
+    """
+    logger.error(f"Error creating user {username}: {str(error)}")
+    errors = {
+        'non_field_errors': ['An error occurred during registration. Please try again.']
+    }
+    return render(request, 'accounts/register.html', {
+        'errors': errors,
+        'username': username,
+        'email': email
+    })
+
+
+def _render_login_form(request, errors=None, username=''):
+    """
+    Render login form with given context.
+    
+    Internal helper for login_view.
+    
+    :param request: Django request object
+    :param errors: dict - Form errors (default: empty dict)
+    :param username: str - Preserved username (default: empty string)
+    :return: HttpResponse - Rendered login form
+    """
+    if errors is None:
+        errors = {}
+    return render(request, 'accounts/login.html', {
+        'errors': errors,
+        'username': username
+    })
+
+
+def _render_registration_form(request, errors=None, username='', email=''):
+    """
+    Render registration form with given context.
+    
+    Internal helper for register view.
+    
+    :param request: Django request object
+    :param errors: dict - Form errors (default: empty dict)
+    :param username: str - Preserved username (default: empty string)
+    :param email: str - Preserved email (default: empty string)
+    :return: HttpResponse - Rendered registration form
+    """
+    if errors is None:
+        errors = {}
+    return render(request, 'accounts/register.html', {
+        'errors': errors,
+        'username': username,
+        'email': email
+    })
+
+
 @require_http_methods(["GET", "POST"])
 def login_view(request):
     """
@@ -84,26 +247,16 @@ def login_view(request):
     # GET request - display form
     if request.method == 'GET':
         logger.info("Displaying login form")
-        return render(request, 'accounts/login.html', {
-            'errors': {},
-            'username': ''
-        })
+        return _render_login_form(request)
     
     # POST request - handle login
-    username = request.POST.get('username', '').strip()
-    password = request.POST.get('password', '')
-    remember_me = request.POST.get('remember_me') == 'on'
-    
-    logger.info(f"Login attempt for username: {username}, remember_me: {remember_me}")
+    username, password, remember_me = _handle_login_form_data(request)
     
     # Validate input
     errors = _validate_login_data(username, password)
     if errors:
         logger.warning(f"Login validation failed for username: {username}, errors: {list(errors.keys())}")
-        return render(request, 'accounts/login.html', {
-            'errors': errors,
-            'username': username
-        })
+        return _render_login_form(request, errors, username)
     
     # Authenticate
     user = authenticate(request, username=username, password=password)
@@ -111,24 +264,9 @@ def login_view(request):
     if user is not None:
         # Successful authentication
         auth_login(request, user)
-        logger.info(f"User {username} authenticated successfully")
-        
-        # Handle remember me
-        _handle_remember_me(request, remember_me)
-        
-        # Redirect to dashboard
-        logger.info(f"Redirecting user {username} to dashboard")
-        return redirect('/dashboard/')
+        return _handle_successful_login(request, username, remember_me)
     else:
-        # Authentication failed
-        logger.warning(f"Authentication failed for username: {username}")
-        errors = {
-            'non_field_errors': ['Invalid username or password. Please try again.']
-        }
-        return render(request, 'accounts/login.html', {
-            'errors': errors,
-            'username': username
-        })
+        return _handle_failed_login(request, username)
 
 
 def custom_logout_view(request):
@@ -265,56 +403,22 @@ def register(request):
     # GET request - display form
     if request.method == 'GET':
         logger.info("Displaying registration form")
-        return render(request, 'accounts/register.html', {
-            'errors': {},
-            'username': '',
-            'email': ''
-        })
+        return _render_registration_form(request)
     
     # POST request - handle registration
-    username = request.POST.get('username', '').strip()
-    email = request.POST.get('email', '').strip()
-    password = request.POST.get('password', '')
-    password_confirm = request.POST.get('password_confirm', '')
-    
-    logger.info(f"Registration attempt for username: {username}, email: {email}")
+    username, email, password, password_confirm = _handle_registration_form_data(request)
     
     # Validate input
     errors = _validate_registration_data(username, email, password, password_confirm)
     if errors:
         logger.warning(f"Registration validation failed for username: {username}, errors: {list(errors.keys())}")
-        return render(request, 'accounts/register.html', {
-            'errors': errors,
-            'username': username,
-            'email': email
-        })
+        return _render_registration_form(request, errors, username, email)
     
     # Create user
     try:
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password
-        )
-        logger.info(f"User {username} created successfully")
-        
-        # Auto-login
-        auth_login(request, user)
-        logger.info(f"User {username} auto-logged in after registration")
-        
-        # Redirect to onboarding
-        logger.info(f"Redirecting user {username} to onboarding")
-        return redirect('/auth/user/onboarding/')
+        return _create_user_and_login(request, username, email, password)
     except Exception as e:
-        logger.error(f"Error creating user {username}: {str(e)}")
-        errors = {
-            'non_field_errors': ['An error occurred during registration. Please try again.']
-        }
-        return render(request, 'accounts/register.html', {
-            'errors': errors,
-            'username': username,
-            'email': email
-        })
+        return _handle_registration_error(request, username, email, e)
 
 
 @require_http_methods(["GET", "POST"])
