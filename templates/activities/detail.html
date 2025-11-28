@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ activity.name }} - Activity{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="activity-detail">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook_pk=playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=workflow.pk %}">{{ workflow.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}">Activities</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ activity.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4" data-testid="activity-header">
+        <div>
+            <h2>
+                <i class="fa-solid fa-tasks"></i> {{ activity.name }}
+            </h2>
+            <p class="text-muted">
+                <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}"
+                      data-testid="status-badge">
+                    {{ activity.get_status_display }}
+                </span>
+                <span class="badge bg-secondary" data-testid="order-badge">Order: #{{ activity.order }}</span>
+                {% if activity.phase %}
+                <span class="badge bg-info" data-testid="phase-badge">{{ activity.phase }}</span>
+                {% endif %}
+                {% if activity.has_dependencies %}
+                <span class="badge bg-warning" data-testid="dependencies-badge">
+                    <i class="fa-solid fa-link"></i> Has Dependencies
+                </span>
+                {% endif %}
+            </p>
+            <p class="text-muted small">
+                <i class="fa-solid fa-clock"></i> Updated {{ activity.updated_at|timesince }} ago
+            </p>
+        </div>
+        <div class="btn-group">
+            {% if can_edit %}
+                <a href="{% url 'activity_edit' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}" 
+                   class="btn btn-primary"
+                   data-testid="edit-btn"
+                   data-bs-toggle="tooltip"
+                   title="Edit this activity">
+                    <i class="fa-solid fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'activity_delete' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}" 
+                   class="btn btn-danger"
+                   data-testid="delete-btn"
+                   data-bs-toggle="tooltip"
+                   title="Delete this activity">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </a>
+            {% endif %}
+            <a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}" 
+               class="btn btn-outline-secondary"
+               data-bs-toggle="tooltip"
+               title="Back to activities list">
+                <i class="fa-solid fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <!-- Activity Details -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Description Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-align-left"></i> Description</h5>
+                </div>
+                <div class="card-body" data-testid="description-content">
+                    <p class="mb-0">{{ activity.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Details Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-info-circle"></i> Details</h5>
+                </div>
+                <div class="card-body" data-testid="details-section">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Status:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}">
+                                {{ activity.get_status_display }}
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-5">Order:</dt>
+                        <dd class="col-sm-7">#{{ activity.order }}</dd>
+
+                        <dt class="col-sm-5">Phase:</dt>
+                        <dd class="col-sm-7">{{ activity.get_phase_display_name }}</dd>
+
+                        <dt class="col-sm-5">Dependencies:</dt>
+                        <dd class="col-sm-7">
+                            {% if activity.has_dependencies %}
+                                <i class="fa-solid fa-check text-warning"></i> Yes
+                            {% else %}
+                                <i class="fa-solid fa-times text-muted"></i> No
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">{{ activity.created_at|date:"M d, Y" }}</dd>
+
+                        <dt class="col-sm-5">Last Updated:</dt>
+                        <dd class="col-sm-7">{{ activity.updated_at|date:"M d, Y" }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Workflow Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-sitemap"></i> Workflow</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">{{ workflow.name }}</h6>
+                    <p class="card-text small text-muted">{{ workflow.description|truncatewords:20 }}</p>
+                    <a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=workflow.pk %}" 
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="fa-solid fa-arrow-right"></i> View Workflow
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
