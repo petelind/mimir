@@ -165,6 +165,20 @@ def tour(request):
 - **[ ]** Update `tests/e2e/test_onboarding_welcome.py` to include tour flow
 - **[ ]** Add journey test: welcome → tour → completion (stub)
 
+**Journey Certification Test (Tier 2, manual e2e):**
+- Implemented Playwright journey certification for ONBOARD-01 → ONBOARD-03:
+  - Path: `tests/e2e/test_journey_onboarding.py::test_new_user_welcome_to_tour_journey`
+  - Flow: register → onboarding welcome → click "Begin your journey" → tour page
+  - Verifies:
+    - ONBOARD-01 welcome content (hero, steps, CTA, test IDs)
+    - ONBOARD-03 tour content (4 feature cards, progress header, badges, continue button)
+  - Run (development):
+    - `pytest tests/e2e/test_journey_onboarding.py::test_new_user_welcome_to_tour_journey -v --headed`
+  - Notes:
+    - Uses `live_server` + Playwright `page` fixtures
+    - Functional flow passes end-to-end, but current environment reports a Django `SynchronousOnlyOperation` during test DB teardown (infra/async issue, not a journey failure)
+    - Treat this as a **manual journey certification test** rather than part of the default CI test suite until infra is adjusted.
+
 ### 3.5. Step State Management
 
 **Onboarding Step Mapping:**
