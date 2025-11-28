@@ -312,3 +312,135 @@ def playbook_edit(request, pk):
     playbook = get_object_or_404(Playbook, pk=pk)
     messages.info(request, 'Edit functionality coming soon.')
     return redirect('playbook_detail', pk=pk)
+
+# ==================== ACTIONS ====================
+
+@login_required
+def playbook_export(request, pk):
+    """
+    Export playbook to JSON file.
+    
+    Downloads playbook metadata as JSON.
+    Shallow export - metadata only, no workflows/activities yet.
+    
+    :param request: HTTP request
+    :param pk: Playbook primary key
+    :returns: JSON file download response
+    """
+    import json
+    from django.http import JsonResponse
+    
+    logger.info(f"User {request.user.username} exporting playbook {pk}")
+    
+    playbook = get_object_or_404(Playbook, pk=pk)
+    
+    # Only owner can export
+    if not playbook.is_owned_by(request.user):
+        logger.warning(f"User {request.user.username} attempted to export playbook {pk} they don't own")
+        messages.error(request, "You can only export playbooks you own.")
+        return redirect('playbook_detail', pk=pk)
+    
+    # Build JSON data
+    data = {
+        'name': playbook.name,
+        'description': playbook.description,
+        'category': playbook.category,
+        'tags': playbook.tags,
+        'visibility': playbook.visibility,
+        'status': playbook.status,
+        'version': playbook.version,
+        'created_at': playbook.created_at.isoformat(),
+        'updated_at': playbook.updated_at.isoformat(),
+        'note': 'Shallow export - metadata only'
+    }
+    
+    # Create filename
+    safe_name = playbook.name.lower().replace(' ', '-').replace('_', '-')
+    filename = f"{safe_name}-v{playbook.version}.json"
+    
+    response = JsonResponse(data)
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    logger.info(f"Exported playbook {pk} as {filename}")
+    return response
+
+
+@login_required
+def playbook_duplicate(request, pk):
+    """
+    Duplicate playbook (shallow copy).
+    
+    Creates new playbook with same metadata but marked as owned.
+    Shallow copy - metadata only, no workflows/activities copied yet.
+    
+    :param request: HTTP request
+    :param pk: Playbook primary key to duplicate
+    :returns: Redirect to new playbook detail page
+    """
+    logger.info(f"User {request.user.username} duplicating playbook {pk}")
+    
+    original = get_object_or_404(Playbook, pk=pk)
+    
+    if request.method == 'POST':
+        new_name = request.POST.get('new_name', f"{original.name} (Copy)")
+        
+        # Create duplicate
+        duplicate = Playbook.objects.create(
+            name=new_name,
+            description=original.description,
+            category=original.category,
+            tags=original.tags.copy() if original.tags else [],
+            visibility='private',  # Duplicates are always private
+            status='draft',  # Duplicates start as draft
+            version=1,  # New version sequence
+            source='owned',  # Duplicates are always owned
+            author=request.user
+        )
+        
+        logger.info(f"Created duplicate playbook {duplicate.pk} from {pk}")
+        messages.success(request, f'Playbook duplicated as "{new_name}"')
+        return redirect('playbook_detail', pk=duplicate.pk)
+    
+    # GET request - show form (for now, just redirect with default name)
+    return redirect('playbook_detail', pk=pk)
+
+
+@login_required
+def playbook_toggle_status(request, pk):
+    """
+    Toggle playbook status between active and disabled.
+    
+    Draft status stays as draft.
+    Active <-> Disabled toggle.
+    
+    :param request: HTTP request
+    :param pk: Playbook primary key
+    :returns: Redirect to playbook detail page
+    """
+    logger.info(f"User {request.user.username} toggling status for playbook {pk}")
+    
+    playbook = get_object_or_404(Playbook, pk=pk)
+    
+    # Only owner can toggle status
+    if not playbook.is_owned_by(request.user):
+        logger.warning(f"User {request.user.username} attempted to toggle status on playbook {pk} they don't own")
+        messages.error(request, "You can only modify playbooks you own.")
+        return redirect('playbook_detail', pk=pk)
+    
+    if request.method == 'POST':
+        # Toggle between active and disabled
+        if playbook.status == 'active':
+            playbook.status = 'disabled'
+            messages.success(request, f'Playbook "{playbook.name}" disabled.')
+        elif playbook.status == 'disabled':
+            playbook.status = 'active'
+            messages.success(request, f'Playbook "{playbook.name}" activated.')
+        else:
+            # Draft stays draft
+            messages.info(request, 'Draft playbooks cannot be toggled. Publish first.')
+            return redirect('playbook_detail', pk=pk)
+        
+        playbook.save()
+        logger.info(f"Toggled playbook {pk} status to {playbook.status}")
+    
+    return redirect('playbook_detail', pk=pk)

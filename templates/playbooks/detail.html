@@ -20,7 +20,7 @@
                 <i class="fa-solid fa-book"></i> {{ playbook.name }}
             </h2>
             <p class="text-muted">
-                <span class="badge bg-{{ playbook.status }}">{{ playbook.get_status_display }}</span>
+                <span class="badge bg-{{ playbook.get_status_badge_color }}">{{ playbook.get_status_display }}</span>
                 <span class="badge bg-secondary">v{{ playbook.version }}</span>
                 <span class="badge bg-info">{{ playbook.get_category_display }}</span>
             </p>
@@ -113,9 +113,4 @@
     </div>
 </div>
 
-<style>
-    .badge.bg-active { background-color: #28a745 !important; }
-    .badge.bg-draft { background-color: #6c757d !important; }
-    .badge.bg-disabled { background-color: #dc3545 !important; }
-</style>
 {% endblock %}
