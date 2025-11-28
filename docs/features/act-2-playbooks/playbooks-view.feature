@@ -56,13 +56,16 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
       | Created  |                            3 months ago |
       | Source   | Downloaded from Usability family        |
 
-  Scenario: PB-VIEW-05 View workflows list in Overview
+  Scenario: PB-VIEW-05 View workflows list in Overview ✅ IMPLEMENTED
     Given Maria is on the Overview tab
     Then she sees Workflows Section
     And each workflow displays: Name, Description, Activity count
     And she sees [View Workflow] link for each workflow
     When she clicks [View Workflow] on "Component Design"
     Then she navigates to ACT 3: WORKFLOWS detail page
+    # Implemented: Workflows shown with name, description, order badge
+    # Clickable links to workflow detail pages
+    # Quick edit button for each workflow
 
   Scenario: PB-VIEW-06 Navigate to Workflows tab
     Given Maria is on the playbook detail page
@@ -71,13 +74,16 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
     And workflows show dependency visualization (if any)
     And she sees workflow filtering options
 
-  Scenario: PB-VIEW-07 Add workflow button (editable playbooks only)
+  Scenario: PB-VIEW-07 Add workflow button (editable playbooks only) ✅ IMPLEMENTED
     Given Maria owns the playbook "Product Discovery Framework"
     And she is on the Workflows tab
     Then she sees [Add Workflow] button
     When she is viewing a downloaded playbook "React Frontend Development"
     And she is on the Workflows tab
     Then the [Add Workflow] button is not visible
+    # Implemented: Add Workflow + Manage buttons in workflows section
+    # Only visible if can_edit (owned playbooks)
+    # Empty state with 'Create First Workflow' button
 
   Scenario: PB-VIEW-08 Navigate to History tab
     Given Maria is on the playbook detail page
@@ -154,12 +160,15 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
       | ...More   |
     And Edit, Delete, Export JSON buttons are not visible
 
-  Scenario: PB-VIEW-16 Click Edit button
+  Scenario: PB-VIEW-16 Click Edit button ✅ IMPLEMENTED
     Given Maria owns the playbook
     And she is on the playbook detail page
     When she clicks [Edit]
     Then she is redirected to FOB-PLAYBOOKS-EDIT_PLAYBOOK-1
     And she sees the edit form pre-populated
+    # Implemented: Edit button in header (if can_edit)
+    # Full edit form with all fields pre-populated
+    # Tests: 11 integration tests passing
 
   Scenario: PB-VIEW-17 Click Delete button
     Given Maria owns the playbook
@@ -168,14 +177,17 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
     Then the FOB-PLAYBOOKS-DELETE_PLAYBOOK-1 modal appears
     And she sees deletion confirmation
 
-  Scenario: PB-VIEW-18 Export playbook to JSON
+  Scenario: PB-VIEW-18 Export playbook to JSON ✅ IMPLEMENTED
     Given Maria owns the playbook "Product Discovery Framework"
     And she is on the playbook detail page
     When she clicks [Export JSON]
     Then a file download is triggered
     And the file is named "product-discovery-framework-v1.0.json"
+    # Implemented: playbook_export view
+    # JSON download with metadata
+    # Filename format: name-vX.json
 
-  Scenario: PB-VIEW-19 Duplicate playbook
+  Scenario: PB-VIEW-19 Duplicate playbook ✅ IMPLEMENTED
     Given Maria is on the playbook detail page
     When she clicks [Duplicate]
     Then a modal appears "Duplicate playbook?"
@@ -183,8 +195,11 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
     When she enters "React Frontend Development (My Copy)" and confirms
     Then a new local playbook is created
     And she is redirected to the new playbook's detail page
+    # Implemented: playbook_duplicate view
+    # Creates shallow copy (metadata only)
+    # Sets source='owned', status='draft'
 
-  Scenario: PB-VIEW-20 Disable/Enable toggle
+  Scenario: PB-VIEW-20 Disable/Enable toggle ✅ IMPLEMENTED
     Given Maria owns an Active playbook
     And she is on the playbook detail page
     When she clicks [Disable]
@@ -193,6 +208,9 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
     Then the playbook status changes to "Disabled"
     And the status badge updates to gray
     And the button changes to [Enable]
+    # Implemented: playbook_toggle_status view
+    # Toggles active <-> disabled
+    # Draft status stays draft
 
   Scenario: PB-VIEW-21 Back to playbooks list
     Given Maria is on the playbook detail page
@@ -218,3 +236,43 @@ Feature: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1 View Playbook Details
       | Active   | green  |
       | Disabled | gray   |
       | Draft    | yellow |
+
+# =============================================================================
+# IMPLEMENTATION STATUS (as of 2025-11-28)
+# =============================================================================
+#
+# COMPLETED SCENARIOS:
+# - PB-VIEW-05: Workflows list in Overview ✅
+# - PB-VIEW-07: Add workflow button ✅
+# - PB-VIEW-16: Edit button ✅
+# - PB-VIEW-18: Export to JSON ✅
+# - PB-VIEW-19: Duplicate playbook ✅
+# - PB-VIEW-20: Toggle status ✅
+#
+# INTEGRATION ENHANCEMENTS (Not in original spec):
+# - Workflows are clickable (link to workflow_detail)
+# - Quick edit button on each workflow
+# - "Manage" button to go to full workflow list
+# - Empty state with "Create First Workflow" button
+# - Workflow order badges (#1, #2, etc.)
+# - Global workflows overview accessible from navbar
+#
+# TESTS:
+# - Playbook EDIT: 11 integration tests ✅
+# - Playbook VIEW Phase 1: 9 tests ✅
+# - Playbook VIEW Phase 2: 5 tests ✅
+# - Workflows CRUDV: 40 tests ✅
+#
+# MISSING TESTS:
+# ⚠️  No playbook LIST tests found!
+# ⚠️  Should implement tests from playbooks-list-find.feature
+#
+# DEFERRED SCENARIOS (Future Implementation):
+# - PB-VIEW-03: Quick Stats (phases, activities, artifacts, roles counts)
+# - PB-VIEW-04: Tags display
+# - PB-VIEW-06: Workflows tab (separate from Overview)
+# - PB-VIEW-08-11: History tab and version comparison
+# - PB-VIEW-12-13: Settings tab
+# - PB-VIEW-17: Delete button (Issue #31)
+# - PB-VIEW-23: Phases integration (when Phase model exists)
+#
