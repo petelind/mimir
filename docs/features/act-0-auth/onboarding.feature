@@ -15,17 +15,17 @@ Feature: ✅ FOB-ONBOARDING-1 First-Time User Onboarding
     Then she is guided through playbook creation
     And she creates a sample playbook
 
-  Scenario: ONBOARD-03 Tour of features
+  Scenario: ONBOARD-03 Tour of features ✅
     Given Maria completed first playbook
     When she proceeds with tour
     Then she sees highlights of: Workflows, Activities, Artifacts, Sync
 
-  Scenario: ✅ ONBOARD-04 Skip onboarding
+Scenario: ONBOARD-04 Skip onboarding ✅
     Given Maria is in onboarding
     When she clicks [Skip Tour]
     Then she is redirected to FOB-DASHBOARD-1
 
-  Scenario: ONBOARD-05 Complete onboarding
+  Scenario: ONBOARD-05 Complete onboarding ✅
     Given Maria finished the tour
     When she clicks [Get Started]
     Then onboarding is marked complete
