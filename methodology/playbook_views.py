@@ -308,10 +308,77 @@ def playbook_add(request):
 
 @login_required
 def playbook_edit(request, pk):
-    """Edit playbook (stub - to be implemented in EDIT phase)."""
+    """Edit playbook metadata."""
     playbook = get_object_or_404(Playbook, pk=pk)
-    messages.info(request, 'Edit functionality coming soon.')
-    return redirect('playbook_detail', pk=pk)
+    
+    # Ownership check
+    if not playbook.can_edit(request.user):
+        messages.error(request, "You can only edit playbooks you own.")
+        return redirect('playbook_detail', pk=pk)
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        description = request.POST.get('description', '').strip()
+        category = request.POST.get('category')
+        tags_string = request.POST.get('tags', '')
+        visibility = request.POST.get('visibility')
+        status = request.POST.get('status')
+        
+        # Validation
+        errors = []
+        
+        if not name:
+            errors.append("Name is required")
+        elif len(name) < 3:
+            errors.append("Name must be at least 3 characters")
+        elif len(name) > 100:
+            errors.append("Name must not exceed 100 characters")
+        
+        # Check duplicate name (exclude current playbook)
+        if name and name != playbook.name:
+            if Playbook.objects.filter(author=request.user, name=name).exists():
+                errors.append("A playbook with this name already exists")
+        
+        if not description or len(description) < 10:
+            errors.append("Description must be at least 10 characters")
+        elif len(description) > 500:
+            errors.append("Description must not exceed 500 characters")
+        
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return render(request, 'playbooks/edit.html', {
+                'playbook': playbook,
+                'form_data': request.POST,
+                'tags_string': tags_string
+            })
+        
+        # Update playbook
+        playbook.name = name
+        playbook.description = description
+        playbook.category = category
+        playbook.visibility = visibility
+        playbook.status = status
+        
+        # Parse tags (comma-separated to list)
+        if tags_string:
+            playbook.tags = [t.strip() for t in tags_string.split(',') if t.strip()]
+        else:
+            playbook.tags = []
+        
+        playbook.save()
+        
+        logger.info(f"User {request.user.username} updated playbook {pk}")
+        messages.success(request, "Playbook updated successfully")
+        return redirect('playbook_detail', pk=pk)
+    
+    # GET request
+    tags_string = ', '.join(playbook.tags) if playbook.tags else ''
+    
+    return render(request, 'playbooks/edit.html', {
+        'playbook': playbook,
+        'tags_string': tags_string
+    })
 
 # ==================== ACTIONS ====================
 
