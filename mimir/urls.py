@@ -25,4 +25,5 @@ urlpatterns = [
     path("dashboard/", methodology_views.dashboard, name="dashboard"),
     path("", methodology_views.index, name="index"),
     path("playbooks/", include("methodology.playbook_urls")),
+    path("playbooks/", include("methodology.workflow_urls")),  # Workflow URLs scoped to playbook
 ]
