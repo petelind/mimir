@@ -38,29 +38,50 @@ class TestOnboardingTourView:
         content = response.content.decode("utf-8")
         # Root test id for ONBOARD-03
         assert 'data-testid="tour-page"' in content
-        # Progress indicator
+        # Enhanced progress header
+        assert 'data-testid="tour-progress-header"' in content
         assert 'data-testid="tour-progress-indicator"' in content
-        assert "Step 2 of 3" in content
-        # All 4 feature cards
+        assert 'data-testid="tour-header"' in content
+        assert 'data-testid="tour-features-grid"' in content
+        assert "Step 2 of 3 - Feature Tour" in content
+        assert "Discover FOB's Features" in content
+        # All 4 feature cards with enhanced structure
         assert 'data-testid="tour-card-workflows"' in content
         assert 'data-testid="tour-card-activities"' in content
         assert 'data-testid="tour-card-artifacts"' in content
         assert 'data-testid="tour-card-sync"' in content
-        # Feature card content
+        # Feature card attributes
+        assert 'data-feature="workflows"' in content
+        assert 'data-feature="activities"' in content
+        assert 'data-feature="artifacts"' in content
+        assert 'data-feature="sync"' in content
+        # Enhanced feature content
         assert "Workflows" in content
         assert "Activities" in content
         assert "Artifacts" in content
         assert "Sync" in content
-        assert "Organize activities into structured processes" in content
-        assert "Define specific tasks" in content
-        assert "Track deliverables" in content
-        assert "Collaborate via Homebase" in content
-        # Continue button
+        assert "Organize activities into structured processes that guide your team from start to finish" in content
+        assert "Define specific tasks with clear responsibilities, timelines, and expected outcomes" in content
+        assert "Track deliverables and maintain a complete record of your team's work products" in content
+        assert "Collaborate via Homebase and keep your entire team aligned with real-time updates" in content
+        # Feature badges
+        assert "Process Management" in content
+        assert "Task Management" in content
+        assert "Deliverable Tracking" in content
+        assert "Team Collaboration" in content
+        # Enhanced continue section
+        assert 'data-testid="tour-continue-section"' in content
         assert 'data-testid="tour-continue-button"' in content
-        assert "Continue" in content
+        assert "Continue Your Journey" in content
+        assert "Ready to start using these powerful features?" in content
         # Feature code marker
         assert 'data-testid="tour-feature-code"' in content
         assert "FOB-ONBOARDING-1-TOUR" in content
+        # Accessibility attributes
+        assert 'role="main"' in content
+        assert 'aria-label="Feature Tour"' in content
+        assert 'role="article"' in content
+        assert 'aria-label="Workflows Feature"' in content
 
     def test_anonymous_user_is_redirected_to_login(self):
         """Anonymous user should be redirected to login when accessing tour."""
@@ -179,17 +200,29 @@ class TestTourViewFunctionality:
         assert response.status_code == 200
         content = response.content.decode("utf-8")
         
-        # Check for proper semantic structure
-        assert '<h1 class="display-5 mb-4">' in content
-        assert '<div class="card h-100"' in content
-        assert '<div class="card-body text-center">' in content
+        # Check for proper semantic structure (enhanced template)
+        assert '<h1 class="display-4 fw-bold mb-3">' in content  # Enhanced header
+        assert '<div class="card feature-card h-100"' in content  # Enhanced feature cards
+        assert '<div class="card-body text-center p-4">' in content  # Enhanced padding
+        assert '<main role="main" aria-label="Feature Tour">' in content  # Semantic main
+        assert '<header class="text-center mb-5"' in content  # Semantic header
+        assert '<section aria-label="Feature Overview"' in content  # Semantic section
+        assert '<footer class="tour-continue-section"' in content  # Semantic footer
         
-        # Check for icons (Font Awesome)
+        # Check for icons (Font Awesome) - same icons but enhanced structure
         assert 'fa-solid fa-sitemap' in content  # Workflows
         assert 'fa-solid fa-tasks' in content    # Activities
         assert 'fa-solid fa-folder-open' in content  # Artifacts
         assert 'fa-solid fa-sync' in content     # Sync
         assert 'fa-solid fa-arrow-right' in content  # Continue button
+        assert 'fa-solid fa-sparkles' in content  # Enhanced header icon
+        assert 'fa-solid fa-lightbulb' in content  # Enhanced footer icon
+        
+        # Check for enhanced feature structure
+        assert 'feature-icon bg-primary bg-gradient' in content
+        assert 'feature-icon bg-success bg-gradient' in content
+        assert 'feature-icon bg-warning bg-gradient' in content
+        assert 'feature-icon bg-info bg-gradient' in content
 
     def test_tour_continue_button_has_tooltip(self):
         """Continue button should have proper tooltip attributes."""
@@ -206,8 +239,9 @@ class TestTourViewFunctionality:
         assert response.status_code == 200
         content = response.content.decode("utf-8")
         
-        # Check for tooltip attributes
+        # Check for enhanced tooltip attributes
         continue_button = 'data-testid="tour-continue-button"'
         assert continue_button in content
         assert 'data-bs-toggle="tooltip"' in content
-        assert 'title="Proceed to next step"' in content
+        assert 'data-bs-placement="top"' in content  # Enhanced placement
+        assert 'aria-label="Continue to next onboarding step"' in content  # Enhanced accessibility
