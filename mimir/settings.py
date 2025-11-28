@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-)t!u$2p(q=x4m54)-kh39ti_an3_(6%aej&p!#w3pcs(s&q0$=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['testserver']  # Allow Django test client
 
 # Trust localhost for development (CSRF protection)
 CSRF_TRUSTED_ORIGINS = [
@@ -58,6 +58,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Custom middleware for request ID tracking
+    "mimir.middleware.RequestIDMiddleware",
 ]
 
 ROOT_URLCONF = "mimir.urls"
@@ -159,7 +161,7 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format': (
-                '[{asctime}] [{levelname:<8}] [PID:{process}:TID:{thread}] '
+                '[{asctime}] [{levelname:<8}] [REQ:{request_id}] [PID:{process}:TID:{thread}] '
                 '[{pathname}:{lineno}] [{module}.{funcName}] '
                 '{message}'
             ),
@@ -167,8 +169,13 @@ LOGGING = {
             'style': '{',
         },
         'simple': {
-            'format': '{levelname} {message}',
+            'format': '[REQ:{request_id}] {levelname} {message}',
             'style': '{',
+        },
+    },
+    'filters': {
+        'request_id': {
+            '()': 'mimir.logging_filters.RequestIDFilter',
         },
     },
     'handlers': {
@@ -178,11 +185,13 @@ LOGGING = {
             'filename': BASE_DIR / 'app.log',
             'mode': 'w',  # Overwrite on each restart
             'formatter': 'verbose',
+            'filters': ['request_id'],
         },
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
+            'filters': ['request_id'],
         },
     },
     'root': {
