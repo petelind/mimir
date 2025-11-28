@@ -76,3 +76,38 @@ class Playbook(models.Model):
     
     def can_edit(self, user):
         return self.source == 'owned' and self.is_owned_by(user)
+    
+    def get_quick_stats(self):
+        """
+        Get quick statistics for the playbook dashboard.
+        
+        Returns dictionary with counts of related objects.
+        
+        :returns: Dictionary with stat counts
+        :rtype: dict
+        """
+        return {
+            'workflows': self.workflows.count(),
+            'phases': 0,  # TODO: Implement when Phase model exists
+            'activities': 0,  # TODO: Implement when Activity model exists
+            'artifacts': 0,  # TODO: Implement when Artifact model exists
+            'roles': 0,  # TODO: Implement when Role model exists
+            'howtos': 0,  # TODO: Implement when Howto model exists
+            'goals': 'Coming soon (v2.1)'
+        }
+    
+    def get_status_badge_color(self):
+        """
+        Get Bootstrap color class for status badge.
+        
+        Maps playbook status to Bootstrap badge color.
+        
+        :returns: Bootstrap color class name
+        :rtype: str
+        """
+        status_colors = {
+            'active': 'success',
+            'draft': 'warning',
+            'disabled': 'secondary'
+        }
+        return status_colors.get(self.status, 'secondary')
