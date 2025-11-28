@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Feature Tour - Mimir{% endblock %}
+
+{% block content %}
+<div class="container mt-5" data-testid="tour-page">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    <!-- Progress Indicator -->
+                    <div class="mb-4" data-testid="tour-progress-indicator">
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="2" aria-valuemin="0" aria-valuemax="3"></div>
+                        </div>
+                        <p class="text-muted mt-2 mb-0">Step 2 of 3</p>
+                    </div>
+                    
+                    <h1 class="display-5 mb-4">
+                        <i class="fa-solid fa-compass text-info"></i>
+                        Tour of Features
+                    </h1>
+                    <p class="lead text-muted mb-5">
+                        Discover the key features that will help you organize your work and collaborate effectively.
+                    </p>
+                    
+                    <!-- Feature Cards Grid -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-6">
+                            <div class="card h-100" data-testid="tour-card-workflows">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-sitemap fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="card-title">Workflows</h5>
+                                    <p class="card-text text-muted">
+                                        Organize activities into structured processes
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card h-100" data-testid="tour-card-activities">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-tasks fa-3x text-success"></i>
+                                    </div>
+                                    <h5 class="card-title">Activities</h5>
+                                    <p class="card-text text-muted">
+                                        Define specific tasks
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card h-100" data-testid="tour-card-artifacts">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-folder-open fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="card-title">Artifacts</h5>
+                                    <p class="card-text text-muted">
+                                        Track deliverables
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card h-100" data-testid="tour-card-sync">
+                                <div class="card-body text-center">
+                                    <div class="mb-3">
+                                        <i class="fa-solid fa-sync fa-3x text-info"></i>
+                                    </div>
+                                    <h5 class="card-title">Sync</h5>
+                                    <p class="card-text text-muted">
+                                        Collaborate via Homebase
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Continue Button -->
+                    <div class="text-center">
+                        <a href="#" 
+                           class="btn btn-primary btn-lg"
+                           data-testid="tour-continue-button"
+                           data-bs-toggle="tooltip"
+                           title="Proceed to next step">
+                            <i class="fa-solid fa-arrow-right"></i>
+                            Continue
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feature code marker for traceability -->
+<div data-testid="tour-feature-code" style="display: none;">FOB-ONBOARDING-1-TOUR</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('[ONBOARD-03] Tour page loaded');
+        
+        var continueButton = document.querySelector('[data-testid="tour-continue-button"]');
+        if (continueButton) {
+            continueButton.addEventListener('click', function () {
+                console.log('[ONBOARD-03] Continue button clicked, proceeding to next step');
+            });
+        }
+    });
+</script>
+{% endblock %}

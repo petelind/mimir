@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from accounts.models import mark_onboarding_completed
+from accounts.models import mark_onboarding_completed, get_or_create_onboarding_state
 
 logger = logging.getLogger(__name__)
 
@@ -189,6 +189,61 @@ def skip_onboarding(request):
 
     logger.info("[ONBOARD-04] Redirecting user %s to dashboard after skip", username)
     return redirect('/dashboard/')
+
+
+@login_required
+def tour(request):
+    """
+    Feature tour view (ONBOARD-03).
+    
+    Shows 4 feature highlight cards with progress indicator.
+    Updates onboarding state to step=2.
+    
+    Template: onboarding/tour.html
+    Context: None (static content)
+    
+    :param request: Django request object. Example: HttpRequest(method='GET', user=<User: maria>)
+    :return: Rendered HTML response with tour content. Example: HttpResponse(status=200, content="<div>...</div>")
+    :raises Http404: If template not found (handled by Django)
+    
+    Behavior:
+        - Ensures user is authenticated (via @login_required)
+        - Updates onboarding state to current_step=2
+        - Renders static tour template with 4 feature cards
+        - Logs tour access at INFO level
+    
+    Feature Cards Displayed:
+        - Workflows: "Organize activities into structured processes"
+        - Activities: "Define specific tasks"
+        - Artifacts: "Track deliverables" 
+        - Sync: "Collaborate via Homebase"
+    """
+    username = request.user.username
+    logger.info("[ONBOARD-03] Tour page accessed by user %s", username)
+    
+    try:
+        # Update onboarding state to step 2
+        state = get_or_create_onboarding_state(request.user)
+        state.current_step = 2
+        state.save(update_fields=["current_step"])
+        
+        logger.info(
+            "[ONBOARD-03] Updated onboarding state for user %s to step %s",
+            username,
+            state.current_step,
+        )
+        
+        # Render tour template
+        return render(request, 'onboarding/tour.html')
+        
+    except Exception as e:
+        logger.error(
+            "[ONBOARD-03] Error rendering tour page for user %s: %s",
+            username,
+            str(e)
+        )
+        # Re-raise to let Django handle the error
+        raise
 
 
 def _validate_registration_data(username, email, password, password_confirm):
