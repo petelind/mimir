@@ -14,7 +14,9 @@ urlpatterns = [
     # Legacy add endpoint (kept for backwards compatibility)
     path('add/', playbook_views.playbook_add, name='playbook_add'),
     
-    # Detail and Edit
+    # Detail, Edit, Delete
     path('<int:pk>/', playbook_views.playbook_detail, name='playbook_detail'),
     path('<int:pk>/edit/', playbook_views.playbook_edit, name='playbook_edit'),
+    path('<int:pk>/delete/', playbook_views.playbook_delete, name='playbook_delete'),
+    path('<int:pk>/delete/confirm/', playbook_views.playbook_delete_confirm, name='playbook_delete_confirm'),
 ]
