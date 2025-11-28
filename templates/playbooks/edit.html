@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Playbook - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h2 class="mb-4">
+                <i class="fa-solid fa-edit"></i>
+                Edit Playbook
+            </h2>
+
+            <form method="post" data-testid="playbook-edit-form">
+                {% csrf_token %}
+
+                <!-- Name Field -->
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-bold">
+                        Name <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name" 
+                        name="name" 
+                        maxlength="100"
+                        value="{{ form_data.name|default:playbook.name }}"
+                        required
+                        data-testid="playbook-name-input">
+                    <div class="form-text">3-100 characters</div>
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="description" class="form-label fw-bold">
+                        Description <span class="text-danger">*</span>
+                    </label>
+                    <textarea 
+                        class="form-control" 
+                        id="description" 
+                        name="description" 
+                        rows="4"
+                        maxlength="500"
+                        required
+                        data-testid="playbook-description-input">{{ form_data.description|default:playbook.description }}</textarea>
+                    <div class="form-text">10-500 characters</div>
+                </div>
+
+                <!-- Category Field -->
+                <div class="mb-3">
+                    <label for="category" class="form-label fw-bold">Category</label>
+                    <select class="form-select" id="category" name="category" data-testid="playbook-category-select">
+                        <option value="product" {% if playbook.category == 'product' %}selected{% endif %}>Product</option>
+                        <option value="development" {% if playbook.category == 'development' %}selected{% endif %}>Development</option>
+                        <option value="research" {% if playbook.category == 'research' %}selected{% endif %}>Research</option>
+                        <option value="design" {% if playbook.category == 'design' %}selected{% endif %}>Design</option>
+                        <option value="other" {% if playbook.category == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <!-- Tags Field -->
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="tags" 
+                        name="tags" 
+                        value="{{ form_data.tags|default:tags_string }}"
+                        placeholder="product, discovery, validation"
+                        data-testid="playbook-tags-input">
+                    <div class="form-text">Comma-separated tags</div>
+                </div>
+
+                <!-- Visibility Field -->
+                <div class="mb-3">
+                    <label for="visibility" class="form-label">Visibility</label>
+                    <select class="form-select" id="visibility" name="visibility" data-testid="playbook-visibility-select">
+                        <option value="private" {% if playbook.visibility == 'private' %}selected{% endif %}>Private (only me)</option>
+                        <option value="family" {% if playbook.visibility == 'family' %}selected{% endif %}>Family</option>
+                        <option value="local" {% if playbook.visibility == 'local' %}selected{% endif %}>Local only</option>
+                    </select>
+                </div>
+
+                <!-- Status Field -->
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" data-testid="playbook-status-select">
+                        <option value="draft" {% if playbook.status == 'draft' %}selected{% endif %}>Draft</option>
+                        <option value="active" {% if playbook.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="disabled" {% if playbook.status == 'disabled' %}selected{% endif %}>Disabled</option>
+                    </select>
+                </div>
+
+                <!-- Version Field (Read-only) -->
+                <div class="mb-3">
+                    <label for="version" class="form-label">Version</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="version" 
+                        value="v{{ playbook.version }}"
+                        readonly
+                        disabled
+                        data-testid="playbook-version-input">
+                    <div class="form-text text-muted">
+                        <i class="fa-solid fa-info-circle"></i>
+                        Version changes via PIPs only
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a 
+                        href="{% url 'playbook_detail' playbook.pk %}" 
+                        class="btn btn-secondary"
+                        data-bs-toggle="tooltip"
+                        title="Cancel and return to playbook detail"
+                        data-testid="cancel-button">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary"
+                        data-bs-toggle="tooltip"
+                        title="Save changes to playbook"
+                        data-testid="save-button">
+                        <i class="fa-solid fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}
