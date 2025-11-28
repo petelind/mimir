@@ -48,10 +48,9 @@ class Workflow(models.Model):
         
         Example:
             >>> workflow.get_activity_count()
-            0  # Returns 0 until Activity model is implemented
+            5  # Returns count of activities
         """
-        # TODO: Implement when Activity model exists
-        return 0
+        return self.activities.count()
     
     def get_phase_count(self):
         """
