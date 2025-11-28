@@ -1,104 +1,246 @@
 {% extends "base.html" %}
 
-{% block title %}Feature Tour - Mimir{% endblock %}
+{% block title %}Tour of Features - Mimir{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Tour-specific enhancements following IA guidelines */
+.tour-progress-section {
+    background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-info) 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.feature-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    background: var(--bs-light);
+}
+
+.feature-icon i {
+    font-size: 2rem;
+}
+
+.tour-continue-section {
+    background: var(--bs-gray-50);
+    padding: 2rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    margin: 1.5rem -1.5rem -1.5rem -1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tour-progress-section {
+        margin: -1rem -1rem 1rem -1rem;
+        padding: 1rem;
+    }
+    
+    .tour-continue-section {
+        margin: 1rem -1rem -1rem -1rem;
+        padding: 1.5rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animation control for testing */
+@media (prefers-reduced-motion: reduce) {
+    .feature-card {
+        transition: none;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5" data-testid="tour-page">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm">
-                <div class="card-body text-center py-5">
-                    <!-- Progress Indicator -->
-                    <div class="mb-4" data-testid="tour-progress-indicator">
-                        <div class="progress" style="height: 8px;">
-                            <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="2" aria-valuemin="0" aria-valuemax="3"></div>
-                        </div>
-                        <p class="text-muted mt-2 mb-0">Step 2 of 3</p>
-                    </div>
-                    
-                    <h1 class="display-5 mb-4">
-                        <i class="fa-solid fa-compass text-info"></i>
-                        Tour of Features
-                    </h1>
-                    <p class="lead text-muted mb-5">
-                        Discover the key features that will help you organize your work and collaborate effectively.
-                    </p>
-                    
-                    <!-- Feature Cards Grid -->
-                    <div class="row g-4 mb-5">
-                        <div class="col-md-6">
-                            <div class="card h-100" data-testid="tour-card-workflows">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-sitemap fa-3x text-primary"></i>
+<main role="main" aria-label="Feature Tour">
+    <div class="container mt-5" data-testid="tour-page">
+        <div class="row justify-content-center">
+            <div class="col-lg-11 col-xl-10">
+                <div class="card shadow-lg border-0">
+                    <!-- Progress Header -->
+                    <div class="tour-progress-section" data-testid="tour-progress-header">
+                        <div class="text-center">
+                            <div class="mb-3" data-testid="tour-progress-indicator">
+                                <div class="progress" style="height: 10px;" role="progressbar" aria-label="Tour progress">
+                                    <div class="progress-bar bg-white" 
+                                         style="width: 66%" 
+                                         aria-valuenow="2" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="3">
+                                        <span class="visually-hidden">66% complete</span>
                                     </div>
-                                    <h5 class="card-title">Workflows</h5>
-                                    <p class="card-text text-muted">
-                                        Organize activities into structured processes
-                                    </p>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="card h-100" data-testid="tour-card-activities">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-tasks fa-3x text-success"></i>
-                                    </div>
-                                    <h5 class="card-title">Activities</h5>
-                                    <p class="card-text text-muted">
-                                        Define specific tasks
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="card h-100" data-testid="tour-card-artifacts">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-folder-open fa-3x text-warning"></i>
-                                    </div>
-                                    <h5 class="card-title">Artifacts</h5>
-                                    <p class="card-text text-muted">
-                                        Track deliverables
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <div class="card h-100" data-testid="tour-card-sync">
-                                <div class="card-body text-center">
-                                    <div class="mb-3">
-                                        <i class="fa-solid fa-sync fa-3x text-info"></i>
-                                    </div>
-                                    <h5 class="card-title">Sync</h5>
-                                    <p class="card-text text-muted">
-                                        Collaborate via Homebase
-                                    </p>
-                                </div>
+                                <p class="mt-2 mb-0 fw-bold">
+                                    <i class="fa-solid fa-compass me-2"></i>
+                                    Step 2 of 3 - Feature Tour
+                                </p>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Continue Button -->
-                    <div class="text-center">
-                        <a href="/auth/user/onboarding/complete/" 
-                           class="btn btn-primary btn-lg"
-                           data-testid="tour-continue-button"
-                           data-bs-toggle="tooltip"
-                           title="Proceed to next step">
-                            <i class="fa-solid fa-arrow-right"></i>
-                            Continue
-                        </a>
+                    <div class="card-body p-5">
+                        <!-- Tour Header -->
+                        <header class="text-center mb-5" data-testid="tour-header">
+                            <h1 class="display-4 fw-bold mb-3">
+                                <i class="fa-solid fa-sparkles text-warning me-3"></i>
+                                Discover FOB's Features
+                            </h1>
+                            <p class="lead text-muted fs-5">
+                                Explore the powerful tools that will transform how you organize work and collaborate with your team.
+                            </p>
+                        </header>
+                        
+                        <!-- Feature Cards Grid -->
+                        <section aria-label="Feature Overview" class="mb-5">
+                            <div class="row g-4" data-testid="tour-features-grid">
+                                <!-- Workflows Card -->
+                                <article class="col-md-6 col-lg-3">
+                                    <div class="card feature-card h-100" 
+                                         data-testid="tour-card-workflows"
+                                         data-feature="workflows"
+                                         role="article"
+                                         aria-label="Workflows Feature">
+                                        <div class="card-body text-center p-4">
+                                            <div class="feature-icon bg-primary bg-gradient text-white">
+                                                <i class="fa-solid fa-sitemap"></i>
+                                            </div>
+                                            <h3 class="card-title h5 fw-bold mb-3">Workflows</h3>
+                                            <p class="card-text text-muted">
+                                                Organize activities into structured processes that guide your team from start to finish.
+                                            </p>
+                                            <div class="mt-auto">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary">
+                                                    <i class="fa-solid fa-route me-1"></i>
+                                                    Process Management
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                
+                                <!-- Activities Card -->
+                                <article class="col-md-6 col-lg-3">
+                                    <div class="card feature-card h-100" 
+                                         data-testid="tour-card-activities"
+                                         data-feature="activities"
+                                         role="article"
+                                         aria-label="Activities Feature">
+                                        <div class="card-body text-center p-4">
+                                            <div class="feature-icon bg-success bg-gradient text-white">
+                                                <i class="fa-solid fa-tasks"></i>
+                                            </div>
+                                            <h3 class="card-title h5 fw-bold mb-3">Activities</h3>
+                                            <p class="card-text text-muted">
+                                                Define specific tasks with clear responsibilities, timelines, and expected outcomes.
+                                            </p>
+                                            <div class="mt-auto">
+                                                <span class="badge bg-success bg-opacity-10 text-success">
+                                                    <i class="fa-solid fa-check me-1"></i>
+                                                    Task Management
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                
+                                <!-- Artifacts Card -->
+                                <article class="col-md-6 col-lg-3">
+                                    <div class="card feature-card h-100" 
+                                         data-testid="tour-card-artifacts"
+                                         data-feature="artifacts"
+                                         role="article"
+                                         aria-label="Artifacts Feature">
+                                        <div class="card-body text-center p-4">
+                                            <div class="feature-icon bg-warning bg-gradient text-white">
+                                                <i class="fa-solid fa-folder-open"></i>
+                                            </div>
+                                            <h3 class="card-title h5 fw-bold mb-3">Artifacts</h3>
+                                            <p class="card-text text-muted">
+                                                Track deliverables and maintain a complete record of your team's work products.
+                                            </p>
+                                            <div class="mt-auto">
+                                                <span class="badge bg-warning bg-opacity-10 text-warning">
+                                                    <i class="fa-solid fa-box me-1"></i>
+                                                    Deliverable Tracking
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                
+                                <!-- Sync Card -->
+                                <article class="col-md-6 col-lg-3">
+                                    <div class="card feature-card h-100" 
+                                         data-testid="tour-card-sync"
+                                         data-feature="sync"
+                                         role="article"
+                                         aria-label="Sync Feature">
+                                        <div class="card-body text-center p-4">
+                                            <div class="feature-icon bg-info bg-gradient text-white">
+                                                <i class="fa-solid fa-sync"></i>
+                                            </div>
+                                            <h3 class="card-title h5 fw-bold mb-3">Sync</h3>
+                                            <p class="card-text text-muted">
+                                                Collaborate via Homebase and keep your entire team aligned with real-time updates.
+                                            </p>
+                                            <div class="mt-auto">
+                                                <span class="badge bg-info bg-opacity-10 text-info">
+                                                    <i class="fa-solid fa-users me-1"></i>
+                                                    Team Collaboration
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
                     </div>
+                    
+                    <!-- Continue Section -->
+                    <footer class="tour-continue-section" data-testid="tour-continue-section">
+                        <div class="text-center">
+                            <a href="/auth/user/onboarding/complete/" 
+                               class="btn btn-primary btn-lg px-5 py-3"
+                               data-testid="tour-continue-button"
+                               data-bs-toggle="tooltip"
+                               data-bs-placement="top"
+                               role="button"
+                               aria-label="Continue to next onboarding step">
+                                <i class="fa-solid fa-arrow-right me-2"></i>
+                                Continue Your Journey
+                            </a>
+                            <p class="text-muted mt-3 mb-0 small">
+                                <i class="fa-solid fa-lightbulb me-1"></i>
+                                Ready to start using these powerful features?
+                            </p>
+                        </div>
+                    </footer>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 <!-- Feature code marker for traceability -->
 <div data-testid="tour-feature-code" style="display: none;">FOB-ONBOARDING-1-TOUR</div>
@@ -111,12 +253,28 @@
     document.addEventListener('DOMContentLoaded', function () {
         console.log('[ONBOARD-03] Tour page loaded');
         
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Enhanced logging for interactions
         var continueButton = document.querySelector('[data-testid="tour-continue-button"]');
         if (continueButton) {
             continueButton.addEventListener('click', function () {
-                console.log('[ONBOARD-03] Continue button clicked, proceeding to next step');
+                console.log('[ONBOARD-03] Continue button clicked, proceeding to completion step');
             });
         }
+        
+        // Log feature card interactions
+        var featureCards = document.querySelectorAll('[data-testid^="tour-card-"]');
+        featureCards.forEach(function(card) {
+            card.addEventListener('mouseenter', function() {
+                var feature = card.getAttribute('data-feature');
+                console.log('[ONBOARD-03] User viewing feature:', feature);
+            });
+        });
     });
 </script>
 {% endblock %}
