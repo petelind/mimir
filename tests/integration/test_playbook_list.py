@@ -175,4 +175,4 @@ class TestPlaybookList:
         
         # Should redirect to login
         assert response.status_code == 302
-        assert '/auth/login/' in response.url
+        assert '/auth/user/login/' in response.url
