@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Workflow - {{ workflow.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook.pk workflow.pk %}">{{ workflow.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h2 class="mb-4">
+                <i class="fa-solid fa-edit"></i>
+                Edit Workflow
+            </h2>
+
+            <form method="post" data-testid="workflow-edit-form">
+                {% csrf_token %}
+
+                <!-- Name Field -->
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-bold">
+                        Workflow Name <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name" 
+                        name="name" 
+                        maxlength="100"
+                        value="{{ name|default:workflow.name }}"
+                        required
+                        data-testid="workflow-name-input">
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea 
+                        class="form-control" 
+                        id="description" 
+                        name="description" 
+                        rows="4"
+                        maxlength="500"
+                        data-testid="workflow-description-input">{{ description|default:workflow.description }}</textarea>
+                </div>
+
+                <!-- Order Field -->
+                <div class="mb-3">
+                    <label for="order" class="form-label">Order</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="order" 
+                        name="order" 
+                        value="{{ workflow.order }}"
+                        min="1"
+                        data-testid="workflow-order-input">
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a 
+                        href="{% url 'workflow_detail' playbook.pk workflow.pk %}" 
+                        class="btn btn-secondary"
+                        data-bs-toggle="tooltip"
+                        title="Cancel and return to workflow"
+                        data-testid="cancel-button">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary"
+                        data-bs-toggle="tooltip"
+                        title="Save changes to workflow"
+                        data-testid="save-button">
+                        <i class="fa-solid fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Workflow - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <h2 class="mb-4">
+                <i class="fa-solid fa-diagram-project"></i>
+                Create Workflow
+            </h2>
+
+            <!-- Context Banner -->
+            <div class="alert alert-info" data-testid="context-banner">
+                <strong>Parent Playbook:</strong> {{ playbook.name }} (v{{ playbook.version }})
+            </div>
+
+            <form method="post" data-testid="workflow-create-form">
+                {% csrf_token %}
+
+                <!-- Name Field -->
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-bold">
+                        Workflow Name <span class="text-danger">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name" 
+                        name="name" 
+                        maxlength="100"
+                        value="{{ name|default:'' }}"
+                        required
+                        data-testid="workflow-name-input"
+                        placeholder="e.g., Component Development, State Management Setup">
+                    <div class="form-text">
+                        3-100 characters. Must be unique within this playbook.
+                    </div>
+                </div>
+
+                <!-- Description Field -->
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea 
+                        class="form-control" 
+                        id="description" 
+                        name="description" 
+                        rows="4"
+                        maxlength="500"
+                        data-testid="workflow-description-input"
+                        placeholder="Describe the purpose and scope of this workflow...">{{ description|default:'' }}</textarea>
+                    <div class="form-text">
+                        Optional. Up to 500 characters.
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a 
+                        href="{% url 'workflow_list' playbook.pk %}" 
+                        class="btn btn-secondary"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Cancel and return to workflows list"
+                        data-testid="cancel-button">
+                        <i class="fa-solid fa-times"></i> Cancel
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        title="Create workflow and add to playbook"
+                        data-testid="create-button">
+                        <i class="fa-solid fa-plus"></i> Create Workflow
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

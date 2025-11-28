@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ workflow.name }} - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ workflow.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 data-testid="workflow-name">
+                <i class="fa-solid fa-diagram-project"></i>
+                {{ workflow.name }}
+                <span class="badge bg-secondary" data-testid="workflow-order">#{{ workflow.order }}</span>
+            </h2>
+            <p class="text-muted">
+                <a href="{% url 'playbook_detail' playbook.pk %}">{{ playbook.name }}</a>
+            </p>
+        </div>
+
+        {% if can_edit %}
+        <div class="btn-group" role="group">
+            <a href="{% url 'workflow_edit' playbook.pk workflow.pk %}" 
+               class="btn btn-outline-primary"
+               data-bs-toggle="tooltip"
+               title="Edit workflow details">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+            <a href="{% url 'workflow_delete' playbook.pk workflow.pk %}" 
+               class="btn btn-outline-danger"
+               data-bs-toggle="tooltip"
+               title="Delete this workflow">
+                <i class="fa-solid fa-trash"></i> Delete
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Description -->
+    {% if workflow.description %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Description</h5>
+            <p class="card-text" data-testid="workflow-description">{{ workflow.description }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Activities Section (Placeholder) -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Activities ({{ workflow.get_activity_count }})</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Activities will be displayed here when Activity model is implemented.</p>
+        </div>
+    </div>
+
+    <!-- Phases Section (Placeholder) -->
+    {% if workflow.get_phase_count > 0 %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Phases ({{ workflow.get_phase_count }})</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Phases will be displayed here when Phase model is implemented.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}
