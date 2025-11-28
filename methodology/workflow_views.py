@@ -26,10 +26,14 @@ def workflow_global_list(request):
         playbook__source='owned'
     ).select_related('playbook').order_by('playbook__name', 'order')
     
+    # Count unique playbooks
+    playbook_count = workflows.values('playbook').distinct().count()
+    
     logger.info(f"User {request.user.username} viewing global workflows list ({workflows.count()} workflows)")
     
     return render(request, 'workflows/global_list.html', {
-        'workflows': workflows
+        'workflows': workflows,
+        'playbook_count': playbook_count
     })
 
 
