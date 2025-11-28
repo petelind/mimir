@@ -6,14 +6,39 @@
 {% block content %}
 <div class="container mt-4">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2>
-                <i class="fa-solid fa-diagram-project"></i>
-                All Workflows
-                <span class="badge bg-secondary">{{ workflows|length }}</span>
-            </h2>
-            <p class="text-muted">Workflows across all your playbooks</p>
+    <div class="mb-4">
+        <h2>
+            <i class="fa-solid fa-diagram-project"></i>
+            All Workflows
+        </h2>
+        <p class="text-muted">Workflows across all your playbooks</p>
+    </div>
+
+    <!-- Summary Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body text-center">
+                    <h2 class="display-4 mb-0">{{ workflows|length }}</h2>
+                    <p class="mb-0">Total Workflows</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body text-center">
+                    <h2 class="display-4 mb-0">{{ playbook_count }}</h2>
+                    <p class="mb-0">Playbooks</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning">
+                <div class="card-body text-center">
+                    <h2 class="display-4 mb-0">0</h2>
+                    <p class="mb-0">Total Activities</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -70,34 +95,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-
-    <!-- Summary Stats -->
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="mb-0">{{ workflows|length }}</h3>
-                    <p class="text-muted mb-0">Total Workflows</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="mb-0">{{ playbook_count }}</h3>
-                    <p class="text-muted mb-0">Playbooks</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3 class="mb-0">0</h3>
-                    <p class="text-muted mb-0">Total Activities</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     {% else %}
