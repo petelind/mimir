@@ -288,13 +288,28 @@ def playbook_detail(request, pk):
         messages.error(request, "You don't have permission to view this playbook.")
         return redirect('playbook_list')
     
+    # Calculate Quick Stats for Overview tab
+    workflows = playbook.workflows.all()
+    quick_stats = {
+        'workflows': workflows.count(),
+        'phases': 0,  # TODO: Implement when Phase model exists
+        'activities': 0,  # TODO: Implement when Activity model exists
+        'artifacts': 0,  # TODO: Implement when Artifact model exists
+        'roles': 0,  # TODO: Implement when Role model exists
+        'howtos': 0,  # TODO: Implement when Howto model exists
+    }
+    logger.info(f"Quick stats calculated for playbook {pk}: {quick_stats}")
+    
     context = {
         'playbook': playbook,
-        'workflows': playbook.workflows.all(),
+        'workflows': workflows,
         'versions': playbook.versions.all()[:5],  # Latest 5 versions
-        'can_edit': playbook.can_edit(request.user)
+        'quick_stats': quick_stats,
+        'can_edit': playbook.source == 'owned' and playbook.author == request.user,
+        'active_tab': request.GET.get('tab', 'overview'),
     }
     
+    logger.info(f"Playbook detail rendered for user {request.user.username}")
     return render(request, 'playbooks/detail.html', context)
 
 
