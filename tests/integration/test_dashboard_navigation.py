@@ -27,6 +27,13 @@ class TestDashboardNavigation:
         assert "+ New Playbook" in content
         assert 'data-testid="dashboard-quick-new-playbook"' in content
 
+        # Tooltip should explain the action
+        assert 'data-bs-toggle="tooltip"' in content
+        assert 'title="Create a new playbook"' in content
+
+        # Icon should follow UI conventions (playbook icon)
+        assert "fa-book-sparkles" in content
+
         # Link should go to playbook_create (FOB-PLAYBOOKS-CREATE_PLAYBOOK-1 entry point)
         create_url = reverse("playbook_create")
         assert create_url in content
