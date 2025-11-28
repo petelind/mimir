@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from methodology import views as methodology_views
+from methodology import workflow_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,5 +27,5 @@ urlpatterns = [
     path("", methodology_views.index, name="index"),
     path("playbooks/", include("methodology.playbook_urls")),
     path("playbooks/", include("methodology.workflow_urls")),  # Workflow URLs scoped to playbook
-    path("workflows/", methodology_views.workflow_global_list, name="workflow_global_list"),  # Global workflows view
+    path("workflows/", workflow_views.workflow_global_list, name="workflow_global_list"),  # Global workflows view
 ]
