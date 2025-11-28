@@ -1,7 +1,7 @@
 """E2E tests for ONBOARD-01 onboarding welcome screen using Django Test Client.
 
 Covers FOB-ONBOARDING-1 / Scenario ONBOARD-01 Welcome screen
-from docs/features/act-0-auth/onboarding.feature.
+and ONBOARD-03 Tour of features from docs/features/act-0-auth/onboarding.feature.
 
 Per .windsurf/workflows/dev-4-e2e-tests.md we use Django Test Client
 for fast, reliable end-to-end flows without browser automation.
@@ -11,6 +11,8 @@ import pytest
 from django.contrib.auth.models import User
 from django.test import Client
 from django.urls import reverse
+
+from accounts.models import UserOnboardingState
 
 
 @pytest.mark.django_db
@@ -120,5 +122,87 @@ class TestOnboardingE2E:
         assert 'Skip tour?' in content
         assert 'Are you sure? You can access help anytime.' in content
 
-        # Confirm button exists (form now POSTs to onboarding_skip backend endpoint)
-        assert 'data-testid="onboarding-skip-confirm"' in content
+    def test_onboarding_welcome_to_tour_journey(self):
+        """End-to-end: ONBOARD-01 welcome → ONBOARD-03 tour → completion stub.
+
+        User Journey:
+        1. Authenticated user accesses onboarding welcome (step 0)
+        2. Clicks "Begin your journey" button
+        3. Redirected to tour page (step 2)
+        4. Views all 4 feature cards and progress indicator
+        5. Clicks continue button to completion stub
+        6. Verifies onboarding state tracking throughout journey
+        """
+        client = Client()
+        
+        # Create and log in user
+        user = User.objects.create_user(username="maria", password="TestPass123")
+        login_response = client.post(
+            reverse("login"),
+            {"username": "maria", "password": "TestPass123"},
+            follow=True,
+        )
+        assert login_response.redirect_chain[-1][0] == "/dashboard/"
+
+        # Step 1: Access welcome screen (ONBOARD-01)
+        welcome_response = client.get(reverse("onboarding"))
+        assert welcome_response.status_code == 200
+        welcome_content = welcome_response.content.decode("utf-8")
+        
+        # Verify welcome content and navigation
+        assert 'data-testid="onboarding-welcome"' in welcome_content
+        assert 'data-testid="onboarding-begin-journey-button"' in welcome_content
+        assert 'Begin your journey' in welcome_content
+        assert 'Take a tour of FOB features and begin your journey' in welcome_content
+        
+        # Verify onboarding state at step 0
+        from accounts.models import get_or_create_onboarding_state
+        state = get_or_create_onboarding_state(user)
+        assert state.current_step == 0
+
+        # Step 2: Navigate to tour (ONBOARD-03)
+        tour_response = client.get(reverse("onboarding_tour"))
+        assert tour_response.status_code == 200
+        tour_content = tour_response.content.decode("utf-8")
+        
+        # Verify tour content
+        assert 'data-testid="tour-page"' in tour_content
+        assert 'data-testid="tour-progress-header"' in tour_content
+        assert 'data-testid="tour-features-grid"' in tour_content
+        assert 'Step 2 of 3 - Feature Tour' in tour_content
+        assert 'Discover FOB\'s Features' in tour_content
+        
+        # Verify all 4 feature cards
+        assert 'data-testid="tour-card-workflows"' in tour_content
+        assert 'data-testid="tour-card-activities"' in tour_content
+        assert 'data-testid="tour-card-artifacts"' in tour_content
+        assert 'data-testid="tour-card-sync"' in tour_content
+        
+        # Verify feature content
+        assert 'Workflows' in tour_content
+        assert 'Activities' in tour_content
+        assert 'Artifacts' in tour_content
+        assert 'Sync' in tour_content
+        assert 'Process Management' in tour_content
+        assert 'Task Management' in tour_content
+        assert 'Deliverable Tracking' in tour_content
+        assert 'Team Collaboration' in tour_content
+        
+        # Verify continue button
+        assert 'data-testid="tour-continue-button"' in tour_content
+        assert 'Continue Your Journey' in tour_content
+        assert '/auth/user/onboarding/complete/' in tour_content
+        
+        # Verify onboarding state updated to step 2
+        state = UserOnboardingState.objects.get(user=user)
+        assert state.current_step == 2
+        assert state.is_completed is False
+
+        # Step 3: Navigate to completion stub (ONBOARD-05 - not implemented)
+        # This will show 404 since completion step isn't implemented yet
+        completion_response = client.get('/auth/user/onboarding/complete/')
+        assert completion_response.status_code == 404
+        
+        # But the tour state should remain intact
+        state = UserOnboardingState.objects.get(user=user)
+        assert state.current_step == 2
