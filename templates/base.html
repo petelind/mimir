@@ -65,9 +65,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" data-testid="nav-workflows"
+                        <a class="nav-link" href="{% url 'workflow_global_list' %}" data-testid="nav-workflows"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Workflows are managed within each playbook - open a playbook to view its workflows">
+                           title="View all workflows across your playbooks"
+                           {% if '/workflows/' in request.path %}aria-current="page"{% endif %}>
                             <i class="fas fa-diagram-project"></i> Workflows
                         </a>
                     </li>

@@ -26,4 +26,5 @@ urlpatterns = [
     path("", methodology_views.index, name="index"),
     path("playbooks/", include("methodology.playbook_urls")),
     path("playbooks/", include("methodology.workflow_urls")),  # Workflow URLs scoped to playbook
+    path("workflows/", methodology_views.workflow_global_list, name="workflow_global_list"),  # Global workflows view
 ]

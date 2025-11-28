@@ -13,6 +13,27 @@ logger = logging.getLogger(__name__)
 
 
 @login_required
+def workflow_global_list(request):
+    """
+    Global workflows overview - all workflows across all playbooks.
+    
+    Shows workflows from all playbooks owned by the user.
+    Useful for seeing workflow patterns and managing across playbooks.
+    """
+    # Get all workflows from user's owned playbooks
+    workflows = Workflow.objects.filter(
+        playbook__author=request.user,
+        playbook__source='owned'
+    ).select_related('playbook').order_by('playbook__name', 'order')
+    
+    logger.info(f"User {request.user.username} viewing global workflows list ({workflows.count()} workflows)")
+    
+    return render(request, 'workflows/global_list.html', {
+        'workflows': workflows
+    })
+
+
+@login_required
 def workflow_create(request, playbook_pk):
     """
     Create new workflow in playbook.
