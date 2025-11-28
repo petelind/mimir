@@ -13,6 +13,57 @@
     margin: -1.5rem -1.5rem 1.5rem -1.5rem;
 }
 
+.tour-stepper {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+}
+
+.tour-stepper .tour-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+}
+
+.tour-stepper .tour-step .step-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    border: 2px solid rgba(255,255,255,0.6);
+    font-size: 1rem;
+}
+
+.tour-stepper .tour-step.completed .step-icon {
+    background: rgba(255,255,255,0.95);
+    color: var(--bs-primary);
+}
+
+.tour-stepper .tour-step.active .step-icon {
+    background: var(--bs-warning);
+    color: var(--bs-dark);
+    border-color: var(--bs-warning);
+}
+
+.tour-stepper .tour-step.upcoming .step-icon {
+    background: transparent;
+    color: rgba(255,255,255,0.9);
+}
+
+.tour-stepper .tour-step small {
+    font-weight: 400;
+    opacity: 0.9;
+}
+
 .feature-card {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     border: none;
@@ -82,20 +133,35 @@
                     <div class="tour-progress-section" data-testid="tour-progress-header">
                         <div class="text-center">
                             <div class="mb-3" data-testid="tour-progress-indicator">
-                                <div class="progress" style="height: 10px;" role="progressbar" aria-label="Tour progress">
+                                <div class="progress" style="height: 10px;" role="progressbar" aria-label="Onboarding progress">
                                     <div class="progress-bar bg-white" 
                                          style="width: 66%" 
                                          aria-valuenow="2" 
                                          aria-valuemin="0" 
                                          aria-valuemax="3">
-                                        <span class="visually-hidden">66% complete</span>
+                                        <span class="visually-hidden">Onboarding progress 2 of 3 steps</span>
                                     </div>
                                 </div>
-                                <p class="mt-2 mb-0 fw-bold">
-                                    <i class="fa-solid fa-compass me-2"></i>
-                                    Step 2 of 3 - Feature Tour
-                                </p>
                             </div>
+                            <ul class="tour-stepper" data-testid="tour-stepper" role="list" aria-label="Onboarding steps">
+                                <li class="tour-step completed" role="listitem">
+                                    <span class="step-icon" aria-hidden="true">
+                                        <i class="fa-solid fa-check"></i>
+                                    </span>
+                                    <span>Step 1</span>
+                                    <small>Welcome</small>
+                                </li>
+                                <li class="tour-step active" role="listitem">
+                                    <span class="step-icon" aria-hidden="true">2</span>
+                                    <span>Step 2</span>
+                                    <small>Feature Tour</small>
+                                </li>
+                                <li class="tour-step upcoming" role="listitem">
+                                    <span class="step-icon" aria-hidden="true">3</span>
+                                    <span>Step 3</span>
+                                    <small>Complete Setup</small>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     
