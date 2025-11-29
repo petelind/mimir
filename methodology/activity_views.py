@@ -180,6 +180,23 @@ def activity_create(request, playbook_pk, workflow_pk):
                 messages.error(request, 'Order must be a number.')
                 return _render_create_form(request, playbook, workflow, request.POST, {'order': 'Must be a number'})
         
+        # Get predecessor and successor objects if IDs provided
+        predecessor = None
+        successor = None
+        if predecessor_id:
+            try:
+                predecessor = Activity.objects.get(pk=int(predecessor_id), workflow=workflow)
+            except (Activity.DoesNotExist, ValueError):
+                messages.error(request, 'Invalid predecessor selected.')
+                return _render_create_form(request, playbook, workflow, request.POST, {})
+        
+        if successor_id:
+            try:
+                successor = Activity.objects.get(pk=int(successor_id), workflow=workflow)
+            except (Activity.DoesNotExist, ValueError):
+                messages.error(request, 'Invalid successor selected.')
+                return _render_create_form(request, playbook, workflow, request.POST, {})
+        
         # Validate and create
         try:
             activity = ActivityService.create_activity(
@@ -188,7 +205,8 @@ def activity_create(request, playbook_pk, workflow_pk):
                 guidance=guidance,
                 phase=phase,
                 order=order_int,
-                has_dependencies=has_dependencies
+                predecessor=predecessor,
+                successor=successor
             )
             logger.info(f"Activity '{name}' created successfully in workflow {workflow_pk}")
             messages.success(request, f"Activity '{activity.name}' created successfully!")
@@ -205,11 +223,21 @@ def activity_create(request, playbook_pk, workflow_pk):
 
 def _render_create_form(request, playbook, workflow, form_data, errors):
     """Helper to render create form with context."""
+    # Get available predecessors and successors
+    available_predecessors = ActivityService.get_available_predecessors(workflow)
+    available_successors = ActivityService.get_available_successors(workflow)
+    
+    # Check if dropdowns should be disabled (no other activities)
+    disable_dependencies = workflow.get_activity_count() == 0
+    
     context = {
         'playbook': playbook,
         'workflow': workflow,
         'form_data': form_data,
         'errors': errors,
+        'available_predecessors': available_predecessors,
+        'available_successors': available_successors,
+        'disable_dependencies': disable_dependencies,
     }
     return render(request, 'activities/create.html', context)
 
