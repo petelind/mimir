@@ -81,7 +81,7 @@
                                         <strong>{{ activity.name }}</strong>
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
+                                        <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.has_dependencies %}
@@ -150,7 +150,7 @@
                                         <strong>{{ activity.name }}</strong>
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
+                                        <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.has_dependencies %}

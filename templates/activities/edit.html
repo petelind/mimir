@@ -58,21 +58,26 @@
                             <small class="form-text text-muted">Unique name for this activity (max 200 characters)</small>
                         </div>
 
-                        <!-- Description -->
+                        <!-- Guidance -->
                         <div class="mb-3">
-                            <label for="description" class="form-label">
-                                Description <span class="text-danger">*</span>
+                            <label for="guidance" class="form-label">
+                                Guidance <span class="text-danger">*</span>
+                                <i class="fa-solid fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip"
+                                   title="Supports Markdown formatting, code blocks, images, and Mermaid diagrams"></i>
                             </label>
-                            <textarea class="form-control {% if errors.description %}is-invalid{% endif %}" 
-                                      id="description" 
-                                      name="description" 
-                                      rows="4"
-                                      data-testid="description-input"
-                                      required>{{ form_data.description }}</textarea>
-                            {% if errors.description %}
-                                <div class="invalid-feedback">{{ errors.description }}</div>
+                            <textarea class="form-control {% if errors.guidance %}is-invalid{% endif %}" 
+                                      id="guidance" 
+                                      name="guidance" 
+                                      rows="8"
+                                      data-testid="guidance-input"
+                                      required>{{ form_data.guidance }}</textarea>
+                            {% if errors.guidance %}
+                                <div class="invalid-feedback">{{ errors.guidance }}</div>
                             {% endif %}
-                            <small class="form-text text-muted">Detailed description of what this activity involves</small>
+                            <small class="form-text text-muted">
+                                <i class="fa-brands fa-markdown"></i> Rich Markdown guidance with instructions, examples, images, and Mermaid diagrams
+                            </small>
                         </div>
 
                         <!-- Phase -->

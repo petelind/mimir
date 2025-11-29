@@ -92,7 +92,7 @@
                                         <td>
                                             <strong>{{ activity.name }}</strong>
                                             <br>
-                                            <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
+                                            <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
                                         </td>
                                         <td>
                                             <a href="{% url 'workflow_detail' playbook_pk=activity.workflow.playbook.pk pk=activity.workflow.pk %}">
