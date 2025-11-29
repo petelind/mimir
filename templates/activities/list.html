@@ -84,7 +84,7 @@
                                         <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
-                                        {% if activity.has_dependencies %}
+                                        {% if activity.predecessor or activity.successor %}
                                             <i class="fa-solid fa-link text-warning" 
                                                data-bs-toggle="tooltip"
                                                title="Has dependencies"></i>
@@ -153,7 +153,7 @@
                                         <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
-                                        {% if activity.has_dependencies %}
+                                        {% if activity.predecessor or activity.successor %}
                                             <i class="fa-solid fa-link text-warning" 
                                                data-bs-toggle="tooltip"
                                                title="Has dependencies"></i>

@@ -106,7 +106,7 @@
                                         </td>
                                         <td>#{{ activity.order }}</td>
                                         <td>
-                                            {% if activity.has_dependencies %}
+                                            {% if activity.predecessor or activity.successor %}
                                                 <i class="fa-solid fa-link text-warning"></i>
                                             {% else %}
                                                 <i class="fa-solid fa-minus text-muted"></i>
