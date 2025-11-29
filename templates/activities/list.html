@@ -67,11 +67,10 @@
                             <thead class="table-light">
                                 <tr>
                                     <th style="width: 5%">#</th>
-                                    <th style="width: 20%">Name</th>
-                                    <th style="width: 35%">Description</th>
-                                    <th style="width: 10%">Status</th>
+                                    <th style="width: 30%">Name</th>
+                                    <th style="width: 45%">Description</th>
                                     <th style="width: 10%">Dependencies</th>
-                                    <th style="width: 20%">Actions</th>
+                                    <th style="width: 10%">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,12 +82,6 @@
                                     </td>
                                     <td>
                                         <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}"
-                                              data-testid="status-badge-{{ activity.id }}">
-                                            {{ activity.get_status_display }}
-                                        </span>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.has_dependencies %}
@@ -142,11 +135,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th style="width: 5%">#</th>
-                                <th style="width: 20%">Name</th>
-                                <th style="width: 35%">Description</th>
-                                <th style="width: 10%">Status</th>
+                                <th style="width: 30%">Name</th>
+                                <th style="width: 45%">Description</th>
                                 <th style="width: 10%">Dependencies</th>
-                                <th style="width: 20%">Actions</th>
+                                <th style="width: 10%">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,12 +151,6 @@
                                     </td>
                                     <td>
                                         <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}"
-                                              data-testid="status-badge-{{ activity.id }}">
-                                            {{ activity.get_status_display }}
-                                        </span>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.has_dependencies %}
@@ -230,10 +216,4 @@
     {% endif %}
 </div>
 
-<style>
-    .badge.bg-not_started { background-color: #6c757d !important; }
-    .badge.bg-in_progress { background-color: #0d6efd !important; }
-    .badge.bg-completed { background-color: #198754 !important; }
-    .badge.bg-blocked { background-color: #dc3545 !important; }
-</style>
 {% endblock %}

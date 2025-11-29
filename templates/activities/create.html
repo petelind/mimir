@@ -93,49 +93,26 @@
                             <small class="form-text text-muted">Optional: Group this activity into a phase (e.g., 'Planning', 'Execution')</small>
                         </div>
 
-                        <!-- Row: Order + Status -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- Order -->
-                                <div class="mb-3">
-                                    <label for="order" class="form-label">
-                                        Order
-                                        <i class="fa-solid fa-info-circle text-muted" 
-                                           data-bs-toggle="tooltip"
-                                           title="Auto-assigned if left empty"></i>
-                                    </label>
-                                    <input type="number" 
-                                           class="form-control {% if errors.order %}is-invalid{% endif %}" 
-                                           id="order" 
-                                           name="order"
-                                           min="1"
-                                           value="{{ form_data.order }}"
-                                           data-testid="order-input"
-                                           placeholder="Auto">
-                                    {% if errors.order %}
-                                        <div class="invalid-feedback">{{ errors.order }}</div>
-                                    {% endif %}
-                                    <small class="form-text text-muted">Leave empty to auto-assign next available order</small>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <!-- Status -->
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" 
-                                            id="status" 
-                                            name="status"
-                                            data-testid="status-select">
-                                        {% for value, label in status_choices %}
-                                            <option value="{{ value }}" {% if form_data.status == value or value == 'not_started' and not form_data.status %}selected{% endif %}>
-                                                {{ label }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                    <small class="form-text text-muted">Current status of this activity</small>
-                                </div>
-                            </div>
+                        <!-- Order -->
+                        <div class="mb-3">
+                            <label for="order" class="form-label">
+                                Order
+                                <i class="fa-solid fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip"
+                                   title="Auto-assigned if left empty"></i>
+                            </label>
+                            <input type="number" 
+                                   class="form-control {% if errors.order %}is-invalid{% endif %}" 
+                                   id="order" 
+                                   name="order"
+                                   min="1"
+                                   value="{{ form_data.order }}"
+                                   data-testid="order-input"
+                                   placeholder="Auto">
+                            {% if errors.order %}
+                                <div class="invalid-feedback">{{ errors.order }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Leave empty to auto-assign next available order</small>
                         </div>
 
                         <!-- Has Dependencies -->
@@ -191,7 +168,7 @@
                         <li><strong>Description:</strong> Detail what needs to be done</li>
                         <li><strong>Phase:</strong> Use consistent naming across activities</li>
                         <li><strong>Order:</strong> Leave blank for automatic sequencing</li>
-                        <li><strong>Status:</strong> Start with "Not Started" for new activities</li>
+                        <li><strong>Dependencies:</strong> Mark if prerequisites exist</li>
                     </ul>
                 </div>
             </div>

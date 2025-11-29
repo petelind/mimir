@@ -58,15 +58,17 @@
                             <dt class="col-sm-3">Phase:</dt>
                             <dd class="col-sm-9">{{ activity.get_phase_display_name }}</dd>
 
-                            <dt class="col-sm-3">Status:</dt>
-                            <dd class="col-sm-9">
-                                <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}">
-                                    {{ activity.get_status_display }}
-                                </span>
-                            </dd>
-
                             <dt class="col-sm-3">Order:</dt>
                             <dd class="col-sm-9">#{{ activity.order }}</dd>
+
+                            <dt class="col-sm-3">Dependencies:</dt>
+                            <dd class="col-sm-9">
+                                {% if activity.has_dependencies %}
+                                    <i class="fa-solid fa-check text-warning"></i> Yes
+                                {% else %}
+                                    <i class="fa-solid fa-times text-muted"></i> No
+                                {% endif %}
+                            </dd>
 
                             <dt class="col-sm-3">Created:</dt>
                             <dd class="col-sm-9">{{ activity.created_at|date:"M d, Y" }}</dd>

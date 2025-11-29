@@ -81,7 +81,6 @@
                                         <th>Activity</th>
                                         <th>Workflow</th>
                                         <th>Playbook</th>
-                                        <th>Status</th>
                                         <th>Order</th>
                                         <th>Dependencies</th>
                                         <th>Actions</th>
@@ -104,11 +103,6 @@
                                             <a href="{% url 'playbook_detail' pk=activity.workflow.playbook.pk %}">
                                                 {{ activity.workflow.playbook.name }}
                                             </a>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}">
-                                                {{ activity.get_status_display }}
-                                            </span>
                                         </td>
                                         <td>#{{ activity.order }}</td>
                                         <td>

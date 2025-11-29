@@ -94,44 +94,21 @@
                             <small class="form-text text-muted">Optional: Group this activity into a phase</small>
                         </div>
 
-                        <!-- Row: Order + Status -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- Order -->
-                                <div class="mb-3">
-                                    <label for="order" class="form-label">Order</label>
-                                    <input type="number" 
-                                           class="form-control {% if errors.order %}is-invalid{% endif %}" 
-                                           id="order" 
-                                           name="order"
-                                           min="1"
-                                           value="{{ form_data.order }}"
-                                           data-testid="order-input"
-                                           required>
-                                    {% if errors.order %}
-                                        <div class="invalid-feedback">{{ errors.order }}</div>
-                                    {% endif %}
-                                    <small class="form-text text-muted">Execution order within workflow</small>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <!-- Status -->
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Status</label>
-                                    <select class="form-select" 
-                                            id="status" 
-                                            name="status"
-                                            data-testid="status-select">
-                                        {% for value, label in status_choices %}
-                                            <option value="{{ value }}" {% if form_data.status == value %}selected{% endif %}>
-                                                {{ label }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                    <small class="form-text text-muted">Current status of this activity</small>
-                                </div>
-                            </div>
+                        <!-- Order -->
+                        <div class="mb-3">
+                            <label for="order" class="form-label">Order</label>
+                            <input type="number" 
+                                   class="form-control {% if errors.order %}is-invalid{% endif %}" 
+                                   id="order" 
+                                   name="order"
+                                   min="1"
+                                   value="{{ form_data.order }}"
+                                   data-testid="order-input"
+                                   required>
+                            {% if errors.order %}
+                                <div class="invalid-feedback">{{ errors.order }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Execution order within workflow</small>
                         </div>
 
                         <!-- Has Dependencies -->

@@ -24,10 +24,6 @@
                 <i class="fa-solid fa-tasks"></i> {{ activity.name }}
             </h2>
             <p class="text-muted">
-                <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}"
-                      data-testid="status-badge">
-                    {{ activity.get_status_display }}
-                </span>
                 <span class="badge bg-secondary" data-testid="order-badge">Order: #{{ activity.order }}</span>
                 {% if activity.phase %}
                 <span class="badge bg-info" data-testid="phase-badge">{{ activity.phase }}</span>
@@ -90,13 +86,6 @@
                 </div>
                 <div class="card-body" data-testid="details-section">
                     <dl class="row mb-0">
-                        <dt class="col-sm-5">Status:</dt>
-                        <dd class="col-sm-7">
-                            <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}">
-                                {{ activity.get_status_display }}
-                            </span>
-                        </dd>
-
                         <dt class="col-sm-5">Order:</dt>
                         <dd class="col-sm-7">#{{ activity.order }}</dd>
 
