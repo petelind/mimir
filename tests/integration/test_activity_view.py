@@ -52,7 +52,6 @@ class TestActivityView:
             description='Create UI design for the component',
             phase='Planning',
             order=1,
-            status='in_progress',
             has_dependencies=True
         )
     
@@ -83,22 +82,9 @@ class TestActivityView:
         assert b'Design Component' in response.content
         assert b'Create UI design for the component' in response.content
         assert b'Planning' in response.content
-        assert b'In Progress' in response.content or b'in_progress' in response.content
         assert b'Has Dependencies' in response.content or b'has_dependencies' in response.content
     
-    def test_view_03_display_status_badge(self):
-        """Test status badge is displayed with correct styling."""
-        url = reverse('activity_detail', kwargs={
-            'playbook_pk': self.playbook.pk,
-            'workflow_pk': self.workflow.pk,
-            'activity_pk': self.activity.pk
-        })
-        response = self.client.get(url)
-        
-        assert response.status_code == 200
-        assert b'data-testid="status-badge"' in response.content
-    
-    def test_view_04_display_timestamps(self):
+    def test_view_03_display_timestamps(self):
         """Test created and updated timestamps are shown."""
         url = reverse('activity_detail', kwargs={
             'playbook_pk': self.playbook.pk,

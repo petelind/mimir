@@ -84,7 +84,6 @@ class TestActivityCreate:
         activity = Activity.objects.get(name='Design Component')
         assert activity.workflow == self.workflow
         assert activity.description == 'Create UI design for the component'
-        assert activity.status == 'not_started'  # Default
         assert activity.order == 1  # Auto-assigned
     
     def test_act_create_03_validate_required_name(self):
@@ -179,27 +178,7 @@ class TestActivityCreate:
         activity = Activity.objects.get(name='Plan Features')
         assert activity.phase == 'Planning'
     
-    def test_act_create_07_create_with_status(self):
-        """Test creating activity with specific status."""
-        url = reverse('activity_create', kwargs={
-            'playbook_pk': self.playbook.pk,
-            'workflow_pk': self.workflow.pk
-        })
-        
-        data = {
-            'name': 'In Progress Activity',
-            'description': 'Already started',
-            'status': 'in_progress',
-        }
-        response = self.client.post(url, data)
-        
-        assert response.status_code == 302
-        
-        # Verify status was set
-        activity = Activity.objects.get(name='In Progress Activity')
-        assert activity.status == 'in_progress'
-    
-    def test_act_create_08_cancel_redirects_to_list(self):
+    def test_act_create_07_cancel_redirects_to_list(self):
         """Test cancel button redirects to activities list."""
         url = reverse('activity_create', kwargs={
             'playbook_pk': self.playbook.pk,

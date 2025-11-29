@@ -72,15 +72,13 @@ class TestActivityList:
             workflow=self.workflow,
             name='Design Component',
             description='Create UI design',
-            order=1,
-            status='completed'
+            order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Write Tests',
             description='Unit tests',
             order=2,
-            status='in_progress',
             has_dependencies=True
         )
         
@@ -97,7 +95,6 @@ class TestActivityList:
         # Check columns exist
         assert b'Name' in response.content
         assert b'Description' in response.content
-        assert b'Status' in response.content
         assert b'Dependencies' in response.content
         assert b'Actions' in response.content
     

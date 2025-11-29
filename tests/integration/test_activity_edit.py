@@ -52,7 +52,6 @@ class TestActivityEdit:
             description='Create UI design',
             phase='Planning',
             order=1,
-            status='not_started',
             has_dependencies=False
         )
     
@@ -97,7 +96,6 @@ class TestActivityEdit:
             'description': 'Create UI design',
             'phase': 'Planning',
             'order': 1,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -121,7 +119,6 @@ class TestActivityEdit:
             'description': 'Updated description with more details',
             'phase': 'Planning',
             'order': 1,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -129,28 +126,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.description == 'Updated description with more details'
     
-    def test_edit_05_update_status(self):
-        """Test updating activity status."""
-        url = reverse('activity_edit', kwargs={
-            'playbook_pk': self.playbook.pk,
-            'workflow_pk': self.workflow.pk,
-            'activity_pk': self.activity.pk
-        })
-        
-        data = {
-            'name': 'Design Component',
-            'description': 'Create UI design',
-            'phase': 'Planning',
-            'order': 1,
-            'status': 'in_progress',
-        }
-        response = self.client.post(url, data)
-        
-        assert response.status_code == 302
-        self.activity.refresh_from_db()
-        assert self.activity.status == 'in_progress'
-    
-    def test_edit_06_update_phase(self):
+    def test_edit_05_update_phase(self):
         """Test updating activity phase."""
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,
@@ -163,7 +139,6 @@ class TestActivityEdit:
             'description': 'Create UI design',
             'phase': 'Execution',
             'order': 1,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -171,7 +146,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.phase == 'Execution'
     
-    def test_edit_07_update_order(self):
+    def test_edit_06_update_order(self):
         """Test updating activity order."""
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,
@@ -184,7 +159,6 @@ class TestActivityEdit:
             'description': 'Create UI design',
             'phase': 'Planning',
             'order': 5,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -192,7 +166,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.order == 5
     
-    def test_edit_08_update_dependencies_flag(self):
+    def test_edit_07_update_dependencies_flag(self):
         """Test updating has_dependencies flag."""
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,
@@ -205,7 +179,6 @@ class TestActivityEdit:
             'description': 'Create UI design',
             'phase': 'Planning',
             'order': 1,
-            'status': 'not_started',
             'has_dependencies': 'on',  # Checkbox checked
         }
         response = self.client.post(url, data)
@@ -214,7 +187,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.has_dependencies is True
     
-    def test_edit_09_validate_required_name(self):
+    def test_edit_08_validate_required_name(self):
         """Test validation error when name is empty."""
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,
@@ -226,7 +199,6 @@ class TestActivityEdit:
             'name': '',  # Empty name
             'description': 'Create UI design',
             'order': 1,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -238,7 +210,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.name == 'Design Component'
     
-    def test_edit_10_validate_duplicate_name(self):
+    def test_edit_09_validate_duplicate_name(self):
         """Test validation error for duplicate activity name in workflow."""
         # Create another activity
         Activity.objects.create(
@@ -258,7 +230,6 @@ class TestActivityEdit:
             'name': 'Existing Activity',  # Duplicate
             'description': 'Create UI design',
             'order': 1,
-            'status': 'not_started',
         }
         response = self.client.post(url, data)
         
@@ -270,7 +241,7 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.name == 'Design Component'
     
-    def test_edit_11_cancel_redirects_to_detail(self):
+    def test_edit_10_cancel_redirects_to_detail(self):
         """Test cancel button redirects to activity detail."""
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,

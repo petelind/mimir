@@ -51,8 +51,7 @@ class TestActivityDelete:
             name='Design Component',
             description='Create UI design',
             phase='Planning',
-            order=1,
-            status='not_started'
+            order=1
         )
     
     def test_delete_01_open_delete_confirmation(self):
