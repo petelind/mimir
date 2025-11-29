@@ -57,21 +57,27 @@
                             <small class="form-text text-muted">Unique name for this activity (max 200 characters)</small>
                         </div>
 
-                        <!-- Description -->
+                        <!-- Guidance -->
                         <div class="mb-3">
-                            <label for="description" class="form-label">
-                                Description <span class="text-danger">*</span>
+                            <label for="guidance" class="form-label">
+                                Guidance <span class="text-danger">*</span>
+                                <i class="fa-solid fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip"
+                                   title="Supports Markdown formatting, code blocks, images, and Mermaid diagrams"></i>
                             </label>
-                            <textarea class="form-control {% if errors.description %}is-invalid{% endif %}" 
-                                      id="description" 
-                                      name="description" 
-                                      rows="4"
-                                      data-testid="description-input"
-                                      required>{{ form_data.description }}</textarea>
-                            {% if errors.description %}
-                                <div class="invalid-feedback">{{ errors.description }}</div>
+                            <textarea class="form-control {% if errors.guidance %}is-invalid{% endif %}" 
+                                      id="guidance" 
+                                      name="guidance" 
+                                      rows="8"
+                                      data-testid="guidance-input"
+                                      placeholder="## Overview&#10;&#10;Brief description of what this activity involves.&#10;&#10;## Steps&#10;&#10;1. First step&#10;2. Second step&#10;&#10;## Example&#10;&#10;```python&#10;# Code example&#10;```"
+                                      required>{{ form_data.guidance }}</textarea>
+                            {% if errors.guidance %}
+                                <div class="invalid-feedback">{{ errors.guidance }}</div>
                             {% endif %}
-                            <small class="form-text text-muted">Detailed description of what this activity involves</small>
+                            <small class="form-text text-muted">
+                                <i class="fa-brands fa-markdown"></i> Rich Markdown guidance with instructions, examples, images, and Mermaid diagrams
+                            </small>
                         </div>
 
                         <!-- Phase -->
@@ -165,7 +171,7 @@
                     </h6>
                     <ul class="small mb-0">
                         <li><strong>Name:</strong> Keep it concise and descriptive</li>
-                        <li><strong>Description:</strong> Detail what needs to be done</li>
+                        <li><strong>Guidance:</strong> Use Markdown for rich formatting, code examples, and diagrams</li>
                         <li><strong>Phase:</strong> Use consistent naming across activities</li>
                         <li><strong>Order:</strong> Leave blank for automatic sequencing</li>
                         <li><strong>Dependencies:</strong> Mark if prerequisites exist</li>

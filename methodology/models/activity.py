@@ -29,8 +29,8 @@ class Activity(models.Model):
         max_length=200,
         help_text="Activity name - must be unique within workflow"
     )
-    description = models.TextField(
-        help_text="Detailed description of the activity"
+    guidance = models.TextField(
+        help_text="Rich Markdown guidance with instructions, examples, images, and diagrams"
     )
     
     # Organization

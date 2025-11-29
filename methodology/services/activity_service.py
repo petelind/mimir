@@ -17,14 +17,14 @@ class ActivityService:
     """Service class for activity operations."""
     
     @staticmethod
-    def create_activity(workflow, name, description='', phase=None, order=None, 
+    def create_activity(workflow, name, guidance='', phase=None, order=None, 
                        has_dependencies=False):
         """
         Create activity with validation and auto-order.
         
         :param workflow: Parent workflow instance
         :param name: Activity name (max 200 chars, unique within workflow)
-        :param description: Activity description (optional)
+        :param guidance: Rich Markdown guidance with instructions, examples, diagrams (optional)
         :param phase: Phase grouping (optional)
         :param order: Execution order (auto-assigned if None)
         :param has_dependencies: Whether activity has dependencies (default: False)
@@ -35,7 +35,7 @@ class ActivityService:
             >>> activity = ActivityService.create_activity(
             ...     workflow=wf,
             ...     name="Design Component",
-            ...     description="Create UI design",
+            ...     guidance="## Steps\n1. Review requirements\n2. Create mockup",
             ...     phase="Planning"
             ... )
         """
@@ -65,7 +65,7 @@ class ActivityService:
             activity = Activity.objects.create(
                 workflow=workflow,
                 name=name.strip(),
-                description=description.strip() if description else '',
+                guidance=guidance.strip() if guidance else '',
                 phase=phase.strip() if phase else None,
                 order=order,
                 has_dependencies=has_dependencies
@@ -140,7 +140,7 @@ class ActivityService:
         Update activity fields.
         
         :param activity_id: Activity primary key
-        :param kwargs: Fields to update (name, description, order, phase, has_dependencies)
+        :param kwargs: Fields to update (name, guidance, order, phase, has_dependencies)
         :returns: Updated Activity instance
         :raises Activity.DoesNotExist: If activity not found
         :raises ValidationError: If validation fails
@@ -236,7 +236,7 @@ class ActivityService:
         return ActivityService.create_activity(
             workflow=original.workflow,
             name=new_name,
-            description=original.description,
+            guidance=original.guidance,
             phase=original.phase,
             order=next_order,
             has_dependencies=original.has_dependencies

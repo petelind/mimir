@@ -7,6 +7,11 @@ fastmcp>=0.1.0
 # Graph Visualization
 graphviz>=0.20
 
+# Markdown Processing
+markdown>=3.5.0
+bleach>=6.1.0
+pymdown-extensions>=10.5.0
+
 # Configuration
 python-dotenv>=1.0.0
 

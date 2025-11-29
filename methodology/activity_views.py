@@ -166,7 +166,7 @@ def activity_create(request, playbook_pk, workflow_pk):
     if request.method == 'POST':
         # Extract form data
         name = request.POST.get('name', '').strip()
-        description = request.POST.get('description', '').strip()
+        guidance = request.POST.get('guidance', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
         has_dependencies = request.POST.get('has_dependencies') == 'on'
@@ -185,7 +185,7 @@ def activity_create(request, playbook_pk, workflow_pk):
             activity = ActivityService.create_activity(
                 workflow=workflow,
                 name=name,
-                description=description,
+                guidance=guidance,
                 phase=phase,
                 order=order_int,
                 has_dependencies=has_dependencies
@@ -221,7 +221,7 @@ def activity_detail(request, playbook_pk, workflow_pk, activity_pk):
     """
     View activity details.
     
-    Displays full activity information including name, description, phase,
+    Displays full activity information including name, guidance (rich Markdown), phase,
     dependencies, order, and timestamps.
     
     Template: activities/detail.html
@@ -295,15 +295,14 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
     activity = get_object_or_404(Activity, pk=activity_pk, workflow=workflow)
     
     # Check edit permission
-    if not workflow.can_edit(request.user):
-        logger.warning(f"User {request.user.username} attempted to edit activity without permission")
+    if not activity.can_edit(request.user):
         messages.error(request, "You don't have permission to edit this activity.")
         return redirect('activity_detail', playbook_pk=playbook_pk, workflow_pk=workflow_pk, activity_pk=activity_pk)
     
     if request.method == 'POST':
         # Extract form data
         name = request.POST.get('name', '').strip()
-        description = request.POST.get('description', '').strip()
+        guidance = request.POST.get('guidance', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
         has_dependencies = request.POST.get('has_dependencies') == 'on'
@@ -321,7 +320,7 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         try:
             update_fields = {
                 'name': name,
-                'description': description,
+                'guidance': guidance,
                 'phase': phase,
                 'has_dependencies': has_dependencies,
             }
@@ -341,7 +340,7 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
     # GET request - show form with current values
     form_data = {
         'name': activity.name,
-        'description': activity.description,
+        'guidance': activity.guidance,
         'phase': activity.phase or '',
         'order': activity.order,
         'has_dependencies': activity.has_dependencies,
