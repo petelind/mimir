@@ -49,7 +49,6 @@ class TestActivityModel:
             description='Create component design',
             order=1,
             phase='Planning',
-            status='in_progress',
             has_dependencies=True
         )
         
@@ -58,7 +57,6 @@ class TestActivityModel:
         assert activity.description == 'Create component design'
         assert activity.order == 1
         assert activity.phase == 'Planning'
-        assert activity.status == 'in_progress'
         assert activity.has_dependencies is True
         assert activity.workflow == test_workflow
     
@@ -72,7 +70,6 @@ class TestActivityModel:
         
         assert activity.order == 1
         assert activity.phase is None
-        assert activity.status == 'not_started'
         assert activity.has_dependencies is False
         assert activity.created_at is not None
         assert activity.updated_at is not None
@@ -254,15 +251,3 @@ class TestActivityModel:
         
         assert activity.get_phase_display_name() == 'Unassigned'
     
-    def test_status_choices(self, test_workflow):
-        """Test all status choices are valid."""
-        statuses = ['not_started', 'in_progress', 'completed', 'blocked']
-        
-        for status in statuses:
-            activity = Activity.objects.create(
-                workflow=test_workflow,
-                name=f'Activity {status}',
-                description='Test',
-                status=status
-            )
-            assert activity.status == status
