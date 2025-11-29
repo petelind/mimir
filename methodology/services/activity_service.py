@@ -7,6 +7,7 @@ and grouping functionality.
 
 import logging
 from django.db import IntegrityError
+from django.db import models
 from django.core.exceptions import ValidationError
 from methodology.models import Activity
 
@@ -18,7 +19,7 @@ class ActivityService:
     
     @staticmethod
     def create_activity(workflow, name, guidance='', phase=None, order=None, 
-                       has_dependencies=False):
+                       predecessor=None, successor=None):
         """
         Create activity with validation and auto-order.
         
@@ -27,7 +28,8 @@ class ActivityService:
         :param guidance: Rich Markdown guidance with instructions, examples, diagrams (optional)
         :param phase: Phase grouping (optional)
         :param order: Execution order (auto-assigned if None)
-        :param has_dependencies: Whether activity has dependencies (default: False)
+        :param predecessor: Previous activity (must be in same workflow)
+        :param successor: Next activity (must be in same workflow)
         :returns: Created Activity instance
         :raises ValidationError: If validation fails
         
@@ -36,7 +38,8 @@ class ActivityService:
             ...     workflow=wf,
             ...     name="Design Component",
             ...     guidance="## Steps\n1. Review requirements\n2. Create mockup",
-            ...     phase="Planning"
+            ...     phase="Planning",
+            ...     predecessor=previous_activity
             ... )
         """
         # Validate name
@@ -60,6 +63,15 @@ class ActivityService:
             )['order__max']
             order = (max_order or 0) + 1
         
+        # Validate dependencies are in same workflow
+        if predecessor and predecessor.workflow_id != workflow.id:
+            logger.warning(f"Predecessor {predecessor.id} not in workflow {workflow.id}")
+            raise ValidationError("Predecessor must be in the same workflow")
+        
+        if successor and successor.workflow_id != workflow.id:
+            logger.warning(f"Successor {successor.id} not in workflow {workflow.id}")
+            raise ValidationError("Successor must be in the same workflow")
+        
         # Create activity
         try:
             activity = Activity.objects.create(
@@ -68,9 +80,18 @@ class ActivityService:
                 guidance=guidance.strip() if guidance else '',
                 phase=phase.strip() if phase else None,
                 order=order,
-                has_dependencies=has_dependencies
+                predecessor=predecessor,
+                successor=successor
             )
-            logger.info(f"Created activity '{name}' (#{order}) in workflow {workflow.id}")
+            
+            dep_info = []
+            if predecessor:
+                dep_info.append(f"predecessor={predecessor.reference_name}")
+            if successor:
+                dep_info.append(f"successor={successor.reference_name}")
+            dep_str = f" with {', '.join(dep_info)}" if dep_info else ""
+            
+            logger.info(f"Created activity '{name}' (#{order}) in workflow {workflow.id}{dep_str}")
             return activity
             
         except IntegrityError as e:
@@ -140,7 +161,7 @@ class ActivityService:
         Update activity fields.
         
         :param activity_id: Activity primary key
-        :param kwargs: Fields to update (name, guidance, order, phase, has_dependencies)
+        :param kwargs: Fields to update (name, guidance, order, phase, predecessor, successor)
         :returns: Updated Activity instance
         :raises Activity.DoesNotExist: If activity not found
         :raises ValidationError: If validation fails
@@ -149,7 +170,8 @@ class ActivityService:
             >>> activity = ActivityService.update_activity(
             ...     123,
             ...     name="New Name",
-            ...     phase="Execution"
+            ...     phase="Execution",
+            ...     predecessor=prev_activity
             ... )
         """
         activity = Activity.objects.get(pk=activity_id)
@@ -172,9 +194,18 @@ class ActivityService:
             
             kwargs['name'] = new_name.strip()
         
+        # Validate dependencies if being updated
+        if 'predecessor' in kwargs and kwargs['predecessor']:
+            if kwargs['predecessor'].workflow_id != activity.workflow_id:
+                raise ValidationError("Predecessor must be in the same workflow")
+        
+        if 'successor' in kwargs and kwargs['successor']:
+            if kwargs['successor'].workflow_id != activity.workflow_id:
+                raise ValidationError("Successor must be in the same workflow")
+        
         # Strip string fields
-        if 'description' in kwargs and kwargs['description']:
-            kwargs['description'] = kwargs['description'].strip()
+        if 'guidance' in kwargs and kwargs['guidance']:
+            kwargs['guidance'] = kwargs['guidance'].strip()
         
         if 'phase' in kwargs and kwargs['phase']:
             kwargs['phase'] = kwargs['phase'].strip()
@@ -182,6 +213,9 @@ class ActivityService:
         # Update fields
         for field, value in kwargs.items():
             setattr(activity, field, value)
+        
+        # Validate using model's clean() method
+        activity.clean()
         
         activity.save()
         logger.info(f"Updated activity {activity_id}: {', '.join(kwargs.keys())}")
@@ -232,16 +266,45 @@ class ActivityService:
         )['order__max']
         next_order = (max_order or 0) + 1
         
-        # Create duplicate
+        # Create duplicate (without dependencies to avoid conflicts)
         return ActivityService.create_activity(
             workflow=original.workflow,
             name=new_name,
             guidance=original.guidance,
             phase=original.phase,
-            order=next_order,
-            has_dependencies=original.has_dependencies
+            order=next_order
         )
-
-
-# Required import for aggregate
-from django.db import models
+    
+    @staticmethod
+    def get_available_predecessors(workflow, exclude_activity_id=None):
+        """
+        Get activities that can be predecessors.
+        
+        :param workflow: Workflow instance
+        :param exclude_activity_id: Activity ID to exclude (usually current activity)
+        :returns: QuerySet of available activities
+        
+        Example:
+            >>> predecessors = ActivityService.get_available_predecessors(wf, exclude_activity_id=123)
+        """
+        qs = Activity.objects.filter(workflow=workflow).order_by('order')
+        if exclude_activity_id:
+            qs = qs.exclude(pk=exclude_activity_id)
+        return qs
+    
+    @staticmethod
+    def get_available_successors(workflow, exclude_activity_id=None):
+        """
+        Get activities that can be successors.
+        
+        :param workflow: Workflow instance
+        :param exclude_activity_id: Activity ID to exclude (usually current activity)
+        :returns: QuerySet of available activities
+        
+        Example:
+            >>> successors = ActivityService.get_available_successors(wf, exclude_activity_id=123)
+        """
+        qs = Activity.objects.filter(workflow=workflow).order_by('order')
+        if exclude_activity_id:
+            qs = qs.exclude(pk=exclude_activity_id)
+        return qs
