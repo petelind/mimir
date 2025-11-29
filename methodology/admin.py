@@ -16,9 +16,9 @@ class PlaybookAdmin(admin.ModelAdmin):
 @admin.register(PlaybookVersion)
 class PlaybookVersionAdmin(admin.ModelAdmin):
     """Admin configuration for PlaybookVersion model."""
-    list_display = ('playbook', 'version', 'created_at')
+    list_display = ('playbook', 'version_number', 'created_at')
     list_filter = ('created_at',)
-    search_fields = ('playbook__name', 'version')
+    search_fields = ('playbook__name', 'change_summary')
     readonly_fields = ('created_at',)
 
 
