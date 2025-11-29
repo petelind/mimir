@@ -92,7 +92,7 @@ class TestActivityEdit:
         
         data = {
             'name': 'Updated Component Design',
-            'description': 'Create UI design',
+            'guidance': 'Create UI design',
             'phase': 'Planning',
             'order': 1,
         }
@@ -115,7 +115,7 @@ class TestActivityEdit:
         
         data = {
             'name': 'Design Component',
-            'description': 'Updated description with more details',
+            'guidance': 'Updated description with more details',
             'phase': 'Planning',
             'order': 1,
         }
@@ -135,7 +135,7 @@ class TestActivityEdit:
         
         data = {
             'name': 'Design Component',
-            'description': 'Create UI design',
+            'guidance': 'Create UI design',
             'phase': 'Execution',
             'order': 1,
         }
@@ -155,7 +155,7 @@ class TestActivityEdit:
         
         data = {
             'name': 'Design Component',
-            'description': 'Create UI design',
+            'guidance': 'Create UI design',
             'phase': 'Planning',
             'order': 5,
         }
@@ -202,7 +202,7 @@ class TestActivityEdit:
         
         data = {
             'name': '',  # Empty name
-            'description': 'Create UI design',
+            'guidance': 'Create UI design',
             'order': 1,
         }
         response = self.client.post(url, data)
@@ -233,7 +233,7 @@ class TestActivityEdit:
         
         data = {
             'name': 'Existing Activity',  # Duplicate
-            'description': 'Create UI design',
+            'guidance': 'Create UI design',
             'order': 1,
         }
         response = self.client.post(url, data)
