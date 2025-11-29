@@ -80,9 +80,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" data-testid="nav-activities"
+                        <a class="nav-link {% if '/activities/' in request.path %}active{% endif %}" 
+                           href="{% url 'activity_global_list' %}" 
+                           data-testid="nav-activities"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Coming soon: Browse all activities">
+                           title="View all activities across your playbooks and workflows"
+                           {% if '/activities/' in request.path %}aria-current="page"{% endif %}>
                             <i class="fas fa-list-check"></i> Activities
                         </a>
                     </li>

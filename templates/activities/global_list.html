@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Activities - Mimir{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4" data-testid="activities-global-list">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>
+                <i class="fa-solid fa-list-check"></i> All Activities
+            </h2>
+            <p class="text-muted">
+                Activities across all your playbooks and workflows
+            </p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">
+                        <i class="fa-solid fa-list-check"></i> Total Activities
+                    </h5>
+                    <p class="card-text display-6">{{ activities.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <h5 class="card-title text-info">
+                        <i class="fa-solid fa-diagram-project"></i> Workflows
+                    </h5>
+                    <p class="card-text display-6">{{ workflow_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">
+                        <i class="fa-solid fa-book-sparkles"></i> Playbooks
+                    </h5>
+                    <p class="card-text display-6">{{ playbook_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-secondary">
+                        <i class="fa-solid fa-bars-progress"></i> Phases
+                    </h5>
+                    <p class="card-text display-6">{{ phase_groups|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if activities %}
+        <!-- Activities Grouped by Phase -->
+        <div class="row">
+            <div class="col-12">
+                {% for phase, phase_activities in phase_groups.items %}
+                <div class="card mb-4" data-testid="phase-group-{{ phase|lower|slugify }}">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fa-solid fa-bars-progress"></i> {{ phase }}
+                            <span class="badge bg-secondary ms-2">{{ phase_activities|length }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Activity</th>
+                                        <th>Workflow</th>
+                                        <th>Playbook</th>
+                                        <th>Status</th>
+                                        <th>Order</th>
+                                        <th>Dependencies</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for activity in phase_activities %}
+                                    <tr data-testid="activity-row-{{ activity.pk }}">
+                                        <td>
+                                            <strong>{{ activity.name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ activity.description|truncatewords:15 }}</small>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'workflow_detail' playbook_pk=activity.workflow.playbook.pk pk=activity.workflow.pk %}">
+                                                {{ activity.workflow.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'playbook_detail' pk=activity.workflow.playbook.pk %}">
+                                                {{ activity.workflow.playbook.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{% if activity.status == 'completed' %}success{% elif activity.status == 'in_progress' %}primary{% elif activity.status == 'blocked' %}danger{% else %}secondary{% endif %}">
+                                                {{ activity.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>#{{ activity.order }}</td>
+                                        <td>
+                                            {% if activity.has_dependencies %}
+                                                <i class="fa-solid fa-link text-warning"></i>
+                                            {% else %}
+                                                <i class="fa-solid fa-minus text-muted"></i>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="{% url 'activity_detail' playbook_pk=activity.workflow.playbook.pk workflow_pk=activity.workflow.pk activity_pk=activity.pk %}" 
+                                                   class="btn btn-outline-primary btn-sm"
+                                                   data-testid="view-btn-{{ activity.pk }}"
+                                                   data-bs-toggle="tooltip"
+                                                   title="View activity details">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'activity_edit' playbook_pk=activity.workflow.playbook.pk workflow_pk=activity.workflow.pk activity_pk=activity.pk %}" 
+                                                   class="btn btn-outline-secondary btn-sm"
+                                                   data-testid="edit-btn-{{ activity.pk }}"
+                                                   data-bs-toggle="tooltip"
+                                                   title="Edit this activity">
+                                                    <i class="fa-solid fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5" data-testid="empty-state">
+                        <i class="fa-solid fa-list-check fa-4x text-muted mb-3"></i>
+                        <h4>No Activities Yet</h4>
+                        <p class="text-muted">
+                            You haven't created any activities yet.
+                            Activities are created within workflows in your playbooks.
+                        </p>
+                        <a href="{% url 'playbook_list' %}" 
+                           class="btn btn-primary"
+                           data-bs-toggle="tooltip"
+                           title="Go to playbooks to add workflows and activities">
+                            <i class="fa-solid fa-book-sparkles"></i> View Playbooks
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

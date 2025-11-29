@@ -1,7 +1,7 @@
 """
 Activity views for CRUDV operations.
 
-Provides list, create, view, edit, and delete operations for activities
+Provides views for listing, creating, viewing, editing, and deleting activities
 within workflows.
 """
 
@@ -15,6 +15,56 @@ from methodology.models import Playbook, Workflow, Activity
 from methodology.services.activity_service import ActivityService
 
 logger = logging.getLogger(__name__)
+
+
+# ==================== GLOBAL LIST ====================
+
+@login_required
+def activity_global_list(request):
+    """
+    Global activities overview - all activities across all workflows and playbooks.
+    
+    Shows activities from all workflows in playbooks owned by the user.
+    Useful for seeing all tasks and managing across entire methodology.
+    
+    Template: activities/global_list.html
+    Template Context:
+        - activities: QuerySet of all activities
+        - workflow_count: Count of unique workflows
+        - playbook_count: Count of unique playbooks
+        - phase_groups: Dict of activities grouped by phase
+    
+    :param request: Django request object
+    :return: Rendered global list template
+    """
+    # Get all activities from user's owned playbooks
+    activities = Activity.objects.filter(
+        workflow__playbook__author=request.user,
+        workflow__playbook__source='owned'
+    ).select_related('workflow', 'workflow__playbook').order_by(
+        'workflow__playbook__name', 'workflow__order', 'order'
+    )
+    
+    # Count unique workflows and playbooks
+    workflow_count = activities.values('workflow').distinct().count()
+    playbook_count = activities.values('workflow__playbook').distinct().count()
+    
+    # Group by phase for overview
+    phase_groups = {}
+    for activity in activities:
+        phase = activity.phase or 'Unassigned'
+        if phase not in phase_groups:
+            phase_groups[phase] = []
+        phase_groups[phase].append(activity)
+    
+    logger.info(f"User {request.user.username} viewing global activities list ({activities.count()} activities)")
+    
+    return render(request, 'activities/global_list.html', {
+        'activities': activities,
+        'workflow_count': workflow_count,
+        'playbook_count': playbook_count,
+        'phase_groups': phase_groups,
+    })
 
 
 # ==================== LIST ====================
