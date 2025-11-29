@@ -68,8 +68,9 @@ class TestWorkflowModel:
         assert workflow.order == 1
     
     def test_workflow_str_representation(self, test_workflow):
-        """Test workflow string representation includes order."""
-        assert str(test_workflow) == 'Test Workflow (#1)'
+        """Test string representation includes name, abbreviation, and order."""
+        expected = f"{test_workflow.name} ({test_workflow.abbreviation}) (#{test_workflow.order})"
+        assert str(test_workflow) == expected
     
     def test_unique_constraint_per_playbook(self, test_playbook):
         """Test that workflow names must be unique within a playbook."""

@@ -31,7 +31,7 @@ class TestActivityEdit:
         # Create playbook and workflow
         self.playbook = Playbook.objects.create(
             name='React Frontend Development',
-            description='A comprehensive methodology',
+            guidance='A comprehensive methodology',
             category='development',
             status='active',
             source='owned',
@@ -40,7 +40,7 @@ class TestActivityEdit:
         
         self.workflow = Workflow.objects.create(
             name='Component Development',
-            description='Develop React components',
+            guidance='Develop React components',
             playbook=self.playbook,
             order=1
         )
@@ -49,10 +49,9 @@ class TestActivityEdit:
         self.activity = Activity.objects.create(
             workflow=self.workflow,
             name='Design Component',
-            description='Create UI design',
+            guidance='Create UI design',
             phase='Planning',
-            order=1,
-            has_dependencies=False
+            order=1
         )
     
     def test_edit_01_open_edit_form(self):
@@ -216,7 +215,7 @@ class TestActivityEdit:
         Activity.objects.create(
             workflow=self.workflow,
             name='Existing Activity',
-            description='Exists',
+            guidance='Exists',
             order=2
         )
         

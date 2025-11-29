@@ -31,7 +31,7 @@ class TestActivityCreate:
         # Create playbook and workflow
         self.playbook = Playbook.objects.create(
             name='React Frontend Development',
-            description='A comprehensive methodology',
+            guidance='A comprehensive methodology',
             category='development',
             status='active',
             source='owned',
@@ -40,7 +40,7 @@ class TestActivityCreate:
         
         self.workflow = Workflow.objects.create(
             name='Component Development',
-            description='Develop React components',
+            guidance='Develop React components',
             playbook=self.playbook,
             order=1
         )
@@ -112,7 +112,7 @@ class TestActivityCreate:
         Activity.objects.create(
             workflow=self.workflow,
             name='Design Component',
-            description='Existing',
+            guidance='Existing',
             order=1
         )
         

@@ -28,7 +28,7 @@ class TestActivityGraphService:
         
         self.playbook = Playbook.objects.create(
             name='Test Playbook',
-            description='Test',
+            guidance='Test',
             category='development',
             status='active',
             source='owned',
@@ -37,7 +37,7 @@ class TestActivityGraphService:
         
         self.workflow = Workflow.objects.create(
             name='Test Workflow',
-            description='Test workflow',
+            guidance='Test workflow',
             playbook=self.playbook,
             order=1
         )
@@ -54,19 +54,19 @@ class TestActivityGraphService:
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 1',
-            description='First',
+            guidance='First',
             order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 2',
-            description='Second',
+            guidance='Second',
             order=2
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 3',
-            description='Third',
+            guidance='Third',
             order=3
         )
         
@@ -86,21 +86,21 @@ class TestActivityGraphService:
         Activity.objects.create(
             workflow=self.workflow,
             name='Plan Features',
-            description='Planning',
+            guidance='Planning',
             phase='Planning',
             order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Write Code',
-            description='Implementation',
+            guidance='Implementation',
             phase='Execution',
             order=2
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Deploy',
-            description='Deployment',
+            guidance='Deployment',
             phase='Execution',
             order=3
         )
@@ -122,7 +122,7 @@ class TestActivityGraphService:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         
@@ -137,7 +137,7 @@ class TestActivityGraphService:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Clickable Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         
@@ -153,16 +153,14 @@ class TestActivityGraphService:
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity with Deps',
-            description='Has dependencies',
-            order=1,
-            has_dependencies=True
+            guidance='Has dependencies',
+            order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity without Deps',
-            description='No dependencies',
-            order=2,
-            has_dependencies=False
+            guidance='No dependencies',
+            order=2
         )
         
         svg = self.service.generate_activities_graph(self.workflow, self.playbook)
@@ -223,7 +221,7 @@ class TestActivityGraphService:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         

@@ -38,7 +38,7 @@ class TestActivityList:
         # Create playbook and workflow
         self.playbook = Playbook.objects.create(
             name='React Frontend Development',
-            description='A comprehensive methodology',
+            guidance='A comprehensive methodology',
             category='development',
             status='active',
             source='owned',
@@ -47,7 +47,7 @@ class TestActivityList:
         
         self.workflow = Workflow.objects.create(
             name='Component Development',
-            description='Develop React components',
+            guidance='Develop React components',
             playbook=self.playbook,
             order=1
         )
@@ -71,15 +71,14 @@ class TestActivityList:
         Activity.objects.create(
             workflow=self.workflow,
             name='Design Component',
-            description='Create UI design',
+            guidance='Create UI design',
             order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Write Tests',
-            description='Unit tests',
-            order=2,
-            has_dependencies=True
+            guidance='Unit tests',
+            order=2
         )
         
         url = reverse('activity_list', kwargs={
@@ -124,21 +123,21 @@ class TestActivityList:
         Activity.objects.create(
             workflow=self.workflow,
             name='Plan Features',
-            description='Feature planning',
+            guidance='Feature planning',
             phase='Planning',
             order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Write Specs',
-            description='Technical specs',
+            guidance='Technical specs',
             phase='Planning',
             order=2
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Implement Code',
-            description='Write code',
+            guidance='Write code',
             phase='Execution',
             order=3
         )
@@ -165,13 +164,13 @@ class TestActivityList:
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 1',
-            description='First activity',
+            guidance='First activity',
             order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 2',
-            description='Second activity',
+            guidance='Second activity',
             order=2
         )
         
@@ -193,7 +192,7 @@ class TestActivityList:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         
@@ -212,7 +211,7 @@ class TestActivityList:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         
@@ -231,7 +230,7 @@ class TestActivityList:
         activity = Activity.objects.create(
             workflow=self.workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             order=1
         )
         
