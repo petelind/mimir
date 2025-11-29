@@ -94,7 +94,7 @@ class TestActivityList:
         assert b'Write Tests' in response.content
         # Check columns exist
         assert b'Name' in response.content
-        assert b'Description' in response.content
+        assert b'Guidance' in response.content
         assert b'Dependencies' in response.content
         assert b'Actions' in response.content
     

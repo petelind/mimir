@@ -124,7 +124,7 @@ class TestActivityEdit:
         
         assert response.status_code == 302
         self.activity.refresh_from_db()
-        assert self.activity.description == 'Updated description with more details'
+        assert self.activity.guidance == 'Updated description with more details'
     
     def test_edit_05_update_phase(self):
         """Test updating activity phase."""

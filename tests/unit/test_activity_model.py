@@ -46,7 +46,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Design Component',
-            description='Create component design',
+            guidance='Create component design',
             order=1,
             phase='Planning',
             has_dependencies=True
@@ -54,7 +54,7 @@ class TestActivityModel:
         
         assert activity.id is not None
         assert activity.name == 'Design Component'
-        assert activity.description == 'Create component design'
+        assert activity.guidance == 'Create component design'
         assert activity.order == 1
         assert activity.phase == 'Planning'
         assert activity.has_dependencies is True
@@ -65,7 +65,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test description'
+            guidance='Test guidance'
         )
         
         assert activity.order == 1
@@ -79,7 +79,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Setup Environment',
-            description='Configure dev environment',
+            guidance='Configure dev environment',
             order=3
         )
         
@@ -130,9 +130,9 @@ class TestActivityModel:
     
     def test_ordering_by_workflow_order_name(self, test_workflow):
         """Test default ordering is by workflow, order, name."""
-        Activity.objects.create(workflow=test_workflow, name='B Activity', description='B', order=2)
-        Activity.objects.create(workflow=test_workflow, name='A Activity', description='A', order=1)
-        Activity.objects.create(workflow=test_workflow, name='C Activity', description='C', order=1)
+        Activity.objects.create(workflow=test_workflow, name='B Activity', guidance='B', order=2)
+        Activity.objects.create(workflow=test_workflow, name='A Activity', guidance='A', order=1)
+        Activity.objects.create(workflow=test_workflow, name='C Activity', guidance='C', order=1)
         
         activities = list(Activity.objects.all())
         
@@ -189,7 +189,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=workflow,
             name='Test Activity',
-            description='Test'
+            guidance='Test'
         )
         
         assert activity.can_edit(test_user) is False
@@ -224,7 +224,7 @@ class TestActivityModel:
         original_updated = activity.updated_at
         
         # Update activity
-        activity.description = 'New description'
+        activity.guidance = 'New description'
         activity.save()
         activity.refresh_from_db()
         
@@ -235,7 +235,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test',
+            guidance='Test',
             phase='Planning'
         )
         

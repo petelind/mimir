@@ -57,7 +57,7 @@ class TestActivityCreate:
         assert b'Create Activity' in response.content
         assert b'data-testid="activity-form"' in response.content
         assert b'data-testid="name-input"' in response.content
-        assert b'data-testid="description-input"' in response.content
+        assert b'data-testid="guidance-input"' in response.content
         assert b'data-testid="save-btn"' in response.content
     
     def test_act_create_02_create_with_required_fields(self):
@@ -83,7 +83,7 @@ class TestActivityCreate:
         # Verify activity was created
         activity = Activity.objects.get(name='Design Component')
         assert activity.workflow == self.workflow
-        assert activity.description == 'Create UI design for the component'
+        assert activity.guidance == 'Create UI design for the component'
         assert activity.order == 1  # Auto-assigned
     
     def test_act_create_03_validate_required_name(self):
@@ -137,8 +137,8 @@ class TestActivityCreate:
     def test_act_create_05_auto_order_assignment(self):
         """Test automatic order assignment when not provided."""
         # Create existing activities
-        Activity.objects.create(workflow=self.workflow, name='Act 1', description='D1', order=1)
-        Activity.objects.create(workflow=self.workflow, name='Act 2', description='D2', order=2)
+        Activity.objects.create(workflow=self.workflow, name='Act 1', guidance='D1', order=1)
+        Activity.objects.create(workflow=self.workflow, name='Act 2', guidance='D2', order=2)
         
         url = reverse('activity_create', kwargs={
             'playbook_pk': self.playbook.pk,
