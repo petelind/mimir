@@ -59,7 +59,7 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
   - Provides combined context: "According to the playbook, Activity 1 covers setup. GitHub shows issue #47 for this work is complete."
 
 **Example**:
-- **FOB displays**: "Activity 1: Setup Project" with description and guidance (static)
+- **FOB displays**: "Activity 1: Setup Project" with rich Markdown guidance (static)
 - **GitHub displays**: "Issue #47: Setup React project structure - Closed on Nov 15" (live tracking)
 - **AI combines**: "Per the React Frontend Development playbook, you need to set up the project. GitHub issue #47 shows this work is complete."
 
@@ -1033,21 +1033,26 @@ Maria clicks [Create New Activity]:
 **Form**:
 - **Name**: Text input
   - Example: "Design Token Integration"
-- **Description**: Rich text editor
-  - Example: "Integrate design system tokens into component library"
-  - Supports markdown, checklists
+- **Guidance**: Rich Markdown editor (8-row textarea)
+  - Example: "## Overview\n\nIntegrate design system tokens into component library\n\n## Steps\n\n1. Review design tokens\n2. Implement token mapping..."
+  - **Full Markdown Support**:
+    - Headers (# ## ###), Lists, Tables, Code blocks
+    - **Mermaid Diagrams**: Sequence, class, flow diagrams
+    - Images, Links, Bold, Italic, Inline code
+  - Placeholder shows example structure
+  - **Note**: Guidance is static reference material - like a technical book chapter
 - **Parent Workflow**: Read-only
 - **Phase Assignment** (if workflow uses phases):
   - Dropdown: Select phase or "No phase"
-- **Role Assignment**: Dropdown
-  - Select from existing roles or [Create New Role]
-  - Example: "Frontend Developer"
-- **Dependencies**:
-  - **Upstream Activities**: Multi-select
-    - Activities that must complete before this one
-  - **Downstream Activities**: Multi-select  
-    - Activities that depend on this one
-  - Validation: Prevents circular dependencies
+  - **Note**: Phases are optional - not all workflows use them
+- **Order**: Number input or auto-assigned
+  - Auto-increments if blank
+- **Has Dependencies**: Checkbox (informational only)
+  - **IMPORTANT**: This is a documentation flag, not enforcement
+  - Indicates this activity should be done after prerequisites
+  - Does NOT track specific dependency relationships
+  - Does NOT prevent execution
+  - **Future Enhancement**: Will be replaced with actual M2M dependency tracking
 - **Artifacts Section**:
   - "What does this activity produce?"
   - [Link Existing Artifacts] or [Create New Artifact]
@@ -1082,21 +1087,24 @@ Maria views activity details:
 - **Tabs**:
 
 1. **Overview Tab**:
-   - Full description
-   - Assigned role with [View Role] link
-   - Dependencies diagram
-   - Artifacts produced (with links to ACT 6)
-   - Howto guide preview (if exists)
-   - Work items linked (GitHub issues via MCP)
+   - **Guidance**: Rendered Markdown with syntax highlighting
+     - Mermaid diagrams rendered as SVG
+     - Code blocks with language-specific formatting
+     - Tables, images, formatted lists
+   - Phase assignment (if using phases)
+   - Order number in workflow
+   - **Has Dependencies**: Info badge (documentation only)
+   - Created/Updated timestamps
+   - **Note**: View Artifacts, Roles, Howtos in separate tabs
 
-2. **Dependencies Tab**:
-   - **Upstream**: Activities that must complete first
-     - Visual cards for each
-     - [Add Upstream] [Remove] buttons
-   - **Downstream**: Activities that depend on this one
-     - Visual cards
-     - [Add Downstream] [Remove] buttons
-   - Dependency graph visualization
+2. **Dependencies Tab**: (Future Enhancement)
+   - **Current State**: Only shows "Has Dependencies" flag
+   - **Planned**: Full dependency management
+     - **Upstream**: Activities that should complete first
+     - **Downstream**: Activities that depend on this one
+     - Dependency graph visualization
+     - M2M relationship tracking
+   - **Note**: Currently activities have only a boolean flag, not actual dependency relationships
 
 3. **Artifacts Tab**:
    - List of artifacts produced by this activity
@@ -1529,6 +1537,12 @@ Confirmation:
 ---
 
 **🎉 Acts 2-8 Complete!** All 7 core entities (Playbooks, Workflows, Phases, Activities, Artifacts, Roles, Howtos) now have full CRUDLF coverage with narrative explanations.
+
+**Demo Playbook Available**: A Feature-Driven Development (FDD) demo playbook with 10 activities showcasing rich Markdown guidance is available via `python manage.py create_demo_fdd`. This demonstrates:
+- Mermaid diagrams (class, sequence, flow)
+- Code examples (Python, Bash, YAML)
+- Tables and checklists
+- Multi-level documentation structure
 
 **Next**: Maria can propose improvements via PIPs (ACT 9) and manage import/export (ACT 10).
 
