@@ -121,46 +121,60 @@
                             <small class="form-text text-muted">Leave empty to auto-assign next available order</small>
                         </div>
 
-                        <!-- Has Dependencies -->
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" 
-                                       type="checkbox" 
-                                       id="has_dependencies" 
-                                       name="has_dependencies"
-                                       data-testid="dependencies-checkbox"
-                                       {% if form_data.has_dependencies %}checked{% endif %}>
-                                <label class="form-check-label" for="has_dependencies">
-                                    This activity has dependencies
+                        <!-- Dependencies -->
+                        <div class="row">
+                            <!-- Predecessor -->
+                            <div class="col-md-6 mb-4">
+                                <label for="predecessor" class="form-label">
+                                    Predecessor Activity
                                     <i class="fa-solid fa-info-circle text-muted" 
                                        data-bs-toggle="tooltip"
-                                       title="Check if this activity depends on other activities being completed first"></i>
+                                       title="Activity that must complete before this one"></i>
                                 </label>
+                                <select name="predecessor" 
+                                        id="predecessor" 
+                                        class="form-select"
+                                        data-testid="predecessor-select"
+                                        {% if disable_dependencies %}disabled{% endif %}>
+                                    <option value="">-- None --</option>
+                                    {% for act in available_predecessors %}
+                                    <option value="{{ act.id }}" 
+                                            {% if form_data.predecessor|stringformat:"s" == act.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ act.reference_name }} - {{ act.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% if disable_dependencies %}
+                                <small class="form-text text-muted">No other activities yet - dependencies will be available after creating more activities</small>
+                                {% endif %}
                             </div>
-                            <small class="form-text text-muted">Check if this activity requires other activities to be completed first</small>
+                            
+                            <!-- Successor -->
+                            <div class="col-md-6 mb-4">
+                                <label for="successor" class="form-label">
+                                    Successor Activity
+                                    <i class="fa-solid fa-info-circle text-muted" 
+                                       data-bs-toggle="tooltip"
+                                       title="Next activity that depends on this one"></i>
+                                </label>
+                                <select name="successor" 
+                                        id="successor" 
+                                        class="form-select"
+                                        data-testid="successor-select"
+                                        {% if disable_dependencies %}disabled{% endif %}>
+                                    <option value="">-- None --</option>
+                                    {% for act in available_successors %}
+                                    <option value="{{ act.id }}" 
+                                            {% if form_data.successor|stringformat:"s" == act.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ act.reference_name }} - {{ act.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% if disable_dependencies %}
+                                <small class="form-text text-muted">No other activities yet - dependencies will be available after creating more activities</small>
+                                {% endif %}
+                            </div>
                         </div>
-
-                        <!-- Action Buttons -->
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}" 
-                               class="btn btn-outline-secondary"
-                               data-testid="cancel-btn"
-                               data-bs-toggle="tooltip"
-                               title="Cancel and return to activities list">
-                                <i class="fa-solid fa-times"></i> Cancel
-                            </a>
-                            <button type="submit" 
-                                    class="btn btn-success"
-                                    data-testid="save-btn"
-                                    data-bs-toggle="tooltip"
-                                    title="Create this activity">
-                                <i class="fa-solid fa-save"></i> Create Activity
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- Helper Info Sidebar -->
         <div class="col-md-4">
