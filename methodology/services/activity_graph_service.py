@@ -91,12 +91,18 @@ class ActivityGraphService:
                 for activity in activities:
                     self._add_activity_node(dot, activity, playbook, workflow)
             
-            # Add edges between activities (sequential flow)
-            activity_list = list(activities)
-            for i in range(len(activity_list) - 1):
-                current = activity_list[i]
-                next_activity = activity_list[i + 1]
-                dot.edge(f'activity_{current.pk}', f'activity_{next_activity.pk}')
+            # Add edges based on actual predecessor/successor relationships
+            for activity in activities:
+                if activity.successor:
+                    # Draw edge from this activity to its successor
+                    dot.edge(
+                        f'activity_{activity.pk}',
+                        f'activity_{activity.successor.pk}',
+                        label='',
+                        color='blue',
+                        penwidth='2.0'
+                    )
+                    logger.debug(f"Added edge: {activity.reference_name} -> {activity.successor.reference_name}")
             
             # Generate SVG
             svg_bytes = dot.pipe(format='svg')
@@ -114,7 +120,7 @@ class ActivityGraphService:
         """
         Create formatted label for activity node.
         
-        Format: "{activity.name}" or "{activity.name}\\n[Has Dependencies]"
+        Format: "{reference_name}\\n{activity.name}"
         
         :param activity: Activity instance
         :type activity: methodology.models.Activity
@@ -123,14 +129,10 @@ class ActivityGraphService:
         
         Example:
             >>> label = service._create_activity_node_label(activity)
-            >>> # Returns: "Design Component"
+            >>> # Returns: "DFS1\\nDesign Component"
         """
-        label = activity.name
-        
-        # Add dependency indicator if present
-        if activity.has_dependencies:
-            label += "\\n[Has Dependencies]"
-        
+        # Include reference name (e.g., "DFS1") in label
+        label = f"{activity.reference_name}\\n{activity.name}"
         return label
     
     def _get_activity_detail_url(self, activity, playbook, workflow):
