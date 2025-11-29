@@ -21,16 +21,20 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-start mb-4" data-testid="activity-header">
         <div>
-            <h2>
-                <i class="fa-solid fa-tasks"></i> {{ activity.name }}
-            </h2>
+            <h1 class="display-6" data-testid="activity-title">
+                <i class="fa-solid fa-tasks"></i> 
+                {% if activity.reference_name %}
+                <span class="badge bg-secondary me-2">{{ activity.reference_name }}</span>
+                {% endif %}
+                {{ activity.name }}
+            </h1>
             <p class="text-muted">
                 <span class="badge bg-secondary" data-testid="order-badge">Order: #{{ activity.order }}</span>
                 {% if activity.phase %}
                 <span class="badge bg-info" data-testid="phase-badge">{{ activity.phase }}</span>
                 {% endif %}
-                {% if activity.has_dependencies %}
-                <span class="badge bg-warning" data-testid="dependencies-badge">
+                {% if activity.predecessor or activity.successor %}
+                <span class="badge bg-info" data-testid="dependencies-badge">
                     <i class="fa-solid fa-link"></i> Has Dependencies
                 </span>
                 {% endif %}
@@ -98,14 +102,27 @@
                         <dt class="col-sm-5">Phase:</dt>
                         <dd class="col-sm-7">{{ activity.get_phase_display_name }}</dd>
 
-                        <dt class="col-sm-5">Dependencies:</dt>
+                        {% if activity.predecessor %}
+                        <dt class="col-sm-5">Predecessor:</dt>
                         <dd class="col-sm-7">
-                            {% if activity.has_dependencies %}
-                                <i class="fa-solid fa-check text-warning"></i> Yes
-                            {% else %}
-                                <i class="fa-solid fa-times text-muted"></i> No
-                            {% endif %}
+                            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.predecessor.id %}"
+                               data-testid="predecessor-link">
+                                <span class="badge bg-info">{{ activity.predecessor.reference_name }}</span>
+                                {{ activity.predecessor.name }}
+                            </a>
                         </dd>
+                        {% endif %}
+                        
+                        {% if activity.successor %}
+                        <dt class="col-sm-5">Successor:</dt>
+                        <dd class="col-sm-7">
+                            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.successor.id %}"
+                               data-testid="successor-link">
+                                <span class="badge bg-info">{{ activity.successor.reference_name }}</span>
+                                {{ activity.successor.name }}
+                            </a>
+                        </dd>
+                        {% endif %}
 
                         <dt class="col-sm-5">Created:</dt>
                         <dd class="col-sm-7">{{ activity.created_at|date:"M d, Y" }}</dd>
