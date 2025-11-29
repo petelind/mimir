@@ -92,14 +92,54 @@ def workflow_create(request, playbook_pk):
 
 @login_required
 def workflow_detail(request, playbook_pk, pk):
-    """View workflow details."""
+    """
+    View workflow details with activities flow diagram.
+    
+    Displays workflow information and generates Graphviz SVG visualization
+    of activities in sequential flow with phase grouping if applicable.
+    
+    Template: workflows/detail.html
+    Context:
+        - playbook: Playbook instance
+        - workflow: Workflow instance
+        - can_edit: Boolean, True if user can edit workflow
+        - activities_svg: SVG string from Graphviz or None if no activities
+        - activity_count: Integer count of activities in workflow
+        - has_activities: Boolean, True if activity_count > 0
+    
+    :param request: Django HTTP request
+    :param playbook_pk: Playbook primary key
+    :param pk: Workflow primary key
+    :return: Rendered template response
+    """
     playbook = get_object_or_404(Playbook, pk=playbook_pk)
     workflow = get_object_or_404(Workflow, pk=pk, playbook=playbook)
+    
+    # Fetch activities and generate graph
+    from methodology.services.activity_graph_service import ActivityGraphService
+    from methodology.models import Activity
+    
+    activities = Activity.objects.filter(workflow=workflow)
+    activity_count = activities.count()
+    
+    # Generate SVG graph if activities exist
+    activities_svg = None
+    if activity_count > 0:
+        try:
+            graph_service = ActivityGraphService()
+            activities_svg = graph_service.generate_activities_graph(workflow, playbook)
+            logger.info(f"Generated activity graph for workflow {pk} with {activity_count} activities")
+        except Exception as e:
+            logger.error(f"Failed to generate activity graph for workflow {pk}: {str(e)}")
+            # Continue without graph - template will show error or plain list
     
     return render(request, 'workflows/detail.html', {
         'playbook': playbook,
         'workflow': workflow,
-        'can_edit': workflow.can_edit(request.user)
+        'can_edit': workflow.can_edit(request.user),
+        'activities_svg': activities_svg,
+        'activity_count': activity_count,
+        'has_activities': activity_count > 0,
     })
 
 
