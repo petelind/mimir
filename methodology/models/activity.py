@@ -45,10 +45,22 @@ class Activity(models.Model):
         help_text="Optional phase grouping (e.g., 'Planning', 'Execution')"
     )
     
-    # Dependencies (simplified - boolean for now, M2M relationship added later)
-    has_dependencies = models.BooleanField(
-        default=False,
-        help_text="Whether this activity has prerequisite dependencies"
+    # Dependencies - predecessor/successor relationships
+    predecessor = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='successors',
+        help_text="Previous activity that must complete first"
+    )
+    successor = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='predecessors',
+        help_text="Next activity that depends on this one"
     )
     
     # Timestamps
@@ -114,3 +126,63 @@ class Activity(models.Model):
             'Unassigned'  # If phase is None or empty
         """
         return self.phase if self.phase else "Unassigned"
+    
+    @property
+    def reference_name(self) -> str:
+        """
+        Generate reference name from workflow abbreviation and order.
+        
+        :returns: Reference name (e.g., 'DFS1', 'PLG3')
+        :rtype: str
+        
+        Example:
+            >>> activity.workflow.abbreviation = 'DFS'
+            >>> activity.order = 1
+            >>> activity.reference_name
+            'DFS1'
+        """
+        return f"{self.workflow.abbreviation}{self.order}"
+    
+    def clean(self):
+        """
+        Validate activity dependencies.
+        
+        :raises ValidationError: If validation fails
+        
+        Validations:
+        - Predecessor must be in same workflow
+        - Successor must be in same workflow
+        - Cannot be self-referential
+        - No circular dependencies
+        """
+        from django.core.exceptions import ValidationError
+        
+        # Validate predecessor is in same workflow
+        if self.predecessor and self.predecessor.workflow_id != self.workflow_id:
+            raise ValidationError({
+                'predecessor': 'Predecessor must be in the same workflow'
+            })
+        
+        # Validate successor is in same workflow
+        if self.successor and self.successor.workflow_id != self.workflow_id:
+            raise ValidationError({
+                'successor': 'Successor must be in the same workflow'
+            })
+        
+        # Validate not self-referential
+        if self.predecessor and self.predecessor.id == self.id:
+            raise ValidationError({
+                'predecessor': 'Activity cannot be its own predecessor'
+            })
+        
+        if self.successor and self.successor.id == self.id:
+            raise ValidationError({
+                'successor': 'Activity cannot be its own successor'
+            })
+        
+        # Validate no circular dependency
+        if self.predecessor and self.successor:
+            if self.predecessor.id == self.successor.id:
+                raise ValidationError(
+                    'Circular dependency detected: predecessor and successor cannot be the same activity'
+                )
