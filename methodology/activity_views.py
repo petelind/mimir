@@ -169,7 +169,8 @@ def activity_create(request, playbook_pk, workflow_pk):
         guidance = request.POST.get('guidance', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
-        has_dependencies = request.POST.get('has_dependencies') == 'on'
+        predecessor_id = request.POST.get('predecessor', '').strip() or None
+        successor_id = request.POST.get('successor', '').strip() or None
         
         # Convert order to int if provided
         order_int = None
@@ -333,7 +334,8 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         guidance = request.POST.get('guidance', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
-        has_dependencies = request.POST.get('has_dependencies') == 'on'
+        predecessor_id = request.POST.get('predecessor', '').strip() or None
+        successor_id = request.POST.get('successor', '').strip() or None
         
         # Convert order to int
         order_int = None
@@ -344,13 +346,35 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
                 messages.error(request, 'Order must be a number.')
                 return _render_edit_form(request, playbook, workflow, activity, request.POST, {'order': 'Must be a number'})
         
+        # Get predecessor and successor objects if IDs provided
+        predecessor = None
+        successor = None
+        if predecessor_id:
+            try:
+                pred_id = int(predecessor_id)
+                if pred_id != activity_pk:  # Don't allow self-reference
+                    predecessor = Activity.objects.get(pk=pred_id, workflow=workflow)
+            except (Activity.DoesNotExist, ValueError):
+                messages.error(request, 'Invalid predecessor selected.')
+                return _render_edit_form(request, playbook, workflow, activity, request.POST, {})
+        
+        if successor_id:
+            try:
+                succ_id = int(successor_id)
+                if succ_id != activity_pk:  # Don't allow self-reference
+                    successor = Activity.objects.get(pk=succ_id, workflow=workflow)
+            except (Activity.DoesNotExist, ValueError):
+                messages.error(request, 'Invalid successor selected.')
+                return _render_edit_form(request, playbook, workflow, activity, request.POST, {})
+        
         # Validate and update
         try:
             update_fields = {
                 'name': name,
                 'guidance': guidance,
                 'phase': phase,
-                'has_dependencies': has_dependencies,
+                'predecessor': predecessor,
+                'successor': successor,
             }
             if order_int is not None:
                 update_fields['order'] = order_int
@@ -371,19 +395,30 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         'guidance': activity.guidance,
         'phase': activity.phase or '',
         'order': activity.order,
-        'has_dependencies': activity.has_dependencies,
+        'predecessor': activity.predecessor.id if activity.predecessor else '',
+        'successor': activity.successor.id if activity.successor else '',
     }
     return _render_edit_form(request, playbook, workflow, activity, form_data, {})
 
 
 def _render_edit_form(request, playbook, workflow, activity, form_data, errors):
     """Helper to render edit form with context."""
+    # Get available predecessors and successors (exclude current activity)
+    available_predecessors = ActivityService.get_available_predecessors(workflow, exclude_activity_id=activity.id)
+    available_successors = ActivityService.get_available_successors(workflow, exclude_activity_id=activity.id)
+    
+    # Check if dropdowns should be disabled (only 1 activity - the current one)
+    disable_dependencies = workflow.get_activity_count() <= 1
+    
     context = {
         'playbook': playbook,
         'workflow': workflow,
         'activity': activity,
         'form_data': form_data,
         'errors': errors,
+        'available_predecessors': available_predecessors,
+        'available_successors': available_successors,
+        'disable_dependencies': disable_dependencies,
     }
     return render(request, 'activities/edit.html', context)
 
