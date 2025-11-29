@@ -48,8 +48,7 @@ class TestActivityModel:
             name='Design Component',
             guidance='Create component design',
             order=1,
-            phase='Planning',
-            has_dependencies=True
+            phase='Planning'
         )
         
         assert activity.id is not None
@@ -57,7 +56,6 @@ class TestActivityModel:
         assert activity.guidance == 'Create component design'
         assert activity.order == 1
         assert activity.phase == 'Planning'
-        assert activity.has_dependencies is True
         assert activity.workflow == test_workflow
     
     def test_activity_defaults(self, test_workflow):
@@ -69,8 +67,7 @@ class TestActivityModel:
         )
         
         assert activity.order == 1
-        assert activity.phase is None
-        assert activity.has_dependencies is False
+        assert activity.phase is None        
         assert activity.created_at is not None
         assert activity.updated_at is not None
     
@@ -90,14 +87,14 @@ class TestActivityModel:
         Activity.objects.create(
             workflow=test_workflow,
             name='Duplicate Name',
-            description='First activity'
+            guidance='First activity'
         )
         
         with pytest.raises(IntegrityError):
             Activity.objects.create(
                 workflow=test_workflow,
                 name='Duplicate Name',  # Same name in same workflow
-                description='Second activity'
+                guidance='Second activity'
             )
     
     def test_unique_constraint_across_workflows(self, test_playbook):
@@ -117,12 +114,12 @@ class TestActivityModel:
         activity1 = Activity.objects.create(
             workflow=workflow1,
             name='Same Name',
-            description='In workflow 1'
+            guidance='In workflow 1'
         )
         activity2 = Activity.objects.create(
             workflow=workflow2,
             name='Same Name',
-            description='In workflow 2'
+            guidance='In workflow 2'
         )
         
         assert activity1.name == activity2.name
@@ -146,7 +143,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test'
+            guidance='Test'
         )
         
         assert activity.is_owned_by(test_user) is True
@@ -157,7 +154,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test'
+            guidance='Test'
         )
         
         assert activity.is_owned_by(other_user) is False
@@ -167,7 +164,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test'
+            guidance='Test'
         )
         
         assert activity.can_edit(test_user) is True
@@ -199,12 +196,12 @@ class TestActivityModel:
         Activity.objects.create(
             workflow=test_workflow,
             name='Activity 1',
-            description='Test'
+            guidance='Test'
         )
         Activity.objects.create(
             workflow=test_workflow,
             name='Activity 2',
-            description='Test'
+            guidance='Test'
         )
         
         assert Activity.objects.count() == 2
@@ -218,7 +215,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Original description'
+            guidance='Original description'
         )
         
         original_updated = activity.updated_at
@@ -246,7 +243,7 @@ class TestActivityModel:
         activity = Activity.objects.create(
             workflow=test_workflow,
             name='Test Activity',
-            description='Test'
+            guidance='Test'
         )
         
         assert activity.get_phase_display_name() == 'Unassigned'
