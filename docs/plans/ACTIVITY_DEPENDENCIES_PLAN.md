@@ -393,6 +393,36 @@
   - Show dependency visualization in activity detail view
 - [ ] Commit: "docs(user_journey): update Act 5 with dependency relationships"
 
+#### 7.3 Update Screen Flow Diagram
+- [ ] Open `docs/ux/2_dialogue-maps/screen-flow.drawio` in draw.io editor
+- [ ] Navigate to "MVP Flow - Local FOB" tab
+- [ ] Locate ACT 5: Activities section
+- [ ] Update FOB-ACTIVITIES-CREATE screen:
+  - Remove "Has Dependencies" checkbox
+  - Add "Predecessor Activity" dropdown (shows reference names)
+  - Add "Successor Activity" dropdown (shows reference names)
+  - Add disabled state indicator when workflow has 0 activities
+  - Show dropdown format: "{REF} - {Name}" (e.g., "DFT1 - Build Domain Model")
+- [ ] Update FOB-ACTIVITIES-EDIT screen:
+  - Same changes as CREATE
+  - Show current selections pre-selected
+  - Exclude current activity from both dropdowns
+- [ ] Update FOB-ACTIVITIES-VIEW screen:
+  - Add reference name badge in header: "[DFT1]" or badge style
+  - Replace "Has Dependencies" badge with actual links:
+    - "Predecessor: [DFT1 - Build Domain Model]" (clickable link)
+    - "Successor: [DFT3 - Plan by Feature]" (clickable link)
+  - Show reference names in activity cards
+- [ ] Update FOB-WORKFLOWS-CREATE screen:
+  - Add note: "3-letter abbreviation will be auto-generated"
+  - Show example: "Design Features → DFT"
+- [ ] Update FOB-WORKFLOWS-VIEW screen:
+  - Show workflow abbreviation in header or badge
+  - Activities in diagram show reference names
+  - Dependency arrows between activities
+- [ ] Save diagram
+- [ ] Commit: "docs(screen-flow): update MVP flow with activity dependencies and abbreviations"
+
 ---
 
 ### 📋 Step 8: Final Testing and Validation
