@@ -35,8 +35,8 @@ class WorkflowAdmin(admin.ModelAdmin):
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     """Admin configuration for Activity model."""
-    list_display = ('name', 'workflow', 'phase', 'status', 'order', 'has_dependencies')
-    list_filter = ('status', 'phase', 'has_dependencies', 'created_at')
+    list_display = ('name', 'workflow', 'phase', 'order', 'has_dependencies')
+    list_filter = ('phase', 'has_dependencies', 'created_at')
     search_fields = ('name', 'description', 'workflow__name', 'workflow__playbook__name')
     readonly_fields = ('created_at', 'updated_at')
     ordering = ('workflow', 'order')
@@ -45,7 +45,7 @@ class ActivityAdmin(admin.ModelAdmin):
             'fields': ('workflow', 'name', 'description')
         }),
         ('Organization', {
-            'fields': ('order', 'phase', 'status', 'has_dependencies')
+            'fields': ('order', 'phase', 'has_dependencies')
         }),
         ('Timestamps', {
             'fields': ('created_at', 'updated_at'),

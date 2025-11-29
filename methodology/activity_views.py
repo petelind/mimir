@@ -142,7 +142,6 @@ def activity_create(request, playbook_pk, workflow_pk):
     Template Context:
         - playbook: Playbook instance
         - workflow: Workflow instance
-        - status_choices: List of status options
         - form_data: Dict with form values (on validation error)
         - errors: Dict with field errors (on validation error)
     
@@ -170,7 +169,6 @@ def activity_create(request, playbook_pk, workflow_pk):
         description = request.POST.get('description', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
-        status = request.POST.get('status', 'not_started')
         has_dependencies = request.POST.get('has_dependencies') == 'on'
         
         # Convert order to int if provided
@@ -190,7 +188,6 @@ def activity_create(request, playbook_pk, workflow_pk):
                 description=description,
                 phase=phase,
                 order=order_int,
-                status=status,
                 has_dependencies=has_dependencies
             )
             logger.info(f"Activity '{name}' created successfully in workflow {workflow_pk}")
@@ -211,7 +208,6 @@ def _render_create_form(request, playbook, workflow, form_data, errors):
     context = {
         'playbook': playbook,
         'workflow': workflow,
-        'status_choices': Activity.STATUS_CHOICES,
         'form_data': form_data,
         'errors': errors,
     }
@@ -226,7 +222,7 @@ def activity_detail(request, playbook_pk, workflow_pk, activity_pk):
     View activity details.
     
     Displays full activity information including name, description, phase,
-    status, dependencies, order, and timestamps.
+    dependencies, order, and timestamps.
     
     Template: activities/detail.html
     Template Context:
@@ -281,7 +277,6 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         - playbook: Playbook instance
         - workflow: Workflow instance
         - activity: Activity instance
-        - status_choices: List of status options
         - form_data: Dict with form values (on validation error)
         - errors: Dict with field errors (on validation error)
     
@@ -311,7 +306,6 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         description = request.POST.get('description', '').strip()
         phase = request.POST.get('phase', '').strip() or None
         order = request.POST.get('order', '').strip()
-        status = request.POST.get('status', 'not_started')
         has_dependencies = request.POST.get('has_dependencies') == 'on'
         
         # Convert order to int
@@ -329,7 +323,6 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
                 'name': name,
                 'description': description,
                 'phase': phase,
-                'status': status,
                 'has_dependencies': has_dependencies,
             }
             if order_int is not None:
@@ -351,7 +344,6 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
         'description': activity.description,
         'phase': activity.phase or '',
         'order': activity.order,
-        'status': activity.status,
         'has_dependencies': activity.has_dependencies,
     }
     return _render_edit_form(request, playbook, workflow, activity, form_data, {})
@@ -363,7 +355,6 @@ def _render_edit_form(request, playbook, workflow, activity, form_data, errors):
         'playbook': playbook,
         'workflow': workflow,
         'activity': activity,
-        'status_choices': Activity.STATUS_CHOICES,
         'form_data': form_data,
         'errors': errors,
     }

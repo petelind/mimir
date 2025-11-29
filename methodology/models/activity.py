@@ -45,20 +45,6 @@ class Activity(models.Model):
         help_text="Optional phase grouping (e.g., 'Planning', 'Execution')"
     )
     
-    # Status tracking
-    STATUS_CHOICES = [
-        ('not_started', 'Not Started'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('blocked', 'Blocked'),
-    ]
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='not_started',
-        help_text="Current status of the activity"
-    )
-    
     # Dependencies (simplified - boolean for now, M2M relationship added later)
     has_dependencies = models.BooleanField(
         default=False,

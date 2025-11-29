@@ -21,8 +21,10 @@ class ActivityGraphService:
     - Sequential flow arrows
     - Phase grouping (if phases exist)
     - Clickable nodes linking to activity detail
-    - Status-based node coloring
     - Dependency indicators
+    
+    Note: Activities are static reference material (like a book).
+    No status tracking - work tracking happens in external systems.
     """
     
     def generate_activities_graph(self, workflow, playbook):
@@ -30,11 +32,10 @@ class ActivityGraphService:
         Generate Graphviz flow diagram of activities in a workflow.
         
         Creates an SVG representation showing:
-        - Activities as nodes with name and status
+        - Activities as nodes with name
         - Sequential flow based on order field
         - Phase grouping using Graphviz subgraph clusters
         - Clickable nodes with href to activity detail
-        - Status-based colors (green=completed, blue=in_progress, red=blocked, gray=not_started)
         
         :param workflow: Workflow instance containing activities
         :type workflow: methodology.models.Workflow
@@ -108,51 +109,23 @@ class ActivityGraphService:
             logger.error(f"Error generating activity graph for workflow {workflow.pk}: {str(e)}")
             raise
     
-    def _get_activity_color(self, status):
-        """
-        Get Graphviz color for activity node based on status.
-        
-        Color mapping:
-        - completed: lightgreen
-        - in_progress: lightblue
-        - blocked: lightcoral
-        - not_started: lightgray
-        
-        :param status: Activity status from STATUS_CHOICES
-        :type status: str
-        :return: Graphviz color name
-        :rtype: str
-        
-        Example:
-            >>> service._get_activity_color('completed')
-            'lightgreen'
-        """
-        color_map = {
-            'completed': 'lightgreen',
-            'in_progress': 'lightblue',
-            'blocked': 'lightcoral',
-            'not_started': 'lightgray',
-        }
-        return color_map.get(status, 'lightgray')
     
     def _create_activity_node_label(self, activity):
         """
         Create formatted label for activity node.
         
-        Format: "{activity.name}\\n{status_display}"
-        Uses newline escape for multi-line display in Graphviz.
+        Format: "{activity.name}" or "{activity.name}\\n[Has Dependencies]"
         
         :param activity: Activity instance
         :type activity: methodology.models.Activity
-        :return: Formatted label string with escaped newline
+        :return: Formatted label string
         :rtype: str
         
         Example:
             >>> label = service._create_activity_node_label(activity)
-            >>> # Returns: "Design Component\\nIn Progress"
+            >>> # Returns: "Design Component"
         """
-        status_display = activity.get_status_display()
-        label = f"{activity.name}\\n{status_display}"
+        label = activity.name
         
         # Add dependency indicator if present
         if activity.has_dependencies:
@@ -233,13 +206,13 @@ class ActivityGraphService:
         """
         node_id = f'activity_{activity.pk}'
         label = self._create_activity_node_label(activity)
-        color = self._get_activity_color(activity.status)
         url = self._get_activity_detail_url(activity, playbook, workflow)
         
+        # Use uniform color - activities are static reference material
         graph.node(
             node_id,
             label=label,
-            fillcolor=color,
+            fillcolor='lightblue',  # Uniform color for all activities
             href=url,
             target='_top'  # Opens in full page, not iframe
         )

@@ -18,7 +18,7 @@ class ActivityService:
     
     @staticmethod
     def create_activity(workflow, name, description='', phase=None, order=None, 
-                       status='not_started', has_dependencies=False):
+                       has_dependencies=False):
         """
         Create activity with validation and auto-order.
         
@@ -27,7 +27,6 @@ class ActivityService:
         :param description: Activity description (optional)
         :param phase: Phase grouping (optional)
         :param order: Execution order (auto-assigned if None)
-        :param status: Activity status (default: not_started)
         :param has_dependencies: Whether activity has dependencies (default: False)
         :returns: Created Activity instance
         :raises ValidationError: If validation fails
@@ -69,7 +68,6 @@ class ActivityService:
                 description=description.strip() if description else '',
                 phase=phase.strip() if phase else None,
                 order=order,
-                status=status,
                 has_dependencies=has_dependencies
             )
             logger.info(f"Created activity '{name}' (#{order}) in workflow {workflow.id}")
@@ -142,7 +140,7 @@ class ActivityService:
         Update activity fields.
         
         :param activity_id: Activity primary key
-        :param kwargs: Fields to update (name, description, order, phase, status, has_dependencies)
+        :param kwargs: Fields to update (name, description, order, phase, has_dependencies)
         :returns: Updated Activity instance
         :raises Activity.DoesNotExist: If activity not found
         :raises ValidationError: If validation fails
@@ -151,7 +149,7 @@ class ActivityService:
             >>> activity = ActivityService.update_activity(
             ...     123,
             ...     name="New Name",
-            ...     status="in_progress"
+            ...     phase="Execution"
             ... )
         """
         activity = Activity.objects.get(pk=activity_id)
@@ -241,7 +239,6 @@ class ActivityService:
             description=original.description,
             phase=original.phase,
             order=next_order,
-            status='not_started',  # Reset status
             has_dependencies=original.has_dependencies
         )
 
