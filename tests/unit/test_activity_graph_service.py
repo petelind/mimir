@@ -55,22 +55,19 @@ class TestActivityGraphService:
             workflow=self.workflow,
             name='Activity 1',
             description='First',
-            order=1,
-            status='completed'
+            order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 2',
             description='Second',
-            order=2,
-            status='in_progress'
+            order=2
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Activity 3',
             description='Third',
-            order=3,
-            status='not_started'
+            order=3
         )
         
         svg = self.service.generate_activities_graph(self.workflow, self.playbook)
@@ -91,24 +88,21 @@ class TestActivityGraphService:
             name='Plan Features',
             description='Planning',
             phase='Planning',
-            order=1,
-            status='completed'
+            order=1
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Write Code',
             description='Implementation',
             phase='Execution',
-            order=2,
-            status='in_progress'
+            order=2
         )
         Activity.objects.create(
             workflow=self.workflow,
             name='Deploy',
             description='Deployment',
             phase='Execution',
-            order=3,
-            status='not_started'
+            order=3
         )
         
         svg = self.service.generate_activities_graph(self.workflow, self.playbook)
@@ -123,33 +117,20 @@ class TestActivityGraphService:
         assert 'Write Code' in svg
         assert 'Deploy' in svg
     
-    def test_node_styling_by_status_completed(self):
-        """Test completed activity nodes are styled with green color."""
+    def test_node_styling_uniform_color(self):
+        """Test all activity nodes use uniform color (activities are static)."""
         activity = Activity.objects.create(
             workflow=self.workflow,
-            name='Completed Activity',
-            description='Done',
-            order=1,
-            status='completed'
+            name='Test Activity',
+            description='Test',
+            order=1
         )
         
-        color = self.service._get_activity_color('completed')
-        assert color == 'lightgreen'
-    
-    def test_node_styling_by_status_in_progress(self):
-        """Test in_progress activity nodes are styled with blue color."""
-        color = self.service._get_activity_color('in_progress')
-        assert color == 'lightblue'
-    
-    def test_node_styling_by_status_blocked(self):
-        """Test blocked activity nodes are styled with red color."""
-        color = self.service._get_activity_color('blocked')
-        assert color == 'lightcoral'
-    
-    def test_node_styling_by_status_not_started(self):
-        """Test not_started activity nodes are styled with gray color."""
-        color = self.service._get_activity_color('not_started')
-        assert color == 'lightgray'
+        svg = self.service.generate_activities_graph(self.workflow, self.playbook)
+        
+        # All nodes should use uniform lightblue color
+        assert svg is not None
+        assert 'lightblue' in svg
     
     def test_clickable_nodes_have_href_attributes(self):
         """Test activity nodes have href attributes for clickability."""
@@ -157,8 +138,7 @@ class TestActivityGraphService:
             workflow=self.workflow,
             name='Clickable Activity',
             description='Test',
-            order=1,
-            status='not_started'
+            order=1
         )
         
         svg = self.service.generate_activities_graph(self.workflow, self.playbook)
@@ -175,7 +155,6 @@ class TestActivityGraphService:
             name='Activity with Deps',
             description='Has dependencies',
             order=1,
-            status='not_started',
             has_dependencies=True
         )
         Activity.objects.create(
@@ -183,7 +162,6 @@ class TestActivityGraphService:
             name='Activity without Deps',
             description='No dependencies',
             order=2,
-            status='not_started',
             has_dependencies=False
         )
         
@@ -233,14 +211,12 @@ class TestActivityGraphService:
     
     def test_create_activity_node_label(self):
         """Test activity node label formatting."""
-        activity = Activity(name='Test Activity', status='in_progress')
-        activity.get_status_display = lambda: 'In Progress'
+        activity = Activity(name='Test Activity')
         
         label = self.service._create_activity_node_label(activity)
         
         assert 'Test Activity' in label
-        assert 'In Progress' in label
-        assert '\\n' in label  # Graphviz newline escape
+        # No status display - activities are static reference material
     
     def test_get_activity_detail_url(self):
         """Test activity detail URL generation."""
