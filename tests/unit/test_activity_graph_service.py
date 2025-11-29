@@ -28,7 +28,7 @@ class TestActivityGraphService:
         
         self.playbook = Playbook.objects.create(
             name='Test Playbook',
-            guidance='Test',
+            description='Test',
             category='development',
             status='active',
             source='owned',
@@ -37,7 +37,7 @@ class TestActivityGraphService:
         
         self.workflow = Workflow.objects.create(
             name='Test Workflow',
-            guidance='Test workflow',
+            description='Test workflow',
             playbook=self.playbook,
             order=1
         )
@@ -208,11 +208,18 @@ class TestActivityGraphService:
         assert len(groups['Unassigned']) == 1
     
     def test_create_activity_node_label(self):
-        """Test activity node label formatting."""
-        activity = Activity(name='Test Activity')
+        """Test activity node label formatting with reference_name."""
+        activity = Activity.objects.create(
+            workflow=self.workflow,
+            name='Test Activity',
+            guidance='Test guidance',
+            order=1
+        )
         
         label = self.service._create_activity_node_label(activity)
         
+        # Should include reference_name and activity name
+        assert activity.reference_name in label
         assert 'Test Activity' in label
         # No status display - activities are static reference material
     

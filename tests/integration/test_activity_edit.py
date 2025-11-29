@@ -31,7 +31,7 @@ class TestActivityEdit:
         # Create playbook and workflow
         self.playbook = Playbook.objects.create(
             name='React Frontend Development',
-            guidance='A comprehensive methodology',
+            description='A comprehensive methodology',
             category='development',
             status='active',
             source='owned',
@@ -40,7 +40,7 @@ class TestActivityEdit:
         
         self.workflow = Workflow.objects.create(
             name='Component Development',
-            guidance='Develop React components',
+            description='Develop React components',
             playbook=self.playbook,
             order=1
         )
@@ -165,26 +165,32 @@ class TestActivityEdit:
         self.activity.refresh_from_db()
         assert self.activity.order == 5
     
-    def test_edit_07_update_dependencies_flag(self):
-        """Test updating has_dependencies flag."""
+    def test_edit_07_update_dependencies(self):
+        """Test updating predecessor and successor."""
+        # Create another activity to use as predecessor
+        predecessor = Activity.objects.create(
+            workflow=self.workflow,
+            name='Predecessor Activity',
+            guidance='Comes before',
+            order=1
+        )
+        
         url = reverse('activity_edit', kwargs={
             'playbook_pk': self.playbook.pk,
             'workflow_pk': self.workflow.pk,
             'activity_pk': self.activity.pk
         })
         
-        data = {
-            'name': 'Design Component',
-            'description': 'Create UI design',
-            'phase': 'Planning',
-            'order': 1,
-            'has_dependencies': 'on',  # Checkbox checked
-        }
-        response = self.client.post(url, data)
+        response = self.client.post(url, {
+            'name': self.activity.name,
+            'guidance': self.activity.guidance,
+            'phase': self.activity.phase or '',
+            'order': self.activity.order,
+            'predecessor': predecessor.id,
+        })
         
-        assert response.status_code == 302
         self.activity.refresh_from_db()
-        assert self.activity.has_dependencies is True
+        assert self.activity.predecessor == predecessor
     
     def test_edit_08_validate_required_name(self):
         """Test validation error when name is empty."""
