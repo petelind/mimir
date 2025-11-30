@@ -16,7 +16,7 @@ from methodology.forms import (
     PlaybookWorkflowForm,
     PlaybookPublishingForm
 )
-from methodology.services import PlaybookService
+from methodology.services.playbook_service import PlaybookService
 
 logger = logging.getLogger(__name__)
 
