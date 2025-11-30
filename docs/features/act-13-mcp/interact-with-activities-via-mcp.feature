@@ -17,7 +17,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # CREATE ACTIVITY (IN DRAFT PLAYBOOK)
   # ============================================================================
 
-  Scenario: MCP-ACT-01 Create activity increments grandparent playbook version
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY
     Given draft playbook (id=1, version=0.2) has workflow (id=1)
     When Cascade calls MCP tool "create_activity" with:
       | workflow_id |                                       1 |
@@ -32,7 +32,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     And grandparent playbook version is incremented from "0.2" to "0.3"
     And activity is assigned auto-incremented order number
 
-  Scenario: MCP-ACT-02 Create activity with predecessor
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY-1 Create with predecessor
     Given workflow (id=1) has activity "Define Props" (id=1)
     And grandparent playbook version is "0.3"
     When Cascade calls "create_activity" with:
@@ -43,7 +43,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then activity is created with predecessor linked to activity id=1
     And grandparent playbook version increments to "0.4"
 
-  Scenario: MCP-ACT-03 Create activity in released playbook raises permission error
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY-2 Released playbook raises error
     Given released playbook (id=1, status=released) has workflow (id=1)
     When Cascade calls "create_activity" with:
       | workflow_id |            1 |
@@ -52,7 +52,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then MCP returns error "PermissionError: Cannot modify released playbook \"[name]\". Use create_pip instead."
     And no activity is created
 
-  Scenario: MCP-ACT-04 Create activity with predecessor in different workflow raises error
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY-3 Predecessor in different workflow raises error
     Given workflow (id=1) has activity (id=1)
     And workflow (id=2) exists in same playbook
     When Cascade calls "create_activity" with:
@@ -62,7 +62,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
       | predecessor_id |    1 |
     Then MCP returns error "ValueError: Predecessor activity 1 not found in workflow"
 
-  Scenario: MCP-ACT-05 Create activity with duplicate name raises error
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY-4 Duplicate name raises error
     Given workflow (id=1) has activity "Define Props"
     When Cascade calls "create_activity" with:
       | workflow_id |            1 |
@@ -73,7 +73,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # LIST ACTIVITIES
   # ============================================================================
 
-  Scenario: MCP-ACT-06 List activities for workflow returns ordered list with dependencies
+  Scenario: MCP-ACTIVITIES-LIST+FIND
     Given workflow (id=1) has 3 activities:
       | name            | order | predecessor_id | successor_id |
       | Define Props    |     1 | null           |            2 |
@@ -84,7 +84,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then MCP returns list of 3 activities ordered by order number
     And each activity includes: id, name, guidance, phase, order, workflow_id, predecessor_id, successor_id
 
-  Scenario: MCP-ACT-07 List activities for non-existent workflow raises error
+  Scenario: MCP-ACTIVITIES-LIST+FIND-1 Non-existent workflow raises error
     When Cascade calls "list_activities" with:
       | workflow_id | 999 |
     Then MCP returns error "ValueError: Workflow 999 not found"
@@ -92,7 +92,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # GET ACTIVITY DETAIL
   # ============================================================================
 
-  Scenario: MCP-ACT-08 Get activity details includes predecessor and successor
+  Scenario: MCP-ACTIVITIES-GET_ACTIVITY
     Given activity (id=2) has:
       | predecessor | Activity id=1, name="Define Props"    |
       | successor   | Activity id=3, name="Write Component" |
@@ -104,7 +104,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
       | predecessor | {id: 1, name: "Define Props"}    |
       | successor   | {id: 3, name: "Write Component"} |
 
-  Scenario: MCP-ACT-09 Get non-existent activity raises error
+  Scenario: MCP-ACTIVITIES-GET_ACTIVITY-1 Non-existent activity raises error
     When Cascade calls "get_activity" with:
       | activity_id | 999 |
     Then MCP returns error "ValueError: Activity 999 not found"
@@ -112,7 +112,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # UPDATE ACTIVITY (IN DRAFT PLAYBOOK)
   # ============================================================================
 
-  Scenario: MCP-ACT-10 Update activity name increments grandparent playbook version
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY
     Given draft playbook (id=1, version=0.5) has workflow with activity (id=1, name="Old Name")
     When Cascade calls "update_activity" with:
       | activity_id |        1 |
@@ -120,7 +120,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then activity name is updated to "New Name"
     And grandparent playbook version is incremented to "0.6"
 
-  Scenario: MCP-ACT-11 Update activity guidance
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-1 Update guidance
     Given draft playbook (version=0.3) has workflow with activity (id=1)
     When Cascade calls "update_activity" with:
       | activity_id |                                   1 |
@@ -128,7 +128,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then activity guidance is updated
     And grandparent playbook version increments to "0.4"
 
-  Scenario: MCP-ACT-12 Update activity phase
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-2 Update phase
     Given draft playbook has workflow with activity (id=1, phase="Planning")
     When Cascade calls "update_activity" with:
       | activity_id |         1 |
@@ -136,7 +136,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then activity phase is updated to "Execution"
     And grandparent playbook version increments
 
-  Scenario: MCP-ACT-13 Update activity order
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-3 Update order
     Given workflow has activities with orders 1, 2, 3
     When Cascade calls "update_activity" with:
       | activity_id | 3 |
@@ -144,7 +144,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then activity order is updated to 1
     And grandparent playbook version increments
 
-  Scenario: MCP-ACT-14 Update activity in released playbook raises permission error
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-4 Released playbook raises error
     Given released playbook (status=released) has workflow with activity (id=1)
     When Cascade calls "update_activity" with:
       | activity_id |        1 |
@@ -155,7 +155,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # DELETE ACTIVITY (IN DRAFT PLAYBOOK)
   # ============================================================================
 
-  Scenario: MCP-ACT-15 Delete activity increments grandparent playbook version
+  Scenario: MCP-ACTIVITIES-DELETE_ACTIVITY
     Given draft playbook (id=1, version=0.7) has workflow with activity (id=1)
     When Cascade calls "delete_activity" with:
       | activity_id | 1 |
@@ -165,14 +165,14 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     And activity is removed from database
     And grandparent playbook version is incremented to "0.8"
 
-  Scenario: MCP-ACT-16 Delete activity in released playbook raises permission error
+  Scenario: MCP-ACTIVITIES-DELETE_ACTIVITY-1 Released playbook raises error
     Given released playbook (status=released) has workflow with activity (id=1)
     When Cascade calls "delete_activity" with:
       | activity_id | 1 |
     Then MCP returns error "PermissionError: Cannot modify released playbook. Use create_pip instead."
     And activity is not deleted
 
-  Scenario: MCP-ACT-17 Delete non-existent activity raises error
+  Scenario: MCP-ACTIVITIES-DELETE_ACTIVITY-2 Non-existent activity raises error
     When Cascade calls "delete_activity" with:
       | activity_id | 999 |
     Then MCP returns error "ValueError: Activity 999 not found"
@@ -180,7 +180,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # DEPENDENCY MANAGEMENT
   # ============================================================================
 
-  Scenario: MCP-ACT-18 Set predecessor creates dependency link
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-5 Set predecessor
     Given draft playbook (version=0.5) has workflow with activities:
       | id | name          | order |
       |  1 | Define Props  |     1 |
@@ -192,7 +192,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     And activity id=1 has successor id=2
     And grandparent playbook version increments to "0.6"
 
-  Scenario: MCP-ACT-19 Set predecessor validates circular dependency
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-6 Circular dependency raises error
     Given workflow has activities with chain: 1 → 2 → 3
     When Cascade calls "set_activity_predecessor" with:
       | activity_id    | 1 |
@@ -200,7 +200,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
     Then MCP returns error "ValidationError: Circular dependency detected"
     And no dependency is created
 
-  Scenario: MCP-ACT-20 Set predecessor in different workflow raises error
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-7 Predecessor in different workflow raises error
     Given workflow (id=1) has activity (id=1)
     And workflow (id=2) has activity (id=2)
     When Cascade calls "set_activity_predecessor" with:
@@ -208,7 +208,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
       | predecessor_id | 1 |
     Then MCP returns error "ValueError: Activity or predecessor not found"
 
-  Scenario: MCP-ACT-21 Set predecessor in released playbook raises permission error
+  Scenario: MCP-ACTIVITIES-UPDATE_ACTIVITY-8 Set predecessor in released playbook raises error
     Given released playbook has workflow with activities (id=1, id=2)
     When Cascade calls "set_activity_predecessor" with:
       | activity_id    | 2 |
@@ -218,7 +218,7 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   # END-TO-END WORKFLOW
   # ============================================================================
 
-  Scenario: MCP-ACT-22 Build complete methodology with dependencies via MCP
+  Scenario: MCP-ACTIVITIES-CREATE_ACTIVITY-5 Build complete methodology with dependencies
     Given user requests "Create React methodology with component workflow"
     When Cascade creates playbook (version=0.1)
     And Cascade creates workflow "Component Development" (version=0.2)
