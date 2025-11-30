@@ -78,13 +78,24 @@ This is where howtos are consumed, judged practical/impractical, refined, and ex
   - **MCP Interface**: For AI assistants to query methodology and create work plans
 - Technology: Django + SQLite + MCP (stdio)
 
-### 2. Read-Only MCP + PIP Workflow
+### 2. Hybrid MCP Access: Draft CRUD + Released PIP Workflow
 
-**Problem Solved**: Prevents synchronization conflicts between AI edits and human edits.
+**Problem Solved**: Allows AI to rapidly build new methodologies while protecting stable/released content from unreviewed changes.
 
-**Solution**: MCP provides read-only access; all changes go through Process Improvement Proposals (PIPs).
+**Solution**: MCP provides full CRUD access to DRAFT playbooks (status='draft', version=0.x), but read-only access to RELEASED playbooks (status='released', version≥1.0). Changes to released playbooks require Process Improvement Proposals (PIPs).
 
-**Workflow**:
+**Workflow for DRAFT Playbooks** (AI can modify directly):
+```
+AI/Engineer via MCP
+    ↓ building new methodology
+Creates/Updates DRAFT Playbook (v0.x)
+    ↓ adds workflows, activities, howtos
+Iterates freely until methodology is ready
+    ↓ when complete and validated
+Engineer reviews in Web UI and releases (v0.x → v1.0)
+```
+
+**Workflow for RELEASED Playbooks** (requires PIP):
 ```
 AI/Engineer via MCP
     ↓ discovers issue during work
@@ -92,17 +103,26 @@ Creates PIP (Process Improvement Proposal)
     ↓ includes: what failed, why, proposed fix
 Engineer reviews in Web UI
     ↓ approves or rejects with reasoning
-If approved → New methodology version created
+If approved → New methodology version created (v1.0 → v1.1)
     ↓ optional
 Transmit PIP to HOMEBASE for global consideration
 ```
 
 **Benefits**:
-- No race conditions between MCP and Web UI
-- Complete audit trail of methodology evolution
-- Human oversight of all changes
-- AI learns from approval/rejection patterns
-- Successful improvements can propagate globally
+- ✅ AI can rapidly build and iterate on new methodologies
+- ✅ Released/stable playbooks protected from unreviewed changes
+- ✅ No race conditions on production methodologies
+- ✅ Complete audit trail of methodology evolution
+- ✅ Human oversight of changes to released content
+- ✅ AI learns from approval/rejection patterns
+- ✅ Successful improvements can propagate globally
+
+**Rules**:
+- MCP can CREATE any playbook (starts as draft v0.1)
+- MCP can UPDATE/DELETE playbooks with status='draft'
+- MCP can READ any playbook (draft or released)
+- MCP CANNOT UPDATE/DELETE playbooks with status='released' (must create PIP)
+- Web UI can do anything (full control)
 
 ### 3. Repository Pattern for Storage Abstraction
 
@@ -349,6 +369,289 @@ def assess_progress(
     """
     service = AssessmentService(get_repository())
     return service.assess_phase_completion(phase, methodology)
+
+# ============================================================================
+# CRUD Tools for DRAFT Playbooks (status='draft', version=0.x)
+# ============================================================================
+
+@mcp.tool()
+def create_playbook(
+    name: str,
+    description: str,
+    category: str = "general"
+) -> dict:
+    """
+    Create new DRAFT playbook (starts at v0.1).
+    
+    :param name: playbook name as str. Example: "React Component Development"
+    :param description: playbook description as str. Example: "Best practices for building React components"
+    :param category: playbook category as str. Example: "frontend"
+    :return: Created playbook dict. Example: {"id": 1, "name": "React Component Development", "version": "0.1", "status": "draft"}
+    :raises ValidationError: If name is empty or duplicate
+    """
+    service = PlaybookService(get_repository())
+    return service.create_draft_playbook(name, description, category)
+
+@mcp.tool()
+def list_playbooks(
+    status: Literal["draft", "released", "all"] = "all"
+) -> list[dict]:
+    """
+    List playbooks filtered by status.
+    
+    :param status: filter by status as Literal. Example: "draft"
+    :return: List of playbook dicts. Example: [{"id": 1, "name": "React Dev", "version": "0.2", "status": "draft"}]
+    """
+    service = PlaybookService(get_repository())
+    return service.list_playbooks(status)
+
+@mcp.tool()
+def get_playbook(playbook_id: int) -> dict:
+    """
+    Get playbook details by ID.
+    
+    :param playbook_id: playbook ID as int. Example: 1
+    :return: Playbook dict with workflows. Example: {"id": 1, "name": "React Dev", "workflows": [...]}
+    :raises NotFoundError: If playbook does not exist
+    """
+    service = PlaybookService(get_repository())
+    return service.get_playbook_detail(playbook_id)
+
+@mcp.tool()
+def update_playbook(
+    playbook_id: int,
+    name: str | None = None,
+    description: str | None = None,
+    category: str | None = None
+) -> dict:
+    """
+    Update DRAFT playbook fields. Auto-increments version (0.1 → 0.2).
+    
+    :param playbook_id: playbook ID as int. Example: 1
+    :param name: new name as str or None. Example: "Updated React Development"
+    :param description: new description as str or None. Example: "Updated best practices"
+    :param category: new category as str or None. Example: "frontend"
+    :return: Updated playbook dict. Example: {"id": 1, "version": "0.2", "status": "draft"}
+    :raises PermissionError: If playbook status is 'released' (use create_pip instead)
+    :raises NotFoundError: If playbook does not exist
+    """
+    service = PlaybookService(get_repository())
+    return service.update_draft_playbook(playbook_id, name, description, category)
+
+@mcp.tool()
+def delete_playbook(playbook_id: int) -> dict:
+    """
+    Delete DRAFT playbook (cascades to workflows/activities).
+    
+    :param playbook_id: playbook ID as int. Example: 1
+    :return: Confirmation dict. Example: {"deleted": True, "playbook_id": 1}
+    :raises PermissionError: If playbook status is 'released'
+    :raises NotFoundError: If playbook does not exist
+    """
+    service = PlaybookService(get_repository())
+    return service.delete_draft_playbook(playbook_id)
+
+# Workflow CRUD Tools
+
+@mcp.tool()
+def create_workflow(
+    playbook_id: int,
+    name: str,
+    description: str,
+    abbreviation: str | None = None
+) -> dict:
+    """
+    Create workflow in DRAFT playbook.
+    
+    :param playbook_id: parent playbook ID as int. Example: 1
+    :param name: workflow name as str. Example: "Component Development"
+    :param description: workflow description as str. Example: "Steps to build reusable components"
+    :param abbreviation: short name as str or None. Example: "COMP-DEV"
+    :return: Created workflow dict. Example: {"id": 1, "name": "Component Development", "playbook_id": 1}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If playbook does not exist
+    """
+    service = WorkflowService(get_repository())
+    return service.create_workflow(playbook_id, name, description, abbreviation)
+
+@mcp.tool()
+def list_workflows(playbook_id: int) -> list[dict]:
+    """
+    List all workflows in playbook.
+    
+    :param playbook_id: playbook ID as int. Example: 1
+    :return: List of workflow dicts. Example: [{"id": 1, "name": "Component Dev", "order": 1}]
+    :raises NotFoundError: If playbook does not exist
+    """
+    service = WorkflowService(get_repository())
+    return service.list_workflows(playbook_id)
+
+@mcp.tool()
+def get_workflow(workflow_id: int) -> dict:
+    """
+    Get workflow details with activities.
+    
+    :param workflow_id: workflow ID as int. Example: 1
+    :return: Workflow dict with activities. Example: {"id": 1, "name": "Component Dev", "activities": [...]}
+    :raises NotFoundError: If workflow does not exist
+    """
+    service = WorkflowService(get_repository())
+    return service.get_workflow_detail(workflow_id)
+
+@mcp.tool()
+def update_workflow(
+    workflow_id: int,
+    name: str | None = None,
+    description: str | None = None,
+    abbreviation: str | None = None
+) -> dict:
+    """
+    Update workflow in DRAFT playbook. Increments parent playbook version.
+    
+    :param workflow_id: workflow ID as int. Example: 1
+    :param name: new name as str or None. Example: "Updated Component Development"
+    :param description: new description as str or None
+    :param abbreviation: new abbreviation as str or None
+    :return: Updated workflow dict. Example: {"id": 1, "name": "Updated Component Development"}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If workflow does not exist
+    """
+    service = WorkflowService(get_repository())
+    return service.update_workflow(workflow_id, name, description, abbreviation)
+
+@mcp.tool()
+def delete_workflow(workflow_id: int) -> dict:
+    """
+    Delete workflow from DRAFT playbook (cascades to activities).
+    
+    :param workflow_id: workflow ID as int. Example: 1
+    :return: Confirmation dict. Example: {"deleted": True, "workflow_id": 1}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If workflow does not exist
+    """
+    service = WorkflowService(get_repository())
+    return service.delete_workflow(workflow_id)
+
+# Activity CRUD Tools
+
+@mcp.tool()
+def create_activity(
+    workflow_id: int,
+    name: str,
+    guidance: str,
+    order: int = 1,
+    phase: str | None = None
+) -> dict:
+    """
+    Create activity in workflow (DRAFT playbook only).
+    
+    :param workflow_id: parent workflow ID as int. Example: 1
+    :param name: activity name as str. Example: "Design Component API"
+    :param guidance: markdown guidance as str. Example: "## API Design\n\nDefine component props..."
+    :param order: execution order as int. Example: 1
+    :param phase: optional phase grouping as str or None. Example: "Planning"
+    :return: Created activity dict. Example: {"id": 1, "name": "Design Component API", "workflow_id": 1}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If workflow does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.create_activity(workflow_id, name, guidance, order, phase)
+
+@mcp.tool()
+def list_activities(workflow_id: int) -> list[dict]:
+    """
+    List all activities in workflow, ordered by execution order.
+    
+    :param workflow_id: workflow ID as int. Example: 1
+    :return: List of activity dicts. Example: [{"id": 1, "name": "Design API", "order": 1}, {"id": 2, "name": "Implement", "order": 2}]
+    :raises NotFoundError: If workflow does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.list_activities(workflow_id)
+
+@mcp.tool()
+def get_activity(activity_id: int) -> dict:
+    """
+    Get activity details with dependencies.
+    
+    :param activity_id: activity ID as int. Example: 1
+    :return: Activity dict with predecessors/successors. Example: {"id": 1, "name": "Design API", "predecessors": [], "successors": [{"id": 2}]}
+    :raises NotFoundError: If activity does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.get_activity_detail(activity_id)
+
+@mcp.tool()
+def update_activity(
+    activity_id: int,
+    name: str | None = None,
+    guidance: str | None = None,
+    order: int | None = None,
+    phase: str | None = None
+) -> dict:
+    """
+    Update activity in DRAFT playbook. Increments parent playbook version.
+    
+    :param activity_id: activity ID as int. Example: 1
+    :param name: new name as str or None
+    :param guidance: new guidance as str or None
+    :param order: new order as int or None
+    :param phase: new phase as str or None
+    :return: Updated activity dict. Example: {"id": 1, "name": "Updated Design API"}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If activity does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.update_activity(activity_id, name, guidance, order, phase)
+
+@mcp.tool()
+def delete_activity(activity_id: int) -> dict:
+    """
+    Delete activity from DRAFT playbook.
+    
+    :param activity_id: activity ID as int. Example: 1
+    :return: Confirmation dict. Example: {"deleted": True, "activity_id": 1}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises NotFoundError: If activity does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.delete_activity(activity_id)
+
+@mcp.tool()
+def set_activity_predecessor(
+    activity_id: int,
+    predecessor_id: int
+) -> dict:
+    """
+    Set predecessor dependency (DRAFT playbook only).
+    
+    :param activity_id: activity ID as int. Example: 2
+    :param predecessor_id: predecessor activity ID as int. Example: 1
+    :return: Updated activity dict. Example: {"id": 2, "predecessors": [{"id": 1}]}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises ValidationError: If creates circular dependency
+    :raises NotFoundError: If either activity does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.set_predecessor(activity_id, predecessor_id)
+
+@mcp.tool()
+def set_activity_successor(
+    activity_id: int,
+    successor_id: int
+) -> dict:
+    """
+    Set successor dependency (DRAFT playbook only).
+    
+    :param activity_id: activity ID as int. Example: 1
+    :param successor_id: successor activity ID as int. Example: 2
+    :return: Updated activity dict. Example: {"id": 1, "successors": [{"id": 2}]}
+    :raises PermissionError: If parent playbook status is 'released'
+    :raises ValidationError: If creates circular dependency
+    :raises NotFoundError: If either activity does not exist
+    """
+    service = ActivityService(get_repository())
+    return service.set_successor(activity_id, successor_id)
 ```
 
 **Django Management Command**:
