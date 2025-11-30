@@ -18,8 +18,10 @@ def set_current_user(user):
     
     :param user: Django User instance
     """
+    logger.info(f'MCP context: About to set user to {user.username} (id={user.id})...')
     _current_user.set(user)
-    logger.info(f'MCP context: User set to {user.username} (id={user.id})')
+    logger.info(f'MCP context: ✓ User successfully set to {user.username} (id={user.id})')
+    logger.info(f'MCP context: User attributes - email={user.email}, is_active={user.is_active}, is_staff={user.is_staff}')
 
 
 def get_current_user():

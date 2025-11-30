@@ -8,6 +8,7 @@ import logging
 from typing import Literal
 from decimal import Decimal
 from fastmcp import FastMCP
+from asgiref.sync import sync_to_async
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ from mcp_integration.context import get_current_user
 # PLAYBOOK MCP TOOLS
 # ============================================================================
 
-def create_playbook(name: str, description: str, category: str) -> dict:
+async def create_playbook(name: str, description: str, category: str) -> dict:
     """
     Create draft playbook.
     
@@ -49,11 +50,11 @@ def create_playbook(name: str, description: str, category: str) -> dict:
     logger.info(f'MCP Tool: create_playbook called - name="{name}", category={category}')
     
     # Phase 5: Get user from MCP context
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     # Call existing service
     from methodology.services.playbook_service import PlaybookService
-    playbook = PlaybookService.create_playbook(
+    playbook = await sync_to_async(PlaybookService.create_playbook)(
         name=name,
         description=description,
         category=category,
@@ -73,7 +74,7 @@ def create_playbook(name: str, description: str, category: str) -> dict:
     return result
 
 
-def list_playbooks(status: Literal["draft", "released", "active", "all"] = "all") -> list:
+async def list_playbooks(status: Literal["draft", "released", "active", "all"] = "all") -> list:
     """
     List playbooks filtered by status.
     
@@ -82,11 +83,11 @@ def list_playbooks(status: Literal["draft", "released", "active", "all"] = "all"
     """
     logger.info(f'MCP Tool: list_playbooks called - status={status}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.services.playbook_service import PlaybookService
     status_filter = None if status == "all" else status
-    playbooks = PlaybookService.list_playbooks(user, status=status_filter)
+    playbooks = await sync_to_async(PlaybookService.list_playbooks)(user, status=status_filter)
     
     result = [
         {
@@ -103,7 +104,7 @@ def list_playbooks(status: Literal["draft", "released", "active", "all"] = "all"
     return result
 
 
-def get_playbook(playbook_id: int) -> dict:
+async def get_playbook(playbook_id: int) -> dict:
     """
     Get playbook details with workflows.
     
@@ -113,11 +114,11 @@ def get_playbook(playbook_id: int) -> dict:
     """
     logger.info(f'MCP Tool: get_playbook called - id={playbook_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Playbook
     try:
-        playbook = Playbook.objects.prefetch_related('workflows').get(
+        playbook = await sync_to_async(Playbook.objects.prefetch_related('workflows').get)(
             id=playbook_id,
             author=user
         )
@@ -125,6 +126,7 @@ def get_playbook(playbook_id: int) -> dict:
         logger.error(f'MCP Tool: Playbook id={playbook_id} not found for user')
         raise ValueError(f'Playbook {playbook_id} not found')
     
+    workflows = await sync_to_async(list)(playbook.workflows.all())
     result = {
         'id': playbook.id,
         'name': playbook.name,
@@ -139,14 +141,14 @@ def get_playbook(playbook_id: int) -> dict:
                 'description': w.description,
                 'order': w.order,
             }
-            for w in playbook.workflows.all()
+            for w in workflows
         ]
     }
     logger.info(f'MCP Tool: Playbook has {len(result["workflows"])} workflows')
     return result
 
 
-def update_playbook(playbook_id: int, name: str = None,
+async def update_playbook(playbook_id: int, name: str = None,
                         description: str = None, category: str = None) -> dict:
     """
     Update DRAFT playbook. Auto-increments version.
@@ -161,11 +163,11 @@ def update_playbook(playbook_id: int, name: str = None,
     """
     logger.info(f'MCP Tool: update_playbook called - id={playbook_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Playbook
     try:
-        playbook = Playbook.objects.get(id=playbook_id, author=user)
+        playbook = await sync_to_async(Playbook.objects.get)(id=playbook_id, author=user)
     except Playbook.DoesNotExist:
         logger.error(f'MCP Tool: Playbook id={playbook_id} not found for user')
         raise ValueError(f'Playbook {playbook_id} not found')
@@ -189,11 +191,11 @@ def update_playbook(playbook_id: int, name: str = None,
         old_version = playbook.version
         
         # Update playbook
-        playbook = PlaybookService.update_playbook(playbook_id, **update_data)
+        playbook = await sync_to_async(PlaybookService.update_playbook)(playbook_id, **update_data)
         
         # Increment version
         playbook.version += Decimal('0.1')
-        playbook.save()
+        await sync_to_async(playbook.save)()
         
         logger.info(f'MCP Tool: Updated playbook, version {old_version} → {playbook.version}')
     
@@ -207,7 +209,7 @@ def update_playbook(playbook_id: int, name: str = None,
     }
 
 
-def delete_playbook(playbook_id: int) -> dict:
+async def delete_playbook(playbook_id: int) -> dict:
     """
     Delete DRAFT playbook (cascades to workflows/activities).
     
@@ -218,11 +220,11 @@ def delete_playbook(playbook_id: int) -> dict:
     """
     logger.info(f'MCP Tool: delete_playbook called - id={playbook_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Playbook
     try:
-        playbook = Playbook.objects.get(id=playbook_id, author=user)
+        playbook = await sync_to_async(Playbook.objects.get)(id=playbook_id, author=user)
     except Playbook.DoesNotExist:
         logger.error(f'MCP Tool: Playbook id={playbook_id} not found for user')
         raise ValueError(f'Playbook {playbook_id} not found')
@@ -233,10 +235,10 @@ def delete_playbook(playbook_id: int) -> dict:
         raise PermissionError(f'Cannot delete released playbook "{playbook.name}"')
     
     playbook_name = playbook.name
-    workflow_count = playbook.workflows.count()
+    workflow_count = await sync_to_async(playbook.workflows.count)()
     
     from methodology.services.playbook_service import PlaybookService
-    PlaybookService.delete_playbook(playbook_id)
+    await sync_to_async(PlaybookService.delete_playbook)(playbook_id)
     
     logger.info(f'MCP Tool: Deleted playbook "{playbook_name}" with {workflow_count} workflows')
     return {'deleted': True, 'playbook_id': playbook_id}
@@ -246,7 +248,7 @@ def delete_playbook(playbook_id: int) -> dict:
 # WORKFLOW MCP TOOLS
 # ============================================================================
 
-def create_workflow(playbook_id: int, name: str, description: str = "") -> dict:
+async def create_workflow(playbook_id: int, name: str, description: str = "") -> dict:
     """
     Create workflow in DRAFT playbook. Increments parent version.
     
@@ -259,11 +261,11 @@ def create_workflow(playbook_id: int, name: str, description: str = "") -> dict:
     """
     logger.info(f'MCP Tool: create_workflow called - playbook_id={playbook_id}, name="{name}"')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Playbook
     try:
-        playbook = Playbook.objects.get(id=playbook_id, author=user)
+        playbook = await sync_to_async(Playbook.objects.get)(id=playbook_id, author=user)
     except Playbook.DoesNotExist:
         logger.error(f'MCP Tool: Playbook id={playbook_id} not found for user')
         raise ValueError(f'Playbook {playbook_id} not found')
@@ -276,11 +278,11 @@ def create_workflow(playbook_id: int, name: str, description: str = "") -> dict:
     # Call existing service
     from methodology.services.workflow_service import WorkflowService
     old_version = playbook.version
-    workflow = WorkflowService.create_workflow(playbook, name, description)
+    workflow = await sync_to_async(WorkflowService.create_workflow)(playbook, name, description)
     
     # Increment parent version
     playbook.version += Decimal('0.1')
-    playbook.save()
+    await sync_to_async(playbook.save)()
     
     logger.info(f'MCP Tool: Created workflow id={workflow.id}, parent version {old_version} → {playbook.version}')
     
@@ -293,7 +295,7 @@ def create_workflow(playbook_id: int, name: str, description: str = "") -> dict:
     }
 
 
-def list_workflows(playbook_id: int) -> list:
+async def list_workflows(playbook_id: int) -> list:
     """
     List workflows for playbook.
     
@@ -303,17 +305,17 @@ def list_workflows(playbook_id: int) -> list:
     """
     logger.info(f'MCP Tool: list_workflows called - playbook_id={playbook_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Playbook
     try:
-        playbook = Playbook.objects.get(id=playbook_id, author=user)
+        playbook = await sync_to_async(Playbook.objects.get)(id=playbook_id, author=user)
     except Playbook.DoesNotExist:
         logger.error(f'MCP Tool: Playbook id={playbook_id} not found for user')
         raise ValueError(f'Playbook {playbook_id} not found')
     
     from methodology.services.workflow_service import WorkflowService
-    workflows = WorkflowService.get_workflows_for_playbook(playbook_id)
+    workflows = await sync_to_async(WorkflowService.get_workflows_for_playbook)(playbook_id)
     
     result = [
         {
@@ -329,7 +331,7 @@ def list_workflows(playbook_id: int) -> list:
     return result
 
 
-def get_workflow(workflow_id: int) -> dict:
+async def get_workflow(workflow_id: int) -> dict:
     """
     Get workflow details with activities.
     
@@ -339,11 +341,11 @@ def get_workflow(workflow_id: int) -> dict:
     """
     logger.info(f'MCP Tool: get_workflow called - id={workflow_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Workflow
     try:
-        workflow = Workflow.objects.prefetch_related('activities').get(
+        workflow = await sync_to_async(Workflow.objects.prefetch_related('activities').get)(
             id=workflow_id,
             playbook__author=user
         )
@@ -351,6 +353,7 @@ def get_workflow(workflow_id: int) -> dict:
         logger.error(f'MCP Tool: Workflow id={workflow_id} not found for user')
         raise ValueError(f'Workflow {workflow_id} not found')
     
+    activities = await sync_to_async(list)(workflow.activities.all())
     result = {
         'id': workflow.id,
         'name': workflow.name,
@@ -363,14 +366,14 @@ def get_workflow(workflow_id: int) -> dict:
                 'name': a.name,
                 'order': a.order,
             }
-            for a in workflow.activities.all()
+            for a in activities
         ]
     }
     logger.info(f'MCP Tool: Workflow has {len(result["activities"])} activities')
     return result
 
 
-def update_workflow(workflow_id: int, name: str = None,
+async def update_workflow(workflow_id: int, name: str = None,
                         description: str = None, order: int = None) -> dict:
     """
     Update workflow in DRAFT playbook. Increments parent version.
@@ -385,11 +388,11 @@ def update_workflow(workflow_id: int, name: str = None,
     """
     logger.info(f'MCP Tool: update_workflow called - id={workflow_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Workflow
     try:
-        workflow = Workflow.objects.select_related('playbook').get(
+        workflow = await sync_to_async(Workflow.objects.select_related('playbook').get)(
             id=workflow_id,
             playbook__author=user
         )
@@ -416,11 +419,11 @@ def update_workflow(workflow_id: int, name: str = None,
         old_version = workflow.playbook.version
         
         # Update workflow
-        workflow = WorkflowService.update_workflow(workflow_id, **update_data)
+        workflow = await sync_to_async(WorkflowService.update_workflow)(workflow_id, **update_data)
         
         # Increment parent version
         workflow.playbook.version += Decimal('0.1')
-        workflow.playbook.save()
+        await sync_to_async(workflow.playbook.save)()
         
         logger.info(f'MCP Tool: Updated workflow, parent version {old_version} → {workflow.playbook.version}')
     
@@ -433,7 +436,7 @@ def update_workflow(workflow_id: int, name: str = None,
     }
 
 
-def delete_workflow(workflow_id: int) -> dict:
+async def delete_workflow(workflow_id: int) -> dict:
     """
     Delete workflow in DRAFT playbook. Increments parent version.
     
@@ -444,11 +447,11 @@ def delete_workflow(workflow_id: int) -> dict:
     """
     logger.info(f'MCP Tool: delete_workflow called - id={workflow_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Workflow
     try:
-        workflow = Workflow.objects.select_related('playbook').get(
+        workflow = await sync_to_async(Workflow.objects.select_related('playbook').get)(
             id=workflow_id,
             playbook__author=user
         )
@@ -463,15 +466,15 @@ def delete_workflow(workflow_id: int) -> dict:
     
     workflow_name = workflow.name
     playbook = workflow.playbook
-    activity_count = workflow.activities.count()
+    activity_count = await sync_to_async(workflow.activities.count)()
     old_version = playbook.version
     
     from methodology.services.workflow_service import WorkflowService
-    WorkflowService.delete_workflow(workflow_id)
+    await sync_to_async(WorkflowService.delete_workflow)(workflow_id)
     
     # Increment parent version
     playbook.version += Decimal('0.1')
-    playbook.save()
+    await sync_to_async(playbook.save)()
     
     logger.info(f'MCP Tool: Deleted workflow "{workflow_name}" ({activity_count} activities), parent version {old_version} → {playbook.version}')
     return {'deleted': True, 'workflow_id': workflow_id}
@@ -481,7 +484,7 @@ def delete_workflow(workflow_id: int) -> dict:
 # ACTIVITY MCP TOOLS
 # ============================================================================
 
-def create_activity(workflow_id: int, name: str, guidance: str = "",
+async def create_activity(workflow_id: int, name: str, guidance: str = "",
                         phase: str = None, predecessor_id: int = None) -> dict:
     """
     Create activity in workflow (DRAFT playbook). Increments grandparent version.
@@ -497,11 +500,11 @@ def create_activity(workflow_id: int, name: str, guidance: str = "",
     """
     logger.info(f'MCP Tool: create_activity called - workflow_id={workflow_id}, name="{name}"')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Workflow, Activity
     try:
-        workflow = Workflow.objects.select_related('playbook').get(
+        workflow = await sync_to_async(Workflow.objects.select_related('playbook').get)(
             id=workflow_id,
             playbook__author=user
         )
@@ -518,7 +521,7 @@ def create_activity(workflow_id: int, name: str, guidance: str = "",
     predecessor = None
     if predecessor_id:
         try:
-            predecessor = Activity.objects.get(id=predecessor_id, workflow=workflow)
+            predecessor = await sync_to_async(Activity.objects.get)(id=predecessor_id, workflow=workflow)
         except Activity.DoesNotExist:
             logger.error(f'MCP Tool: Predecessor id={predecessor_id} not found in workflow {workflow_id}')
             raise ValueError(f'Predecessor activity {predecessor_id} not found in workflow')
@@ -526,7 +529,7 @@ def create_activity(workflow_id: int, name: str, guidance: str = "",
     # Call existing service
     from methodology.services.activity_service import ActivityService
     old_version = workflow.playbook.version
-    activity = ActivityService.create_activity(
+    activity = await sync_to_async(ActivityService.create_activity)(
         workflow=workflow,
         name=name,
         guidance=guidance,
@@ -536,7 +539,7 @@ def create_activity(workflow_id: int, name: str, guidance: str = "",
     
     # Increment grandparent version
     workflow.playbook.version += Decimal('0.1')
-    workflow.playbook.save()
+    await sync_to_async(workflow.playbook.save)()
     
     logger.info(f'MCP Tool: Created activity id={activity.id}, grandparent version {old_version} → {workflow.playbook.version}')
     
@@ -551,7 +554,7 @@ def create_activity(workflow_id: int, name: str, guidance: str = "",
     }
 
 
-def list_activities(workflow_id: int) -> list:
+async def list_activities(workflow_id: int) -> list:
     """
     List activities for workflow.
     
@@ -561,17 +564,17 @@ def list_activities(workflow_id: int) -> list:
     """
     logger.info(f'MCP Tool: list_activities called - workflow_id={workflow_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Workflow
     try:
-        workflow = Workflow.objects.get(id=workflow_id, playbook__author=user)
+        workflow = await sync_to_async(Workflow.objects.get)(id=workflow_id, playbook__author=user)
     except Workflow.DoesNotExist:
         logger.error(f'MCP Tool: Workflow id={workflow_id} not found for user')
         raise ValueError(f'Workflow {workflow_id} not found')
     
     from methodology.services.activity_service import ActivityService
-    activities = ActivityService.get_activities_for_workflow(workflow_id)
+    activities = await sync_to_async(ActivityService.get_activities_for_workflow)(workflow_id)
     
     result = [
         {
@@ -590,7 +593,7 @@ def list_activities(workflow_id: int) -> list:
     return result
 
 
-def get_activity(activity_id: int) -> dict:
+async def get_activity(activity_id: int) -> dict:
     """
     Get activity details with dependencies.
     
@@ -600,13 +603,13 @@ def get_activity(activity_id: int) -> dict:
     """
     logger.info(f'MCP Tool: get_activity called - id={activity_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Activity
     try:
-        activity = Activity.objects.select_related(
+        activity = await sync_to_async(Activity.objects.select_related(
             'predecessor', 'successor', 'workflow__playbook'
-        ).get(
+        ).get)(
             id=activity_id,
             workflow__playbook__author=user
         )
@@ -634,7 +637,7 @@ def get_activity(activity_id: int) -> dict:
     return result
 
 
-def update_activity(activity_id: int, name: str = None, guidance: str = None,
+async def update_activity(activity_id: int, name: str = None, guidance: str = None,
                         phase: str = None, order: int = None) -> dict:
     """
     Update activity in DRAFT playbook. Increments grandparent version.
@@ -652,11 +655,11 @@ def update_activity(activity_id: int, name: str = None, guidance: str = None,
     """
     logger.info(f'MCP Tool: update_activity called - id={activity_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Activity
     try:
-        activity = Activity.objects.select_related('workflow__playbook').get(
+        activity = await sync_to_async(Activity.objects.select_related('workflow__playbook').get)(
             id=activity_id,
             workflow__playbook__author=user
         )
@@ -685,11 +688,11 @@ def update_activity(activity_id: int, name: str = None, guidance: str = None,
         old_version = activity.workflow.playbook.version
         
         # Update activity
-        activity = ActivityService.update_activity(activity_id, **update_data)
+        activity = await sync_to_async(ActivityService.update_activity)(activity_id, **update_data)
         
         # Increment grandparent version
         activity.workflow.playbook.version += Decimal('0.1')
-        activity.workflow.playbook.save()
+        await sync_to_async(activity.workflow.playbook.save)()
         
         logger.info(f'MCP Tool: Updated activity, grandparent version {old_version} → {activity.workflow.playbook.version}')
     
@@ -703,7 +706,7 @@ def update_activity(activity_id: int, name: str = None, guidance: str = None,
     }
 
 
-def delete_activity(activity_id: int) -> dict:
+async def delete_activity(activity_id: int) -> dict:
     """
     Delete activity in DRAFT playbook. Increments grandparent version.
     
@@ -714,11 +717,11 @@ def delete_activity(activity_id: int) -> dict:
     """
     logger.info(f'MCP Tool: delete_activity called - id={activity_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Activity
     try:
-        activity = Activity.objects.select_related('workflow__playbook').get(
+        activity = await sync_to_async(Activity.objects.select_related('workflow__playbook').get)(
             id=activity_id,
             workflow__playbook__author=user
         )
@@ -736,17 +739,17 @@ def delete_activity(activity_id: int) -> dict:
     old_version = playbook.version
     
     from methodology.services.activity_service import ActivityService
-    ActivityService.delete_activity(activity_id)
+    await sync_to_async(ActivityService.delete_activity)(activity_id)
     
     # Increment grandparent version
     playbook.version += Decimal('0.1')
-    playbook.save()
+    await sync_to_async(playbook.save)()
     
     logger.info(f'MCP Tool: Deleted activity "{activity_name}", grandparent version {old_version} → {playbook.version}')
     return {'deleted': True, 'activity_id': activity_id}
 
 
-def set_predecessor(activity_id: int, predecessor_id: int) -> dict:
+async def set_predecessor(activity_id: int, predecessor_id: int) -> dict:
     """
     Set activity predecessor (validates no circular dependencies).
     
@@ -758,15 +761,15 @@ def set_predecessor(activity_id: int, predecessor_id: int) -> dict:
     """
     logger.info(f'MCP Tool: set_predecessor called - activity_id={activity_id}, predecessor_id={predecessor_id}')
     
-    user = get_current_user()
+    user = await sync_to_async(get_current_user)()
     
     from methodology.models import Activity
     try:
-        activity = Activity.objects.select_related('workflow__playbook').get(
+        activity = await sync_to_async(Activity.objects.select_related('workflow__playbook').get)(
             id=activity_id,
             workflow__playbook__author=user
         )
-        predecessor = Activity.objects.get(id=predecessor_id, workflow=activity.workflow)
+        predecessor = await sync_to_async(Activity.objects.get)(id=predecessor_id, workflow=activity.workflow)
     except Activity.DoesNotExist as e:
         logger.error(f'MCP Tool: Activity not found or not in same workflow')
         raise ValueError('Activity or predecessor not found') from e
@@ -779,11 +782,11 @@ def set_predecessor(activity_id: int, predecessor_id: int) -> dict:
     # Call service (validates circular dependencies)
     from methodology.services.activity_service import ActivityService
     old_version = activity.workflow.playbook.version
-    ActivityService.set_predecessor(activity, predecessor)
+    await sync_to_async(ActivityService.set_predecessor)(activity, predecessor)
     
     # Increment grandparent version
     activity.workflow.playbook.version += Decimal('0.1')
-    activity.workflow.playbook.save()
+    await sync_to_async(activity.workflow.playbook.save)()
     
     logger.info(f'MCP Tool: Set predecessor, grandparent version {old_version} → {activity.workflow.playbook.version}')
     
