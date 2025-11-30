@@ -581,7 +581,7 @@
                 <mxCell id="fob-mcp-config-int" value="FOB-ONBOARDING-&#10;MCP-CONFIG-1&#10;&#10;MCP Configuration&#10;Setup Mimir MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;" parent="layer-1-main" vertex="1">
                     <mxGeometry x="800" y="620" width="160" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="fob-dashboard-int" value="FOB-DASHBOARD-1&#10;&#10;Main Dashboard&#10;Ready to use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=10;fontColor=#ffffff;strokeWidth=2;" parent="layer-1-main" vertex="1">
+                <mxCell id="fob-dashboard-int" value="⚙️ FOB-DASHBOARD-1&#10;&#10;Main Dashboard&#10;Ready to use" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=10;fontColor=#ffffff;strokeWidth=3;dashPattern=8 8;dashed=1;" parent="layer-1-main" vertex="1">
                     <mxGeometry x="1020" y="620" width="160" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="arrow-act1-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="layer-1-main" source="fob-first-run-int" target="fob-sync-prefs-int" edge="1">
@@ -907,7 +907,7 @@
                 <mxCell id="v2-fob-startup" value="FOB-STARTUP-1&#10;Pull Container" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="260" y="360" width="100" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-user-create" value="FOB-LOCAL-&#10;USER-CREATE-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-user-create" value="⚙️ FOB-LOCAL-&#10;USER-CREATE-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;dashPattern=8 8;dashed=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="400" y="360" width="100" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-act1-label" value="ACT 1: MCP CONFIG" style="text;html=1;strokeColor=#2e7d32;fillColor=#e8f5e9;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
@@ -919,7 +919,7 @@
                 <mxCell id="v2-fob-mcp-config" value="FOB-MCP-&#10;CONFIG-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="670" y="360" width="90" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-dashboard" value="FOB-&#10;DASHBOARD-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-dashboard" value="⚙️ FOB-&#10;DASHBOARD-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;dashPattern=8 8;dashed=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="800" y="360" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-arrow-start-act0" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#000000;" parent="v2-root-1" source="v2-start" target="v2-fob-startup" edge="1">
@@ -940,16 +940,16 @@
                 <mxCell id="v2-act2-label" value="ACT 2: PLAYBOOKS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="550" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-playbooks-list" value="FOB-PLAYBOOKS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-playbooks-list" value="✅ FOB-PLAYBOOKS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="600" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-playbooks-create" value="FOB-PLAYBOOKS-&#10;CREATE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-playbooks-create" value="✅ FOB-PLAYBOOKS-&#10;CREATE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="545" y="490" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-playbooks-view" value="FOB-PLAYBOOKS-&#10;VIEW_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-playbooks-view" value="✅ FOB-PLAYBOOKS-&#10;VIEW_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="700" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-playbooks-edit" value="FOB-PLAYBOOKS-&#10;EDIT_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-playbooks-edit" value="✅ FOB-PLAYBOOKS-&#10;EDIT_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="700" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-fob-playbooks-delete" value="FOB-PLAYBOOKS-&#10;DELETE_PLAYBOOK&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
@@ -1054,19 +1054,19 @@
                 <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="900" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-workflows-list" value="FOB-WORKFLOWS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-workflows-list" value="✅ FOB-WORKFLOWS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="950" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-workflows-create" value="FOB-WORKFLOWS-&#10;CREATE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-workflows-create" value="✅ FOB-WORKFLOWS-&#10;CREATE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="950" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-workflows-view" value="FOB-WORKFLOWS-&#10;VIEW_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-workflows-view" value="✅ FOB-WORKFLOWS-&#10;VIEW_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="1050" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-workflows-edit" value="FOB-WORKFLOWS-&#10;EDIT_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-workflows-edit" value="✅ FOB-WORKFLOWS-&#10;EDIT_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="1050" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-workflows-delete" value="FOB-WORKFLOWS-&#10;DELETE_WORKFLOW&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-workflows-delete" value="✅ FOB-WORKFLOWS-&#10;DELETE_WORKFLOW&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#22c55e;fontSize=9;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="540" y="1050" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-workflow-version-increment-note" value="⚡ Workflow changes&#10;auto-increment parent&#10;playbook version (if draft)" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
@@ -1165,19 +1165,19 @@
                 <mxCell id="v2-act5-label" value="ACT 5: ACTIVITIES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="1600" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-activities-list" value="FOB-ACTIVITIES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-activities-list" value="✅ FOB-ACTIVITIES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="1650" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-activities-create" value="FOB-ACTIVITIES-&#10;CREATE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-activities-create" value="✅ FOB-ACTIVITIES-&#10;CREATE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="1650" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-activities-view" value="FOB-ACTIVITIES-&#10;VIEW_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-activities-view" value="✅ FOB-ACTIVITIES-&#10;VIEW_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="1750" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-activities-edit" value="FOB-ACTIVITIES-&#10;EDIT_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#1565c0;fontSize=9;fontColor=#ffffff;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-activities-edit" value="✅ FOB-ACTIVITIES-&#10;EDIT_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="1750" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-activities-delete" value="FOB-ACTIVITIES-&#10;DELETE_ACTIVITY&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-activities-delete" value="✅ FOB-ACTIVITIES-&#10;DELETE_ACTIVITY&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#22c55e;fontSize=9;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="540" y="1750" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-tool-activities-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
