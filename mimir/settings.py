@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "accounts",
     "methodology",
     "mcp_integration",
-    "mcp",
 ]
 
 MIDDLEWARE = [
