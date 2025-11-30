@@ -113,6 +113,37 @@ Download playbooks from HOMEBASE based on your access level:
    
    > **Note**: BDD feature files in `docs/features/act-*/` serve as comprehensive UI specifications (46 files covering Acts 0-15). Step definitions will be implemented during development.
 
+## Quick Reference
+
+### Running the Application
+
+```bash
+# Start web UI (keep running in terminal)
+python manage.py runserver 8000
+# → Open http://localhost:8000
+
+# Test MCP server manually (different terminal)
+python manage.py mcp_server --user=admin
+# → Press Ctrl+C to stop
+
+# Run all tests
+pytest tests/
+# → Should see: 250 passed, 1 skipped
+
+# Create a new user
+python manage.py createsuperuser
+```
+
+### MCP Configuration Files
+
+- **Windsurf**: `~/.codeium/windsurf/mcp_config.json`
+- **Claude Desktop**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Cursor**: Workspace `.cursorrules` or settings
+
+See configuration details in section 2 below.
+
+---
+
 ## How to Use
 
 Mimir runs as two processes that work together:
@@ -135,14 +166,43 @@ Once logged in, you can:
 
 Add Mimir to your MCP client configuration.
 
+**For Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "/absolute/path/to/mimir/venv/bin/python",
+      "args": [
+        "/absolute/path/to/mimir/manage.py",
+        "mcp_server",
+        "--user=admin"
+      ],
+      "env": {
+        "DJANGO_SETTINGS_MODULE": "mimir.settings",
+        "PYTHONPATH": "/absolute/path/to/mimir",
+        "MIMIR_MCP_MODE": "1"
+      },
+      "disabled": false
+    }
+  }
+}
+```
+
 **For Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {
     "mimir": {
-      "command": "python",
-      "args": ["/absolute/path/to/mimir/manage.py", "mcp_server"],
-      "cwd": "/absolute/path/to/mimir"
+      "command": "/absolute/path/to/mimir/venv/bin/python",
+      "args": [
+        "/absolute/path/to/mimir/manage.py",
+        "mcp_server",
+        "--user=admin"
+      ],
+      "env": {
+        "DJANGO_SETTINGS_MODULE": "mimir.settings",
+        "PYTHONPATH": "/absolute/path/to/mimir"
+      }
     }
   }
 }
@@ -154,44 +214,65 @@ Add Mimir to your MCP client configuration.
   "mcp": {
     "servers": {
       "mimir": {
-        "command": "python",
-        "args": ["/absolute/path/to/mimir/manage.py", "mcp_server"]
+        "command": "/absolute/path/to/mimir/venv/bin/python",
+        "args": [
+          "/absolute/path/to/mimir/manage.py",
+          "mcp_server",
+          "--user=admin"
+        ],
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "mimir.settings",
+          "PYTHONPATH": "/absolute/path/to/mimir"
+        }
       }
     }
   }
 }
 ```
 
+**Important Notes:**
+- Replace `/absolute/path/to/mimir` with your actual project path
+- Replace `admin` with your username (created in step 5 above)
+- Use the full path to your virtual environment's Python binary
+- The `MIMIR_MCP_MODE` environment variable disables console logging for Windsurf
+
 Restart your IDE after configuration.
 
 ### 3. Use MCP Tools in Your IDE
 
-Once configured, your AI assistant has access to three Mimir tools (implemented using [FastMCP](https://github.com/jlowin/fastmcp)):
+Once configured, your AI assistant has access to **16 Mimir MCP tools** for managing playbooks, workflows, and activities:
 
-#### query_methodology
-Ask questions about how to perform tasks:
+#### Playbook Management (5 tools)
+- **`create_playbook`** - Create new draft playbooks
+- **`list_playbooks`** - List playbooks (filter by status: draft/released/all)
+- **`get_playbook`** - Get detailed playbook info with nested workflows
+- **`update_playbook`** - Update playbook details (auto-increments version)
+- **`delete_playbook`** - Delete draft playbooks
+
+#### Workflow Management (5 tools)
+- **`create_workflow`** - Add workflows to playbooks
+- **`list_workflows`** - List workflows for a playbook
+- **`get_workflow`** - Get workflow details with activities
+- **`update_workflow`** - Update workflow details
+- **`delete_workflow`** - Delete workflows from playbooks
+
+#### Activity Management (6 tools)
+- **`create_activity`** - Add activities to workflows
+- **`list_activities`** - List activities in a workflow
+- **`get_activity`** - Get activity details with dependencies
+- **`update_activity`** - Update activity guidance, name, phase
+- **`delete_activity`** - Remove activities
+- **`set_predecessor`** - Define activity dependencies (validates no circular deps)
+
+**Example Usage:**
 ```
-"How do I create screen mockups per FDD playbook?"
-"What are the acceptance criteria for a component specification?"
-"Show me howtos for React component testing"
+"Create a new playbook called 'Frontend Best Practices'"
+"Add a workflow called 'Component Development' to playbook 5"
+"List all activities in workflow 3"
+"Update activity 7 to add more detailed guidance"
 ```
 
-#### plan_execution
-Generate work plans and create tasks:
-```
-"Plan implementation of user login feature per FDD"
-"Create GitHub issues for inception phase activities"
-"Generate work breakdown for scenario LOG1.1"
-```
-*Requires GitHub or Jira MCP to be configured*
-
-#### assess_progress
-Check progress against playbook phases:
-```
-"Am I ready to complete the inception phase?"
-"What deliverables am I missing for construction?"
-"Assess my project against FDD inception requirements"
-```
+All tools support async operations and validate user permissions automatically.
 
 ## Typical Workflow
 
@@ -273,15 +354,33 @@ python manage.py sync_methodology --all --force
 
 ### MCP Server Not Responding
 
-1. Check if `mcp_server` command works:
+1. **Test the MCP server manually:**
    ```bash
-   python manage.py mcp_server
+   python manage.py mcp_server --user=admin
    ```
-   Should wait for input (press Ctrl+C to exit)
+   The server should start and wait for JSON-RPC input. Press Ctrl+C to exit.
+   
+   To test a simple tool call, send:
+   ```bash
+   echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python manage.py mcp_server --user=admin
+   ```
+   You should see a list of 16 available tools.
 
-2. Verify paths in MCP config are absolute, not relative
+2. **Verify configuration:**
+   - Ensure paths in MCP config are **absolute**, not relative
+   - Check that `--user=admin` matches an existing user in your database
+   - Verify virtual environment path points to correct Python binary
 
-3. Check IDE logs for MCP connection errors
+3. **Check IDE logs:**
+   - **Windsurf**: View logs in MCP settings panel
+   - **Claude Desktop**: Check `~/Library/Logs/Claude/`
+   - **Cursor**: Check IDE console for MCP connection errors
+
+4. **Common issues:**
+   - **"Command not found"**: Path to Python or manage.py is incorrect
+   - **"User not found"**: Username doesn't exist, create it with `python manage.py createsuperuser`
+   - **"Database is locked"**: Ensure web server isn't running simultaneously
+   - **Timeout errors**: Check `app.log` for stderr contamination issues
 
 ### Database Locked
 
@@ -312,34 +411,43 @@ python manage.py sync_methodology --family "Software Engineering"
 mimir/
 ├── docs/
 │   ├── architecture/
-│   │   └── SAO.md           # System architecture & design
-│   ├── features/            # BDD specifications (46 files)
-│   │   ├── act-0-auth/      # Authentication, Onboarding, Navigation
-│   │   ├── act-2-playbooks/ # Playbooks CRUDLF (5 files)
-│   │   ├── act-3-workflows/ # Workflows CRUDLF (5 files)
-│   │   ├── act-4-phases/    # Phases CRUDLF (5 files, optional entity)
-│   │   ├── act-5-activities/# Activities CRUDLF (5 files)
-│   │   ├── act-6-artifacts/ # Artifacts CRUDLF (5 files)
-│   │   ├── act-7-roles/     # Roles CRUDLF (5 files)
-│   │   ├── act-8-howtos/    # Howtos CRUDLF (5 files)
-│   │   └── act-9-15/        # PIPs, Import/Export, Family, Sync, MCP, Settings, Errors
+│   │   └── SAO.md              # System architecture & design
+│   ├── features/               # BDD specifications (46+ files)
+│   │   ├── act-0-auth/         # Authentication, Onboarding, Navigation
+│   │   ├── act-2-playbooks/    # Playbooks CRUDLF (5 files)
+│   │   ├── act-3-workflows/    # Workflows CRUDLF (5 files)
+│   │   ├── act-4-phases/       # Phases CRUDLF (5 files, optional entity)
+│   │   ├── act-5-activities/   # Activities CRUDLF (5 files)
+│   │   ├── act-6-artifacts/    # Artifacts CRUDLF (5 files)
+│   │   ├── act-7-roles/        # Roles CRUDLF (5 files)
+│   │   ├── act-8-howtos/       # Howtos CRUDLF (5 files)
+│   │   ├── act-9-15/           # PIPs, Import/Export, Family, Sync, MCP, Settings, Errors
+│   │   └── act-13-mcp/         # MCP integration specifications (4 files)
+│   ├── mcp/                    # MCP documentation
+│   │   ├── README.md           # MCP overview
+│   │   └── *.md                # Implementation status documents
 │   └── ux/
-│       ├── user_journey.md  # Complete Acts 0-15 narrative
+│       ├── user_journey.md     # Complete Acts 0-15 narrative
 │       └── 2_dialogue-maps/
 │           └── screen-flow.drawio  # Visual MVP flow diagram
-├── mimir/                   # Django project
-│   ├── methodology/         # Core app (internal name)
-│   │   ├── models/          # Node, Edge, Version, PIP
-│   │   ├── repository/      # Storage abstraction layer
-│   │   ├── services/        # Business logic
-│   │   └── views/           # Web UI
-│   └── mcp/                 # FastMCP integration
-│       ├── tools.py         # @tool decorators
+├── mimir/                      # Django project
+│   ├── methodology/            # Core app (internal name)
+│   │   ├── models/             # Playbook, Workflow, Activity, etc.
+│   │   ├── services/           # Business logic (PlaybookService, etc.)
+│   │   ├── repository/         # Storage abstraction layer
+│   │   └── views/              # Web UI views
+│   └── mcp_integration/        # MCP server integration (Django app)
+│       ├── tools.py            # 16 MCP tool functions (async)
+│       ├── context.py          # User context management
 │       └── management/
 │           └── commands/
-│               └── mcp_server.py  # Calls mcp.run()
+│               └── mcp_server.py  # Django command: mcp_server
+├── tests/
+│   ├── unit/                   # Unit tests (services, models)
+│   ├── integration/            # Integration tests (MCP tools, workflows)
+│   └── e2e/                    # End-to-end tests (Playwright)
 ├── manage.py
-└── requirements.txt         # Includes fastmcp
+└── requirements.txt            # Includes fastmcp, pytest-asyncio
 ```
 
 ## Contributing
