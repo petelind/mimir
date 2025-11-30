@@ -872,16 +872,16 @@
                     <mxGeometry x="40" y="310" width="1000" height="160" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="40" y="540" width="1620" height="330" as="geometry"/>
+                    <mxGeometry x="40" y="540" width="1720" height="330" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="40" y="890" width="1000" height="330" as="geometry"/>
+                    <mxGeometry x="40" y="890" width="1720" height="330" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="1240" width="1000" height="330" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="40" y="1590" width="1000" height="330" as="geometry"/>
+                    <mxGeometry x="40" y="1590" width="1720" height="330" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-6" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="1940" width="1000" height="330" as="geometry"/>
@@ -937,19 +937,43 @@
                 <mxCell id="v2-arrow-act1-2" value="Save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;fontSize=9;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-fob-dashboard" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-windsurf-playbook-mcp" value="✅ WINDSURF-&#10;PLAYBOOK-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="1230" y="600" width="140" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="v2-arrow-mcp-playbook" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-windsurf-playbook-mcp" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="715" y="440"/>
-                            <mxPoint x="1300" y="440"/>
-                        </Array>
-                    </mxGeometry>
-                </mxCell>
                 <mxCell id="v2-act2-label" value="ACT 2: PLAYBOOKS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="550" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbooks-list" value="✅ MCP: List&#10;Playbooks" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="600" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbooks-create" value="✅ MCP: Create&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="600" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbooks-get" value="✅ MCP: Get&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="700" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbooks-update" value="✅ MCP: Update&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="700" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-playbooks-delete" value="✅ MCP: Delete&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1570" y="700" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-pb-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-playbooks-list" target="v2-mcp-playbooks-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-pb-list-get" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-playbooks-list" target="v2-mcp-playbooks-get" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-pb-get-update" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-playbooks-get" target="v2-mcp-playbooks-update" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-pb-get-delete" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-playbooks-get" target="v2-mcp-playbooks-delete" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-start-mcp-pb" value="via Windsurf" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=3;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-mcp-playbooks-list" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="715" y="480"/>
+                            <mxPoint x="1300" y="480"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="v2-fob-playbooks-list" value="✅ FOB-PLAYBOOKS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="600" width="150" height="70" as="geometry"/>
@@ -1064,14 +1088,38 @@
                 <mxCell id="v2-playbook-edit-restriction-note" value="NOTE: Only DRAFT can be edited like that!&lt;br&gt;Draft versions: Auto-increments version:&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;v0.3 → v0.4&lt;br&gt;Released: only via PIP: 1.1 -&amp;gt; 1.2 etc." style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="440" y="645" width="150" height="45" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-windsurf-workflow-mcp" value="✅ WINDSURF-&#10;WORKFLOW-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="1230" y="950" width="140" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="v2-arrow-mcp-workflow" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-windsurf-playbook-mcp" target="v2-windsurf-workflow-mcp" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
                 <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="900" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-workflows-list" value="✅ MCP: List&#10;Workflows" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="950" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-workflows-create" value="✅ MCP: Create&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="950" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-workflows-get" value="✅ MCP: Get&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="1050" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-workflows-update" value="✅ MCP: Update&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="1050" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-workflows-delete" value="✅ MCP: Delete&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1570" y="1050" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-wf-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-workflows-list" target="v2-mcp-workflows-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-wf-list-get" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-workflows-list" target="v2-mcp-workflows-get" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-wf-get-update" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-workflows-get" target="v2-mcp-workflows-update" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-wf-get-delete" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-workflows-get" target="v2-mcp-workflows-delete" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-pb-to-wf" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-mcp-playbooks-create" target="v2-mcp-workflows-list" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-fob-workflows-list" value="✅ FOB-WORKFLOWS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="57" y="950" width="150" height="70" as="geometry"/>
@@ -1187,14 +1235,38 @@
                 <mxCell id="v2-extends-ph-edit-view" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-phases-edit" target="v2-fob-phases-view" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-windsurf-activity-mcp" value="✅ WINDSURF-&#10;ACTIVITY-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
-                    <mxGeometry x="1230" y="1650" width="140" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="v2-arrow-mcp-activity" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-windsurf-workflow-mcp" target="v2-windsurf-activity-mcp" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
                 <mxCell id="v2-act5-label" value="ACT 5: ACTIVITIES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="1580" width="220" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-activities-list" value="✅ MCP: List&#10;Activities" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="1650" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-activities-create" value="✅ MCP: Create&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="1650" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-activities-get" value="✅ MCP: Get&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="1750" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-activities-update" value="✅ MCP: Update&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1400" y="1750" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-mcp-activities-delete" value="✅ MCP: Delete&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1570" y="1750" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-act-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-activities-list" target="v2-mcp-activities-create" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-act-list-get" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-activities-list" target="v2-mcp-activities-get" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-act-get-update" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-activities-get" target="v2-mcp-activities-update" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-act-get-delete" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-activities-get" target="v2-mcp-activities-delete" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-wf-to-act" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-mcp-workflows-create" target="v2-mcp-activities-list" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-fob-activities-list" value="✅ FOB-ACTIVITIES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="89" y="1650" width="150" height="70" as="geometry"/>
