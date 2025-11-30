@@ -9,9 +9,24 @@ Feature: FOB-DASHBOARD-1 Dashboard and Navigation
 
   Scenario: NAV-01 View dashboard overview
     Given Maria is on the dashboard
-    Then she sees "My Playbooks" section with recent playbooks
-    And she sees "Recent Activity" feed
-    And she sees quick action buttons
+    Then she sees "My Playbooks" section with 5 most recently accessed playbooks
+    And she sees "Recently Used" section showing last 10 accessed items (Playbooks/Workflows/Activities) with usage counts
+    And she sees quick action buttons for Create/Import/Sync
+    
+  Scenario: NAV-01a Recently Used section shows usage statistics
+    Given Maria is on the dashboard
+    And she has accessed "React Frontend Development" playbook 15 times
+    And she last accessed it 2 hours ago
+    When she views the "Recently Used" section
+    Then she sees "React Frontend Development" | Playbook | "15 times" | "2 hours ago"
+    And she sees a [View] button to quickly navigate to it
+    
+  Scenario: NAV-01b Recently Used tracks only views, not edits
+    Given Maria is on the dashboard
+    When she views the "Recently Used" section
+    Then it shows items she has VIEWED/ACCESSED
+    And it does NOT show create/update/delete operations
+    And it is NOT an audit trail or activity log
 
   Scenario: NAV-02 Navigate to Playbooks
     Given Maria is on the dashboard

@@ -272,6 +272,61 @@ Maria's FOB web GUI (http://localhost:8000) has a consistent layout:
 - Recently viewed playbooks
 - Active playbook indicator
 
+---
+
+#### Screen: FOB Dashboard (Main Landing Page)
+
+**Context**: The dashboard is the main landing page after login. It provides quick access to Maria's work and shows what she's been using recently.
+
+**Layout**:
+
+**Section 1: My Playbooks** (Top section)
+- Grid/list of 5 most recently accessed playbooks
+- Each playbook card shows:
+  - Name and description
+  - Version badge
+  - Status badge (Draft/Released)
+  - Last accessed timestamp (e.g., "Opened 2 hours ago")
+- [View All Playbooks] link → FOB-PLAYBOOKS-LIST+FIND-1
+- Empty state: "No playbooks yet" with [Create Playbook] button
+
+**Section 2: Recently Used** (Middle section - informer style)
+- **Purpose**: Show what Maria has been actively working with and how often
+- **NOT an audit trail**: Does not track all user actions, only tracks access/usage for quick navigation
+- Table showing:
+  - **Item Name** | **Type** | **Times Used** | **Last Used** | **Quick Action**
+- Item types: Playbook, Workflow, Activity
+- Sorted by: Last Used (most recent first)
+- Shows: Last 10 items
+- **Times Used**: Simple counter incremented each time item is viewed/accessed
+  - Playbook: Viewed detail page
+  - Workflow: Viewed detail page
+  - Activity: Viewed detail page
+- **Quick Action**: [View] button → navigates to item's detail page
+- Example rows:
+  - "React Frontend Development" | Playbook | 15 times | 2 hours ago | [View]
+  - "Component Development" | Workflow | 8 times | 3 hours ago | [View]
+  - "Setup Project" | Activity | 12 times | 5 hours ago | [View]
+- Empty state: "No recent usage yet"
+
+**⚠️ IMPORTANT**: This is NOT a comprehensive audit log or activity tracking system. It only tracks views/access for the purpose of showing recently used items as quick navigation shortcuts. It does not track create/update/delete operations.
+
+**Section 3: Quick Actions** (Bottom section)
+- Three prominent action buttons:
+  - [+ New Playbook] → FOB-PLAYBOOKS-CREATE_PLAYBOOK-1
+    - Icon: fa-plus-circle
+    - Tooltip: "Create a new playbook from scratch"
+  - [Import Playbook] → Import feature (disabled in MVP)
+    - Icon: fa-file-import
+    - Tooltip: "Import playbook from JSON file (coming soon)"
+    - Disabled state with gray styling
+  - [Sync with Homebase] → Sync feature (disabled if no HB connection)
+    - Icon: fa-sync
+    - Tooltip: "Download playbooks from Homebase families" (or "Connect to Homebase first" if no connection)
+    - Disabled if no HB connection configured
+
+Maria uses this dashboard to quickly resume her work and navigate to frequently accessed items.
+
 #### Screen: FOB Notification Center
 Maria clicks the bell icon (badge shows "3"):
 - Dropdown panel appears:
