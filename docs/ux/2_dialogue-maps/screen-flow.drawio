@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="README - Start Here!" id="readme-first">
-        <mxGraphModel dx="576" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
+        <mxGraphModel dx="627" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" math="0" shadow="0">
             <root>
                 <mxCell id="readme-root-0"/>
                 <mxCell id="readme-root-1" parent="readme-root-0"/>
@@ -37,14 +37,14 @@
                 <mxCell id="screenflow-location" value="📁 Location: This file! (screen-flow.drawio)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontFamily=Courier New;fontColor=#003d82;" parent="section-screenflow" vertex="1">
                     <mxGeometry y="40" width="380" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="screenflow-what" value="📝 What: Domain model + MVP flow&#10;showing local FOB operations" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="section-screenflow" vertex="1">
+                <mxCell id="screenflow-what" value="📝 What: Domain model + MVP flow&#10;showing FOB GUI + MCP operations" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=12;fontStyle=1;" parent="section-screenflow" vertex="1">
                     <mxGeometry y="70" width="380" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="screenflow-who" value="👥 Audience: UX designers, developers" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-screenflow" vertex="1">
                     <mxGeometry y="120" width="380" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="screenflow-content" value="📋 Contains:&#10;• Domain Model entities&#10;• MVP Flow (Acts 0-9)&#10;• CRUDLF operations&#10;• Main progression arrows" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-screenflow" vertex="1">
-                    <mxGeometry y="150" width="380" height="90" as="geometry"/>
+                <mxCell id="screenflow-content" value="📋 Contains:&#10;• Domain Model entities&#10;• MVP Flow (Acts 0-9)&#10;• Blue: FOB GUI (CRUDLF)&#10;• Purple: Windsurf MCP operations&#10;• Main progression arrows" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="section-screenflow" vertex="1">
+                    <mxGeometry y="150" width="380" height="105" as="geometry"/>
                 </mxCell>
                 <mxCell id="screenflow-use" value="💡 Use: Understand HOW screens connect" style="text;strokeColor=none;fillColor=#cce5ff;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=3;strokeColor=#0066cc;" parent="section-screenflow" vertex="1">
                     <mxGeometry y="240" width="380" height="40" as="geometry"/>
@@ -121,19 +121,19 @@
                 <mxCell id="legend-hb-readme" value="🟩 Green (#82b366): Homebase (Django backend) screens" style="text;strokeColor=#2e7d32;fillColor=#82b366;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
                     <mxGeometry y="70" width="560" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-windsurf-readme" value="🟪 Purple (#9370DB): Windsurf IDE interactions" style="text;strokeColor=#6a5acd;fillColor=#9370DB;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                <mxCell id="legend-windsurf-readme" value="🟪 Purple (#9370DB): Windsurf MCP operations" style="text;strokeColor=#6a5acd;fillColor=#9370DB;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
                     <mxGeometry y="100" width="560" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-mcp-readme" value="🟧 Orange (#FF8C00): MCP processing &amp; AI operations" style="text;strokeColor=#d68000;fillColor=#FF8C00;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="legend-box" vertex="1">
+                <mxCell id="legend-green-border-readme" value="✅ Green Border (solid): Feature Complete" style="text;strokeColor=#22c55e;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;strokeWidth=3;" parent="legend-box" vertex="1">
                     <mxGeometry y="130" width="560" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-modal-readme" value="⬜ Light Grey (#D3D3D3, dashed): Modals &amp; popups" style="text;strokeColor=#999999;fillColor=#D3D3D3;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
+                <mxCell id="legend-green-dashed-readme" value="⚙️ Green Border (dashed): Partial Implementation" style="text;strokeColor=#22c55e;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;strokeWidth=3;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
                     <mxGeometry y="160" width="560" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-error-readme" value="🟥 Red/Pink (#f8cecc): Error states &amp; alerts" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="legend-box" vertex="1">
+                <mxCell id="legend-modal-readme" value="⬜ Light Grey (#D3D3D3, dashed): Modals &amp; popups" style="text;strokeColor=#999999;fillColor=#D3D3D3;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
                     <mxGeometry y="190" width="560" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="legend-dashed-readme" value="- - - Dashed Border: Alternative/optional paths" style="text;strokeColor=#666666;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=8 8;" parent="legend-box" vertex="1">
+                <mxCell id="legend-error-readme" value="🟥 Red/Pink (#f8cecc): Error states &amp; alerts" style="text;strokeColor=#b85450;fillColor=#f8cecc;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="legend-box" vertex="1">
                     <mxGeometry y="220" width="560" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="nextsteps-box" value="▶️ NEXT: Click 'MVP Flow - Local FOB' tab to see the complete flow!" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4caf50;strokeColor=#2e7d32;fontSize=16;fontStyle=1;fontColor=#ffffff;align=center;" parent="readme-root-1" vertex="1">
@@ -838,35 +838,35 @@
                 <mxCell id="v2-legend-fob" value="🟦 Blue Box = FOB Page (#4682B4)" style="text;strokeColor=#1565c0;fillColor=#4682B4;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="v2-legend-box" vertex="1">
                     <mxGeometry y="30" width="400" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-legend-windsurf" value="🟪 Purple Box = Windsurf Integration (#9370DB)" style="text;strokeColor=#6a5acd;fillColor=#9370DB;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="v2-legend-box" vertex="1">
+                <mxCell id="v2-legend-windsurf" value="🟪 Purple Box = Windsurf MCP Operations (#9370DB)" style="text;strokeColor=#6a5acd;fillColor=#9370DB;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="v2-legend-box" vertex="1">
                     <mxGeometry y="60" width="400" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-legend-tool" value="⚫ Grey Box (dashed) = MCP Tool (#666666)" style="text;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;dashed=1;dashPattern=2 2;" parent="v2-legend-box" vertex="1">
                     <mxGeometry y="90" width="400" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-legend-mcp" value="🟧 Orange Box = MCP Service (#FF8C00)" style="text;strokeColor=#d68000;fillColor=#FF8C00;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontColor=#ffffff;" parent="v2-legend-box" vertex="1">
+                <mxCell id="v2-legend-green-border" value="✅ Green Border (solid) = Feature Complete" style="text;strokeColor=#22c55e;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;strokeWidth=3;" parent="v2-legend-box" vertex="1">
                     <mxGeometry y="120" width="400" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-legend-arrow-primary" value="→ Bold Black Arrow = Primary Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="150" width="400" height="25" as="geometry"/>
+                <mxCell id="v2-legend-green-dashed" value="⚙️ Green Border (dashed) = Partial Implementation" style="text;strokeColor=#22c55e;fillColor=#ffffff;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;strokeWidth=3;dashed=1;dashPattern=8 8;" parent="v2-legend-box" vertex="1">
+                    <mxGeometry y="150" width="400" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-legend-arrow-alt" value="→ Thin Blue Arrow = Alternative Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="175" width="400" height="25" as="geometry"/>
+                <mxCell id="v2-legend-arrow-primary" value="→ Bold Black Arrow = Primary Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
+                    <mxGeometry y="180" width="400" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-legend-arrow-alt" value="→ Thin Purple Arrow = MCP Flow" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
+                    <mxGeometry y="205" width="400" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-legend-arrow-tool" value="→ Dashed Grey Arrow = Tool Connection" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="200" width="400" height="25" as="geometry"/>
+                    <mxGeometry y="230" width="400" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-legend-arrow-extends" value="→ «extends» Dashed Grey = CRUD from LIST+FIND" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="225" width="400" height="25" as="geometry"/>
+                    <mxGeometry y="255" width="400" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-legend-arrow-progression" value="⬛ Bold Black Arrow (w=4) = Main Progression" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;fontStyle=1;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="250" width="400" height="25" as="geometry"/>
+                    <mxGeometry y="280" width="400" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-legend-swimlanes" value="📊 Horizontal Swimlanes = Acts (top→down flow)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="275" width="400" height="25" as="geometry"/>
-                </mxCell>
-                <mxCell id="v2-legend-note" value="Note: Goal entity deferred to v2.1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=10;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;fontStyle=2;" parent="v2-legend-box" vertex="1">
-                    <mxGeometry y="300" width="400" height="25" as="geometry"/>
+                    <mxGeometry y="305" width="400" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-swimlane-bg-0" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;opacity=40;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="310" width="1000" height="160" as="geometry"/>
@@ -936,6 +936,17 @@
                 </mxCell>
                 <mxCell id="v2-arrow-act1-2" value="Save" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2e7d32;fontSize=9;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-fob-dashboard" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-windsurf-playbook-mcp" value="✅ WINDSURF-&#10;PLAYBOOK-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="600" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-playbook" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-fob-mcp-config" target="v2-windsurf-playbook-mcp" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="715" y="440"/>
+                            <mxPoint x="1300" y="440"/>
+                        </Array>
+                    </mxGeometry>
                 </mxCell>
                 <mxCell id="v2-act2-label" value="ACT 2: PLAYBOOKS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="550" width="220" height="30" as="geometry"/>
@@ -1053,6 +1064,12 @@
                 <mxCell id="v2-playbook-edit-restriction-note" value="NOTE: Only DRAFT can be edited like that!&lt;br&gt;Draft versions: Auto-increments version:&lt;br style=&quot;border-color: rgb(218, 220, 224);&quot;&gt;v0.3 → v0.4&lt;br&gt;Released: only via PIP: 1.1 -&amp;gt; 1.2 etc." style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="440" y="645" width="150" height="45" as="geometry"/>
                 </mxCell>
+                <mxCell id="v2-windsurf-workflow-mcp" value="✅ WINDSURF-&#10;WORKFLOW-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="950" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-workflow" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-windsurf-playbook-mcp" target="v2-windsurf-workflow-mcp" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
                 <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="900" width="220" height="30" as="geometry"/>
                 </mxCell>
@@ -1168,6 +1185,12 @@
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-ph-edit-view" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-phases-edit" target="v2-fob-phases-view" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-windsurf-activity-mcp" value="✅ WINDSURF-&#10;ACTIVITY-MCP" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="1230" y="1650" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-arrow-mcp-activity" value="MCP Tools" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;fontSize=9;dashed=1;dashPattern=4 4;" parent="v2-root-1" source="v2-windsurf-workflow-mcp" target="v2-windsurf-activity-mcp" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-act5-label" value="ACT 5: ACTIVITIES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
