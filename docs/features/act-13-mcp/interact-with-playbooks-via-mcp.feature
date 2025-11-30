@@ -3,9 +3,11 @@ Feature: FOB-MCP-PLAYBOOKS-1 AI Assistant Interacts with Playbooks via MCP
   I want to create, read, update, and delete playbooks via MCP tools
   So that I can help users build and refine methodologies through conversation
 
-  Status: 🔧 IN PROGRESS
+  Status: ✅ DONE - Core CRUD operations implemented
   Branch: feature/mcp-integration
   Related: act-2-playbooks
+  Tests: 250 passed (100% pass rate)
+  Commit: c049341
 
   Background:
     Given MCP server is running with command "python manage.py mcp_server --user=maria"
@@ -15,7 +17,7 @@ Feature: FOB-MCP-PLAYBOOKS-1 AI Assistant Interacts with Playbooks via MCP
   # CREATE PLAYBOOK
   # ============================================================================
 
-  Scenario: MCP-PB-01 Create draft playbook via MCP tool
+  Scenario: ✅ MCP-PB-01 Create draft playbook via MCP tool
     Given Cascade receives user request "Help me create a React component development methodology"
     When Cascade calls MCP tool "create_playbook" with:
       | name        | React Component Development                           |
@@ -29,7 +31,7 @@ Feature: FOB-MCP-PLAYBOOKS-1 AI Assistant Interacts with Playbooks via MCP
     And playbook is saved in database with author "maria"
     And playbook has initial version "0.1"
 
-  Scenario: MCP-PB-02 Create playbook with duplicate name raises error
+  Scenario: ✅ MCP-PB-02 Create playbook with duplicate name raises error
     Given draft playbook "React Component Development" exists for user "maria"
     When Cascade calls MCP tool "create_playbook" with:
       | name        | React Component Development |
