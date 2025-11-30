@@ -480,6 +480,323 @@ def delete_workflow_tool(workflow_id: int) -> dict:
     return {'deleted': True, 'workflow_id': workflow_id}
 
 
-# Phase 5: Register tools with FastMCP
-# Phase 5: Add Activity tools
+# ============================================================================
+# ACTIVITY MCP TOOLS
+# ============================================================================
+
+def create_activity_tool(workflow_id: int, name: str, guidance: str = "",
+                        phase: str = None, predecessor_id: int = None) -> dict:
+    """
+    Create activity in workflow (DRAFT playbook). Increments grandparent version.
+    
+    :param workflow_id: Parent workflow ID. Example: 1
+    :param name: Activity name. Example: "Design Component"
+    :param guidance: Rich Markdown guidance (optional)
+    :param phase: Phase grouping (optional)
+    :param predecessor_id: Predecessor activity ID (optional, must be in same workflow)
+    :return: Created activity dict
+    :raises PermissionError: if grandparent playbook is released
+    :raises ValueError: if workflow not found or validation fails
+    """
+    logger.info(f'MCP Tool: create_activity called - workflow_id={workflow_id}, name="{name}"')
+    
+    user = get_current_user()
+    
+    from methodology.models import Workflow, Activity
+    try:
+        workflow = Workflow.objects.select_related('playbook').get(
+            id=workflow_id,
+            playbook__author=user
+        )
+    except Workflow.DoesNotExist:
+        logger.error(f'MCP Tool: Workflow id={workflow_id} not found for user')
+        raise ValueError(f'Workflow {workflow_id} not found')
+    
+    # Permission check on grandparent playbook
+    if workflow.playbook.status == 'released':
+        logger.error(f'MCP Tool: Cannot add activity to workflow in released playbook')
+        raise PermissionError(f'Cannot modify released playbook "{workflow.playbook.name}". Use create_pip instead.')
+    
+    # Get predecessor if specified
+    predecessor = None
+    if predecessor_id:
+        try:
+            predecessor = Activity.objects.get(id=predecessor_id, workflow=workflow)
+        except Activity.DoesNotExist:
+            logger.error(f'MCP Tool: Predecessor id={predecessor_id} not found in workflow {workflow_id}')
+            raise ValueError(f'Predecessor activity {predecessor_id} not found in workflow')
+    
+    # Call existing service
+    from methodology.services import ActivityService
+    old_version = workflow.playbook.version
+    activity = ActivityService.create_activity(
+        workflow=workflow,
+        name=name,
+        guidance=guidance,
+        phase=phase,
+        predecessor=predecessor
+    )
+    
+    # Increment grandparent version
+    workflow.playbook.version += Decimal('0.1')
+    workflow.playbook.save()
+    
+    logger.info(f'MCP Tool: Created activity id={activity.id}, grandparent version {old_version} → {workflow.playbook.version}')
+    
+    return {
+        'id': activity.id,
+        'name': activity.name,
+        'guidance': activity.guidance,
+        'phase': activity.phase,
+        'order': activity.order,
+        'workflow_id': workflow.id,
+        'predecessor_id': predecessor.id if predecessor else None,
+    }
+
+
+def list_activities_tool(workflow_id: int) -> list:
+    """
+    List activities for workflow.
+    
+    :param workflow_id: Parent workflow ID. Example: 1
+    :return: List of activity dicts
+    :raises ValueError: if workflow not found
+    """
+    logger.info(f'MCP Tool: list_activities called - workflow_id={workflow_id}')
+    
+    user = get_current_user()
+    
+    from methodology.models import Workflow
+    try:
+        workflow = Workflow.objects.get(id=workflow_id, playbook__author=user)
+    except Workflow.DoesNotExist:
+        logger.error(f'MCP Tool: Workflow id={workflow_id} not found for user')
+        raise ValueError(f'Workflow {workflow_id} not found')
+    
+    from methodology.services import ActivityService
+    activities = ActivityService.get_activities_for_workflow(workflow_id)
+    
+    result = [
+        {
+            'id': a.id,
+            'name': a.name,
+            'guidance': a.guidance,
+            'phase': a.phase,
+            'order': a.order,
+            'workflow_id': a.workflow_id,
+            'predecessor_id': a.predecessor_id,
+            'successor_id': a.successor_id,
+        }
+        for a in activities
+    ]
+    logger.info(f'MCP Tool: Returning {len(result)} activities')
+    return result
+
+
+def get_activity_tool(activity_id: int) -> dict:
+    """
+    Get activity details with dependencies.
+    
+    :param activity_id: Activity ID. Example: 1
+    :return: Activity dict with predecessor/successor info
+    :raises ValueError: if not found or not owned
+    """
+    logger.info(f'MCP Tool: get_activity called - id={activity_id}')
+    
+    user = get_current_user()
+    
+    from methodology.models import Activity
+    try:
+        activity = Activity.objects.select_related(
+            'predecessor', 'successor', 'workflow__playbook'
+        ).get(
+            id=activity_id,
+            workflow__playbook__author=user
+        )
+    except Activity.DoesNotExist:
+        logger.error(f'MCP Tool: Activity id={activity_id} not found for user')
+        raise ValueError(f'Activity {activity_id} not found')
+    
+    result = {
+        'id': activity.id,
+        'name': activity.name,
+        'guidance': activity.guidance,
+        'phase': activity.phase,
+        'order': activity.order,
+        'workflow_id': activity.workflow_id,
+        'predecessor': {
+            'id': activity.predecessor.id,
+            'name': activity.predecessor.name,
+        } if activity.predecessor else None,
+        'successor': {
+            'id': activity.successor.id,
+            'name': activity.successor.name,
+        } if activity.successor else None,
+    }
+    logger.info(f'MCP Tool: Activity with predecessor={activity.predecessor_id}, successor={activity.successor_id}')
+    return result
+
+
+def update_activity_tool(activity_id: int, name: str = None, guidance: str = None,
+                        phase: str = None, order: int = None) -> dict:
+    """
+    Update activity in DRAFT playbook. Increments grandparent version.
+    
+    Note: Use set_predecessor_tool() to change dependencies.
+    
+    :param activity_id: Activity ID. Example: 1
+    :param name: New name or None
+    :param guidance: New guidance or None
+    :param phase: New phase or None
+    :param order: New order or None
+    :return: Updated activity dict
+    :raises PermissionError: if grandparent playbook is released
+    :raises ValueError: if not found
+    """
+    logger.info(f'MCP Tool: update_activity called - id={activity_id}')
+    
+    user = get_current_user()
+    
+    from methodology.models import Activity
+    try:
+        activity = Activity.objects.select_related('workflow__playbook').get(
+            id=activity_id,
+            workflow__playbook__author=user
+        )
+    except Activity.DoesNotExist:
+        logger.error(f'MCP Tool: Activity id={activity_id} not found for user')
+        raise ValueError(f'Activity {activity_id} not found')
+    
+    # Permission check
+    if activity.workflow.playbook.status == 'released':
+        logger.error(f'MCP Tool: Cannot update activity in released playbook')
+        raise PermissionError(f'Cannot modify released playbook. Use create_pip instead.')
+    
+    # Build update data
+    update_data = {}
+    if name is not None:
+        update_data['name'] = name
+    if guidance is not None:
+        update_data['guidance'] = guidance
+    if phase is not None:
+        update_data['phase'] = phase
+    if order is not None:
+        update_data['order'] = order
+    
+    if update_data:
+        from methodology.services import ActivityService
+        old_version = activity.workflow.playbook.version
+        
+        # Update activity
+        activity = ActivityService.update_activity(activity_id, **update_data)
+        
+        # Increment grandparent version
+        activity.workflow.playbook.version += Decimal('0.1')
+        activity.workflow.playbook.save()
+        
+        logger.info(f'MCP Tool: Updated activity, grandparent version {old_version} → {activity.workflow.playbook.version}')
+    
+    return {
+        'id': activity.id,
+        'name': activity.name,
+        'guidance': activity.guidance,
+        'phase': activity.phase,
+        'order': activity.order,
+        'workflow_id': activity.workflow_id,
+    }
+
+
+def delete_activity_tool(activity_id: int) -> dict:
+    """
+    Delete activity in DRAFT playbook. Increments grandparent version.
+    
+    :param activity_id: Activity ID. Example: 1
+    :return: Confirmation dict
+    :raises PermissionError: if grandparent playbook is released
+    :raises ValueError: if not found
+    """
+    logger.info(f'MCP Tool: delete_activity called - id={activity_id}')
+    
+    user = get_current_user()
+    
+    from methodology.models import Activity
+    try:
+        activity = Activity.objects.select_related('workflow__playbook').get(
+            id=activity_id,
+            workflow__playbook__author=user
+        )
+    except Activity.DoesNotExist:
+        logger.error(f'MCP Tool: Activity id={activity_id} not found for user')
+        raise ValueError(f'Activity {activity_id} not found')
+    
+    # Permission check
+    if activity.workflow.playbook.status == 'released':
+        logger.error(f'MCP Tool: Cannot delete activity in released playbook')
+        raise PermissionError(f'Cannot modify released playbook. Use create_pip instead.')
+    
+    activity_name = activity.name
+    playbook = activity.workflow.playbook
+    old_version = playbook.version
+    
+    from methodology.services import ActivityService
+    ActivityService.delete_activity(activity_id)
+    
+    # Increment grandparent version
+    playbook.version += Decimal('0.1')
+    playbook.save()
+    
+    logger.info(f'MCP Tool: Deleted activity "{activity_name}", grandparent version {old_version} → {playbook.version}')
+    return {'deleted': True, 'activity_id': activity_id}
+
+
+def set_predecessor_tool(activity_id: int, predecessor_id: int) -> dict:
+    """
+    Set activity predecessor (validates no circular dependencies).
+    
+    :param activity_id: Activity ID. Example: 2
+    :param predecessor_id: Predecessor activity ID. Example: 1
+    :return: Updated activity dict
+    :raises PermissionError: if grandparent playbook is released
+    :raises ValueError: if validation fails or circular dependency detected
+    """
+    logger.info(f'MCP Tool: set_predecessor called - activity_id={activity_id}, predecessor_id={predecessor_id}')
+    
+    user = get_current_user()
+    
+    from methodology.models import Activity
+    try:
+        activity = Activity.objects.select_related('workflow__playbook').get(
+            id=activity_id,
+            workflow__playbook__author=user
+        )
+        predecessor = Activity.objects.get(id=predecessor_id, workflow=activity.workflow)
+    except Activity.DoesNotExist as e:
+        logger.error(f'MCP Tool: Activity not found or not in same workflow')
+        raise ValueError('Activity or predecessor not found') from e
+    
+    # Permission check
+    if activity.workflow.playbook.status == 'released':
+        logger.error(f'MCP Tool: Cannot modify dependencies in released playbook')
+        raise PermissionError(f'Cannot modify released playbook. Use create_pip instead.')
+    
+    # Call service (validates circular dependencies)
+    from methodology.services import ActivityService
+    old_version = activity.workflow.playbook.version
+    ActivityService.set_predecessor(activity, predecessor)
+    
+    # Increment grandparent version
+    activity.workflow.playbook.version += Decimal('0.1')
+    activity.workflow.playbook.save()
+    
+    logger.info(f'MCP Tool: Set predecessor, grandparent version {old_version} → {activity.workflow.playbook.version}')
+    
+    return {
+        'activity_id': activity.id,
+        'predecessor_id': predecessor.id,
+        'updated': True,
+    }
+
+
+# Phase 5: Register all tools with FastMCP
 # Phase 5: Add initialize_mcp() function
+# Phase 5: Add user context management
