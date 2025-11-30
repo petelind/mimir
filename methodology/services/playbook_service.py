@@ -201,3 +201,51 @@ class PlaybookService:
         
         logger.info(f"Playbook duplicated as {duplicate.pk}")
         return duplicate
+    
+    @staticmethod
+    @transaction.atomic
+    def release_playbook(playbook_id, author):
+        """
+        Release draft playbook to production (version 1.0).
+        
+        Transitions from draft (0.x) to released (1.0).
+        After release, playbook requires PIP workflow for changes.
+        
+        :param playbook_id: Playbook ID
+        :param author: User instance (must be owner)
+        :returns: Released Playbook instance
+        :raises ValidationError: If not draft or other validation fails
+        :raises PermissionError: If user doesn't own playbook
+        
+        Example:
+            >>> playbook = PlaybookService.release_playbook(
+            ...     playbook_id=1,
+            ...     author=user
+            ... )
+            >>> playbook.version
+            Decimal('1.0')
+            >>> playbook.status
+            'released'
+        """
+        logger.info(f"Releasing playbook id={playbook_id}, author={author.id}")
+        
+        playbook = Playbook.objects.get(pk=playbook_id)
+        
+        # Permission check
+        if playbook.author != author:
+            logger.error(f"User {author.id} attempted to release playbook {playbook_id} owned by {playbook.author.id}")
+            raise PermissionError("You don't have permission to release this playbook")
+        
+        # Validation - must be draft
+        if not playbook.is_draft:
+            logger.error(f"Attempted to release non-draft playbook {playbook_id} (status={playbook.status})")
+            raise ValidationError(f"Only draft playbooks can be released. Current status: {playbook.status}")
+        
+        old_version = playbook.version
+        old_status = playbook.status
+        
+        # Call model method
+        playbook.release()
+        
+        logger.info(f"Playbook '{playbook.name}' released: {old_status} v{old_version} → {playbook.status} v{playbook.version}")
+        return playbook
