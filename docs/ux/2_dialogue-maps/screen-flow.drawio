@@ -1247,7 +1247,7 @@
                 <mxCell id="v2-tool-list-phases" value="@list_phases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="185" y="1540" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-find-phases" value="@find_phases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-find-phases" value="@find_phases" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="310" y="1540" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-ph-create" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-phases-list" target="v2-fob-phases-create" edge="1">
@@ -1382,22 +1382,22 @@
                 <mxCell id="v2-tool-artifacts-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="2200" width="50" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-create-artifact" value="@create_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-create-artifact" value="@create_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2200" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-get-artifact" value="@get_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-get-artifact" value="@get_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2200" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-update-artifact" value="@update_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-update-artifact" value="@update_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="410" y="2200" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-delete-artifact" value="@delete_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-delete-artifact" value="@delete_artifact" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="2200" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-list-artifacts" value="@list_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-list-artifacts" value="@list_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2240" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-find-artifacts" value="@find_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-find-artifacts" value="@find_artifacts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2240" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-ar-create" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-artifacts-list" target="v2-fob-artifacts-create" edge="1">
@@ -1436,22 +1436,22 @@
                 <mxCell id="v2-tool-howtos-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="2550" width="50" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-create-howto" value="@create_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-create-howto" value="@create_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2550" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-get-howto" value="@get_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-get-howto" value="@get_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2550" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-update-howto" value="@update_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-update-howto" value="@update_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="410" y="2550" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-delete-howto" value="@delete_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-delete-howto" value="@delete_howto" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="2550" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-list-howtos" value="@list_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-list-howtos" value="@list_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2590" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-find-howtos" value="@find_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-find-howtos" value="@find_howtos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2590" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-ht-create" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-howtos-list" target="v2-fob-howtos-create" edge="1">
@@ -1490,22 +1490,22 @@
                 <mxCell id="v2-tool-roles-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="2900" width="50" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-create-role" value="@create_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-create-role" value="@create_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2900" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-get-role" value="@get_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-get-role" value="@get_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2900" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-update-role" value="@update_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-update-role" value="@update_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="410" y="2900" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-delete-role" value="@delete_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-delete-role" value="@delete_role" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="2900" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-list-roles" value="@list_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-list-roles" value="@list_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="2940" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-find-roles" value="@find_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-find-roles" value="@find_roles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="2940" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-ro-create" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-roles-list" target="v2-fob-roles-create" edge="1">
@@ -1553,28 +1553,28 @@
                 <mxCell id="v2-tool-pips-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="3250" width="50" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-create-pip" value="@create_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-create-pip" value="@create_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="3250" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-get-pip" value="@get_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-get-pip" value="@get_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="3250" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-update-pip" value="@update_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-update-pip" value="@update_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="410" y="3250" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-delete-pip" value="@delete_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-delete-pip" value="@delete_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="3250" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-list-pips" value="@list_pips" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-list-pips" value="@list_pips" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="3290" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-find-pips" value="@find_pips" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-find-pips" value="@find_pips" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="3290" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-tool-suggest-pip" value="@suggest_pip (AI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#ff8f00;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="170" y="3330" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-submit-pip" value="@submit_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-submit-pip" value="@submit_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="290" y="3330" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-tool-approve-pip" value="@approve_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
@@ -1583,10 +1583,10 @@
                 <mxCell id="v2-tool-reject-pip" value="@reject_pip" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="3330" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-list-pipitems" value="@list_pip_items" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-list-pipitems" value="@list_pip_items" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="410" y="3290" width="110" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-tool-get-pipitem" value="@get_pip_item" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#22c55e;fontSize=8;fontColor=#000000;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-tool-get-pipitem" value="@get_pip_item" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=8;fontColor=#000000;dashed=1;dashPattern=2 2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="530" y="3290" width="110" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-extends-pip-create" value="«extends»" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=3 3;fontSize=9;fontColor=#666666;" parent="v2-root-1" source="v2-fob-pips-list" target="v2-fob-pips-create" edge="1">
