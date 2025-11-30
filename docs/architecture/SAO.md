@@ -1869,6 +1869,267 @@ Improved PIP proposals next time
 - **Tyr AI**: Task planning and work order generation
 - **Saga AI**: Retrospection and improvement suggestions
 
+## MCP Integration: Implementation Patterns
+
+### Critical Discovery: stdio Pollution Prevention
+
+**Problem**: MCP servers communicate via JSON-RPC over stdio (stdin/stdout). Any logging, print statements, or warnings to stdout/stderr will corrupt the JSON protocol and cause Windsurf/Claude Desktop to timeout with "context deadline exceeded" errors.
+
+**Solution**: Environment-aware logging configuration
+
+```python
+# mimir/settings.py
+import os
+
+# Detect MCP mode
+_IS_MCP_SERVER = os.environ.get('MIMIR_MCP_MODE') == '1'
+
+# Conditional handler list
+_LOG_HANDLERS = ['file'] if _IS_MCP_SERVER else ['file', 'console']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'app.log',
+            'mode': 'w',  # Overwrite on each restart
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': _LOG_HANDLERS,  # Conditional: file only in MCP mode
+        'level': 'INFO',
+    },
+}
+```
+
+**MCP Server Startup** (extra defense):
+```python
+# mcp_integration/management/commands/mcp_server.py
+def handle(self, *args, **options):
+    # CRITICAL: Remove ALL console handlers IMMEDIATELY
+    # Must be FIRST thing we do, before any logging
+    import logging as logging_module
+    import sys
+    
+    root_logger = logging_module.getLogger()
+    console_handlers = [h for h in root_logger.handlers 
+                       if isinstance(h, logging_module.StreamHandler) 
+                       and not isinstance(h, logging_module.FileHandler)]
+    for handler in console_handlers:
+        root_logger.removeHandler(handler)
+    
+    # Flush any buffered output
+    sys.stdout.flush()
+    sys.stderr.flush()
+    
+    # NOW safe to proceed with MCP server
+    # ...
+```
+
+**Windsurf Configuration**:
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "/path/to/venv/bin/python",
+      "args": ["/path/to/manage.py", "mcp_server", "--user=admin"],
+      "env": {
+        "MIMIR_MCP_MODE": "1",  // Disables console logging
+        "DJANGO_SETTINGS_MODULE": "mimir.settings",
+        "PYTHONPATH": "/path/to/project"
+      }
+    }
+  }
+}
+```
+
+**Key Lessons**:
+1. **Never log to console** in MCP mode - use `app.log` exclusively
+2. **Remove handlers early** - before Django initialization completes
+3. **Flush stdio** - clear any buffered output before starting MCP
+4. **Test manually** - `echo '{"jsonrpc":"2.0","method":"tools/list","id":1}' | python manage.py mcp_server --user=admin` should return clean JSON
+
+---
+
+### Critical Discovery: Django ORM in Async MCP Tools
+
+**Problem**: FastMCP tools are async (`async def`), but Django ORM is synchronous. Direct ORM calls from async functions raise `SynchronousOnlyOperation` errors.
+
+**Solution**: Use Django's `sync_to_async` wrapper
+
+**Pattern 1: Simple Query**
+```python
+from asgiref.sync import sync_to_async
+from methodology.models import Playbook
+
+@tool()
+async def get_playbook(playbook_id: int) -> dict:
+    """Get playbook details."""
+    # Wrap ORM call with sync_to_async
+    playbook = await sync_to_async(Playbook.objects.get)(id=playbook_id)
+    
+    return {
+        'id': playbook.id,
+        'name': playbook.name,
+        'version': str(playbook.version),
+    }
+```
+
+**Pattern 2: Query with select_related (ForeignKey)**
+```python
+@tool()
+async def get_playbook_with_author(playbook_id: int) -> dict:
+    """Get playbook with author details."""
+    # Use select_related to avoid lazy-loading in async context
+    playbook = await sync_to_async(
+        Playbook.objects.select_related('author').get
+    )(id=playbook_id)
+    
+    return {
+        'id': playbook.id,
+        'name': playbook.name,
+        'author': playbook.author.username,  # Already loaded, no DB hit
+    }
+```
+
+**Pattern 3: Filter Queries**
+```python
+@tool()
+async def list_playbooks(status: str = 'all') -> list[dict]:
+    """List playbooks filtered by status."""
+    # Wrap QuerySet evaluation
+    def _get_playbooks():
+        qs = Playbook.objects.all()
+        if status != 'all':
+            qs = qs.filter(status=status)
+        return list(qs.values('id', 'name', 'status', 'version'))
+    
+    playbooks = await sync_to_async(_get_playbooks)()
+    return playbooks
+```
+
+**Pattern 4: Existence Checks**
+```python
+@tool()
+async def delete_playbook(playbook_id: int) -> dict:
+    """Delete a playbook."""
+    # Wrap exists() check
+    exists = await sync_to_async(
+        Playbook.objects.filter(id=playbook_id).exists
+    )()
+    
+    if not exists:
+        raise ValueError(f"Playbook {playbook_id} not found")
+    
+    # Wrap delete operation
+    await sync_to_async(Playbook.objects.filter(id=playbook_id).delete)()
+    return {'status': 'deleted', 'id': playbook_id}
+```
+
+**Testing Async MCP Tools**:
+```python
+import pytest
+from asgiref.sync import sync_to_async
+
+@pytest.mark.asyncio  # Mark test as async
+@pytest.mark.django_db(transaction=True)  # Enable transaction mode for async
+async def test_create_playbook():
+    """Test async MCP tool with Django ORM."""
+    from mcp_integration.tools import create_playbook
+    
+    # Call async MCP tool
+    result = await create_playbook(
+        name="Test Playbook",
+        description="Test description",
+        category="test"
+    )
+    
+    # Verify in database (wrap ORM call)
+    playbook = await sync_to_async(Playbook.objects.get)(id=result['id'])
+    assert playbook.name == "Test Playbook"
+```
+
+**Key Lessons**:
+1. **Always use sync_to_async** for ORM calls in async MCP tools
+2. **Use select_related/prefetch_related** to avoid N+1 queries in async context
+3. **Wrap entire queries** - don't try to await QuerySet methods directly
+4. **Transaction mode in tests** - `@pytest.mark.django_db(transaction=True)` required for async DB access
+5. **Test with pytest-asyncio** - mark tests with `@pytest.mark.asyncio`
+
+**Dependencies Required**:
+```txt
+# requirements.txt
+fastmcp>=0.1.0
+django>=5.0
+pytest-asyncio>=0.21.0  # For async test support
+pytest-django>=4.5.0    # For Django integration
+```
+
+---
+
+### Architecture Decision: Service Layer + MCP Tools
+
+**Pattern**: Service layer handles sync business logic, MCP tools wrap it with async/await
+
+```python
+# methodology/services/playbook_service.py (SYNC)
+class PlaybookService:
+    @staticmethod
+    def create_playbook(name: str, description: str, category: str, author):
+        """Synchronous business logic."""
+        if Playbook.objects.filter(name=name, author=author).exists():
+            raise ValidationError(f"Playbook '{name}' already exists")
+        
+        playbook = Playbook.objects.create(
+            name=name,
+            description=description,
+            category=category,
+            author=author,
+            version=Decimal('0.1'),
+            status='draft'
+        )
+        return playbook
+
+# mcp_integration/tools.py (ASYNC wrapper)
+from asgiref.sync import sync_to_async
+from methodology.services.playbook_service import PlaybookService
+
+@tool()
+async def create_playbook(name: str, description: str, category: str) -> dict:
+    """MCP tool for creating playbooks."""
+    user = get_current_user()  # From thread-local context
+    
+    # Wrap service call with sync_to_async
+    playbook = await sync_to_async(PlaybookService.create_playbook)(
+        name=name,
+        description=description,
+        category=category,
+        author=user
+    )
+    
+    return {
+        'id': playbook.id,
+        'name': playbook.name,
+        'version': str(playbook.version),
+        'status': playbook.status,
+    }
+```
+
+**Benefits**:
+- ✅ Service logic is reusable (web UI uses it directly, sync)
+- ✅ MCP tools are thin async wrappers
+- ✅ Business logic tested once, works in both contexts
+- ✅ Type safety maintained throughout
+
 ## Security & Access Control
 
 ### HOMEBASE
