@@ -5,6 +5,7 @@ Playbooks represent methodologies with workflows, activities, and artifacts.
 Each playbook can be owned (created by user) or downloaded from families.
 """
 
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -37,6 +38,7 @@ class Playbook(models.Model):
     STATUS_CHOICES = [
         ('active', 'Active'),
         ('draft', 'Draft'),
+        ('released', 'Released'),
         ('disabled', 'Disabled'),
     ]
     
@@ -52,7 +54,7 @@ class Playbook(models.Model):
     tags = models.JSONField(default=list, blank=True)
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='private')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
-    version = models.IntegerField(default=1)
+    version = models.DecimalField(max_digits=5, decimal_places=1, default=0.1, help_text="Draft: 0.1, 0.2, etc. Released: 1.0, 2.0, etc.")
     source = models.CharField(max_length=20, choices=SOURCE_CHOICES, default='owned')
     
     # Relationships
@@ -75,7 +77,68 @@ class Playbook(models.Model):
         return self.author == user
     
     def can_edit(self, user):
-        return self.source == 'owned' and self.is_owned_by(user)
+        """
+        Check if user can directly edit this playbook.
+        
+        Released playbooks can only be changed via PIP (Process Improvement Proposal).
+        Draft playbooks can be edited directly by owner.
+        
+        :param user: User attempting to edit
+        :returns: True if user can edit directly (not via PIP)
+        """
+        if not (self.source == 'owned' and self.is_owned_by(user)):
+            return False
+        
+        # Released playbooks require PIP workflow
+        if self.status == 'released':
+            return False
+        
+        return True
+    
+    @property
+    def is_draft(self):
+        """Check if playbook is in draft status."""
+        return self.status == 'draft'
+    
+    @property
+    def is_released(self):
+        """Check if playbook is released (requires PIP for changes)."""
+        return self.status == 'released'
+    
+    def increment_version(self):
+        """
+        Increment playbook version based on status.
+        
+        Draft: 0.1 → 0.2 → 0.3, etc.
+        Released: 1.0 → 2.0 → 3.0, etc. (via PIP only)
+        
+        :returns: New version number
+        """
+        # Ensure version is Decimal for arithmetic
+        current_version = Decimal(str(self.version))
+        
+        if self.is_draft:
+            # Increment by 0.1 for draft changes
+            self.version = current_version + Decimal('0.1')
+        else:
+            # For released, increment by 1.0 (should only happen via PIP)
+            self.version = current_version + Decimal('1.0')
+        
+        return self.version
+    
+    def release(self):
+        """
+        Release the playbook from draft to production.
+        
+        Changes status to 'released' and sets version to 1.0.
+        After release, changes must go through PIP workflow.
+        """
+        if not self.is_draft:
+            raise ValueError("Only draft playbooks can be released")
+        
+        self.status = 'released'
+        self.version = Decimal('1.0')
+        self.save()
     
     def get_quick_stats(self):
         """
@@ -108,6 +171,7 @@ class Playbook(models.Model):
         status_colors = {
             'active': 'success',
             'draft': 'warning',
+            'released': 'primary',
             'disabled': 'secondary'
         }
         return status_colors.get(self.status, 'secondary')

@@ -34,7 +34,7 @@
                                 {{ playbook.description|truncatewords:20 }}
                             </p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="badge bg-{{ playbook.status }}">
+                                <span class="badge bg-{{ playbook.get_status_badge_color }}">
                                     {{ playbook.get_status_display }}
                                 </span>
                                 <small class="text-muted">v{{ playbook.version }}</small>
@@ -60,10 +60,4 @@
         </div>
     {% endif %}
 </div>
-
-<style>
-    .badge.bg-active { background-color: #28a745 !important; }
-    .badge.bg-draft { background-color: #6c757d !important; }
-    .badge.bg-disabled { background-color: #dc3545 !important; }
-</style>
 {% endblock %}

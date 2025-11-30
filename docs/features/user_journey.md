@@ -392,9 +392,12 @@ Maria clicks [Create New Playbook]. The creation wizard opens:
 
 **Wizard Step 3: Publishing Settings**
 - **Status**: Radio buttons
-  - ● Active (ready to use)
-  - ○ Draft (work in progress)
-- **Initial Version**: Auto-set to v1.0
+  - ○ Draft (work in progress - editable, starts at v0.1)
+  - ○ Released (production-ready - v1.0, requires PIP for changes)
+  - Note: "Draft playbooks can be edited directly. Released playbooks require PIP (Process Improvement Proposal) for any changes."
+- **Initial Version**: Auto-set based on status
+  - Draft: v0.1
+  - Released: v1.0
 - Review summary of playbook being created
 - [Cancel] [Create Playbook] buttons
 
@@ -411,6 +414,70 @@ Maria clicks [Create New Playbook]. The creation wizard opens:
 
 ---
 
+#### Playbook Versioning & Lifecycle System
+
+**Context**: Mimir implements automatic versioning to track playbook evolution while enforcing change control for released methodologies.
+
+**Versioning Rules**:
+
+1. **Draft Status** (v0.1, v0.2, v0.3, ...):
+   - New playbooks start at **v0.1**
+   - Every change automatically increments version by 0.1
+   - Changes include:
+     - Editing playbook metadata (name, description, etc.)
+     - Adding/editing/deleting workflows
+     - Adding/editing/deleting activities in workflows
+     - Adding/editing/deleting any related entities
+   - Draft playbooks are **fully editable** via GUI and MCP
+   - Version increments happen automatically (transparent to user)
+
+2. **Released Status** (v1.0, v2.0, v3.0, ...):
+   - When user releases a draft playbook → version becomes **v1.0**
+   - Released playbooks are **read-only** in GUI and MCP
+   - Any attempt to edit shows message:
+     - "This playbook is Released and cannot be edited directly. Please submit a PIP (Process Improvement Proposal) to make changes."
+   - Changes can only be made via **PIP workflow** (ACT 9)
+   - Each approved PIP increments major version (1.0 → 2.0 → 3.0)
+
+**Example Lifecycle**:
+```
+Create Playbook (Draft)     → v0.1
+Add 2 workflows              → v0.2  (auto-increment)
+Edit playbook description    → v0.3  (auto-increment)
+Add 5 activities to workflow → v0.4  (auto-increment)
+Edit activity #3             → v0.5  (auto-increment)
+[User clicks "Release"]      → v1.0  (status: Released)
+[Try to edit - blocked]      → Error: "Use PIP to change"
+Submit PIP with changes      → PIP workflow
+PIP approved and merged      → v2.0  (new released version)
+```
+
+**Status Badge Colors**:
+- Draft: Yellow/Warning (editable, evolving)
+- Released: Blue/Primary (stable, controlled)
+- Active: Green/Success (deprecated status, use Draft or Released)
+- Disabled: Gray/Secondary (archived, not in use)
+
+**User Actions**:
+- **Release Draft**: Draft v0.x → Released v1.0
+  - One-way operation (cannot revert to draft)
+  - Accessible from playbook detail page
+  - Confirmation modal explains implications
+- **Submit PIP**: Only way to change Released playbooks
+  - Creates PIP proposal with proposed changes
+  - Requires review/approval workflow
+  - See ACT 9: PIPs for complete flow
+
+**MCP Integration**:
+- MCP can read both draft and released playbooks
+- MCP can suggest edits only to draft playbooks
+- For released playbooks, MCP suggests creating PIP instead
+- MCP tools check playbook status before allowing mutations
+
+Maria now understands that her new draft playbooks will auto-version as she works on them, and once released, they become controlled artifacts that require formal change proposals.
+
+---
+
 #### Screen: FOB-PLAYBOOKS-VIEW_PLAYBOOK-1
 
 Maria clicks [View] on "React Frontend Development" from the list. The detail view opens:
@@ -418,12 +485,14 @@ Maria clicks [View] on "React Frontend Development" from the list. The detail vi
 **Layout**:
 - **Header**:
   - Playbook name: "React Frontend Development" (h1)
-  - Version badge: v1.2
-  - Status badge: Active (green) / Disabled (gray) / Draft (yellow)
+  - Version badge: v1.0 (or v0.3 if draft)
+  - Status badge: Draft (yellow) / Released (blue) / Disabled (gray)
   - Author: Mike Chen (Usability family)
   - Last modified: 2 weeks ago
 - **Top Actions**:
-  - [Edit] button (if editable - owned or local)
+  - [Edit] button (if draft and owned - disabled for released with tooltip: "Released playbooks require PIP")
+  - [Release] button (if draft and owned - promotes to v1.0 released status)
+  - [Submit PIP] button (if released and owned - opens PIP creation flow)
   - [Delete] button (if owned)
   - [Export JSON] button (if authored)
   - [Duplicate] button
@@ -485,20 +554,27 @@ Maria can explore the complete playbook structure, drill into workflows, view ve
 
 #### Screen: FOB-PLAYBOOKS-EDIT_PLAYBOOK-1
 
-Maria clicks [Edit] on her "Product Discovery Framework" playbook. The edit form opens:
+Maria clicks [Edit] on her "Product Discovery Framework" draft playbook (v0.3). The edit form opens:
+
+**Access Control**:
+- **Draft playbooks**: Fully editable, version auto-increments on save
+- **Released playbooks**: Edit button disabled/blocked
+  - Shows error: "This playbook is Released and cannot be edited directly. Please submit a PIP (Process Improvement Proposal) to make changes."
+  - Redirects to playbook detail page
 
 **Form Layout** (similar to CREATE wizard but single page):
 - **Basic Information Section**:
-  - Name: Pre-populated, editable
-  - Description: Pre-populated, editable textarea
-  - Category: Pre-populated dropdown
-  - Tags: Pre-populated multi-select
+  - Name: Pre-populated, editable (triggers version increment)
+  - Description: Pre-populated, editable textarea (triggers version increment)
+  - Category: Pre-populated dropdown (triggers version increment)
+  - Tags: Pre-populated multi-select (triggers version increment)
   - Visibility: Pre-populated radio buttons
     - Note: "Changing visibility from Family to Private will recall from family members"
 
 - **Status Section**:
-  - Current Status: Active/Disabled/Draft radio buttons
-  - Version: v1.0 (read-only, changes via PIPs create new versions)
+  - Current Version: v0.3 (read-only, shows current version)
+  - Current Status: Draft / Released / Disabled radio buttons
+  - Note: "Draft playbooks auto-increment version on every save (v0.3 → v0.4). Use Release button to publish as v1.0."
 
 - **Workflows Section**:
   - List of current workflows
@@ -518,16 +594,17 @@ Maria clicks [Edit] on her "Product Discovery Framework" playbook. The edit form
 
 **Actions**:
 - [Cancel] - Returns to VIEW without saving, confirmation if changes made
-- [Save as Draft] - Saves but keeps in Draft status
-- [Save Changes] - Saves and keeps current status
-  - For published playbooks: "Save will create local v1.1. Sync to submit as PIP."
+- [Save Changes] - Saves and auto-increments version for draft playbooks
+  - Draft: v0.3 → v0.4 automatically
+  - Note: Only available for draft playbooks
 
 **Success Flow**:
 - Changes saved
-- Success notification: "Playbook updated successfully"
+- Version automatically incremented (v0.3 → v0.4)
+- Success notification: "Playbook updated successfully (v0.4)"
 - If visibility changed: Additional notification about impact
 - Returns to FOB-PLAYBOOKS-VIEW_PLAYBOOK-1
-- Updated data visible in FOB-PLAYBOOKS-LIST+FIND-1
+- Updated data and new version visible in FOB-PLAYBOOKS-LIST+FIND-1
 
 **Permission Handling**:
 - Downloaded playbooks (not owned): Edit button disabled or opens read-only view

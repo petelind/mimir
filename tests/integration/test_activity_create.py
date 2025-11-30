@@ -69,7 +69,7 @@ class TestActivityCreate:
         
         data = {
             'name': 'Design Component',
-            'description': 'Create UI design for the component',
+            'guidance': 'Create UI design for the component',
         }
         response = self.client.post(url, data)
         
@@ -95,7 +95,7 @@ class TestActivityCreate:
         
         data = {
             'name': '',  # Empty name
-            'description': 'Test description',
+            'guidance': 'Test description',
         }
         response = self.client.post(url, data)
         
@@ -123,7 +123,7 @@ class TestActivityCreate:
         
         data = {
             'name': 'Design Component',  # Duplicate
-            'description': 'New description',
+            'guidance': 'New description',
         }
         response = self.client.post(url, data)
         
@@ -147,7 +147,7 @@ class TestActivityCreate:
         
         data = {
             'name': 'Act 3',
-            'description': 'Third activity',
+            'guidance': 'Third activity',
             # order not provided
         }
         response = self.client.post(url, data)
@@ -167,7 +167,7 @@ class TestActivityCreate:
         
         data = {
             'name': 'Plan Features',
-            'description': 'Feature planning',
+            'guidance': 'Feature planning',
             'phase': 'Planning',
         }
         response = self.client.post(url, data)

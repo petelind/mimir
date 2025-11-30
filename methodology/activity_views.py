@@ -272,7 +272,11 @@ def activity_detail(request, playbook_pk, workflow_pk, activity_pk):
     # Get instances with permission check
     playbook = get_object_or_404(Playbook, pk=playbook_pk)
     workflow = get_object_or_404(Workflow, pk=workflow_pk, playbook=playbook)
-    activity = get_object_or_404(Activity, pk=activity_pk, workflow=workflow)
+    activity = get_object_or_404(
+        Activity.objects.select_related('predecessor', 'successor'),
+        pk=activity_pk,
+        workflow=workflow
+    )
     
     # Check if user has access
     if playbook.source == 'owned' and playbook.author != request.user:
@@ -321,7 +325,11 @@ def activity_edit(request, playbook_pk, workflow_pk, activity_pk):
     # Get instances with permission check
     playbook = get_object_or_404(Playbook, pk=playbook_pk)
     workflow = get_object_or_404(Workflow, pk=workflow_pk, playbook=playbook)
-    activity = get_object_or_404(Activity, pk=activity_pk, workflow=workflow)
+    activity = get_object_or_404(
+        Activity.objects.select_related('predecessor', 'successor'),
+        pk=activity_pk,
+        workflow=workflow
+    )
     
     # Check edit permission
     if not activity.can_edit(request.user):

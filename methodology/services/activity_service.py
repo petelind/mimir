@@ -125,7 +125,9 @@ class ActivityService:
             >>> for act in activities:
             ...     print(act.name, act.order)
         """
-        return Activity.objects.filter(workflow=workflow).order_by('order', 'name')
+        return Activity.objects.filter(workflow=workflow).select_related(
+            'predecessor', 'successor'
+        ).order_by('order', 'name')
     
     @staticmethod
     def get_activities_grouped_by_phase(workflow):

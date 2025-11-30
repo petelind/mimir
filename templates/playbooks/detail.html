@@ -20,7 +20,7 @@
                 <i class="fa-solid fa-book"></i> {{ playbook.name }}
             </h2>
             <p class="text-muted">
-                <span class="badge bg-{{ playbook.status }}" data-testid="status-badge">{{ playbook.get_status_display }}</span>
+                <span class="badge bg-{{ playbook.get_status_badge_color }}" data-testid="status-badge">{{ playbook.get_status_display }}</span>
                 <span class="badge bg-secondary" data-testid="version-badge">v{{ playbook.version }}</span>
                 <span class="badge bg-info">{{ playbook.get_category_display }}</span>
             </p>
@@ -30,13 +30,47 @@
             </p>
         </div>
         <div class="btn-group">
-            {% if can_edit %}
-                <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
-                   class="btn btn-primary"
-                   data-bs-toggle="tooltip"
-                   title="Edit this playbook">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
+            {% if playbook.source == 'owned' and playbook.author == request.user %}
+                {% if playbook.is_draft %}
+                    <!-- Edit button for draft playbooks -->
+                    <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Edit this playbook (v{{ playbook.version }})">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </a>
+                    <!-- Release button for draft playbooks -->
+                    <button type="button" 
+                            class="btn btn-success"
+                            data-bs-toggle="tooltip"
+                            title="Release this playbook to v1.0 (makes it read-only, changes require PIP)">
+                        <i class="fa-solid fa-rocket"></i> Release
+                    </button>
+                {% elif playbook.is_released %}
+                    <!-- Edit button disabled for released playbooks -->
+                    <button type="button" 
+                            class="btn btn-secondary" 
+                            disabled
+                            data-bs-toggle="tooltip"
+                            title="Released playbooks cannot be edited directly. Please submit a PIP (Process Improvement Proposal) to make changes.">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </button>
+                    <!-- Submit PIP button for released playbooks -->
+                    <a href="#" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Submit a Process Improvement Proposal to change this playbook">
+                        <i class="fa-solid fa-file-lines"></i> Submit PIP
+                    </a>
+                {% else %}
+                    <!-- Active/Disabled status - legacy, allow edit -->
+                    <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Edit this playbook">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </a>
+                {% endif %}
             {% endif %}
             <a href="{% url 'playbook_list' %}" 
                class="btn btn-outline-secondary"

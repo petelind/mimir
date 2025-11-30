@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load markdown_filters %}
 
 {% block title %}Activities - {{ workflow.name }}{% endblock %}
 
@@ -81,7 +82,7 @@
                                         <strong>{{ activity.name }}</strong>
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
+                                        <small class="text-muted">{{ activity.guidance|markdown|striptags|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.predecessor or activity.successor %}
@@ -150,7 +151,7 @@
                                         <strong>{{ activity.name }}</strong>
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ activity.guidance|truncatewords:15 }}</small>
+                                        <small class="text-muted">{{ activity.guidance|markdown|striptags|truncatewords:15 }}</small>
                                     </td>
                                     <td class="text-center">
                                         {% if activity.predecessor or activity.successor %}
