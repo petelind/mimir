@@ -59,3 +59,39 @@ class TestMCPPlaybookCreate:
         playbook = Playbook.objects.get(id=result['id'])
         assert playbook.author == setup_user_context
         assert playbook.name == "React Component Development"
+    
+    def test_mcp_pb_02_create_playbook_with_duplicate_name_raises_error(self, setup_user_context):
+        """Scenario: MCP-PB-02 Create playbook with duplicate name raises error"""
+        create_playbook(name="React Component Development", description="Test", category="frontend")
+        
+        with pytest.raises(ValidationError):
+            create_playbook(name="React Component Development", description="Different", category="frontend")
+
+
+@pytest.mark.django_db
+class TestMCPPlaybookUpdate:
+    """MCP-PB-10 to MCP-PB-13: Update playbook scenarios."""
+    
+    def test_mcp_pb_10_update_draft_playbook_increments_version(self, setup_user_context):
+        """Scenario: MCP-PB-10 Update draft playbook increments version"""
+        created = create_playbook(name="Original Name", description="Original Description", category="development")
+        
+        result = update_playbook(playbook_id=created['id'], name="Updated Name")
+        
+        assert result['name'] == "Updated Name"
+        assert result['version'] == '0.2'
+        # Version incremented
+
+
+@pytest.mark.django_db
+class TestMCPPlaybookDelete:
+    """MCP-PB-14: Delete playbook scenarios."""
+    
+    def test_mcp_pb_14_delete_draft_playbook_success(self, setup_user_context):
+        """Scenario: MCP-PB-14 Delete draft playbook removes from database"""
+        created = create_playbook(name="To Delete", description="Will be deleted", category="test")
+        
+        result = delete_playbook(playbook_id=created['id'])
+        
+        assert result['deleted'] is True
+        assert not Playbook.objects.filter(id=created['id']).exists()
