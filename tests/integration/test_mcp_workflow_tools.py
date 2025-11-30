@@ -1,6 +1,8 @@
 """Integration tests for Workflow MCP tools."""
 import pytest
+import pytest_asyncio
 from decimal import Decimal
+from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from methodology.models import Playbook, Workflow
@@ -18,36 +20,40 @@ def setup_user_context(maria):
     set_current_user(maria)
     return maria
 
-@pytest.fixture
-def draft_playbook(setup_user_context):
-    return create_playbook(name="Test Playbook", description="Test", category="dev")
+@pytest_asyncio.fixture
+async def draft_playbook(setup_user_context):
+    return await create_playbook(name="Test Playbook", description="Test", category="dev")
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 class TestMCPWorkflowCreate:
-    def test_mcp_wf_01_create_workflow_increments_parent_version(self, setup_user_context, draft_playbook):
+    @pytest.mark.asyncio
+    async def test_mcp_wf_01_create_workflow_increments_parent_version(self, setup_user_context, draft_playbook):
         """Scenario: MCP-WF-01 Create workflow increments parent playbook version"""
-        result = create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Test")
+        result = await create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Test")
         
         assert result['id'] is not None
         assert result['playbook_id'] == draft_playbook['id']
         
-        playbook = Playbook.objects.get(id=draft_playbook['id'])
+        playbook = await sync_to_async(Playbook.objects.get)(id=draft_playbook['id'])
         assert playbook.version > Decimal('0.1')  # Version incremented
     
-    def test_mcp_wf_02_create_workflow_duplicate_name_raises_error(self, setup_user_context, draft_playbook):
+    @pytest.mark.asyncio
+    async def test_mcp_wf_02_create_workflow_duplicate_name_raises_error(self, setup_user_context, draft_playbook):
         """Scenario: MCP-WF-02 Duplicate workflow name raises ValidationError"""
-        create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Test")
+        await create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Test")
         
         with pytest.raises(ValidationError):
-            create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Different")
+            await create_workflow(playbook_id=draft_playbook['id'], name="Design Phase", description="Different")
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True)
 class TestMCPWorkflowDelete:
-    def test_mcp_wf_13_delete_workflow_success(self, setup_user_context, draft_playbook):
+    @pytest.mark.asyncio
+    async def test_mcp_wf_13_delete_workflow_success(self, setup_user_context, draft_playbook):
         """Scenario: MCP-WF-13 Delete workflow removes from database"""
-        workflow = create_workflow(playbook_id=draft_playbook['id'], name="To Delete", description="Test")
+        workflow = await create_workflow(playbook_id=draft_playbook['id'], name="To Delete", description="Test")
         
-        result = delete_workflow(workflow_id=workflow['id'])
+        result = await delete_workflow(workflow_id=workflow['id'])
         
         assert result['deleted'] is True
-        assert not Workflow.objects.filter(id=workflow['id']).exists()
+        exists = await sync_to_async(Workflow.objects.filter(id=workflow['id']).exists)()
+        assert not exists
