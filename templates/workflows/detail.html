@@ -56,13 +56,55 @@
     </div>
     {% endif %}
 
-    <!-- Activities Section (Placeholder) -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Activities ({{ workflow.get_activity_count }})</h5>
+    <!-- Activities Flow Diagram -->
+    <div class="card mb-4" data-testid="activities-section">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-diagram-project"></i> Activities Flow ({{ activity_count }})
+            </h5>
+            {% if can_edit %}
+            <a href="{% url 'activity_create' playbook_pk=playbook.pk workflow_pk=workflow.pk %}" 
+               class="btn btn-sm btn-primary"
+               data-testid="add-activity-btn"
+               data-bs-toggle="tooltip"
+               data-bs-placement="left"
+               title="Create a new activity in this workflow">
+                <i class="fa-solid fa-plus"></i> Add Activity
+            </a>
+            {% endif %}
         </div>
         <div class="card-body">
-            <p class="text-muted">Activities will be displayed here when Activity model is implemented.</p>
+            {% if has_activities %}
+                {% if activities_svg %}
+                    <!-- Graphviz SVG Flow Diagram -->
+                    <div class="graph-container" data-testid="activities-graph">
+                        {{ activities_svg|safe }}
+                    </div>
+                {% else %}
+                    <!-- Graph generation failed - show message -->
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa-solid fa-exclamation-triangle"></i>
+                        <strong>Graph visualization unavailable.</strong>
+                        Unable to generate activity flow diagram. Graphviz may not be installed.
+                    </div>
+                {% endif %}
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-5" data-testid="empty-activities-state">
+                    <i class="fa-solid fa-diagram-project fa-4x text-muted mb-3"></i>
+                    <h5>No Activities Yet</h5>
+                    <p class="text-muted">This workflow doesn't have any activities defined.</p>
+                    {% if can_edit %}
+                    <a href="{% url 'activity_create' playbook_pk=playbook.pk workflow_pk=workflow.pk %}" 
+                       class="btn btn-primary"
+                       data-testid="create-first-activity-btn"
+                       data-bs-toggle="tooltip"
+                       title="Create the first activity for this workflow">
+                        <i class="fa-solid fa-plus"></i> Create First Activity
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -78,6 +120,41 @@
     </div>
     {% endif %}
 </div>
+
+<style>
+    /* Activity Graph SVG Styling */
+    .graph-container {
+        overflow-x: auto;
+        margin: 1rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .graph-container svg {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    /* Make SVG links clickable with pointer cursor */
+    .graph-container svg a {
+        cursor: pointer;
+    }
+    
+    /* Hover effect for activity nodes */
+    .graph-container svg a:hover {
+        opacity: 0.85;
+    }
+    
+    /* Responsive handling for smaller screens */
+    @media (max-width: 768px) {
+        .graph-container {
+            padding: 0.5rem;
+        }
+    }
+</style>
 
 <script>
     // Initialize tooltips

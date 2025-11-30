@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit {{ activity.name }} - Activity{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="activity-edit">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook_pk=playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=workflow.pk %}">{{ workflow.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}">Activities</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}">{{ activity.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>
+                <i class="fa-solid fa-edit"></i> Edit Activity
+            </h2>
+            <p class="text-muted">{{ activity.name }} in {{ workflow.name }}</p>
+        </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Activity Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" data-testid="activity-form">
+                        {% csrf_token %}
+                        
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control {% if errors.name %}is-invalid{% endif %}" 
+                                   id="name" 
+                                   name="name" 
+                                   maxlength="200"
+                                   value="{{ form_data.name }}"
+                                   data-testid="name-input"
+                                   required>
+                            {% if errors.name %}
+                                <div class="invalid-feedback">{{ errors.name }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Unique name for this activity (max 200 characters)</small>
+                        </div>
+
+                        <!-- Guidance -->
+                        <div class="mb-3">
+                            <label for="guidance" class="form-label">
+                                Guidance <span class="text-danger">*</span>
+                                <i class="fa-solid fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip"
+                                   title="Supports Markdown formatting, code blocks, images, and Mermaid diagrams"></i>
+                            </label>
+                            <textarea class="form-control {% if errors.guidance %}is-invalid{% endif %}" 
+                                      id="guidance" 
+                                      name="guidance" 
+                                      rows="8"
+                                      data-testid="guidance-input"
+                                      required>{{ form_data.guidance }}</textarea>
+                            {% if errors.guidance %}
+                                <div class="invalid-feedback">{{ errors.guidance }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                <i class="fa-brands fa-markdown"></i> Rich Markdown guidance with instructions, examples, images, and Mermaid diagrams
+                            </small>
+                        </div>
+
+                        <!-- Phase -->
+                        <div class="mb-3">
+                            <label for="phase" class="form-label">
+                                Phase
+                                <i class="fa-solid fa-info-circle text-muted" 
+                                   data-bs-toggle="tooltip"
+                                   title="Optional grouping for organizing activities"></i>
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="phase" 
+                                   name="phase"
+                                   maxlength="100"
+                                   value="{{ form_data.phase }}"
+                                   data-testid="phase-input"
+                                   placeholder="e.g., Planning, Execution, Review">
+                            <small class="form-text text-muted">Optional: Group this activity into a phase</small>
+                        </div>
+
+                        <!-- Order -->
+                        <div class="mb-3">
+                            <label for="order" class="form-label">Order</label>
+                            <input type="number" 
+                                   class="form-control {% if errors.order %}is-invalid{% endif %}" 
+                                   id="order" 
+                                   name="order"
+                                   min="1"
+                                   value="{{ form_data.order }}"
+                                   data-testid="order-input"
+                                   required>
+                            {% if errors.order %}
+                                <div class="invalid-feedback">{{ errors.order }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Execution order within workflow</small>
+                        </div>
+
+                        <!-- Dependencies -->
+                        <div class="row">
+                            <!-- Predecessor -->
+                            <div class="col-md-6 mb-4">
+                                <label for="predecessor" class="form-label">
+                                    Predecessor Activity
+                                    <i class="fa-solid fa-info-circle text-muted" 
+                                       data-bs-toggle="tooltip"
+                                       title="Activity that must complete before this one"></i>
+                                </label>
+                                <select name="predecessor" 
+                                        id="predecessor" 
+                                        class="form-select"
+                                        data-testid="predecessor-select"
+                                        {% if disable_dependencies %}disabled{% endif %}>
+                                    <option value="">-- None --</option>
+                                    {% for act in available_predecessors %}
+                                    <option value="{{ act.id }}" 
+                                            {% if form_data.predecessor|stringformat:"s" == act.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ act.reference_name }} - {{ act.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% if disable_dependencies %}
+                                <small class="form-text text-muted">No other activities yet - dependencies will be available after creating more activities</small>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Successor -->
+                            <div class="col-md-6 mb-4">
+                                <label for="successor" class="form-label">
+                                    Successor Activity
+                                    <i class="fa-solid fa-info-circle text-muted" 
+                                       data-bs-toggle="tooltip"
+                                       title="Next activity that depends on this one"></i>
+                                </label>
+                                <select name="successor" 
+                                        id="successor" 
+                                        class="form-select"
+                                        data-testid="successor-select"
+                                        {% if disable_dependencies %}disabled{% endif %}>
+                                    <option value="">-- None --</option>
+                                    {% for act in available_successors %}
+                                    <option value="{{ act.id }}" 
+                                            {% if form_data.successor|stringformat:"s" == act.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ act.reference_name }} - {{ act.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% if disable_dependencies %}
+                                <small class="form-text text-muted">No other activities yet - dependencies will be available after creating more activities</small>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a 
+                                href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}" 
+                                class="btn btn-secondary"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Cancel and return to activity detail"
+                                data-testid="cancel-btn">
+                                <i class="fa-solid fa-times"></i> Cancel
+                            </a>
+                            <button 
+                                type="submit" 
+                                class="btn btn-primary"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Save changes to activity"
+                                data-testid="save-btn">
+                                <i class="fa-solid fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Helper Info Sidebar (3rd column) -->
+        <div class="col-md-4">
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fa-solid fa-lightbulb text-warning"></i> Editing Activity
+                    </h6>
+                    <p class="small mb-0">
+                        Updating this activity will preserve its history.
+                        All changes are logged with timestamps.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card border-0 bg-light mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="fa-solid fa-info-circle text-info"></i> Original Activity
+                    </h6>
+                    <dl class="small mb-0">
+                        <dt>Created:</dt>
+                        <dd>{{ activity.created_at|date:"M d, Y" }}</dd>
+                        <dt>Last Updated:</dt>
+                        <dd>{{ activity.updated_at|date:"M d, Y H:i" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Predecessor/Successor filtering logic
+        const predecessorSelect = document.getElementById('predecessor');
+        const successorSelect = document.getElementById('successor');
+        
+        if (predecessorSelect && successorSelect) {
+            // Store original options
+            const predecessorOptions = Array.from(predecessorSelect.options).map(opt => ({
+                value: opt.value,
+                text: opt.text
+            }));
+            const successorOptions = Array.from(successorSelect.options).map(opt => ({
+                value: opt.value,
+                text: opt.text
+            }));
+            
+            // Function to filter options
+            function filterOptions(sourceSelect, targetSelect, targetOptions) {
+                const selectedValue = sourceSelect.value;
+                const currentTargetValue = targetSelect.value;
+                
+                // Rebuild target select options
+                targetSelect.innerHTML = '';
+                targetOptions.forEach(opt => {
+                    // Only add option if it's not the selected value in source
+                    if (!selectedValue || opt.value !== selectedValue) {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.text = opt.text;
+                        if (opt.value === currentTargetValue) {
+                            option.selected = true;
+                        }
+                        targetSelect.appendChild(option);
+                    }
+                });
+            }
+            
+            // When predecessor changes, filter successor options
+            predecessorSelect.addEventListener('change', function() {
+                filterOptions(predecessorSelect, successorSelect, successorOptions);
+            });
+            
+            // When successor changes, filter predecessor options
+            successorSelect.addEventListener('change', function() {
+                filterOptions(successorSelect, predecessorSelect, predecessorOptions);
+            });
+            
+            // Run initial filtering on page load
+            if (predecessorSelect.value) {
+                filterOptions(predecessorSelect, successorSelect, successorOptions);
+            }
+            if (successorSelect.value) {
+                filterOptions(successorSelect, predecessorSelect, predecessorOptions);
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -38,3 +38,44 @@ class TestPlaybookView:
         """PB-VIEW-01: Open playbook detail page."""
         response = self.client.get(reverse('playbook_detail', kwargs={'pk': self.playbook.id}))
         assert response.status_code == 200
+    
+    def test_pb_view_02_view_header_information(self):
+        """PB-VIEW-02: View header with name, version, status, author, timestamps."""
+        response = self.client.get(reverse('playbook_detail', kwargs={'pk': self.playbook.id}))
+        
+        assert response.status_code == 200
+        assert b'React Frontend Development' in response.content
+        assert b'v2' in response.content
+        assert b'Active' in response.content or b'active' in response.content
+        assert b'data-testid="playbook-header"' in response.content
+        assert b'data-testid="version-badge"' in response.content
+        assert b'data-testid="status-badge"' in response.content
+    
+    def test_pb_view_03_view_overview_tab_default(self):
+        """PB-VIEW-03: Overview tab selected by default with quick stats."""
+        response = self.client.get(reverse('playbook_detail', kwargs={'pk': self.playbook.id}))
+        
+        assert response.status_code == 200
+        # Check Overview tab is default/active
+        assert b'data-testid="tab-overview"' in response.content
+        assert b'Quick Stats' in response.content
+        # Check stats are displayed
+        assert b'Workflows' in response.content
+        assert b'data-testid="stat-workflows"' in response.content
+    
+    def test_pb_view_04_view_metadata_in_overview(self):
+        """PB-VIEW-04: View metadata (category, tags, created, source)."""
+        response = self.client.get(reverse('playbook_detail', kwargs={'pk': self.playbook.id}))
+        
+        assert response.status_code == 200
+        assert b'development' in response.content.lower() or b'Development' in response.content
+        assert b'react' in response.content
+        assert b'frontend' in response.content
+        assert b'data-testid="metadata-section"' in response.content
+    
+    def test_pb_view_05_view_workflows_list_in_overview(self):
+        """PB-VIEW-05: View workflows list in Overview tab."""
+        response = self.client.get(reverse('playbook_detail', kwargs={'pk': self.playbook.id}))
+        
+        assert response.status_code == 200
+        assert b'data-testid="workflows-section"' in response.content

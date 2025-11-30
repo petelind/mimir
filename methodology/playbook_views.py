@@ -159,6 +159,12 @@ def playbook_create_step2(request):
 
 def _create_playbook_from_wizard(wizard_data, status, user):
     """Create Playbook instance from wizard data."""
+    from decimal import Decimal
+    
+    # Set initial version based on status
+    # Draft: 0.1, Released/Active: 1.0
+    initial_version = Decimal('1.0') if status in ['released', 'active'] else Decimal('0.1')
+    
     playbook = Playbook.objects.create(
         name=wizard_data['name'],
         description=wizard_data['description'],
@@ -166,11 +172,11 @@ def _create_playbook_from_wizard(wizard_data, status, user):
         tags=wizard_data.get('tags', []),
         visibility=wizard_data.get('visibility', 'private'),
         status=status,
-        version=1,
+        version=initial_version,
         source='owned',
         author=user
     )
-    logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {user.username}")
+    logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {user.username} with version {initial_version}")
     return playbook
 
 
@@ -288,13 +294,28 @@ def playbook_detail(request, pk):
         messages.error(request, "You don't have permission to view this playbook.")
         return redirect('playbook_list')
     
+    # Calculate Quick Stats for Overview tab
+    workflows = playbook.workflows.all()
+    quick_stats = {
+        'workflows': workflows.count(),
+        'phases': 0,  # TODO: Implement when Phase model exists
+        'activities': 0,  # TODO: Implement when Activity model exists
+        'artifacts': 0,  # TODO: Implement when Artifact model exists
+        'roles': 0,  # TODO: Implement when Role model exists
+        'howtos': 0,  # TODO: Implement when Howto model exists
+    }
+    logger.info(f"Quick stats calculated for playbook {pk}: {quick_stats}")
+    
     context = {
         'playbook': playbook,
-        'workflows': playbook.workflows.all(),
+        'workflows': workflows,
         'versions': playbook.versions.all()[:5],  # Latest 5 versions
-        'can_edit': playbook.can_edit(request.user)
+        'quick_stats': quick_stats,
+        'can_edit': playbook.source == 'owned' and playbook.author == request.user,
+        'active_tab': request.GET.get('tab', 'overview'),
     }
     
+    logger.info(f"Playbook detail rendered for user {request.user.username}")
     return render(request, 'playbooks/detail.html', context)
 
 
@@ -308,12 +329,20 @@ def playbook_add(request):
 
 @login_required
 def playbook_edit(request, pk):
-    """Edit playbook metadata."""
+    """
+    Edit playbook metadata.
+    
+    Released playbooks cannot be edited directly - changes must go through PIP.
+    Draft playbooks increment version (0.1 → 0.2) on each save.
+    """
     playbook = get_object_or_404(Playbook, pk=pk)
     
     # Ownership check
     if not playbook.can_edit(request.user):
-        messages.error(request, "You can only edit playbooks you own.")
+        if playbook.is_released:
+            messages.error(request, "This playbook is Released and cannot be edited directly. Please submit a PIP (Process Improvement Proposal) to make changes.")
+        else:
+            messages.error(request, "You can only edit playbooks you own.")
         return redirect('playbook_detail', pk=pk)
     
     if request.method == 'POST':
@@ -366,10 +395,15 @@ def playbook_edit(request, pk):
         else:
             playbook.tags = []
         
+        # Increment version for draft playbooks
+        if playbook.is_draft:
+            playbook.increment_version()
+            logger.info(f"Incremented draft playbook {pk} version to {playbook.version}")
+        
         playbook.save()
         
         logger.info(f"User {request.user.username} updated playbook {pk}")
-        messages.success(request, "Playbook updated successfully")
+        messages.success(request, f"Playbook updated successfully (v{playbook.version})")
         return redirect('playbook_detail', pk=pk)
     
     # GET request

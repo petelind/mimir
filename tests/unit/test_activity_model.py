@@ -1,256 +1,250 @@
-"""Unit tests for Activity model.
-
-Tests cover model creation, validation, methods, and queries.
-Follows do-test-first.md - tests written before implementation.
-"""
+"""Unit tests for Activity model."""
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.test import TestCase
-from django.core.exceptions import ValidationError
-from methodology.models.activity import Activity
-from methodology.models.playbook import Playbook
+from django.db import IntegrityError
+from methodology.models import Playbook, Workflow, Activity
 
 User = get_user_model()
 
 
+@pytest.fixture
+def test_user():
+    """Create test user."""
+    return User.objects.create_user(username='maria', password='test123')
+
+
+@pytest.fixture
+def test_playbook(test_user):
+    """Create test playbook."""
+    return Playbook.objects.create(
+        name='Test Playbook',
+        description='Test description',
+        author=test_user,
+        source='owned',
+        status='active'
+    )
+
+
+@pytest.fixture
+def test_workflow(test_playbook):
+    """Create test workflow."""
+    return Workflow.objects.create(
+        name='Test Workflow',
+        description='Test workflow description',
+        playbook=test_playbook,
+        order=1
+    )
+
+
 @pytest.mark.django_db
-class TestActivityModel(TestCase):
+class TestActivityModel:
     """Test Activity model functionality."""
     
-    def setUp(self):
-        """Set up test data."""
-        self.user = User.objects.create_user(
-            username='testuser',
-            email='test@example.com',
-            password='testpass123'
-        )
-        self.playbook = Playbook.objects.create(
-            name='Test Playbook',
-            description='A test playbook',
-            category='development',
-            author=self.user
-        )
-    
-    def test_activity_creation_minimal_fields(self):
-        """Test creating activity with minimal required fields."""
+    def test_create_activity(self, test_workflow):
+        """Test creating an activity with all fields."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='User viewed dashboard'
+            workflow=test_workflow,
+            name='Design Component',
+            guidance='Create component design',
+            order=1,
+            phase='Planning'
         )
         
-        assert activity.user == self.user
-        assert activity.action_type == 'dashboard_viewed'
-        assert activity.description == 'User viewed dashboard'
-        assert activity.playbook is None
-        assert activity.metadata == {}
-        assert activity.timestamp is not None
-        assert str(activity) == f"{self.user.username}: dashboard_viewed at {activity.timestamp}"
+        assert activity.id is not None
+        assert activity.name == 'Design Component'
+        assert activity.guidance == 'Create component design'
+        assert activity.order == 1
+        assert activity.phase == 'Planning'
+        assert activity.workflow == test_workflow
     
-    def test_activity_creation_with_playbook(self):
-        """Test creating activity with related playbook."""
+    def test_activity_defaults(self, test_workflow):
+        """Test activity default values."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_viewed',
-            playbook=self.playbook,
-            description='User viewed playbook'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test guidance'
         )
         
-        assert activity.playbook == self.playbook
-        assert activity.user == self.user
-        assert activity.action_type == 'playbook_viewed'
+        assert activity.order == 1
+        assert activity.phase is None        
+        assert activity.created_at is not None
+        assert activity.updated_at is not None
     
-    def test_activity_creation_with_metadata(self):
-        """Test creating activity with metadata."""
-        metadata = {'ip_address': '192.168.1.1', 'user_agent': 'Chrome'}
+    def test_activity_str_representation(self, test_workflow):
+        """Test __str__ method shows name and order."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_created',
-            playbook=self.playbook,
-            description='User created playbook',
-            metadata=metadata
+            workflow=test_workflow,
+            name='Setup Environment',
+            guidance='Configure dev environment',
+            order=3
         )
         
-        assert activity.metadata == metadata
+        assert str(activity) == 'Setup Environment (#3)'
     
-    def test_activity_str_representation(self):
-        """Test string representation of activity."""
-        activity = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_created',
-            description='User created playbook'
+    def test_unique_constraint_per_workflow(self, test_workflow):
+        """Test unique constraint: same name within workflow not allowed."""
+        Activity.objects.create(
+            workflow=test_workflow,
+            name='Duplicate Name',
+            guidance='First activity'
         )
         
-        expected = f"{self.user.username}: playbook_created at {activity.timestamp}"
-        assert str(activity) == expected
+        with pytest.raises(IntegrityError):
+            Activity.objects.create(
+                workflow=test_workflow,
+                name='Duplicate Name',  # Same name in same workflow
+                guidance='Second activity'
+            )
     
-    def test_activity_ordering(self):
-        """Test activities are ordered by timestamp descending."""
-        # Create activities with delay to ensure different timestamps
-        import time
+    def test_unique_constraint_across_workflows(self, test_playbook):
+        """Test that same name is allowed across different workflows."""
+        workflow1 = Workflow.objects.create(
+            name='Workflow 1',
+            playbook=test_playbook,
+            order=1
+        )
+        workflow2 = Workflow.objects.create(
+            name='Workflow 2',
+            playbook=test_playbook,
+            order=2
+        )
+        
+        # Should allow same name in different workflows
         activity1 = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='First activity'
+            workflow=workflow1,
+            name='Same Name',
+            guidance='In workflow 1'
         )
-        time.sleep(0.01)  # Small delay
         activity2 = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_viewed',
-            description='Second activity'
+            workflow=workflow2,
+            name='Same Name',
+            guidance='In workflow 2'
         )
         
-        activities = Activity.objects.all()
-        assert activities[0] == activity2  # Most recent first
-        assert activities[1] == activity1
+        assert activity1.name == activity2.name
+        assert activity1.workflow != activity2.workflow
     
-    def test_invalid_action_type_raises_validation_error(self):
-        """Test that invalid action type raises validation error."""
-        with pytest.raises(ValidationError):
-            activity = Activity(
-                user=self.user,
-                action_type='invalid_action',
-                description='Invalid action'
-            )
-            activity.full_clean()
+    def test_ordering_by_workflow_order_name(self, test_workflow):
+        """Test default ordering is by workflow, order, name."""
+        Activity.objects.create(workflow=test_workflow, name='B Activity', guidance='B', order=2)
+        Activity.objects.create(workflow=test_workflow, name='A Activity', guidance='A', order=1)
+        Activity.objects.create(workflow=test_workflow, name='C Activity', guidance='C', order=1)
+        
+        activities = list(Activity.objects.all())
+        
+        # Should be ordered by order first, then name
+        assert activities[0].name == 'A Activity'  # order=1, alphabetically first
+        assert activities[1].name == 'C Activity'  # order=1, alphabetically second
+        assert activities[2].name == 'B Activity'  # order=2
     
-    def test_activity_user_relationship(self):
-        """Test activity-user relationship."""
+    def test_is_owned_by_owner(self, test_user, test_workflow):
+        """Test is_owned_by returns True for playbook owner."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='User viewed dashboard'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
         )
         
-        # Test reverse relationship
-        user_activities = self.user.activities.all()
-        assert activity in user_activities
-        assert user_activities.count() == 1
+        assert activity.is_owned_by(test_user) is True
     
-    def test_activity_playbook_relationship(self):
-        """Test activity-playbook relationship."""
+    def test_is_owned_by_non_owner(self, test_workflow):
+        """Test is_owned_by returns False for non-owner."""
+        other_user = User.objects.create_user(username='john', password='test123')
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_viewed',
-            playbook=self.playbook,
-            description='User viewed playbook'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
         )
         
-        # Test reverse relationship
-        playbook_activities = self.playbook.activities.all()
-        assert activity in playbook_activities
-        assert playbook_activities.count() == 1
+        assert activity.is_owned_by(other_user) is False
     
-    def test_get_recent_activities_for_user_success(self):
-        """Test get_recent_activities_for_user with valid parameters."""
-        # Create multiple activities
+    def test_can_edit_owner_owned_playbook(self, test_user, test_workflow):
+        """Test can_edit returns True for owner of owned playbook."""
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        assert activity.can_edit(test_user) is True
+    
+    def test_can_edit_downloaded_playbook(self, test_user):
+        """Test can_edit returns False for downloaded playbook."""
+        playbook = Playbook.objects.create(
+            name='Downloaded Playbook',
+            description='Test',
+            author=test_user,
+            source='downloaded',  # Not owned
+            status='active'
+        )
+        workflow = Workflow.objects.create(
+            name='Test Workflow',
+            playbook=playbook,
+            order=1
+        )
+        activity = Activity.objects.create(
+            workflow=workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        assert activity.can_edit(test_user) is False
+    
+    def test_cascade_delete_with_workflow(self, test_workflow):
+        """Test that deleting workflow deletes its activities."""
         Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='Dashboard view 1'
+            workflow=test_workflow,
+            name='Activity 1',
+            guidance='Test'
         )
         Activity.objects.create(
-            user=self.user,
-            action_type='playbook_viewed',
-            playbook=self.playbook,
-            description='Playbook view 1'
+            workflow=test_workflow,
+            name='Activity 2',
+            guidance='Test'
         )
         
-        # Test the method
-        activities = Activity.get_recent_activities_for_user(self.user, limit=5)
-        assert activities.count() == 2
-        assert activities[0].action_type == 'playbook_viewed'  # Most recent
-    
-    def test_get_recent_activities_for_user_invalid_limit(self):
-        """Test get_recent_activities_for_user with invalid limit."""
-        with pytest.raises(ValueError, match="Limit must be a positive integer"):
-            Activity.get_recent_activities_for_user(self.user, limit=0)
+        assert Activity.objects.count() == 2
         
-        with pytest.raises(ValueError, match="Limit must be a positive integer"):
-            Activity.get_recent_activities_for_user(self.user, limit=-1)
+        test_workflow.delete()
         
-        with pytest.raises(ValueError, match="Limit must be a positive integer"):
-            Activity.get_recent_activities_for_user(self.user, limit='invalid')
+        assert Activity.objects.count() == 0
     
-    def test_log_activity_success(self):
-        """Test log_activity with valid parameters."""
-        activity = Activity.log_activity(
-            user=self.user,
-            action_type='playbook_created',
-            playbook=self.playbook,
-            description='Created new playbook',
-            metadata={'version': 1}
-        )
-        
-        assert activity.user == self.user
-        assert activity.action_type == 'playbook_created'
-        assert activity.playbook == self.playbook
-        assert activity.description == 'Created new playbook'
-        assert activity.metadata == {'version': 1}
-    
-    def test_log_activity_invalid_action_type(self):
-        """Test log_activity with invalid action type."""
-        with pytest.raises(ValueError, match="Invalid action_type"):
-            Activity.log_activity(
-                user=self.user,
-                action_type='invalid_action',
-                description='Invalid action'
-            )
-    
-    def test_get_action_display_with_icon(self):
-        """Test get_action_display_with_icon method."""
+    def test_updated_at_changes(self, test_workflow):
+        """Test that updated_at changes on save."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='playbook_created',
-            description='Created playbook'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Original description'
         )
         
-        icon_display = activity.get_action_display_with_icon()
-        assert 'fa-plus-circle' in icon_display
-        assert 'Playbook Created' in icon_display
+        original_updated = activity.updated_at
+        
+        # Update activity
+        activity.guidance = 'New description'
+        activity.save()
+        activity.refresh_from_db()
+        
+        assert activity.updated_at > original_updated
     
-    def test_is_recent_true(self):
-        """Test is_recent method for recent activity."""
+    def test_get_phase_display_name_with_phase(self, test_workflow):
+        """Test get_phase_display_name returns phase when set."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='Recent activity'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test',
+            phase='Planning'
         )
         
-        # Should be recent within 30 minutes
-        assert activity.is_recent(minutes=30) is True
+        assert activity.get_phase_display_name() == 'Planning'
     
-    def test_is_recent_false(self):
-        """Test is_recent method for old activity."""
+    def test_get_phase_display_name_without_phase(self, test_workflow):
+        """Test get_phase_display_name returns Unassigned when no phase."""
         activity = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='Old activity'
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
         )
         
-        # Should not be recent within 0 minutes
-        assert activity.is_recent(minutes=0) is False
+        assert activity.get_phase_display_name() == 'Unassigned'
     
-    def test_activity_metadata_default(self):
-        """Test metadata defaults to empty dict."""
-        activity = Activity.objects.create(
-            user=self.user,
-            action_type='dashboard_viewed',
-            description='Test activity'
-        )
-        
-        assert activity.metadata == {}
-    
-    def test_activity_choices_are_valid(self):
-        """Test all action_type choices are valid."""
-        valid_choices = dict(Activity.ACTION_TYPE_CHOICES)
-        
-        for choice, display in valid_choices.items():
-            activity = Activity.objects.create(
-                user=self.user,
-                action_type=choice,
-                description=f'Test {display}'
-            )
-            assert activity.action_type == choice
-            assert activity.get_action_type_display() == display

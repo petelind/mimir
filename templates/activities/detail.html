@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+{% load markdown_filters %}
+
+{% block title %}{{ activity.name }} - Activity{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="activity-detail">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_list' playbook_pk=playbook.pk %}">Workflows</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=workflow.pk %}">{{ workflow.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}">Activities</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ activity.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4" data-testid="activity-header">
+        <div>
+            <h1 class="display-6" data-testid="activity-title">
+                <i class="fa-solid fa-tasks"></i> 
+                {% if activity.reference_name %}
+                <span class="badge bg-secondary me-2">{{ activity.reference_name }}</span>
+                {% endif %}
+                {{ activity.name }}
+            </h1>
+            <p class="text-muted">
+                <span class="badge bg-secondary" data-testid="order-badge">Order: #{{ activity.order }}</span>
+                {% if activity.phase %}
+                <span class="badge bg-info" data-testid="phase-badge">{{ activity.phase }}</span>
+                {% endif %}
+                {% if activity.predecessor or activity.successor %}
+                <span class="badge bg-info" data-testid="dependencies-badge">
+                    <i class="fa-solid fa-link"></i> Has Dependencies
+                </span>
+                {% endif %}
+            </p>
+            <p class="text-muted small">
+                <i class="fa-solid fa-clock"></i> Updated {{ activity.updated_at|timesince }} ago
+            </p>
+        </div>
+        <div class="btn-group">
+            {% if can_edit %}
+                <a href="{% url 'activity_edit' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}" 
+                   class="btn btn-primary"
+                   data-testid="edit-btn"
+                   data-bs-toggle="tooltip"
+                   title="Edit this activity">
+                    <i class="fa-solid fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'activity_delete' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.pk %}" 
+                   class="btn btn-danger"
+                   data-testid="delete-btn"
+                   data-bs-toggle="tooltip"
+                   title="Delete this activity">
+                    <i class="fa-solid fa-trash"></i> Delete
+                </a>
+            {% endif %}
+            <a href="{% url 'activity_list' playbook_pk=playbook.pk workflow_pk=workflow.pk %}" 
+               class="btn btn-outline-secondary"
+               data-bs-toggle="tooltip"
+               title="Back to activities list">
+                <i class="fa-solid fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <!-- Activity Details -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Guidance Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-book-open"></i> Guidance
+                        <i class="fa-brands fa-markdown text-muted ms-2" 
+                           data-bs-toggle="tooltip" 
+                           title="Rendered from Markdown"></i>
+                    </h5>
+                </div>
+                <div class="card-body markdown-content" data-testid="guidance-content">
+                    {{ activity.guidance|markdown }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Details Card -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-info-circle"></i> Details</h5>
+                </div>
+                <div class="card-body" data-testid="details-section">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Order:</dt>
+                        <dd class="col-sm-7">#{{ activity.order }}</dd>
+
+                        <dt class="col-sm-5">Phase:</dt>
+                        <dd class="col-sm-7">{{ activity.get_phase_display_name }}</dd>
+
+                        {% if activity.predecessor %}
+                        <dt class="col-sm-5">Predecessor:</dt>
+                        <dd class="col-sm-7">
+                            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.predecessor.id %}"
+                               data-testid="predecessor-link">
+                                <span class="badge bg-info">{{ activity.predecessor.reference_name }}</span>
+                                {{ activity.predecessor.name }}
+                            </a>
+                        </dd>
+                        {% endif %}
+                        
+                        {% if activity.successor %}
+                        <dt class="col-sm-5">Successor:</dt>
+                        <dd class="col-sm-7">
+                            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=workflow.pk activity_pk=activity.successor.id %}"
+                               data-testid="successor-link">
+                                <span class="badge bg-info">{{ activity.successor.reference_name }}</span>
+                                {{ activity.successor.name }}
+                            </a>
+                        </dd>
+                        {% endif %}
+
+                        <dt class="col-sm-5">Created:</dt>
+                        <dd class="col-sm-7">{{ activity.created_at|date:"M d, Y" }}</dd>
+
+                        <dt class="col-sm-5">Last Updated:</dt>
+                        <dd class="col-sm-7">{{ activity.updated_at|date:"M d, Y" }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Workflow Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-sitemap"></i> Workflow</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-title">{{ workflow.name }}</h6>
+                    <p class="card-text small text-muted">{{ workflow.description|truncatewords:20 }}</p>
+                    <a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=workflow.pk %}" 
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="fa-solid fa-arrow-right"></i> View Workflow
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mermaid.js for diagram rendering -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ 
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'loose'
+    });
+</script>
+
+<style>
+    /* Markdown content styling */
+    .markdown-content {
+        line-height: 1.6;
+    }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3,
+    .markdown-content h4, .markdown-content h5, .markdown-content h6 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .markdown-content h1 { font-size: 1.75rem; }
+    .markdown-content h2 { font-size: 1.5rem; }
+    .markdown-content h3 { font-size: 1.25rem; }
+    .markdown-content pre {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        overflow-x: auto;
+    }
+    .markdown-content code {
+        background-color: #f8f9fa;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+    }
+    .markdown-content pre code {
+        background-color: transparent;
+        padding: 0;
+    }
+    .markdown-content img {
+        max-width: 100%;
+        height: auto;
+    }
+    .markdown-content table {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-collapse: collapse;
+    }
+    .markdown-content table th,
+    .markdown-content table td {
+        padding: 0.75rem;
+        border: 1px solid #dee2e6;
+    }
+    .markdown-content table thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+    .mermaid {
+        text-align: center;
+        margin: 1rem 0;
+    }
+</style>
+{% endblock %}

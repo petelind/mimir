@@ -1039,6 +1039,18 @@
                 <mxCell id="v2-arrow-tool-find-pb" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#666666;dashed=1;dashPattern=2 2;" parent="v2-root-1" source="v2-fob-playbooks-list" target="v2-tool-find-playbooks" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
+                <mxCell id="v2-playbook-versioning-note" value="📌 PLAYBOOK VERSIONING&#10;&#10;STATUS TYPES:&#10;• Draft (v0.1, v0.2, v0.3...)&#10;  - Editable via GUI/MCP&#10;  - Auto-increments on change&#10;  - Yellow badge&#10;&#10;• Released (v1.0, v2.0...)&#10;  - Read-only (locked)&#10;  - Changes via PIP only&#10;  - Blue badge&#10;&#10;TRANSITIONS:&#10;Draft → Release: [Release] btn&#10;  Draft v0.9 → Released v1.0&#10;  (one-way, cannot revert)&#10;&#10;Released → Modified: Submit PIP&#10;  (See ACT 9: PIPs)" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=8;fontStyle=0;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="750" y="490" width="200" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-playbook-create-version-note" value="✨ Creates at v0.1 (draft)&#10;Status: Draft or Released" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="545" y="565" width="150" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-playbook-view-version-note" value="📋 VIEW screen shows:&#10;• Version badge (v0.X or v1.X)&#10;• Status badge (color-coded)&#10;&#10;DRAFT buttons:&#10;  [Edit] editable&#10;  [Release] → v1.0&#10;&#10;RELEASED buttons:&#10;  [Edit] disabled (tooltip: use PIP)&#10;  [Submit PIP] → ACT 9" style="text;html=1;strokeColor=#9673a6;fillColor=#e1d5e7;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=0;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="280" y="690" width="160" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-playbook-edit-restriction-note" value="⚠️ DRAFT only&#10;Released: blocked&#10;Auto-increments version:&#10;v0.3 → v0.4" style="text;html=1;strokeColor=#b85450;fillColor=#f8cecc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="320" y="775" width="150" height="45" as="geometry"/>
+                </mxCell>
                 <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="900" width="220" height="30" as="geometry"/>
                 </mxCell>
@@ -1056,6 +1068,9 @@
                 </mxCell>
                 <mxCell id="v2-fob-workflows-delete" value="FOB-WORKFLOWS-&#10;DELETE_WORKFLOW&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="540" y="1050" width="150" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="v2-workflow-version-increment-note" value="⚡ Workflow changes&#10;auto-increment parent&#10;playbook version (if draft)" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=7;fontStyle=2;" parent="v2-root-1" vertex="1">
+                    <mxGeometry x="500" y="950" width="140" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-tool-workflows-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="100" y="1150" width="50" height="20" as="geometry"/>

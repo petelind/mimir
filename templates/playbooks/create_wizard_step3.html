@@ -97,9 +97,13 @@
             </h4>
         </div>
         <div class="card-body">
-            <div class="alert alert-warning">
-                <i class="fa-solid fa-exclamation-triangle"></i>
-                Choose how you want to save your playbook. You can change this later.
+            <div class="alert alert-info">
+                <i class="fa-solid fa-info-circle"></i>
+                <strong>Playbook Versioning &amp; Lifecycle:</strong>
+                <ul class="mb-0 mt-2">
+                    <li><strong>Draft</strong>: Starts at v0.1, editable via GUI/MCP, auto-increments version on every change (0.1 → 0.2 → 0.3...)</li>
+                    <li><strong>Released</strong>: Starts at v1.0, read-only, changes only via PIP (Process Improvement Proposal)</li>
+                </ul>
             </div>
 
             <form method="post" action="{% url 'playbook_create_step3' %}">
@@ -113,6 +117,11 @@
                             {{ radio.tag }}
                             <label class="form-check-label" for="{{ radio.id_for_label }}">
                                 {{ radio.choice_label }}
+                                {% if radio.choice_value == 'draft' %}
+                                <span class="text-muted small">(v0.1 - fully editable)</span>
+                                {% elif radio.choice_value == 'released' %}
+                                <span class="text-muted small">(v1.0 - controlled via PIP)</span>
+                                {% endif %}
                             </label>
                         </div>
                     {% endfor %}

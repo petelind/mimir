@@ -1,339 +1,312 @@
 """
-Activity service for managing user activity tracking and logging.
+Service layer for Activity operations.
 
-This service provides a clean interface for logging and retrieving user activities
-throughout the application. It abstracts the database operations and provides
-business logic for activity management.
+Provides business logic for activity CRUD operations, validation,
+and grouping functionality.
 """
 
 import logging
-from typing import List, Dict, Optional, Any
-from django.contrib.auth import get_user_model
-from django.db.models import QuerySet
-from methodology.models.activity import Activity
-from methodology.models.playbook import Playbook
+from django.db import IntegrityError
+from django.db import models
+from django.core.exceptions import ValidationError
+from methodology.models import Activity
 
 logger = logging.getLogger(__name__)
 
-User = get_user_model()
-
 
 class ActivityService:
-    """
-    Service for managing user activities and recent actions.
+    """Service class for activity operations."""
     
-    This service handles the business logic for:
-    - Logging user activities
-    - Retrieving recent activities for feeds
-    - Getting recent playbooks for dashboard
-    - Activity analytics and reporting
-    """
-    
-    def __init__(self):
+    @staticmethod
+    def create_activity(workflow, name, guidance='', phase=None, order=None, 
+                       predecessor=None, successor=None):
         """
-        Initialize the activity service.
+        Create activity with validation and auto-order.
         
-        Sets up logging and any required dependencies.
-        """
-        logger.info("ActivityService initialized")
-        pass
-    
-    def log_activity(
-        self, 
-        user: User, 
-        action_type: str, 
-        playbook: Optional[Playbook] = None, 
-        description: Optional[str] = None, 
-        metadata: Optional[Dict[str, Any]] = None
-    ) -> Activity:
-        """
-        Log a user activity with comprehensive error handling.
+        :param workflow: Parent workflow instance
+        :param name: Activity name (max 200 chars, unique within workflow)
+        :param guidance: Rich Markdown guidance with instructions, examples, diagrams (optional)
+        :param phase: Phase grouping (optional)
+        :param order: Execution order (auto-assigned if None)
+        :param predecessor: Previous activity (must be in same workflow)
+        :param successor: Next activity (must be in same workflow)
+        :returns: Created Activity instance
+        :raises ValidationError: If validation fails
         
-        Args:
-            user (User): The user performing the action
-            action_type (str): Type of action from Activity.ACTION_TYPE_CHOICES
-            playbook (Playbook, optional): Related playbook instance
-            description (str, optional): Human-readable description
-            metadata (dict, optional): Additional structured data
-            
-        Returns:
-            Activity: The created activity instance
-            
-        Raises:
-            ValueError: If action_type is invalid or user is None
-            ValidationError: If required fields are missing
-            DatabaseError: If database operation fails
-            
         Example:
-            >>> service = ActivityService()
-            >>> activity = service.log_activity(
-            ...     user=request.user,
-            ...     action_type='playbook_created',
-            ...     playbook=new_playbook,
-            ...     description="Created new playbook 'User Guide'"
+            >>> activity = ActivityService.create_activity(
+            ...     workflow=wf,
+            ...     name="Design Component",
+            ...     guidance="## Steps\n1. Review requirements\n2. Create mockup",
+            ...     phase="Planning",
+            ...     predecessor=previous_activity
             ... )
         """
-        if not user:
-            raise ValueError("User cannot be None")
+        # Validate name
+        if not name or not name.strip():
+            logger.warning(f"Activity creation failed: empty name for workflow {workflow.id}")
+            raise ValidationError("Activity name cannot be empty")
         
-        if not action_type:
-            raise ValueError("Action type cannot be empty")
+        if len(name) > 200:
+            logger.warning(f"Activity creation failed: name too long ({len(name)} chars)")
+            raise ValidationError("Activity name cannot exceed 200 characters")
         
-        logger.info(f"Logging activity: {action_type} for user {user.username}")
+        # Check for duplicate name in workflow
+        if Activity.objects.filter(workflow=workflow, name=name).exists():
+            logger.warning(f"Activity creation failed: duplicate name '{name}' in workflow {workflow.id}")
+            raise ValidationError(f"Activity with name '{name}' already exists in this workflow")
         
+        # Auto-assign order if not provided
+        if order is None:
+            max_order = Activity.objects.filter(workflow=workflow).aggregate(
+                models.Max('order')
+            )['order__max']
+            order = (max_order or 0) + 1
+        
+        # Validate dependencies are in same workflow
+        if predecessor and predecessor.workflow_id != workflow.id:
+            logger.warning(f"Predecessor {predecessor.id} not in workflow {workflow.id}")
+            raise ValidationError("Predecessor must be in the same workflow")
+        
+        if successor and successor.workflow_id != workflow.id:
+            logger.warning(f"Successor {successor.id} not in workflow {workflow.id}")
+            raise ValidationError("Successor must be in the same workflow")
+        
+        # Create activity
         try:
-            # Validate action type by attempting to create the activity
-            # This will raise ValueError if invalid
-            activity = Activity.log_activity(
-                user=user,
-                action_type=action_type,
-                playbook=playbook,
-                description=description,
-                metadata=metadata or {}
+            activity = Activity.objects.create(
+                workflow=workflow,
+                name=name.strip(),
+                guidance=guidance.strip() if guidance else '',
+                phase=phase.strip() if phase else None,
+                order=order,
+                predecessor=predecessor,
+                successor=successor
             )
             
-            logger.info(f"Successfully logged activity {activity.id} for user {user.username}")
+            dep_info = []
+            if predecessor:
+                dep_info.append(f"predecessor={predecessor.reference_name}")
+            if successor:
+                dep_info.append(f"successor={successor.reference_name}")
+            dep_str = f" with {', '.join(dep_info)}" if dep_info else ""
+            
+            logger.info(f"Created activity '{name}' (#{order}) in workflow {workflow.id}{dep_str}")
             return activity
             
-        except ValueError as e:
-            logger.error(f"Validation error logging activity: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"Database error logging activity: {e}")
-            raise
+        except IntegrityError as e:
+            logger.error(f"Activity creation failed: {str(e)}")
+            raise ValidationError(f"Failed to create activity: {str(e)}")
     
-    def get_recent_activities(self, user: User, limit: int = 10) -> QuerySet[Activity]:
+    @staticmethod
+    def get_activity(activity_id):
         """
-        Get recent activities for a user with optimized queries.
+        Get activity by ID.
         
-        Args:
-            user (User): The user to get activities for
-            limit (int): Maximum number of activities to return
-            
-        Returns:
-            QuerySet[Activity]: Recent activities ordered by timestamp descending
-            
-        Raises:
-            ValueError: If user is None or limit is invalid
-            DatabaseError: If database query fails
-            
+        :param activity_id: Activity primary key
+        :returns: Activity instance
+        :raises Activity.DoesNotExist: If activity not found
+        
         Example:
-            >>> service = ActivityService()
-            >>> activities = service.get_recent_activities(user, limit=5)
-            >>> for activity in activities:
-            ...     print(f"{action.action_type}: {action.description}")
+            >>> activity = ActivityService.get_activity(123)
         """
-        if not user:
-            raise ValueError("User cannot be None")
-        
-        if limit <= 0:
-            raise ValueError("Limit must be positive")
-        
-        logger.info(f"Getting recent activities for user {user.username}, limit={limit}")
-        
-        try:
-            # Use select_related for playbook to optimize queries
-            activities = Activity.objects.filter(
-                user=user
-            ).select_related(
-                'playbook'
-            ).order_by(
-                '-timestamp'
-            )[:limit]
-            
-            logger.info(f"Retrieved {len(activities)} activities for user {user.username}")
-            return activities
-            
-        except Exception as e:
-            logger.error(f"Database error getting recent activities: {e}")
-            raise
+        return Activity.objects.select_related('workflow', 'workflow__playbook').get(pk=activity_id)
     
-    def get_recent_playbooks(self, user: User, limit: int = 5) -> List[Playbook]:
+    @staticmethod
+    def get_activities_for_workflow(workflow):
         """
-        Get recent playbooks for a user with optimized queries.
+        Get all activities in a workflow, ordered.
         
-        Args:
-            user (User): The user to get playbooks for
-            limit (int): Maximum number of playbooks to return
-            
-        Returns:
-            List[Playbook]: Recent playbooks ordered by updated_at descending
-            
-        Raises:
-            ValueError: If user is None or limit is invalid
-            DatabaseError: If database query fails
-            
+        :param workflow: Workflow instance
+        :returns: QuerySet of Activity instances ordered by order, name
+        
         Example:
-            >>> service = ActivityService()
-            >>> playbooks = service.get_recent_playbooks(user, limit=3)
-            >>> for playbook in playbooks:
-            ...     print(f"{playbook.name} (v{playbook.version})")
+            >>> activities = ActivityService.get_activities_for_workflow(wf)
+            >>> for act in activities:
+            ...     print(act.name, act.order)
         """
-        if not user:
-            raise ValueError("User cannot be None")
-        
-        if limit <= 0:
-            raise ValueError("Limit must be positive")
-        
-        logger.info(f"Getting recent playbooks for user {user.username}, limit={limit}")
-        
-        try:
-            playbooks = Playbook.objects.filter(
-                author=user
-            ).order_by(
-                '-updated_at'
-            )[:limit]
-            
-            logger.info(f"Retrieved {len(playbooks)} playbooks for user {user.username}")
-            return list(playbooks)
-            
-        except Exception as e:
-            logger.error(f"Database error getting recent playbooks: {e}")
-            raise
+        return Activity.objects.filter(workflow=workflow).select_related(
+            'predecessor', 'successor'
+        ).order_by('order', 'name')
     
-    def get_activity_statistics(self, user: User, days: int = 30) -> Dict[str, Any]:
+    @staticmethod
+    def get_activities_grouped_by_phase(workflow):
         """
-        Get activity statistics for a user within a time period.
+        Get activities grouped by phase.
         
-        Args:
-            user (User): The user to get statistics for
-            days (int): Number of days to look back
-            
-        Returns:
-            Dict[str, Any]: Statistics including counts by action type
-            
-        Raises:
-            ValueError: If user is None or days is invalid
-            DatabaseError: If database query fails
-            
+        :param workflow: Workflow instance
+        :returns: Dict mapping phase names to lists of activities
+        
         Example:
-            >>> service = ActivityService()
-            >>> stats = service.get_activity_statistics(user, days=7)
-            >>> print(f"Total activities: {stats['total_activities']}")
-            >>> print(f"Playbooks created: {stats['playbook_created_count']}")
-        """
-        if not user:
-            raise ValueError("User cannot be None")
-        
-        if days <= 0:
-            raise ValueError("Days must be positive")
-        
-        logger.info(f"Getting activity statistics for user {user.username}, days={days}")
-        
-        try:
-            from django.utils import timezone
-            import datetime
-            
-            cutoff_date = timezone.now() - datetime.timedelta(days=days)
-            
-            # Get all activities within the time period
-            activities = Activity.objects.filter(
-                user=user,
-                timestamp__gte=cutoff_date
-            )
-            
-            # Calculate statistics
-            stats = {
-                'total_activities': activities.count(),
-                'date_range': {
-                    'start': cutoff_date,
-                    'end': timezone.now()
-                }
+            >>> grouped = ActivityService.get_activities_grouped_by_phase(wf)
+            >>> grouped
+            {
+                'Planning': [<Activity: Design (#1)>, <Activity: Spec (#2)>],
+                'Execution': [<Activity: Code (#3)>],
+                'Unassigned': [<Activity: Review (#4)>]
             }
-            
-            # Count by action type
-            action_counts = {}
-            for action_type, _ in Activity.ACTION_TYPE_CHOICES:
-                count = activities.filter(action_type=action_type).count()
-                if count > 0:
-                    action_counts[f"{action_type}_count"] = count
-            
-            stats.update(action_counts)
-            
-            logger.info(f"Generated statistics for user {user.username}: {stats['total_activities']} activities")
-            return stats
-            
-        except Exception as e:
-            logger.error(f"Database error getting activity statistics: {e}")
-            raise
+        """
+        activities = ActivityService.get_activities_for_workflow(workflow)
+        grouped = {}
+        
+        for activity in activities:
+            phase_name = activity.get_phase_display_name()
+            if phase_name not in grouped:
+                grouped[phase_name] = []
+            grouped[phase_name].append(activity)
+        
+        return grouped
     
-    def cleanup_old_activities(self, days_to_keep: int = 90) -> int:
+    @staticmethod
+    def update_activity(activity_id, **kwargs):
         """
-        Clean up old activities beyond retention period.
+        Update activity fields.
         
-        Args:
-            days_to_keep (int): Number of days to keep activities
-            
-        Returns:
-            int: Number of activities deleted
-            
-        Raises:
-            ValueError: If days_to_keep is invalid
-            DatabaseError: If database operation fails
-        """
-        if days_to_keep <= 0:
-            raise ValueError("Days to keep must be positive")
+        :param activity_id: Activity primary key
+        :param kwargs: Fields to update (name, guidance, order, phase, predecessor, successor)
+        :returns: Updated Activity instance
+        :raises Activity.DoesNotExist: If activity not found
+        :raises ValidationError: If validation fails
         
-        logger.info(f"Cleaning up activities older than {days_to_keep} days")
-        
-        try:
-            from django.utils import timezone
-            import datetime
-            
-            cutoff_date = timezone.now() - datetime.timedelta(days=days_to_keep)
-            
-            # Delete old activities
-            deleted_count, _ = Activity.objects.filter(
-                timestamp__lt=cutoff_date
-            ).delete()
-            
-            logger.info(f"Deleted {deleted_count} old activities")
-            return deleted_count
-            
-        except Exception as e:
-            logger.error(f"Database error cleaning up old activities: {e}")
-            raise
-    
-    def get_activity_feed_data(self, user: User) -> Dict[str, Any]:
-        """
-        Get complete dashboard activity feed data in one query.
-        
-        Args:
-            user (User): The user to get feed data for
-            
-        Returns:
-            Dict[str, Any]: Dictionary with recent_activities and recent_playbooks
-            
-        Raises:
-            ValueError: If user is None
-            DatabaseError: If database query fails
-            
         Example:
-            >>> service = ActivityService()
-            >>> data = service.get_activity_feed_data(user)
-            >>> activities = data['recent_activities']
-            >>> playbooks = data['recent_playbooks']
+            >>> activity = ActivityService.update_activity(
+            ...     123,
+            ...     name="New Name",
+            ...     phase="Execution",
+            ...     predecessor=prev_activity
+            ... )
         """
-        if not user:
-            raise ValueError("User cannot be None")
+        activity = Activity.objects.get(pk=activity_id)
         
-        logger.info(f"Getting activity feed data for user {user.username}")
+        # Validate name if being updated
+        if 'name' in kwargs:
+            new_name = kwargs['name']
+            if not new_name or not new_name.strip():
+                raise ValidationError("Activity name cannot be empty")
+            
+            if len(new_name) > 200:
+                raise ValidationError("Activity name cannot exceed 200 characters")
+            
+            # Check for duplicate name (excluding current activity)
+            if Activity.objects.filter(
+                workflow=activity.workflow,
+                name=new_name
+            ).exclude(pk=activity_id).exists():
+                raise ValidationError(f"Activity with name '{new_name}' already exists in this workflow")
+            
+            kwargs['name'] = new_name.strip()
         
-        try:
-            # Get both recent activities and playbooks
-            recent_activities = self.get_recent_activities(user, limit=10)
-            recent_playbooks = self.get_recent_playbooks(user, limit=5)
-            
-            data = {
-                'recent_activities': recent_activities,
-                'recent_playbooks': recent_playbooks,
-                'activity_count': len(recent_activities),
-                'playbook_count': len(recent_playbooks)
-            }
-            
-            logger.info(f"Retrieved feed data for user {user.username}: {data['activity_count']} activities, {data['playbook_count']} playbooks")
-            return data
-            
-        except Exception as e:
-            logger.error(f"Database error getting activity feed data: {e}")
-            raise
+        # Validate dependencies if being updated
+        if 'predecessor' in kwargs and kwargs['predecessor']:
+            if kwargs['predecessor'].workflow_id != activity.workflow_id:
+                raise ValidationError("Predecessor must be in the same workflow")
+        
+        if 'successor' in kwargs and kwargs['successor']:
+            if kwargs['successor'].workflow_id != activity.workflow_id:
+                raise ValidationError("Successor must be in the same workflow")
+        
+        # Strip string fields
+        if 'guidance' in kwargs and kwargs['guidance']:
+            kwargs['guidance'] = kwargs['guidance'].strip()
+        
+        if 'phase' in kwargs and kwargs['phase']:
+            kwargs['phase'] = kwargs['phase'].strip()
+        
+        # Update fields
+        for field, value in kwargs.items():
+            setattr(activity, field, value)
+        
+        # Validate using model's clean() method
+        activity.clean()
+        
+        activity.save()
+        logger.info(f"Updated activity {activity_id}: {', '.join(kwargs.keys())}")
+        
+        return activity
+    
+    @staticmethod
+    def delete_activity(activity_id):
+        """
+        Delete activity.
+        
+        :param activity_id: Activity primary key
+        :raises Activity.DoesNotExist: If activity not found
+        
+        Example:
+            >>> ActivityService.delete_activity(123)
+        """
+        activity = Activity.objects.get(pk=activity_id)
+        workflow_id = activity.workflow.id
+        name = activity.name
+        
+        activity.delete()
+        logger.info(f"Deleted activity '{name}' from workflow {workflow_id}")
+    
+    @staticmethod
+    def duplicate_activity(activity_id, new_name=None):
+        """
+        Create a copy of an activity.
+        
+        :param activity_id: Activity primary key to duplicate
+        :param new_name: Name for duplicate (default: "Copy of [original name]")
+        :returns: New Activity instance
+        :raises Activity.DoesNotExist: If activity not found
+        :raises ValidationError: If validation fails
+        
+        Example:
+            >>> dup = ActivityService.duplicate_activity(123, "Component Design v2")
+        """
+        original = Activity.objects.get(pk=activity_id)
+        
+        # Generate name for duplicate
+        if new_name is None:
+            new_name = f"Copy of {original.name}"
+        
+        # Get next order
+        max_order = Activity.objects.filter(workflow=original.workflow).aggregate(
+            models.Max('order')
+        )['order__max']
+        next_order = (max_order or 0) + 1
+        
+        # Create duplicate (without dependencies to avoid conflicts)
+        return ActivityService.create_activity(
+            workflow=original.workflow,
+            name=new_name,
+            guidance=original.guidance,
+            phase=original.phase,
+            order=next_order
+        )
+    
+    @staticmethod
+    def get_available_predecessors(workflow, exclude_activity_id=None):
+        """
+        Get activities that can be predecessors.
+        
+        :param workflow: Workflow instance
+        :param exclude_activity_id: Activity ID to exclude (usually current activity)
+        :returns: QuerySet of available activities
+        
+        Example:
+            >>> predecessors = ActivityService.get_available_predecessors(wf, exclude_activity_id=123)
+        """
+        qs = Activity.objects.filter(workflow=workflow).order_by('order')
+        if exclude_activity_id:
+            qs = qs.exclude(pk=exclude_activity_id)
+        return qs
+    
+    @staticmethod
+    def get_available_successors(workflow, exclude_activity_id=None):
+        """
+        Get activities that can be successors.
+        
+        :param workflow: Workflow instance
+        :param exclude_activity_id: Activity ID to exclude (usually current activity)
+        :returns: QuerySet of available activities
+        
+        Example:
+            >>> successors = ActivityService.get_available_successors(wf, exclude_activity_id=123)
+        """
+        qs = Activity.objects.filter(workflow=workflow).order_by('order')
+        if exclude_activity_id:
+            qs = qs.exclude(pk=exclude_activity_id)
+        return qs

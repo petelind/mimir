@@ -1,246 +1,188 @@
 """
-Activity model for tracking user actions in the system.
+Activity model for individual tasks within workflows.
 
-This model provides an audit trail of all user actions across playbooks,
-workflows, and other entities. It enables the recent activity feed
-on the dashboard and supports user engagement analytics.
+Activities represent discrete work items that make up a workflow.
+Each activity belongs to a workflow and can be organized into phases.
 """
 
 from django.db import models
-from django.contrib.auth import get_user_model
-import logging
-
-logger = logging.getLogger(__name__)
-
-User = get_user_model()
 
 
 class Activity(models.Model):
     """
-    Track user actions for activity feeds and audit trails.
+    Activity represents a single task/step within a workflow.
     
-    Activities represent user actions such as creating, updating, viewing,
-    or deleting playbooks and other entities. Each activity is linked to
-    a user and optionally to a specific playbook.
-    
-    Attributes:
-        user (User): The user who performed the action
-        action_type (str): Type of action performed
-        playbook (Playbook): Related playbook (optional)
-        description (str): Human-readable description of the action
-        timestamp (datetime): When the action occurred
-        metadata (dict): Additional structured data about the action
+    Activities are ordered work items that can be grouped by phase,
+    tracked by status, and can have dependencies on other activities.
     """
     
-    # Action type choices following semantic naming
-    ACTION_TYPE_CHOICES = [
-        ('playbook_created', 'Playbook Created'),
-        ('playbook_updated', 'Playbook Updated'),
-        ('playbook_deleted', 'Playbook Deleted'),
-        ('playbook_viewed', 'Playbook Viewed'),
-        ('dashboard_viewed', 'Dashboard Viewed'),
-        ('workflow_created', 'Workflow Created'),
-        ('workflow_updated', 'Workflow Updated'),
-        ('workflow_deleted', 'Workflow Deleted'),
-        ('activity_created', 'Activity Created'),
-        ('activity_updated', 'Activity Updated'),
-        ('activity_deleted', 'Activity Deleted'),
-        ('pip_created', 'PIP Created'),
-        ('pip_approved', 'PIP Approved'),
-        ('pip_rejected', 'PIP Rejected'),
-    ]
+    # Relationships
+    workflow = models.ForeignKey(
+        'Workflow',
+        on_delete=models.CASCADE,
+        related_name='activities',
+        help_text="Parent workflow containing this activity"
+    )
     
-    # Fields
-    user = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
-        related_name='activities',
-        help_text="The user who performed this action"
+    # Core fields
+    name = models.CharField(
+        max_length=200,
+        help_text="Activity name - must be unique within workflow"
     )
-    action_type = models.CharField(
-        max_length=50, 
-        choices=ACTION_TYPE_CHOICES,
-        help_text="Type of action performed"
+    guidance = models.TextField(
+        help_text="Rich Markdown guidance with instructions, examples, images, and diagrams"
     )
-    playbook = models.ForeignKey(
-        'methodology.Playbook', 
-        on_delete=models.SET_NULL, 
-        null=True, 
+    
+    # Organization
+    order = models.IntegerField(
+        default=1,
+        help_text="Execution order within workflow"
+    )
+    phase = models.CharField(
+        max_length=100,
         blank=True,
-        related_name='activities',
-        help_text="Related playbook if applicable"
+        null=True,
+        help_text="Optional phase grouping (e.g., 'Planning', 'Execution')"
     )
-    description = models.TextField(
-        max_length=500,
-        help_text="Human-readable description of what happened"
-    )
-    timestamp = models.DateTimeField(
-        auto_now_add=True,
-        help_text="When this action occurred"
-    )
-    metadata = models.JSONField(
-        default=dict,
+    
+    # Dependencies - predecessor/successor relationships
+    predecessor = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        help_text="Additional structured data about the action"
+        related_name='successors',
+        help_text="Previous activity that must complete first"
     )
+    successor = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='predecessors',
+        help_text="Next activity that depends on this one"
+    )
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['-timestamp']
-        indexes = [
-            models.Index(fields=['user', '-timestamp']),
-            models.Index(fields=['action_type']),
-            models.Index(fields=['timestamp']),
+        ordering = ['workflow', 'order', 'name']
+        verbose_name = 'Activity'
+        verbose_name_plural = 'Activities'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['workflow', 'name'],
+                name='unique_activity_per_workflow'
+            )
         ]
-        verbose_name_plural = "Activities"
     
     def __str__(self):
-        """
-        Return string representation of the activity.
-        
-        Returns:
-            str: Description in format "User: action_type at timestamp"
-        """
-        return f"{self.user.username}: {self.action_type} at {self.timestamp}"
+        """String representation showing name and order."""
+        return f"{self.name} (#{self.order})"
     
-    @classmethod
-    def get_recent_activities_for_user(cls, user, limit=10):
+    def is_owned_by(self, user):
         """
-        Get recent activities for a specific user.
+        Check if user owns the parent workflow's playbook.
         
-        Args:
-            user (User): The user to get activities for
-            limit (int): Maximum number of activities to return
-            
-        Returns:
-            QuerySet: Recent activities ordered by timestamp descending
-            
-        Raises:
-            ValueError: If limit is not a positive integer
-        """
-        if not isinstance(limit, int) or limit <= 0:
-            raise ValueError("Limit must be a positive integer")
+        :param user: User to check ownership for
+        :returns: True if user owns parent playbook
+        :rtype: bool
         
-        logger.info(f"Getting recent activities for user {user.username}, limit={limit}")
-        return cls.objects.filter(user=user).order_by('-timestamp')[:limit]
-    
-    @classmethod
-    def log_activity(cls, user, action_type, playbook=None, description=None, metadata=None):
-        """
-        Create a new activity entry.
-        
-        Args:
-            user (User): The user performing the action
-            action_type (str): Type of action from ACTION_TYPE_CHOICES
-            playbook (Playbook, optional): Related playbook
-            description (str, optional): Human-readable description
-            metadata (dict, optional): Additional structured data
-            
-        Returns:
-            Activity: The created activity instance
-            
-        Raises:
-            ValueError: If action_type is not valid
-            ValidationError: If required fields are missing
-        """
-        if action_type not in dict(cls.ACTION_TYPE_CHOICES):
-            raise ValueError(f"Invalid action_type: {action_type}")
-        
-        logger.info(f"Logging activity: {action_type} for user {user.username}")
-        
-        # Set default description if not provided
-        if not description:
-            description = dict(cls.ACTION_TYPE_CHOICES).get(action_type, action_type)
-        
-        # Ensure metadata is a dict
-        if metadata is None:
-            metadata = {}
-        
-        return cls.objects.create(
-            user=user,
-            action_type=action_type,
-            playbook=playbook,
-            description=description,
-            metadata=metadata
-        )
-    
-    def get_action_display_with_icon(self):
-        """
-        Get action display text with appropriate icon.
-        
-        Returns:
-            str: Action display text with Font Awesome icon
-            
         Example:
-            "fa-plus-circle Playbook Created"
+            >>> activity.is_owned_by(maria)
+            True  # If maria owns the playbook
         """
-        # Icon mapping for different action types
-        icon_map = {
-            'playbook_created': 'fa-plus-circle',
-            'playbook_updated': 'fa-edit',
-            'playbook_deleted': 'fa-trash',
-            'playbook_viewed': 'fa-eye',
-            'dashboard_viewed': 'fa-gauge',
-            'workflow_created': 'fa-plus-circle',
-            'workflow_updated': 'fa-edit',
-            'workflow_deleted': 'fa-trash',
-            'activity_created': 'fa-plus-circle',
-            'activity_updated': 'fa-edit',
-            'activity_deleted': 'fa-trash',
-            'pip_created': 'fa-lightbulb',
-            'pip_approved': 'fa-check-circle',
-            'pip_rejected': 'fa-times-circle',
-        }
-        
-        icon = icon_map.get(self.action_type, 'fa-circle')
-        display_text = self.get_action_type_display()
-        
-        return f"{icon} {display_text}"
+        return self.workflow.playbook.is_owned_by(user)
     
-    def get_icon_class(self):
+    def can_edit(self, user):
         """
-        Get just the icon class for the action type.
+        Check if user can edit this activity.
         
-        Returns:
-            str: Font Awesome icon class
-            
+        User can edit if they own the parent playbook and it's an owned playbook.
+        
+        :param user: User to check edit permission for
+        :returns: True if user can edit
+        :rtype: bool
+        
         Example:
-            "fa-plus-circle"
+            >>> activity.can_edit(maria)
+            True  # If maria owns the playbook
         """
-        # Icon mapping for different action types
-        icon_map = {
-            'playbook_created': 'fa-plus-circle',
-            'playbook_updated': 'fa-edit',
-            'playbook_deleted': 'fa-trash',
-            'playbook_viewed': 'fa-eye',
-            'dashboard_viewed': 'fa-gauge',
-            'workflow_created': 'fa-plus-circle',
-            'workflow_updated': 'fa-edit',
-            'workflow_deleted': 'fa-trash',
-            'activity_created': 'fa-plus-circle',
-            'activity_updated': 'fa-edit',
-            'activity_deleted': 'fa-trash',
-            'pip_created': 'fa-lightbulb',
-            'pip_approved': 'fa-check-circle',
-            'pip_rejected': 'fa-times-circle',
-        }
-        
-        return icon_map.get(self.action_type, 'fa-circle')
+        return self.workflow.can_edit(user)
     
-    def is_recent(self, minutes=30):
+    def get_phase_display_name(self):
         """
-        Check if this activity occurred within the specified minutes.
+        Get formatted phase name or default.
         
-        Args:
-            minutes (int): Number of minutes to consider as recent
-            
-        Returns:
-            bool: True if activity is recent, False otherwise
+        :returns: Phase name or 'Unassigned' if no phase set
+        :rtype: str
+        
+        Example:
+            >>> activity.get_phase_display_name()
+            'Planning'  # If phase is set
+            >>> no_phase_activity.get_phase_display_name()
+            'Unassigned'  # If phase is None or empty
         """
-        from django.utils import timezone
-        import datetime
+        return self.phase if self.phase else "Unassigned"
+    
+    @property
+    def reference_name(self) -> str:
+        """
+        Generate reference name from workflow abbreviation and order.
         
-        if not isinstance(minutes, int) or minutes < 0:
-            raise ValueError("Minutes must be a non-negative integer")
+        :returns: Reference name (e.g., 'DFS1', 'PLG3')
+        :rtype: str
         
-        threshold = timezone.now() - datetime.timedelta(minutes=minutes)
-        return self.timestamp >= threshold
+        Example:
+            >>> activity.workflow.abbreviation = 'DFS'
+            >>> activity.order = 1
+            >>> activity.reference_name
+            'DFS1'
+        """
+        return f"{self.workflow.abbreviation}{self.order}"
+    
+    def clean(self):
+        """
+        Validate activity dependencies.
+        
+        :raises ValidationError: If validation fails
+        
+        Validations:
+        - Predecessor must be in same workflow
+        - Successor must be in same workflow
+        - Cannot be self-referential
+        - No circular dependencies
+        """
+        from django.core.exceptions import ValidationError
+        
+        # Validate predecessor is in same workflow
+        if self.predecessor and self.predecessor.workflow_id != self.workflow_id:
+            raise ValidationError({
+                'predecessor': 'Predecessor must be in the same workflow'
+            })
+        
+        # Validate successor is in same workflow
+        if self.successor and self.successor.workflow_id != self.workflow_id:
+            raise ValidationError({
+                'successor': 'Successor must be in the same workflow'
+            })
+        
+        # Validate not self-referential
+        if self.predecessor and self.predecessor.id == self.id:
+            raise ValidationError({
+                'predecessor': 'Activity cannot be its own predecessor'
+            })
+        
+        if self.successor and self.successor.id == self.id:
+            raise ValidationError({
+                'successor': 'Activity cannot be its own successor'
+            })
+        
+        # Validate no circular dependency
+        if self.predecessor and self.successor:
+            if self.predecessor.id == self.successor.id:
+                raise ValidationError(
+                    'Circular dependency detected: predecessor and successor cannot be the same activity'
+                )

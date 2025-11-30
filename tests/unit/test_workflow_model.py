@@ -68,8 +68,9 @@ class TestWorkflowModel:
         assert workflow.order == 1
     
     def test_workflow_str_representation(self, test_workflow):
-        """Test workflow string representation includes order."""
-        assert str(test_workflow) == 'Test Workflow (#1)'
+        """Test string representation includes name, abbreviation, and order."""
+        expected = f"{test_workflow.name} ({test_workflow.abbreviation}) (#{test_workflow.order})"
+        assert str(test_workflow) == expected
     
     def test_unique_constraint_per_playbook(self, test_playbook):
         """Test that workflow names must be unique within a playbook."""
@@ -206,3 +207,89 @@ class TestWorkflowModel:
         test_workflow.save()
         
         assert test_workflow.updated_at > original_updated
+    
+    def test_abbreviation_generated_on_save(self, test_playbook):
+        """Test abbreviation is auto-generated when workflow is saved."""
+        workflow = Workflow.objects.create(
+            name='Design Features',
+            playbook=test_playbook
+        )
+        
+        assert workflow.abbreviation is not None
+        assert len(workflow.abbreviation) == 3
+        assert workflow.abbreviation.isupper()
+    
+    def test_abbreviation_three_letters(self, test_playbook):
+        """Test abbreviation is exactly 3 letters."""
+        workflow = Workflow.objects.create(
+            name='Build System',
+            playbook=test_playbook
+        )
+        
+        assert len(workflow.abbreviation) == 3
+    
+    def test_abbreviation_uppercase(self, test_playbook):
+        """Test abbreviation is all uppercase."""
+        workflow = Workflow.objects.create(
+            name='design features',
+            playbook=test_playbook
+        )
+        
+        assert workflow.abbreviation.isupper()
+    
+    def test_abbreviation_from_two_words(self, test_playbook):
+        """Test abbreviation from two-word workflow name."""
+        workflow = Workflow.objects.create(
+            name='Design Features',
+            playbook=test_playbook
+        )
+        
+        # Should be 3 letters starting with D and F
+        assert len(workflow.abbreviation) == 3
+        assert workflow.abbreviation[0] == 'D'
+        assert workflow.abbreviation[1] == 'F'
+        # Third letter depends on algorithm - currently last letter of last word
+        assert workflow.abbreviation == 'DFS'
+    
+    def test_abbreviation_from_single_word(self, test_playbook):
+        """Test abbreviation from single-word workflow name."""
+        workflow = Workflow.objects.create(
+            name='Planning',
+            playbook=test_playbook
+        )
+        
+        # Should take first, middle, last letters
+        assert len(workflow.abbreviation) == 3
+        assert workflow.abbreviation[0] == 'P'
+    
+    def test_abbreviation_handles_short_names(self, test_playbook):
+        """Test abbreviation from very short names."""
+        workflow = Workflow.objects.create(
+            name='UI',
+            playbook=test_playbook
+        )
+        
+        # Should handle short names gracefully
+        assert len(workflow.abbreviation) == 3
+    
+    def test_abbreviation_can_be_set_manually(self, test_playbook):
+        """Test abbreviation can be manually set and won't be overridden."""
+        workflow = Workflow.objects.create(
+            name='Design Features',
+            abbreviation='DES',
+            playbook=test_playbook
+        )
+        
+        assert workflow.abbreviation == 'DES'
+    
+    def test_workflow_str_includes_abbreviation(self, test_playbook):
+        """Test workflow string representation includes abbreviation."""
+        workflow = Workflow.objects.create(
+            name='Design Features',
+            playbook=test_playbook,
+            order=1
+        )
+        
+        # Should be "Design Features (DFT) (#1)"
+        assert workflow.abbreviation in str(workflow)
+        assert 'Design Features' in str(workflow)

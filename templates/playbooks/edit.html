@@ -98,14 +98,19 @@
                     <label for="status" class="form-label">Status</label>
                     <select class="form-select" id="status" name="status" data-testid="playbook-status-select">
                         <option value="draft" {% if playbook.status == 'draft' %}selected{% endif %}>Draft</option>
-                        <option value="active" {% if playbook.status == 'active' %}selected{% endif %}>Active</option>
+                        <option value="released" {% if playbook.status == 'released' %}selected{% endif %}>Released</option>
+                        <option value="active" {% if playbook.status == 'active' %}selected{% endif %}>Active (legacy)</option>
                         <option value="disabled" {% if playbook.status == 'disabled' %}selected{% endif %}>Disabled</option>
                     </select>
+                    <div class="form-text">
+                        <i class="fa-solid fa-info-circle"></i>
+                        Draft: editable, auto-increments version (0.1 → 0.2). Released: read-only, changes require PIP.
+                    </div>
                 </div>
 
                 <!-- Version Field (Read-only) -->
                 <div class="mb-3">
-                    <label for="version" class="form-label">Version</label>
+                    <label for="version" class="form-label">Current Version</label>
                     <input 
                         type="text" 
                         class="form-control" 
@@ -116,7 +121,11 @@
                         data-testid="playbook-version-input">
                     <div class="form-text text-muted">
                         <i class="fa-solid fa-info-circle"></i>
-                        Version changes via PIPs only
+                        {% if playbook.is_draft %}
+                        Version will auto-increment to v{{ playbook.version|add:"0.1" }} when you save changes.
+                        {% else %}
+                        Released playbooks can only be changed via PIP (Process Improvement Proposal).
+                        {% endif %}
                     </div>
                 </div>
 

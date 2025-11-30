@@ -4,7 +4,7 @@
 {% block title %}{{ playbook.name }} - Playbook{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4" data-testid="playbook-detail">
     <!-- Breadcrumbs -->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -14,25 +14,63 @@
     </nav>
 
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-start mb-4">
+    <div class="d-flex justify-content-between align-items-start mb-4" data-testid="playbook-header">
         <div>
             <h2>
                 <i class="fa-solid fa-book"></i> {{ playbook.name }}
             </h2>
             <p class="text-muted">
-                <span class="badge bg-{{ playbook.get_status_badge_color }}">{{ playbook.get_status_display }}</span>
-                <span class="badge bg-secondary">v{{ playbook.version }}</span>
+                <span class="badge bg-{{ playbook.get_status_badge_color }}" data-testid="status-badge">{{ playbook.get_status_display }}</span>
+                <span class="badge bg-secondary" data-testid="version-badge">v{{ playbook.version }}</span>
                 <span class="badge bg-info">{{ playbook.get_category_display }}</span>
+            </p>
+            <p class="text-muted small">
+                <i class="fa-solid fa-user"></i> {{ playbook.author.username }}
+                <i class="fa-solid fa-clock ms-2"></i> Updated {{ playbook.updated_at|timesince }} ago
             </p>
         </div>
         <div class="btn-group">
-            {% if can_edit %}
-                <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
-                   class="btn btn-primary"
-                   data-bs-toggle="tooltip"
-                   title="Edit this playbook">
-                    <i class="fa-solid fa-edit"></i> Edit
-                </a>
+            {% if playbook.source == 'owned' and playbook.author == request.user %}
+                {% if playbook.is_draft %}
+                    <!-- Edit button for draft playbooks -->
+                    <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Edit this playbook (v{{ playbook.version }})">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </a>
+                    <!-- Release button for draft playbooks -->
+                    <button type="button" 
+                            class="btn btn-success"
+                            data-bs-toggle="tooltip"
+                            title="Release this playbook to v1.0 (makes it read-only, changes require PIP)">
+                        <i class="fa-solid fa-rocket"></i> Release
+                    </button>
+                {% elif playbook.is_released %}
+                    <!-- Edit button disabled for released playbooks -->
+                    <button type="button" 
+                            class="btn btn-secondary" 
+                            disabled
+                            data-bs-toggle="tooltip"
+                            title="Released playbooks cannot be edited directly. Please submit a PIP (Process Improvement Proposal) to make changes.">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </button>
+                    <!-- Submit PIP button for released playbooks -->
+                    <a href="#" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Submit a Process Improvement Proposal to change this playbook">
+                        <i class="fa-solid fa-file-lines"></i> Submit PIP
+                    </a>
+                {% else %}
+                    <!-- Active/Disabled status - legacy, allow edit -->
+                    <a href="{% url 'playbook_edit' pk=playbook.pk %}" 
+                       class="btn btn-primary"
+                       data-bs-toggle="tooltip"
+                       title="Edit this playbook">
+                        <i class="fa-solid fa-edit"></i> Edit
+                    </a>
+                {% endif %}
             {% endif %}
             <a href="{% url 'playbook_list' %}" 
                class="btn btn-outline-secondary"
@@ -43,115 +81,208 @@
         </div>
     </div>
 
-    <!-- Description -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Description</h5>
-        </div>
-        <div class="card-body">
-            <p>{{ playbook.description }}</p>
-        </div>
-    </div>
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" 
+                    data-testid="tab-overview"
+                    id="overview-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#overview" 
+                    type="button" 
+                    role="tab">
+                <i class="fa-solid fa-info-circle"></i> Overview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" 
+                    data-testid="tab-workflows"
+                    id="workflows-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#workflows-content" 
+                    type="button" 
+                    role="tab">
+                <i class="fa-solid fa-sitemap"></i> Workflows
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" 
+                    data-testid="tab-history"
+                    id="history-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#history" 
+                    type="button" 
+                    role="tab">
+                <i class="fa-solid fa-history"></i> History
+            </button>
+        </li>
+        {% if can_edit %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" 
+                    data-testid="tab-settings"
+                    id="settings-tab" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#settings" 
+                    type="button" 
+                    role="tab">
+                <i class="fa-solid fa-cog"></i> Settings
+            </button>
+        </li>
+        {% endif %}
+    </ul>
 
-    <!-- Metadata & Workflows -->
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Workflows -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Workflows ({{ workflows|length }})</h5>
-                    {% if can_edit %}
-                    <div class="btn-group btn-group-sm">
-                        <a href="{% url 'workflow_create' playbook.pk %}" 
-                           class="btn btn-primary btn-sm"
-                           data-bs-toggle="tooltip"
-                           title="Add a new workflow to this playbook"
-                           data-testid="add-workflow-button">
-                            <i class="fa-solid fa-plus"></i> Add Workflow
-                        </a>
-                        <a href="{% url 'workflow_list' playbook.pk %}" 
-                           class="btn btn-outline-secondary btn-sm"
-                           data-bs-toggle="tooltip"
-                           title="Manage all workflows in this playbook"
-                           data-testid="manage-workflows-button">
-                            <i class="fa-solid fa-list"></i> Manage
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    {% if workflows %}
-                        <ul class="list-group list-group-flush">
-                            {% for workflow in workflows %}
-                                <li class="list-group-item d-flex justify-content-between align-items-start">
-                                    <div class="flex-grow-1">
-                                        <a href="{% url 'workflow_detail' playbook.pk workflow.pk %}" class="text-decoration-none">
-                                            <i class="fa-solid fa-diagram-project text-primary"></i>
-                                            <strong>{{ workflow.name }}</strong>
-                                            <span class="badge bg-secondary">#{{ workflow.order }}</span>
-                                        </a>
-                                        {% if workflow.description %}
-                                            <p class="mb-0 text-muted small">{{ workflow.description|truncatewords:15 }}</p>
-                                        {% endif %}
-                                    </div>
-                                    {% if can_edit %}
-                                    <div class="btn-group btn-group-sm" role="group">
-                                        <a href="{% url 'workflow_edit' playbook.pk workflow.pk %}" 
-                                           class="btn btn-sm btn-outline-secondary"
-                                           data-bs-toggle="tooltip"
-                                           title="Edit this workflow">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </a>
-                                    </div>
-                                    {% endif %}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <div class="text-center py-4">
-                            <i class="fa-solid fa-diagram-project fa-3x text-muted mb-3"></i>
-                            <p class="text-muted mb-3">No workflows added yet.</p>
-                            {% if can_edit %}
-                            <a href="{% url 'workflow_create' playbook.pk %}" class="btn btn-primary">
-                                <i class="fa-solid fa-plus"></i> Create First Workflow
-                            </a>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <!-- Metadata -->
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <!-- Description -->
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Details</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-align-left"></i> Description</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row mb-0">
-                        <dt class="col-sm-5">Author:</dt>
-                        <dd class="col-sm-7">{{ playbook.author.username }}</dd>
+                    <p>{{ playbook.description }}</p>
+                </div>
+            </div>
 
-                        <dt class="col-sm-5">Created:</dt>
-                        <dd class="col-sm-7">{{ playbook.created_at|date:"Y-m-d" }}</dd>
+            <!-- Quick Stats & Content Row -->
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Quick Stats Card -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fa-solid fa-chart-bar"></i> Quick Stats</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-4 mb-3" data-testid="stat-workflows">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-sitemap fa-2x text-primary mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.workflows }}</h3>
+                                        <small class="text-muted">Workflows</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3" data-testid="stat-phases">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-layer-group fa-2x text-info mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.phases }}</h3>
+                                        <small class="text-muted">Phases</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3" data-testid="stat-activities">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-tasks fa-2x text-success mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.activities }}</h3>
+                                        <small class="text-muted">Activities</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3" data-testid="stat-artifacts">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-folder fa-2x text-warning mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.artifacts }}</h3>
+                                        <small class="text-muted">Artifacts</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3" data-testid="stat-roles">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-users fa-2x text-secondary mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.roles }}</h3>
+                                        <small class="text-muted">Roles</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3" data-testid="stat-howtos">
+                                    <div class="p-3 border rounded">
+                                        <i class="fa-solid fa-lightbulb fa-2x text-danger mb-2"></i>
+                                        <h3 class="mb-0">{{ quick_stats.howtos }}</h3>
+                                        <small class="text-muted">Howtos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <dt class="col-sm-5">Updated:</dt>
-                        <dd class="col-sm-7">{{ playbook.updated_at|date:"Y-m-d" }}</dd>
+                    <!-- Workflows Section -->
+                    <div class="card mb-4" data-testid="workflows-section">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fa-solid fa-sitemap"></i> Workflows</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if workflows %}
+                                <ul class="list-group list-group-flush">
+                                    {% for workflow in workflows %}
+                                        <li class="list-group-item">
+                                            <i class="fa-solid fa-sitemap text-primary"></i>
+                                            <strong>{{ workflow.name }}</strong>
+                                            {% if workflow.description %}
+                                                <p class="mb-0 text-muted small">{{ workflow.description }}</p>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted mb-0">No workflows added yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
 
-                        {% if playbook.tags %}
-                        <dt class="col-sm-5">Tags:</dt>
-                        <dd class="col-sm-7">
-                            {% for tag in playbook.tags %}
-                                <span class="badge bg-secondary">{{ tag }}</span>
-                            {% endfor %}
-                        </dd>
-                        {% endif %}
-                    </dl>
+                <div class="col-md-4">
+                    <!-- Metadata -->
+                    <div class="card mb-4" data-testid="metadata-section">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fa-solid fa-info-circle"></i> Metadata</h5>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-5">Category:</dt>
+                                <dd class="col-sm-7">{{ playbook.get_category_display }}</dd>
+
+                                <dt class="col-sm-5">Author:</dt>
+                                <dd class="col-sm-7">{{ playbook.author.username }}</dd>
+
+                                <dt class="col-sm-5">Created:</dt>
+                                <dd class="col-sm-7">{{ playbook.created_at|timesince }} ago</dd>
+
+                                <dt class="col-sm-5">Source:</dt>
+                                <dd class="col-sm-7">{{ playbook.get_source_display }}</dd>
+
+                                {% if playbook.tags %}
+                                <dt class="col-sm-5">Tags:</dt>
+                                <dd class="col-sm-7">
+                                    {% for tag in playbook.tags %}
+                                        <span class="badge bg-secondary">{{ tag }}</span>
+                                    {% endfor %}
+                                </dd>
+                                {% endif %}
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Workflows Tab (placeholder) -->
+        <div class="tab-pane fade" id="workflows-content" role="tabpanel">
+            <p class="text-muted">Workflows tab content (to be implemented)</p>
+        </div>
+
+        <!-- History Tab (placeholder) -->
+        <div class="tab-pane fade" id="history" role="tabpanel">
+            <p class="text-muted">History tab content (to be implemented)</p>
+        </div>
+
+        <!-- Settings Tab (placeholder) -->
+        {% if can_edit %}
+        <div class="tab-pane fade" id="settings" role="tabpanel">
+            <p class="text-muted">Settings tab content (to be implemented)</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 
+<style>
+    .badge.bg-active { background-color: #28a745 !important; }
+    .badge.bg-draft { background-color: #6c757d !important; }
+    .badge.bg-disabled { background-color: #dc3545 !important; }
+</style>
 {% endblock %}
