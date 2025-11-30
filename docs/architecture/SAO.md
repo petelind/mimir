@@ -1940,12 +1940,12 @@ def handle(self, *args, **options):
 {
   "mcpServers": {
     "mimir": {
-      "command": "/path/to/venv/bin/python",
-      "args": ["/path/to/manage.py", "mcp_server", "--user=admin"],
+      "command": "absolute/path/to/venv/bin/python",
+      "args": ["absolute/path/to/manage.py", "mcp_server", "--user=admin"],
       "env": {
         "MIMIR_MCP_MODE": "1",  // Disables console logging
         "DJANGO_SETTINGS_MODULE": "mimir.settings",
-        "PYTHONPATH": "/path/to/project"
+        "PYTHONPATH": "absolute/path/to/project"
       }
     }
   }
