@@ -940,19 +940,19 @@
                 <mxCell id="v2-act2-label" value="ACT 2: PLAYBOOKS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="550" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-playbooks-list" value="✅ MCP: List&#10;Playbooks" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-playbooks-list" value="✅ MCP-PLAYBOOKS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="600" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-playbooks-create" value="✅ MCP: Create&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-playbooks-create" value="✅ MCP-PLAYBOOKS-&#10;CREATE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="600" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-playbooks-get" value="✅ MCP: Get&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-playbooks-get" value="✅ MCP-PLAYBOOKS-&#10;GET_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="700" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-playbooks-update" value="✅ MCP: Update&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-playbooks-update" value="✅ MCP-PLAYBOOKS-&#10;UPDATE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="700" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-playbooks-delete" value="✅ MCP: Delete&#10;Playbook" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-playbooks-delete" value="✅ MCP-PLAYBOOKS-&#10;DELETE_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1570" y="700" width="140" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-arrow-mcp-pb-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-playbooks-list" target="v2-mcp-playbooks-create" edge="1">
@@ -1103,19 +1103,19 @@
                 <mxCell id="v2-act3-label" value="ACT 3: WORKFLOWS" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="900" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-workflows-list" value="✅ MCP: List&#10;Workflows" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-workflows-list" value="✅ MCP-WORKFLOWS-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="950" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-workflows-create" value="✅ MCP: Create&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-workflows-create" value="✅ MCP-WORKFLOWS-&#10;CREATE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="950" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-workflows-get" value="✅ MCP: Get&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-workflows-get" value="✅ MCP-WORKFLOWS-&#10;GET_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="1050" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-workflows-update" value="✅ MCP: Update&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-workflows-update" value="✅ MCP-WORKFLOWS-&#10;UPDATE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="1050" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-workflows-delete" value="✅ MCP: Delete&#10;Workflow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-workflows-delete" value="✅ MCP-WORKFLOWS-&#10;DELETE_WORKFLOW" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1570" y="1050" width="140" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-arrow-mcp-wf-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-workflows-list" target="v2-mcp-workflows-create" edge="1">
@@ -1262,19 +1262,19 @@
                 <mxCell id="v2-act5-label" value="ACT 5: ACTIVITIES" style="text;html=1;strokeColor=#ff8f00;fillColor=#fff3e0;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontStyle=1;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="40" y="1580" width="220" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-activities-list" value="✅ MCP: List&#10;Activities" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-activities-list" value="✅ MCP-ACTIVITIES-&#10;LIST+FIND" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="1650" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-activities-create" value="✅ MCP: Create&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-activities-create" value="✅ MCP-ACTIVITIES-&#10;CREATE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="1650" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-activities-get" value="✅ MCP: Get&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-activities-get" value="✅ MCP-ACTIVITIES-&#10;GET_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1230" y="1750" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-activities-update" value="✅ MCP: Update&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-activities-update" value="✅ MCP-ACTIVITIES-&#10;UPDATE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1400" y="1750" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-mcp-activities-delete" value="✅ MCP: Delete&#10;Activity" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-mcp-activities-delete" value="✅ MCP-ACTIVITIES-&#10;DELETE_ACTIVITY" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#9370DB;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="1570" y="1750" width="140" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-arrow-mcp-act-list-create" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9370DB;" parent="v2-root-1" source="v2-mcp-activities-list" target="v2-mcp-activities-create" edge="1">
