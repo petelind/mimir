@@ -72,97 +72,72 @@
 
 **Our Implementation** matches this ✓
 
-## 2. User Stories - AI Assistant Using MCP Tools
+## 2. BDD Feature Files - AI Assistant Using MCP Tools
 
-### Story 1: Create New Methodology from Scratch
-**As**: AI assistant (e.g., Claude, Cascade)  
-**I want to**: Create a new draft playbook with workflows and activities  
-**So that**: User can iteratively develop their methodology with AI assistance
+**Actor**: AI assistant (Cascade) using MCP tools programmatically via stdio protocol
 
-**Scenario**:
-```
-User: "Help me create a React component development methodology"
+### Feature Files Created
 
-AI uses MCP tools:
-1. create_playbook(name="React Component Development", description="...", category="frontend")
-   → Returns: {"id": 1, "version": "0.1", "status": "draft"}
+1. **`docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature`** (18 scenarios)
+   - Create/list/get/update/delete playbooks via MCP
+   - Permission enforcement (draft vs released)
+   - Version auto-increment on updates
+   - Error handling and validation
+   - Iterative refinement workflow
 
-2. create_workflow(playbook_id=1, name="Design Phase", description="Component planning")
-   → Returns: {"id": 1, "order": 1, "playbook_id": 1}
+2. **`docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature`** (19 scenarios)
+   - Create/list/get/update/delete workflows via MCP
+   - Parent playbook version incrementing
+   - Permission checks on grandparent playbook
+   - Workflow ordering
+   - End-to-end methodology building
 
-3. create_activity(workflow_id=1, name="Define Props Interface", guidance="...")
-   → Returns: {"id": 1, "order": 1}
+3. **`docs/features/act-13-mcp/interact-with-activities-via-mcp.feature`** (23 scenarios)
+   - Create/list/get/update/delete activities via MCP
+   - Dependency management (predecessors/successors)
+   - Circular dependency validation
+   - Grandparent playbook version incrementing
+   - Complex dependency chains
 
-4. create_activity(workflow_id=1, name="Create Mockup", guidance="...")
-   → Returns: {"id": 2, "order": 2}
+**Total: 60 Gherkin scenarios** covering all MCP CRUD operations
 
-5. set_activity_predecessor(activity_id=2, predecessor_id=1)
-   → Returns: {"updated": True}
+### Example Scenarios
 
-Result: Draft playbook v0.1 created with workflows and activities
-```
-
-### Story 2: Iteratively Refine Draft Methodology
-**As**: AI assistant  
-**I want to**: Update/add/remove components in draft playbook  
-**So that**: User can refine methodology through conversation
-
-**Scenario**:
-```
-User: "Add a testing workflow to the React methodology"
-
-AI uses MCP tools:
-1. get_playbook(playbook_id=1)
-   → Returns full playbook structure
-
-2. create_workflow(playbook_id=1, name="Testing Phase", description="...")
-   → Playbook version auto-increments: 0.1 → 0.2
-
-3. create_activity(workflow_id=2, name="Write Unit Tests", ...)
-   → Playbook version: 0.2 → 0.3
-
-Result: Draft playbook v0.3 with new testing workflow
+**Create Playbook** (from `interact-with-playbooks-via-mcp.feature`):
+```gherkin
+Scenario: MCP-PB-01 Create draft playbook via MCP tool
+  Given Cascade receives user request "Help me create a React component development methodology"
+  When Cascade calls MCP tool "create_playbook" with:
+    | name        | React Component Development                          |
+    | description | Best practices for building reusable React components |
+    | category    | frontend                                              |
+  Then MCP returns success response with:
+    | id      | 1     |
+    | version | 0.1   |
+    | status  | draft |
+  And playbook is saved in database with author "maria"
 ```
 
-### Story 3: Query Existing Methodology
-**As**: AI assistant  
-**I want to**: Read playbook structure to answer user questions  
-**So that**: User gets accurate information about their methodologies
-
-**Scenario**:
-```
-User: "What activities are in the Design Phase?"
-
-AI uses MCP tools:
-1. list_playbooks(status="draft")
-   → Returns list of draft playbooks
-
-2. get_playbook(playbook_id=1)
-   → Returns playbook with workflows
-
-3. get_workflow(workflow_id=1)
-   → Returns workflow with activities
-
-AI responds: "The Design Phase has 2 activities: 1) Define Props Interface, 2) Create Mockup"
+**Permission Enforcement** (from `interact-with-playbooks-via-mcp.feature`):
+```gherkin
+Scenario: MCP-PB-13 Update released playbook raises permission error
+  Given released playbook (id=1, status=released, version=1.0) exists
+  When Cascade calls MCP tool "update_playbook" with:
+    | playbook_id | 1        |
+    | name        | New Name |
+  Then MCP returns error "PermissionError: Cannot modify released playbook. Use create_pip instead."
+  And playbook is not modified
 ```
 
-### Story 4: Permission Enforcement
-**As**: AI assistant  
-**I want to**: Attempt to modify released playbook and get clear error  
-**So that**: User understands PIP workflow is required
-
-**Scenario**:
-```
-User: "Update the production React methodology"
-
-AI uses MCP tools:
-1. get_playbook(playbook_id=1)
-   → Returns: {"status": "released", "version": "1.0"}
-
-2. update_playbook(playbook_id=1, name="New Name")
-   → Raises: PermissionError("Cannot modify released playbook. Use create_pip instead.")
-
-AI responds: "This playbook is released (v1.0). To make changes, you need to create a PIP (Playbook Improvement Proposal)."
+**Dependency Management** (from `interact-with-activities-via-mcp.feature`):
+```gherkin
+Scenario: MCP-ACT-19 Set predecessor validates circular dependency
+  Given workflow has activities with chain: 1 → 2 → 3
+  When Cascade calls "set_activity_predecessor" with:
+    | activity_id    | 1 |
+    | predecessor_id | 3 |
+  Then MCP returns error "ValidationError: Circular dependency detected"
+  And no dependency is created
 ```
 
 ## 3. Detailed Implementation Plan
@@ -363,170 +338,134 @@ class Command(BaseCommand):
 - `workflow` - parent workflow
 - `activity1`, `activity2`, `activity3` - for dependency testing
 
-### Phase C: MCP Tool Testing
+### Phase C: MCP Tool Unit Tests (Optional - for tool wrapper logic)
 
-**Re-read**: `.windsurf/rules/test-first.md` before each test file
+**Note**: With BDD feature files as primary tests, these unit tests are optional. Only create if tool wrappers have complex logic beyond calling services.
 
-#### C1. Test MCP Tool Wrappers (Playbook)
-**Task**: Test playbook MCP tools with mocked services  
-**Files**: `tests/unit/test_mcp_playbook_tools.py`  
-**Tests to create**:
-1. `test_create_playbook_calls_service_with_user_context`
-2. `test_create_playbook_returns_serialized_dict`
-3. `test_list_playbooks_filters_by_status`
-4. `test_get_playbook_includes_workflows`
-5. `test_update_playbook_checks_released_status`
-6. `test_update_playbook_increments_version`
-7. `test_delete_playbook_checks_released_status`
-8. `test_all_tools_require_user_context`
+**Skip for now** - BDD scenarios provide comprehensive coverage of tool behavior.
 
-**Mocking strategy**:
-- Mock `get_current_user()` to return test user
-- Mock service calls to verify correct parameters passed
-- Verify permission checks happen before service calls
-
-#### C2. Test MCP Tool Wrappers (Workflow)
-**Task**: Test workflow MCP tools  
-**Files**: `tests/unit/test_mcp_workflow_tools.py`  
-**Tests to create**:
-1. `test_create_workflow_checks_parent_playbook_status`
-2. `test_create_workflow_increments_parent_version`
-3. `test_list_workflows_returns_for_playbook`
-4. `test_get_workflow_includes_activities`
-5. `test_update_workflow_checks_parent_playbook_status`
-6. `test_update_workflow_increments_parent_version`
-7. `test_delete_workflow_checks_parent_playbook_status`
-8. `test_delete_workflow_increments_parent_version`
-
-#### C3. Test MCP Tool Wrappers (Activity)
-**Task**: Test activity MCP tools with dependency management  
-**Files**: `tests/unit/test_mcp_activity_tools.py`  
-**Tests to create**:
-1. `test_create_activity_checks_grandparent_playbook_status`
-2. `test_create_activity_increments_grandparent_version`
-3. `test_create_activity_validates_predecessor_in_same_workflow`
-4. `test_list_activities_returns_with_dependencies`
-5. `test_get_activity_includes_predecessor_successor`
-6. `test_update_activity_checks_grandparent_playbook_status`
-7. `test_delete_activity_checks_grandparent_playbook_status`
-8. `test_set_predecessor_validates_circular_dependency`
-9. `test_set_predecessor_increments_grandparent_version`
-
-### Phase D: Integration Testing
+### Phase D: BDD Step Definitions (Integration Tests)
 
 **Re-read**: `.windsurf/rules/do-not-mock-in-integration-tests.md`
 
-#### D1. E2E Test: Create Methodology via MCP
-**Task**: End-to-end test of creating playbook → workflow → activities via MCP tools  
-**Files**: `tests/integration/test_mcp_create_methodology.py`  
-**Test scenario**:
+#### D1. Implement Step Definitions for Playbook Scenarios
+**Task**: Implement step definitions for 18 playbook scenarios  
+**Files**: `tests/integration/test_steps/mcp_playbook_steps.py`  
+**Feature**: `docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature`
+
+**Example step definitions**:
 ```python
-def test_create_react_methodology_via_mcp(user):
-    """E2E: Create complete React methodology using MCP tools."""
-    # Set user context
-    set_current_user(user)
-    
-    # Create playbook
-    playbook = create_playbook(
-        name="React Component Development",
-        description="Best practices",
-        category="frontend"
+from pytest_bdd import scenarios, given, when, then, parsers
+from mcp.context import set_current_user
+from mcp.tools import create_playbook, update_playbook, delete_playbook
+
+scenarios('../../../docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature')
+
+@given('MCP server is running for user "maria"')
+def mcp_server_running(maria_user):
+    """Set up MCP context for maria."""
+    set_current_user(maria_user)
+
+@when(parsers.parse('Cascade calls MCP tool "create_playbook" with:\n{table}'))
+def cascade_calls_create_playbook(table, context):
+    """Parse table and call create_playbook tool."""
+    data = parse_table(table)
+    context['result'] = create_playbook(
+        name=data['name'],
+        description=data['description'],
+        category=data['category']
     )
-    assert playbook['status'] == 'draft'
-    assert playbook['version'] == '0.1'
-    
-    # Create workflow
-    workflow = create_workflow(
-        playbook_id=playbook['id'],
-        name="Design Phase",
-        description="Component planning"
-    )
-    assert workflow['playbook_id'] == playbook['id']
-    
-    # Verify version incremented
-    updated_playbook = get_playbook(playbook['id'])
-    assert updated_playbook['version'] == '0.2'
-    
-    # Create activities
-    act1 = create_activity(
-        workflow_id=workflow['id'],
-        name="Define Props",
-        guidance="Document component interface"
-    )
-    
-    act2 = create_activity(
-        workflow_id=workflow['id'],
-        name="Create Mockup",
-        guidance="Design component visuals"
-    )
-    
-    # Set dependency
-    set_activity_predecessor(
-        activity_id=act2['id'],
-        predecessor_id=act1['id']
-    )
-    
-    # Verify final structure
-    final_playbook = get_playbook(playbook['id'])
-    assert final_playbook['version'] == '0.4'  # 0.1 + workflow + 2 activities
-    assert len(final_playbook['workflows']) == 1
-    
-    final_workflow = get_workflow(workflow['id'])
-    assert len(final_workflow['activities']) == 2
-    
-    final_act2 = get_activity(act2['id'])
-    assert final_act2['predecessor']['id'] == act1['id']
+
+@then(parsers.parse('MCP returns success response with:\n{table}'))
+def verify_success_response(table, context):
+    """Verify response matches expected values."""
+    expected = parse_table(table)
+    result = context['result']
+    assert result['id'] == int(expected['id'])
+    assert result['version'] == expected['version']
+    assert result['status'] == expected['status']
+
+@then(parsers.parse('MCP returns error "{error_message}"'))
+def verify_error_raised(error_message, context):
+    """Verify expected exception was raised."""
+    assert 'error' in context
+    assert error_message in str(context['error'])
 ```
 
 **NO MOCKING** - uses real database, real services, real MCP tools
 
-#### D2. E2E Test: Permission Enforcement
-**Task**: Test that released playbooks reject modifications  
-**Files**: `tests/integration/test_mcp_permissions.py`  
-**Test scenario**:
+#### D2. Implement Step Definitions for Workflow Scenarios
+**Task**: Implement step definitions for 19 workflow scenarios  
+**Files**: `tests/integration/test_steps/mcp_workflow_steps.py`  
+**Feature**: `docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature`
+
+**Example step definitions**:
 ```python
-def test_cannot_modify_released_playbook_via_mcp(user):
-    """E2E: Verify permission checks for released playbooks."""
-    set_current_user(user)
-    
-    # Create and release playbook
-    playbook = create_playbook(name="Test", description="Test", category="test")
-    
-    # Release it (using service directly for setup)
-    PlaybookService.release_playbook(playbook['id'], user)
-    
-    # Attempt to update - should fail
-    with pytest.raises(PermissionError, match="released playbook"):
-        update_playbook(playbook['id'], name="New Name")
-    
-    # Attempt to delete - should fail
-    with pytest.raises(PermissionError, match="released playbook"):
-        delete_playbook(playbook['id'])
-    
-    # Attempt to create workflow - should fail
-    with pytest.raises(PermissionError, match="released playbook"):
-        create_workflow(playbook['id'], name="New Workflow", description="Test")
+from pytest_bdd import scenarios, given, when, then, parsers
+from mcp.tools import create_workflow, update_workflow, delete_workflow
+
+scenarios('../../../docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature')
+
+@when(parsers.parse('Cascade calls MCP tool "create_workflow" with:\n{table}'))
+def cascade_calls_create_workflow(table, context):
+    data = parse_table(table)
+    context['result'] = create_workflow(
+        playbook_id=int(data['playbook_id']),
+        name=data['name'],
+        description=data['description']
+    )
+
+@then(parsers.parse('parent playbook version is incremented from "{old}" to "{new}"'))
+def verify_version_incremented(old, new, context):
+    playbook = Playbook.objects.get(id=context['playbook_id'])
+    # Previous test stored old version, verify new version
+    assert str(playbook.version) == new
 ```
 
-#### D3. Integration Test: MCP Server Command
-**Task**: Test mcp_server command actually runs  
-**Files**: `tests/integration/test_mcp_server_startup.py`  
-**Test scenario**:
+#### D3. Implement Step Definitions for Activity Scenarios
+**Task**: Implement step definitions for 23 activity scenarios  
+**Files**: `tests/integration/test_steps/mcp_activity_steps.py`  
+**Feature**: `docs/features/act-13-mcp/interact-with-activities-via-mcp.feature`
+
+**Example step definitions**:
 ```python
-def test_mcp_server_command_starts(capsys):
-    """Test mcp_server management command can start."""
-    from django.core.management import call_command
-    
-    # This will hang on mcp.run(), so we mock just the run() call
-    with patch('mcp.tools.initialize_mcp') as mock_init:
-        mock_mcp = Mock()
-        mock_init.return_value = mock_mcp
-        
-        call_command('mcp_server', '--user=testuser')
-        
-        # Verify it tried to run
-        mock_mcp.run.assert_called_once()
+from pytest_bdd import scenarios, given, when, then, parsers
+from mcp.tools import create_activity, set_activity_predecessor
+
+scenarios('../../../docs/features/act-13-mcp/interact-with-activities-via-mcp.feature')
+
+@when(parsers.parse('Cascade calls MCP tool "create_activity" with:\n{table}'))
+def cascade_calls_create_activity(table, context):
+    data = parse_table(table)
+    context['result'] = create_activity(
+        workflow_id=int(data['workflow_id']),
+        name=data['name'],
+        guidance=data.get('guidance', ''),
+        phase=data.get('phase'),
+        predecessor_id=int(data['predecessor_id']) if 'predecessor_id' in data else None
+    )
+
+@when(parsers.parse('Cascade calls "set_activity_predecessor" with:\n{table}'))
+def cascade_sets_predecessor(table, context):
+    data = parse_table(table)
+    try:
+        context['result'] = set_activity_predecessor(
+            activity_id=int(data['activity_id']),
+            predecessor_id=int(data['predecessor_id'])
+        )
+    except Exception as e:
+        context['error'] = e
+
+@then(parsers.parse('MCP returns error "ValidationError: Circular dependency detected"'))
+def verify_circular_dependency_error(context):
+    assert 'error' in context
+    assert 'Circular dependency' in str(context['error'])
 ```
+
+#### D4. Test Execution
+**Command**: `pytest tests/integration/test_steps/ -v --cucumber-json=test_results.json`
+
+**Success criteria**: All 60 BDD scenarios pass (100% pass rate)
 
 ### Phase E: Documentation & Finalization
 
@@ -570,24 +509,20 @@ After each major step above:
 
 ## 4. Test Summary
 
-**Total tests to create**: ~60 tests
+**BDD Feature Scenarios**: 60 scenarios (test-first)
+- `interact-with-playbooks-via-mcp.feature`: 18 scenarios
+- `interact-with-workflows-via-mcp.feature`: 19 scenarios
+- `interact-with-activities-via-mcp.feature`: 23 scenarios
 
-**Service tests** (~45 tests):
-- PlaybookService: 17 tests
-- WorkflowService: 12 tests
-- ActivityService: 18 tests
+**Unit tests to create** (~45 tests - retroactive for services):
+- PlaybookService: 17 tests (create/get/list/update/delete/duplicate/release)
+- WorkflowService: 12 tests (create/get/list/update/delete/duplicate)
+- ActivityService: 18 tests (CRUD + dependency management)
 
-**MCP tool tests** (~25 tests):
-- Playbook tools: 8 tests
-- Workflow tools: 8 tests
-- Activity tools: 9 tests
-
-**Integration tests** (~3 tests):
-- E2E create methodology: 1 test
-- E2E permissions: 1 test
-- mcp_server startup: 1 test
-
-**NO MOCKING in integration tests** per project rules
+**Integration tests**: Implement step definitions for 60 BDD scenarios
+- NO MOCKING per project rules
+- Real database, real services, real MCP tools
+- Covers full request → response cycle
 
 ## 5. Success Criteria
 
