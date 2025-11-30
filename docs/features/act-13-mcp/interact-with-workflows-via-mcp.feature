@@ -3,9 +3,11 @@ Feature: FOB-MCP-WORKFLOWS-1 AI Assistant Interacts with Workflows via MCP
   I want to create, read, update, and delete workflows via MCP tools
   So that I can help users structure their methodologies
 
-  Status: 🔧 IN PROGRESS
-  Branch: feature/mcp-integration
+  Status: ✅ DONE - All 5 CRUD tools implemented
+  Branch: feature/mcp-integration (merged to main)
   Related: act-3-workflows
+  Tests: 250 passed (100% pass rate)
+  Commit: 0969327
 
   Background:
     Given MCP server is running for user "maria"

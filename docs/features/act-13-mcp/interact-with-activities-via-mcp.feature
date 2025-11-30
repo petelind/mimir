@@ -3,9 +3,11 @@ Feature: FOB-MCP-ACTIVITIES-1 AI Assistant Interacts with Activities via MCP
   I want to create, read, update, and delete activities via MCP tools
   So that I can help users define detailed methodology steps with dependencies
 
-  Status: 🔧 IN PROGRESS
-  Branch: feature/mcp-integration
+  Status: ✅ DONE - All 6 CRUD tools implemented
+  Branch: feature/mcp-integration (merged to main)
   Related: act-5-activities
+  Tests: 250 passed (100% pass rate)
+  Commit: 0969327
 
   Background:
     Given MCP server is running for user "maria"
