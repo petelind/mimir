@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Mimir apps
     "accounts",
     "methodology",
+    "mcp_integration",
 ]
 
 MIDDLEWARE = [
@@ -155,6 +156,13 @@ SESSION_COOKIE_SAMESITE = "Lax"  # CSRF protection
 # Logging configuration
 # https://docs.djangoproject.com/en/5.2/topics/logging/
 
+# Detect if we're running MCP server (needs clean stdio for JSON-RPC)
+import os
+_IS_MCP_SERVER = os.environ.get('MIMIR_MCP_MODE') == '1'
+
+# Choose handlers based on mode
+_LOG_HANDLERS = ['file'] if _IS_MCP_SERVER else ['file', 'console']
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -195,22 +203,27 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['file', 'console'],
+        'handlers': _LOG_HANDLERS,
         'level': 'INFO',
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'console'],
+            'handlers': _LOG_HANDLERS,
             'level': 'INFO',
             'propagate': False,
         },
         'accounts': {
-            'handlers': ['file', 'console'],
+            'handlers': _LOG_HANDLERS,
             'level': 'INFO',
             'propagate': False,
         },
         'methodology': {
-            'handlers': ['file', 'console'],
+            'handlers': _LOG_HANDLERS,
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'mcp_integration': {
+            'handlers': _LOG_HANDLERS,
             'level': 'INFO',
             'propagate': False,
         },

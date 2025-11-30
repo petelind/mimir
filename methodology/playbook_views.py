@@ -10,13 +10,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-
 from methodology.models import Playbook, Workflow, PlaybookVersion
 from methodology.forms import (
     PlaybookBasicInfoForm,
     PlaybookWorkflowForm,
     PlaybookPublishingForm
 )
+from methodology.services.playbook_service import PlaybookService
 
 logger = logging.getLogger(__name__)
 
@@ -162,21 +162,17 @@ def _create_playbook_from_wizard(wizard_data, status, user):
     from decimal import Decimal
     
     # Set initial version based on status
-    # Draft: 0.1, Released/Active: 1.0
-    initial_version = Decimal('1.0') if status in ['released', 'active'] else Decimal('0.1')
-    
-    playbook = Playbook.objects.create(
+    # Use service layer for consistent business logic
+    playbook = PlaybookService.create_playbook(
         name=wizard_data['name'],
         description=wizard_data['description'],
         category=wizard_data['category'],
-        tags=wizard_data.get('tags', []),
-        visibility=wizard_data.get('visibility', 'private'),
+        author=user,
         status=status,
-        version=initial_version,
-        source='owned',
-        author=user
+        visibility=wizard_data.get('visibility', 'private'),
+        source='owned'
     )
-    logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {user.username} with version {initial_version}")
+    logger.info(f"Playbook '{playbook.name}' (ID: {playbook.pk}) created by {user.username} with version {playbook.version}")
     return playbook
 
 
@@ -485,16 +481,10 @@ def playbook_duplicate(request, pk):
     if request.method == 'POST':
         new_name = request.POST.get('new_name', f"{original.name} (Copy)")
         
-        # Create duplicate
-        duplicate = Playbook.objects.create(
-            name=new_name,
-            description=original.description,
-            category=original.category,
-            tags=original.tags.copy() if original.tags else [],
-            visibility='private',  # Duplicates are always private
-            status='draft',  # Duplicates start as draft
-            version=1,  # New version sequence
-            source='owned',  # Duplicates are always owned
+        # Use service layer for consistent duplication logic
+        duplicate = PlaybookService.duplicate_playbook(
+            playbook_id=pk,
+            new_name=new_name,
             author=request.user
         )
         
