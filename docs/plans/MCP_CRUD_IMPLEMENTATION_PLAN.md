@@ -344,128 +344,178 @@ class Command(BaseCommand):
 
 **Skip for now** - BDD scenarios provide comprehensive coverage of tool behavior.
 
-### Phase D: BDD Step Definitions (Integration Tests)
+### Phase D: Integration Tests (Based on BDD Scenarios)
 
 **Re-read**: `.windsurf/rules/do-not-mock-in-integration-tests.md`
 
-#### D1. Implement Step Definitions for Playbook Scenarios
-**Task**: Implement step definitions for 18 playbook scenarios  
-**Files**: `tests/integration/test_steps/mcp_playbook_steps.py`  
-**Feature**: `docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature`
+**Strategy**: Write separate pytest integration tests, one per BDD scenario. BDD feature files provide specification, regular pytest provides implementation.
 
-**Example step definitions**:
+#### D1. Integration Tests for Playbook MCP Tools
+**Task**: Write 18 integration tests based on playbook scenarios  
+**Files**: `tests/integration/test_mcp_playbook_tools.py`  
+**Reference**: `docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature`
+
+**Example tests**:
 ```python
-from pytest_bdd import scenarios, given, when, then, parsers
+import pytest
 from mcp.context import set_current_user
 from mcp.tools import create_playbook, update_playbook, delete_playbook
+from methodology.models import Playbook
 
-scenarios('../../../docs/features/act-13-mcp/interact-with-playbooks-via-mcp.feature')
-
-@given('MCP server is running for user "maria"')
-def mcp_server_running(maria_user):
-    """Set up MCP context for maria."""
-    set_current_user(maria_user)
-
-@when(parsers.parse('Cascade calls MCP tool "create_playbook" with:\n{table}'))
-def cascade_calls_create_playbook(table, context):
-    """Parse table and call create_playbook tool."""
-    data = parse_table(table)
-    context['result'] = create_playbook(
-        name=data['name'],
-        description=data['description'],
-        category=data['category']
-    )
-
-@then(parsers.parse('MCP returns success response with:\n{table}'))
-def verify_success_response(table, context):
-    """Verify response matches expected values."""
-    expected = parse_table(table)
-    result = context['result']
-    assert result['id'] == int(expected['id'])
-    assert result['version'] == expected['version']
-    assert result['status'] == expected['status']
-
-@then(parsers.parse('MCP returns error "{error_message}"'))
-def verify_error_raised(error_message, context):
-    """Verify expected exception was raised."""
-    assert 'error' in context
-    assert error_message in str(context['error'])
+class TestPlaybookMCPTools:
+    """Integration tests for Playbook MCP tools (based on BDD scenarios)."""
+    
+    def test_mcp_pb_01_create_draft_playbook_via_mcp_tool(self, maria_user):
+        """
+        Scenario: MCP-PB-01 Create draft playbook via MCP tool
+        Given Cascade receives user request
+        When Cascade calls create_playbook
+        Then playbook created with version 0.1, status draft
+        """
+        # Set user context
+        set_current_user(maria_user)
+        
+        # Call MCP tool
+        result = create_playbook(
+            name="React Component Development",
+            description="Best practices for building reusable React components",
+            category="frontend"
+        )
+        
+        # Verify response
+        assert result['id'] == 1
+        assert result['version'] == '0.1'
+        assert result['status'] == 'draft'
+        
+        # Verify in database
+        playbook = Playbook.objects.get(id=result['id'])
+        assert playbook.author == maria_user
+        assert playbook.name == "React Component Development"
+    
+    def test_mcp_pb_02_create_playbook_with_duplicate_name_raises_error(self, maria_user):
+        """
+        Scenario: MCP-PB-02 Create playbook with duplicate name raises error
+        Given draft playbook exists
+        When Cascade calls create_playbook with same name
+        Then ValidationError raised
+        """
+        set_current_user(maria_user)
+        
+        # Create first playbook
+        create_playbook(
+            name="React Component Development",
+            description="Test",
+            category="frontend"
+        )
+        
+        # Attempt duplicate
+        with pytest.raises(ValidationError, match="already exists"):
+            create_playbook(
+                name="React Component Development",
+                description="Different description",
+                category="frontend"
+            )
+    
+    def test_mcp_pb_13_update_released_playbook_raises_permission_error(self, maria_user):
+        """
+        Scenario: MCP-PB-13 Update released playbook raises permission error
+        Given released playbook exists
+        When Cascade calls update_playbook
+        Then PermissionError raised
+        """
+        set_current_user(maria_user)
+        
+        # Create and release playbook
+        result = create_playbook(name="Test", description="Test", category="test")
+        from methodology.services import PlaybookService
+        PlaybookService.release_playbook(result['id'], maria_user)
+        
+        # Attempt to update
+        with pytest.raises(PermissionError, match="released playbook"):
+            update_playbook(result['id'], name="New Name")
+        
+        # Verify not modified
+        playbook = Playbook.objects.get(id=result['id'])
+        assert playbook.name == "Test"
+        assert playbook.version == Decimal('1.0')
 ```
 
 **NO MOCKING** - uses real database, real services, real MCP tools
 
-#### D2. Implement Step Definitions for Workflow Scenarios
-**Task**: Implement step definitions for 19 workflow scenarios  
-**Files**: `tests/integration/test_steps/mcp_workflow_steps.py`  
-**Feature**: `docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature`
+#### D2. Integration Tests for Workflow MCP Tools
+**Task**: Write 19 integration tests based on workflow scenarios  
+**Files**: `tests/integration/test_mcp_workflow_tools.py`  
+**Reference**: `docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature`
 
-**Example step definitions**:
+**Example tests**:
 ```python
-from pytest_bdd import scenarios, given, when, then, parsers
-from mcp.tools import create_workflow, update_workflow, delete_workflow
-
-scenarios('../../../docs/features/act-13-mcp/interact-with-workflows-via-mcp.feature')
-
-@when(parsers.parse('Cascade calls MCP tool "create_workflow" with:\n{table}'))
-def cascade_calls_create_workflow(table, context):
-    data = parse_table(table)
-    context['result'] = create_workflow(
-        playbook_id=int(data['playbook_id']),
-        name=data['name'],
-        description=data['description']
-    )
-
-@then(parsers.parse('parent playbook version is incremented from "{old}" to "{new}"'))
-def verify_version_incremented(old, new, context):
-    playbook = Playbook.objects.get(id=context['playbook_id'])
-    # Previous test stored old version, verify new version
-    assert str(playbook.version) == new
+class TestWorkflowMCPTools:
+    """Integration tests for Workflow MCP tools."""
+    
+    def test_mcp_wf_01_create_workflow_increments_parent_version(self, maria_user, draft_playbook):
+        """
+        Scenario: MCP-WF-01 Create workflow in draft playbook increments parent version
+        """
+        set_current_user(maria_user)
+        
+        old_version = draft_playbook.version
+        assert old_version == Decimal('0.1')
+        
+        # Create workflow via MCP
+        result = create_workflow(
+            playbook_id=draft_playbook.id,
+            name="Design Phase",
+            description="Component architecture and planning"
+        )
+        
+        # Verify workflow created
+        assert result['id'] == 1
+        assert result['playbook_id'] == draft_playbook.id
+        assert result['order'] == 1
+        
+        # Verify parent version incremented
+        draft_playbook.refresh_from_db()
+        assert draft_playbook.version == Decimal('0.2')
 ```
 
-#### D3. Implement Step Definitions for Activity Scenarios
-**Task**: Implement step definitions for 23 activity scenarios  
-**Files**: `tests/integration/test_steps/mcp_activity_steps.py`  
-**Feature**: `docs/features/act-13-mcp/interact-with-activities-via-mcp.feature`
+#### D3. Integration Tests for Activity MCP Tools
+**Task**: Write 23 integration tests based on activity scenarios  
+**Files**: `tests/integration/test_mcp_activity_tools.py`  
+**Reference**: `docs/features/act-13-mcp/interact-with-activities-via-mcp.feature`
 
-**Example step definitions**:
+**Example tests**:
 ```python
-from pytest_bdd import scenarios, given, when, then, parsers
-from mcp.tools import create_activity, set_activity_predecessor
-
-scenarios('../../../docs/features/act-13-mcp/interact-with-activities-via-mcp.feature')
-
-@when(parsers.parse('Cascade calls MCP tool "create_activity" with:\n{table}'))
-def cascade_calls_create_activity(table, context):
-    data = parse_table(table)
-    context['result'] = create_activity(
-        workflow_id=int(data['workflow_id']),
-        name=data['name'],
-        guidance=data.get('guidance', ''),
-        phase=data.get('phase'),
-        predecessor_id=int(data['predecessor_id']) if 'predecessor_id' in data else None
-    )
-
-@when(parsers.parse('Cascade calls "set_activity_predecessor" with:\n{table}'))
-def cascade_sets_predecessor(table, context):
-    data = parse_table(table)
-    try:
-        context['result'] = set_activity_predecessor(
-            activity_id=int(data['activity_id']),
-            predecessor_id=int(data['predecessor_id'])
-        )
-    except Exception as e:
-        context['error'] = e
-
-@then(parsers.parse('MCP returns error "ValidationError: Circular dependency detected"'))
-def verify_circular_dependency_error(context):
-    assert 'error' in context
-    assert 'Circular dependency' in str(context['error'])
+class TestActivityMCPTools:
+    """Integration tests for Activity MCP tools."""
+    
+    def test_mcp_act_19_set_predecessor_validates_circular_dependency(self, maria_user, workflow_with_chain):
+        """
+        Scenario: MCP-ACT-19 Set predecessor validates circular dependency
+        Given workflow has activities with chain: 1 → 2 → 3
+        When Cascade tries to set activity 1 predecessor to activity 3
+        Then ValidationError raised (circular dependency)
+        """
+        set_current_user(maria_user)
+        
+        # workflow_with_chain fixture has 3 activities: 1 → 2 → 3
+        act1, act2, act3 = workflow_with_chain.activities.all().order_by('order')
+        
+        # Attempt to create circular dependency
+        with pytest.raises(ValidationError, match="Circular dependency"):
+            set_activity_predecessor(
+                activity_id=act1.id,
+                predecessor_id=act3.id
+            )
+        
+        # Verify no dependency created
+        act1.refresh_from_db()
+        assert act1.predecessor is None
 ```
 
 #### D4. Test Execution
-**Command**: `pytest tests/integration/test_steps/ -v --cucumber-json=test_results.json`
+**Command**: `pytest tests/integration/ -v`
 
-**Success criteria**: All 60 BDD scenarios pass (100% pass rate)
+**Success criteria**: All 60 integration tests pass (100% pass rate)
 
 ### Phase E: Documentation & Finalization
 
@@ -519,10 +569,12 @@ After each major step above:
 - WorkflowService: 12 tests (create/get/list/update/delete/duplicate)
 - ActivityService: 18 tests (CRUD + dependency management)
 
-**Integration tests**: Implement step definitions for 60 BDD scenarios
+**Integration tests to create** (~60 tests based on BDD scenarios):
+- Separate pytest tests (NOT pytest-bdd step definitions)
 - NO MOCKING per project rules
 - Real database, real services, real MCP tools
-- Covers full request → response cycle
+- Each test implements one BDD scenario
+- Example: `test_mcp_pb_01_create_draft_playbook()` implements scenario MCP-PB-01
 
 ## 5. Success Criteria
 
