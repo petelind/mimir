@@ -51,4 +51,9 @@ class Command(BaseCommand):
         logger.info('MCP Server: FastMCP initialized with 16 tools')
         
         # Run the server
-        mcp.run()
+
+        # Run the server with explicit stdio transport
+        import sys
+        sys.stdout.flush()
+        sys.stderr.flush()
+        mcp.run(transport="stdio")
