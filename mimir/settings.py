@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Mimir apps
     "accounts",
     "methodology",
+    "mcp_integration",
     "mcp",
 ]
 
