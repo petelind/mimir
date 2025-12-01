@@ -289,7 +289,14 @@ class TestSystemImpact:
         # Verify removed from list
         list_url = reverse('playbook_list')
         response = client_maria.get(list_url)
-        assert playbook_old_patterns.name not in response.content.decode()
+        content = response.content.decode()
+        
+        # Playbook should not be in database
+        from methodology.models import Playbook
+        assert not Playbook.objects.filter(name=playbook_old_patterns.name).exists()
+        
+        # List should show "No playbooks yet" message
+        assert 'No playbooks yet' in content
     
     def test_deletion_cannot_be_undone(self, client_maria, playbook_old_patterns):
         """PB-DELETE-17: Deletion cannot be undone (no recovery mechanism)"""
