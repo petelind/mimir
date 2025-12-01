@@ -993,7 +993,7 @@
                 <mxCell id="v2-fob-playbooks-edit" value="✅ FOB-PLAYBOOKS-&#10;EDIT_PLAYBOOK" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="320" y="700" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-fob-playbooks-delete" value="FOB-PLAYBOOKS-&#10;DELETE_PLAYBOOK&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" parent="v2-root-1" vertex="1">
+                <mxCell id="v2-fob-playbooks-delete" value="✅ FOB-PLAYBOOKS-&#10;DELETE_PLAYBOOK&#10;(modal)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#4682B4;strokeColor=#22c55e;fontSize=9;fontColor=#ffffff;strokeWidth=3;" parent="v2-root-1" vertex="1">
                     <mxGeometry x="540" y="700" width="150" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="v2-tool-playbooks-label" value="@tools" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=9;fontStyle=2;" parent="v2-root-1" vertex="1">
@@ -1062,7 +1062,7 @@
                 <mxCell id="v2-arrow-view-edit-pb" value="[Edit]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4682B4;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-fob-playbooks-edit" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="v2-arrow-view-delete-pb" value="[Delete]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#b85450;dashed=1;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-fob-playbooks-delete" edge="1">
+                <mxCell id="v2-arrow-view-delete-pb" value="[Delete]" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#4682B4;fontSize=9;" parent="v2-root-1" source="v2-fob-playbooks-view" target="v2-fob-playbooks-delete" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
                             <mxPoint x="110" y="520"/>
