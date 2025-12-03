@@ -93,8 +93,16 @@ Download playbooks from HOMEBASE based on your access level:
    ```bash
    python manage.py migrate
    ```
+   
+   **Note:** The default database (`mimir.db`) includes the **FeatureFactory** playbook, which was used to build Mimir itself. This playbook provides a complete feature development workflow with 8 activities covering planning, implementation, testing, and finalization.
 
-5. **Create admin user**
+5. **Create admin user (or use default)**
+   
+   The database comes with a default admin account:
+   - **Username:** `admin`
+   - **Password:** `admin`
+   
+   **For production or shared environments, create your own user:**
    ```bash
    python manage.py createsuperuser
    ```
@@ -201,7 +209,8 @@ Add Mimir to your MCP client configuration.
       ],
       "env": {
         "DJANGO_SETTINGS_MODULE": "mimir.settings",
-        "PYTHONPATH": "/absolute/path/to/mimir"
+        "PYTHONPATH": "/absolute/path/to/mimir",
+        "MIMIR_MCP_MODE": "true"
       }
     }
   }
@@ -222,7 +231,8 @@ Add Mimir to your MCP client configuration.
         ],
         "env": {
           "DJANGO_SETTINGS_MODULE": "mimir.settings",
-          "PYTHONPATH": "/absolute/path/to/mimir"
+          "PYTHONPATH": "/absolute/path/to/mimir",
+          "MIMIR_MCP_MODE": "true"
         }
       }
     }
@@ -278,77 +288,39 @@ All tools support async operations and validate user permissions automatically.
 
 ### Daily Development
 
-1. **Start your work session**
+1. **Configure your IDE** (one-time setup)
+   
+   Add Mimir to your IDE's MCP configuration (see section 2 above):
+   - **Windsurf:** `~/.codeium/windsurf/mcp_config.json`
+   - **Claude Desktop:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Cursor:** Workspace settings or `.cursorrules`
+   
+   Restart your IDE after configuration.
+
+2. **Start working with Mimir**
+   
+   Once configured, interact with Mimir through your IDE's AI assistant:
+   
+   ```
+   "Mimir, list available playbooks"
+   "Mimir, show me the Build Page workflow"
+   "Mimir, plan FOB-LOGIN-1 per BPE1 Plan Feature"
+   "Mimir, implement backend per BPE2"
+   ```
+
+3. **Optional: Web UI for management**
+   
+   Start the web interface to manage playbooks visually:
    ```bash
-   # Terminal 1: Web UI (leave running)
    python manage.py runserver 8000
    ```
-
-2. **Ask AI for guidance**
-   ```
-   "I need to implement a user profile page. What's the FDD process for this?"
-   ```
-
-3. **Generate work plan**
-   ```
-   "Plan this implementation and create GitHub issues"
-   ```
-
-4. **Get implementation help**
-   ```
-   "How should I structure the TSX component per playbook?"
-   ```
-
-### Weekly Review
-
-1. **Check playbook improvements**
-   - Open http://localhost:8000/pips/
-   - Review PIPs created by AI during the week
-   - Approve good suggestions, reject with reasoning
-
-2. **Sync from HOMEBASE**
-   ```bash
-   python manage.py sync_methodology --all
-   ```
-
-3. **Transmit approved PIPs**
-   - Select PIPs worth sharing
-   - Click "Transmit to HOMEBASE" in web UI
-   - HOMEBASE team reviews for global adoption
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# HOMEBASE (playbook repository)
-MIMIR_HOMEBASE_URL=https://methodologies.example.com
-MIMIR_API_KEY=your_api_key_here
-
-# Database
-MIMIR_DB_PATH=mimir.db
-
-# AI Model (optional)
-OPENAI_API_KEY=your_openai_key  # For AI-driven features
-```
-
-### Playbook Sync
-
-```bash
-# Sync specific playbook
-python manage.py sync_methodology --name "FDD"
-
-# Sync entire family
-python manage.py sync_methodology --family "Software Engineering"
-
-# Sync all available for your access level
-python manage.py sync_methodology --all
-
-# Force re-download even if up to date
-python manage.py sync_methodology --all --force
-```
+   
+   Open http://localhost:8000 to:
+   - Browse and edit playbooks
+   - View workflows and activities
+   - Manage methodology content
+   
+   **Note:** While a Playbook is in draft status, you can work with it directly: update, extend, and even delete - via both MCP and GUI. Once it's released, it can be revised only via PIPs (Playbook Improvement Proposals).
 
 ## Troubleshooting
 
@@ -391,16 +363,6 @@ pkill -f "manage.py runserver"
 
 # Restart web server
 python manage.py runserver 8000
-```
-
-### No Playbooks Available
-
-```bash
-# Load sample data
-python manage.py loaddata sample_methodologies
-
-# Or sync from source
-python manage.py sync_methodology --family "Software Engineering"
 ```
 
 ## Project Structure
