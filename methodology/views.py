@@ -40,27 +40,31 @@ def dashboard(request):
     logger.info(f"User {request.user.username} accessing dashboard")
     
     try:
-        # Initialize activity service
         from methodology.services.activity_service import ActivityService
-        activity_service = ActivityService()
+        from methodology.services.playbook_service import PlaybookService
+        from methodology.models import Playbook, Activity
         
-        # Get dashboard data
-        feed_data = activity_service.get_activity_feed_data(request.user)
+        # Get recent playbooks (last 5 updated)
+        recent_playbooks = Playbook.objects.filter(
+            owner=request.user
+        ).order_by('-updated_at')[:5]
         
-        # Log dashboard view activity
-        activity_service.log_activity(
-            user=request.user,
-            action_type='dashboard_viewed',
-            description=f"{request.user.username} viewed dashboard"
-        )
+        # Get recent activities (last 10 updated)
+        recent_activities = ActivityService.get_recent_activities(request.user, limit=10)
         
-        logger.info(f"Dashboard loaded for {request.user.username}: {feed_data['playbook_count']} playbooks, {feed_data['activity_count']} activities")
+        # Get counts
+        playbook_count = Playbook.objects.filter(owner=request.user).count()
+        activity_count = Activity.objects.filter(
+            workflow__playbook__owner=request.user
+        ).count()
+        
+        logger.info(f"Dashboard loaded for {request.user.username}: {playbook_count} playbooks, {activity_count} activities")
         
         return render(request, 'dashboard.html', {
-            'recent_playbooks': feed_data['recent_playbooks'],
-            'recent_activities': feed_data['recent_activities'],
-            'activity_count': feed_data['activity_count'],
-            'playbook_count': feed_data['playbook_count'],
+            'recent_playbooks': recent_playbooks,
+            'recent_activities': recent_activities,
+            'activity_count': activity_count,
+            'playbook_count': playbook_count,
         })
         
     except Exception as e:
@@ -95,13 +99,12 @@ def dashboard_activities(request):
     
     try:
         from methodology.services.activity_service import ActivityService
-        activity_service = ActivityService()
         
         # Get hours parameter (default to 24)
         hours = int(request.GET.get('hours', 24))
         
         # Get recent activities
-        recent_activities = activity_service.get_recent_activities(request.user, limit=10)
+        recent_activities = ActivityService.get_recent_activities(request.user, limit=10)
         
         logger.info(f"Returned {len(recent_activities)} activities for {request.user.username}")
         

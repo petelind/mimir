@@ -310,3 +310,23 @@ class ActivityService:
         if exclude_activity_id:
             qs = qs.exclude(pk=exclude_activity_id)
         return qs
+    
+    @staticmethod
+    def get_recent_activities(user, limit=10):
+        """
+        Get recently updated activities accessible to the user.
+        
+        :param user: User instance
+        :param limit: Maximum number of activities to return (default: 10)
+        :returns: QuerySet of Activity instances ordered by updated_at descending
+        
+        Example:
+            >>> recent = ActivityService.get_recent_activities(user, limit=10)
+            >>> for activity in recent:
+            ...     print(activity.name, activity.updated_at)
+        """
+        return Activity.objects.filter(
+            workflow__playbook__owner=user
+        ).select_related(
+            'workflow', 'workflow__playbook'
+        ).order_by('-updated_at')[:limit]
