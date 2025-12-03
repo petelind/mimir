@@ -46,16 +46,16 @@ def dashboard(request):
         
         # Get recent playbooks (last 5 updated)
         recent_playbooks = Playbook.objects.filter(
-            owner=request.user
+            author=request.user
         ).order_by('-updated_at')[:5]
         
         # Get recent activities (last 10 updated)
         recent_activities = ActivityService.get_recent_activities(request.user, limit=10)
         
         # Get counts
-        playbook_count = Playbook.objects.filter(owner=request.user).count()
+        playbook_count = Playbook.objects.filter(author=request.user).count()
         activity_count = Activity.objects.filter(
-            workflow__playbook__owner=request.user
+            workflow__playbook__author=request.user
         ).count()
         
         logger.info(f"Dashboard loaded for {request.user.username}: {playbook_count} playbooks, {activity_count} activities")

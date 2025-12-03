@@ -326,7 +326,7 @@ class ActivityService:
             ...     print(activity.name, activity.updated_at)
         """
         return Activity.objects.filter(
-            workflow__playbook__owner=user
+            workflow__playbook__author=user
         ).select_related(
             'workflow', 'workflow__playbook'
         ).order_by('-updated_at')[:limit]
