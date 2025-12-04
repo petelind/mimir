@@ -186,3 +186,91 @@ class TestActivityService:
         # Assertions - activity1 should be first (most recent)
         assert recent[0] == activity1
         assert recent[1] == activity2
+    
+    def test_touch_activity_access_updates_timestamp(self):
+        """Test touch_activity_access updates last_accessed_at timestamp."""
+        from django.utils import timezone
+        
+        # Create user and activity
+        user = User.objects.create_user(username='testuser', password='pass123')
+        playbook = Playbook.objects.create(
+            name='Test Playbook',
+            description='Test',
+            category='development',
+            author=user
+        )
+        workflow = Workflow.objects.create(
+            playbook=playbook,
+            name='Test Workflow',
+            description='Test'
+        )
+        activity = Activity.objects.create(
+            workflow=workflow,
+            name='Test Activity',
+            guidance='Test',
+            order=1
+        )
+        
+        # Verify initially None
+        assert activity.last_accessed_at is None
+        
+        # Call touch_activity_access
+        before_time = timezone.now()
+        ActivityService.touch_activity_access(activity.id)
+        
+        # Refresh from DB
+        activity.refresh_from_db()
+        
+        # Assertions
+        assert activity.last_accessed_at is not None
+        assert activity.last_accessed_at >= before_time
+    
+    def test_touch_activity_access_raises_for_invalid_id(self):
+        """Test touch_activity_access raises Activity.DoesNotExist for invalid ID."""
+        # Attempt to touch non-existent activity
+        with pytest.raises(Activity.DoesNotExist):
+            ActivityService.touch_activity_access(99999)
+    
+    def test_get_recent_activities_sorts_by_access_time(self):
+        """Test get_recent_activities sorts by MAX(last_accessed_at, updated_at)."""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        # Create user with activities
+        user = User.objects.create_user(username='testuser', password='pass123')
+        playbook = Playbook.objects.create(
+            name='Test Playbook',
+            description='Test',
+            category='development',
+            author=user
+        )
+        workflow = Workflow.objects.create(
+            playbook=playbook,
+            name='Test Workflow',
+            description='Test'
+        )
+        
+        activity1 = Activity.objects.create(
+            workflow=workflow,
+            name='Activity 1',
+            guidance='Test',
+            order=1
+        )
+        
+        activity2 = Activity.objects.create(
+            workflow=workflow,
+            name='Activity 2',
+            guidance='Test',
+            order=2
+        )
+        
+        # Set activity2's last_accessed_at to future (making it more recent)
+        activity2.last_accessed_at = timezone.now() + timedelta(hours=1)
+        activity2.save()
+        
+        # Get recent activities
+        recent = list(ActivityService.get_recent_activities(user, limit=10))
+        
+        # Assertions - activity2 should be first (most recently accessed)
+        assert recent[0] == activity2
+        assert recent[1] == activity1

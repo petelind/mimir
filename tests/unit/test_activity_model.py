@@ -248,3 +248,65 @@ class TestActivityModel:
         
         assert activity.get_phase_display_name() == 'Unassigned'
     
+    def test_playbook_property_returns_workflow_playbook(self, test_workflow):
+        """Test that playbook property returns the parent workflow's playbook."""
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        assert activity.playbook == test_workflow.playbook
+        assert activity.playbook.name == 'Test Playbook'
+    
+    def test_timestamp_returns_updated_at_when_no_access(self, test_workflow):
+        """Test that timestamp returns updated_at when last_accessed_at is None."""
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        assert activity.timestamp == activity.updated_at
+        assert activity.last_accessed_at is None
+    
+    def test_timestamp_returns_last_accessed_when_more_recent(self, test_workflow):
+        """Test that timestamp returns last_accessed_at when it's more recent than updated_at."""
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        # Set last_accessed_at to future time
+        future_time = timezone.now() + timedelta(hours=1)
+        activity.last_accessed_at = future_time
+        activity.save()
+        
+        assert activity.timestamp == future_time
+        assert activity.timestamp > activity.updated_at
+    
+    def test_description_property_format(self, test_workflow):
+        """Test that description property returns correctly formatted string."""
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Design Component',
+            guidance='Test'
+        )
+        
+        expected = 'Design Component in Test Workflow workflow'
+        assert activity.description == expected
+    
+    def test_get_icon_class_returns_tasks_icon(self, test_workflow):
+        """Test that get_icon_class returns Font Awesome tasks icon."""
+        activity = Activity.objects.create(
+            workflow=test_workflow,
+            name='Test Activity',
+            guidance='Test'
+        )
+        
+        assert activity.get_icon_class() == 'fas fa-tasks'
+    
