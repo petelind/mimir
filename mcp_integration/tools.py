@@ -597,6 +597,9 @@ async def get_activity(activity_id: int) -> dict:
     """
     Get activity details with dependencies.
     
+    Tracks activity access by updating last_accessed_at timestamp for
+    the "Recently Used" dashboard section.
+    
     :param activity_id: Activity ID. Example: 1
     :return: Activity dict with predecessor/successor info
     :raises ValueError: if not found or not owned
@@ -616,6 +619,15 @@ async def get_activity(activity_id: int) -> dict:
     except Activity.DoesNotExist:
         logger.error(f'MCP Tool: Activity id={activity_id} not found for user')
         raise ValueError(f'Activity {activity_id} not found')
+    
+    # Track access for "Recently Used" dashboard section
+    # Non-critical operation - log errors but don't fail the request
+    try:
+        from methodology.services.activity_service import ActivityService
+        await sync_to_async(ActivityService.touch_activity_access)(activity_id)
+    except Exception as e:
+        logger.warning(f'Failed to track access for activity {activity_id}: {e}')
+        # Continue - access tracking is non-critical
     
     result = {
         'id': activity.id,
