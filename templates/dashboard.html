@@ -11,12 +11,45 @@
             Dashboard
             <small class="text-muted ms-2">Welcome back, {{ user.username }}!</small>
         </h1>
-        <div class="btn-group">
-            <button class="btn btn-outline-secondary">
-                <i class="fa-solid fa-gauge me-2"></i>
-                Dashboard
+        <div class="d-flex gap-2">
+            <!-- Quick Actions -->
+            <a href="{% url 'playbook_create' %}" 
+               class="btn btn-primary"
+               data-testid="dashboard-quick-new-playbook-header"
+               data-bs-toggle="tooltip" 
+               data-bs-placement="bottom" 
+               title="Create a new playbook">
+                <i class="fa-solid fa-book-sparkles me-2"></i>
+                New Playbook
+            </a>
+            <button class="btn btn-outline-secondary" 
+                    disabled
+                    data-testid="quick-action-import-playbook-header"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" 
+                    title="Import playbook from file (coming soon)">
+                <i class="fa-solid fa-file-import me-2"></i>
+                Import Playbook
             </button>
-            <button class="btn btn-outline-secondary">
+            <button class="btn btn-outline-secondary" 
+                    disabled
+                    data-testid="quick-action-sync-homebase-header"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" 
+                    title="Sync with Homebase repository (coming soon)">
+                <i class="fa-solid fa-sync me-2"></i>
+                Sync with Homebase
+            </button>
+            
+            <!-- Divider -->
+            <div class="vr"></div>
+            
+            <!-- Settings -->
+            <button class="btn btn-outline-secondary"
+                    data-testid="dashboard-settings-button"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" 
+                    title="Configure your Mimir settings">
                 <i class="fa-solid fa-gear me-2"></i>
                 Settings
             </button>
