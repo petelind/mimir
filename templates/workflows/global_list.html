@@ -4,14 +4,16 @@
 {% block title %}All Workflows{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <!-- Header -->
-    <div class="mb-4">
-        <h2>
-            <i class="fa-solid fa-diagram-project"></i>
-            All Workflows
-        </h2>
-        <p class="text-muted">Workflows across all your playbooks</p>
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>
+                <i class="fa-solid fa-diagram-project"></i>
+                All Workflows
+            </h2>
+            <p class="text-muted">Workflows across all your playbooks</p>
+        </div>
     </div>
 
     <!-- Summary Stats Cards -->
@@ -41,57 +43,71 @@
 
     {% if workflows %}
     <!-- Workflows Table -->
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Workflow</th>
-                    <th>Playbook</th>
-                    <th>Order</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for workflow in workflows %}
-                <tr>
-                    <td>
-                        <a href="{% url 'workflow_detail' workflow.playbook.pk workflow.pk %}">
-                            <i class="fa-solid fa-diagram-project text-primary"></i>
-                            <strong>{{ workflow.name }}</strong>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'playbook_detail' workflow.playbook.pk %}" class="text-muted">
-                            {{ workflow.playbook.name }}
-                        </a>
-                    </td>
-                    <td>
-                        <span class="badge bg-secondary">#{{ workflow.order }}</span>
-                    </td>
-                    <td>
-                        <small class="text-muted">{{ workflow.description|truncatewords:10 }}</small>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{% url 'workflow_detail' workflow.playbook.pk workflow.pk %}" 
-                               class="btn btn-sm btn-outline-primary"
-                               data-bs-toggle="tooltip"
-                               title="View workflow details">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                            <a href="{% url 'workflow_edit' workflow.playbook.pk workflow.pk %}" 
-                               class="btn btn-sm btn-outline-secondary"
-                               data-bs-toggle="tooltip"
-                               title="Edit workflow">
-                                <i class="fa-solid fa-edit"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-diagram-project"></i> All Workflows
+                        <span class="badge bg-secondary ms-2">{{ workflows|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Workflow</th>
+                                    <th>Playbook</th>
+                                    <th>Order</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for workflow in workflows %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'workflow_detail' workflow.playbook.pk workflow.pk %}">
+                                            <i class="fa-solid fa-diagram-project text-primary"></i>
+                                            <strong>{{ workflow.name }}</strong>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'playbook_detail' workflow.playbook.pk %}" class="text-muted">
+                                            {{ workflow.playbook.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">#{{ workflow.order }}</span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ workflow.description|truncatewords:10 }}</small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'workflow_detail' workflow.playbook.pk workflow.pk %}" 
+                                               class="btn btn-sm btn-outline-primary"
+                                               data-bs-toggle="tooltip"
+                                               title="View workflow details">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'workflow_edit' workflow.playbook.pk workflow.pk %}" 
+                                               class="btn btn-sm btn-outline-secondary"
+                                               data-bs-toggle="tooltip"
+                                               title="Edit workflow">
+                                                <i class="fa-solid fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     {% else %}
