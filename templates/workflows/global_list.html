@@ -15,29 +15,26 @@
     </div>
 
     <!-- Summary Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary">
-                <div class="card-body text-center">
-                    <h2 class="display-4 mb-0">{{ workflows|length }}</h2>
-                    <p class="mb-0">Total Workflows</p>
-                </div>
+    <div class="row mb-4 text-center">
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded">
+                <i class="fa-solid fa-diagram-project fa-2x text-primary mb-2"></i>
+                <h3 class="mb-0">{{ workflows|length }}</h3>
+                <small class="text-muted">Total Workflows</small>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-info">
-                <div class="card-body text-center">
-                    <h2 class="display-4 mb-0">{{ playbook_count }}</h2>
-                    <p class="mb-0">Playbooks</p>
-                </div>
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded">
+                <i class="fa-solid fa-book-sparkles fa-2x text-success mb-2"></i>
+                <h3 class="mb-0">{{ playbook_count }}</h3>
+                <small class="text-muted">Playbooks</small>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-warning">
-                <div class="card-body text-center">
-                    <h2 class="display-4 mb-0">0</h2>
-                    <p class="mb-0">Total Activities</p>
-                </div>
+        <div class="col-md-4 mb-3">
+            <div class="p-3 border rounded">
+                <i class="fa-solid fa-list-check fa-2x text-info mb-2"></i>
+                <h3 class="mb-0">0</h3>
+                <small class="text-muted">Total Activities</small>
             </div>
         </div>
     </div>
