@@ -66,6 +66,11 @@ class Activity(models.Model):
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    last_accessed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp when activity was last accessed/viewed (for Recent Activity tracking)"
+    )
     
     class Meta:
         ordering = ['workflow', 'order', 'name']
