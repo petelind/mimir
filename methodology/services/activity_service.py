@@ -312,21 +312,60 @@ class ActivityService:
         return qs
     
     @staticmethod
+    def touch_activity_access(activity_id):
+        """
+        Update last_accessed_at timestamp when activity is viewed.
+        
+        :param activity_id: Activity primary key
+        :return: None
+        :raises Activity.DoesNotExist: If activity not found
+        
+        Example:
+            >>> ActivityService.touch_activity_access(123)
+        """
+        from django.utils import timezone
+        
+        try:
+            activity = Activity.objects.get(pk=activity_id)
+            activity.last_accessed_at = timezone.now()
+            activity.save(update_fields=['last_accessed_at'])
+            logger.info(f"Activity {activity_id} accessed at {activity.last_accessed_at}")
+        except Activity.DoesNotExist:
+            logger.error(f"Activity {activity_id} not found for access tracking")
+            raise  # Propagate to caller
+    
+    @staticmethod
     def get_recent_activities(user, limit=10):
         """
-        Get recently updated activities accessible to the user.
+        Get recently used/modified activities sorted by most recent access or update.
+        
+        Sorts by MAX(last_accessed_at, updated_at) to show activities that were
+        either recently accessed via MCP or modified via GUI/MCP.
         
         :param user: User instance
         :param limit: Maximum number of activities to return (default: 10)
-        :returns: QuerySet of Activity instances ordered by updated_at descending
+        :return: QuerySet of Activity instances ordered by recent_time descending
+        :rtype: QuerySet[Activity]
+        :raises: Database errors propagate naturally (OperationalError, DatabaseError)
         
         Example:
             >>> recent = ActivityService.get_recent_activities(user, limit=10)
             >>> for activity in recent:
-            ...     print(activity.name, activity.updated_at)
+            ...     print(activity.name, activity.timestamp)
         """
-        return Activity.objects.filter(
-            workflow__playbook__author=user
-        ).select_related(
-            'workflow', 'workflow__playbook'
-        ).order_by('-updated_at')[:limit]
+        from django.db.models.functions import Coalesce, Greatest
+        
+        try:
+            return Activity.objects.filter(
+                workflow__playbook__author=user
+            ).annotate(
+                recent_time=Greatest(
+                    Coalesce('last_accessed_at', 'updated_at'),
+                    'updated_at'
+                )
+            ).select_related(
+                'workflow', 'workflow__playbook'
+            ).order_by('-recent_time')[:limit]
+        except Exception as e:
+            logger.error(f"Error fetching recent activities for user {user.username}: {e}")
+            raise  # Propagate to caller for proper handling
