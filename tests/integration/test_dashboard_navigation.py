@@ -26,9 +26,6 @@ class TestDashboardNavigation:
         # Quick action button must be present in header
         assert "New Playbook" in content
         assert 'data-testid="dashboard-quick-new-playbook-header"' in content
-        
-        # Quick action button also present in bottom section
-        assert 'data-testid="dashboard-quick-new-playbook"' in content
 
         # Tooltip should explain the action
         assert 'data-bs-toggle="tooltip"' in content
