@@ -2,6 +2,9 @@
 django>=5.0
 asgiref>=3.8.0
 
+# WSGI Server for Production
+gunicorn>=21.2.0
+
 # MCP Integration
 fastmcp>=0.1.0
 
@@ -15,6 +18,9 @@ pymdown-extensions>=10.5.0
 
 # Configuration
 python-dotenv>=1.0.0
+
+# HTTP Client (for Docker healthcheck)
+requests>=2.31.0
 
 # Testing
 pytest>=7.4.0

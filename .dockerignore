@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+.hypothesis/
+
+# Django
+*.log
+mimir.db
+mimir.db-journal
+staticfiles/
+media/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Documentation
+docs/
+*.md
+!README.md
+!CONTAINERIZED_MIMIR_PLAN.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Data (will be volume-mounted)
+data/
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# Logs
+logs/
+tests.log
+app.log
+
+# Node modules (if any)
+node_modules/
+
+# Playwright
+playwright-report/
+test-results/
