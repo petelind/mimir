@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-)t!u$2p(q=x4m54)-kh39ti_an3_(6%aej&p!#w3pcs(s&q0$="
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver']  # Allow Django test client
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0,testserver').split(',')
 
 # Trust localhost for development (CSRF protection)
 CSRF_TRUSTED_ORIGINS = [
@@ -86,10 +87,26 @@ WSGI_APPLICATION = "mimir.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Support for volume-mounted database in Docker container
+# Default: Use data/mimir.db for containerized deployment
+# Development: Falls back to BASE_DIR/mimir.db if MIMIR_DB_PATH not set
+db_path = os.getenv('MIMIR_DB_PATH')
+if db_path:
+    # Use environment variable path (for Docker)
+    database_path = Path(db_path)
+else:
+    # Check if we're in containerized environment (data directory exists)
+    data_dir = BASE_DIR / "data"
+    if data_dir.exists():
+        database_path = data_dir / "mimir.db"
+    else:
+        # Development fallback
+        database_path = BASE_DIR / "mimir.db"
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "mimir.db",
+        "NAME": database_path,
     }
 }
 
