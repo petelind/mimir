@@ -94,19 +94,66 @@ For **Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
       "args": [
         "exec",
         "-i",
+        "-e",
+        "MIMIR_MCP_MODE=1",
         "mimir",
         "python",
         "manage.py",
         "mcp_server",
         "--user=yourusername"
-      ],
-      "env": {
-        "MIMIR_MCP_MODE": "1"
+      ]
+    }
+  }
+}
+```
+
+For **Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "-e",
+        "MIMIR_MCP_MODE=1",
+        "mimir",
+        "python",
+        "manage.py",
+        "mcp_server",
+        "--user=yourusername"
+      ]
+    }
+  }
+}
+```
+
+For **Cursor** (`.cursorrules` or workspace settings):
+```json
+{
+  "mcp": {
+    "servers": {
+      "mimir": {
+        "command": "docker",
+        "args": [
+          "exec",
+          "-i",
+          "-e",
+          "MIMIR_MCP_MODE=1",
+          "mimir",
+          "python",
+          "manage.py",
+          "mcp_server",
+          "--user=yourusername"
+        ]
       }
     }
   }
 }
 ```
+
+**Important:** Replace `yourusername` with the username you set in `MIMIR_USER` when starting the container.
 
 **That's it!** Your data persists in `~/mimir-data` across container updates.
 
