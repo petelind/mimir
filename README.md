@@ -62,7 +62,63 @@ Download playbooks from HOMEBASE based on your access level:
 - **Family-based**: Software Engineering, UX Design, Testing, etc.
 - **Version tiers**: LITE (Basic), FULL (Standard), EXTENDED (Premium)
 
-## Installation
+## 🚀 Quick Start with Docker
+
+**Just want to run Mimir? Pull the container:**
+
+```bash
+# Pull the latest release from Azure Container Registry
+docker pull acrmimir.azurecr.io/mimir:release-latest
+
+# Run with persistent storage
+docker run -d \
+  --name mimir \
+  -p 8000:8000 \
+  -v ~/mimir-data:/app/data \
+  -e MIMIR_USER=yourusername \
+  -e MIMIR_EMAIL=you@example.com \
+  acrmimir.azurecr.io/mimir:release-latest
+
+# Access the web interface
+open http://localhost:8000
+```
+
+**Configure MCP in your IDE:**
+
+For **Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "mimir",
+        "python",
+        "manage.py",
+        "mcp_server",
+        "--user=yourusername"
+      ],
+      "env": {
+        "MIMIR_MCP_MODE": "1"
+      }
+    }
+  }
+}
+```
+
+**That's it!** Your data persists in `~/mimir-data` across container updates.
+
+> 📦 **Multi-platform support**: Works on Intel (amd64) and Apple Silicon (arm64) Macs  
+> 🔄 **Auto-updates**: Pull latest image and restart container to update  
+> 💾 **Data safety**: Database stored in mounted volume survives container restarts
+
+See [docs/DOCKER_QUICK_START.md](docs/DOCKER_QUICK_START.md) for more details.
+
+---
+
+## Installation (For Development)
 
 ### Prerequisites
 
