@@ -4,7 +4,7 @@
 
 Mimir helps you work more effectively by providing structured playbooks that your AI assistant can access directly in your IDE. Get guidance, generate work plans, track progress, and continuously improve your development process.
 
-> 📖 For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
+> For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
 
 ## Core Entities
 
@@ -20,7 +20,7 @@ Mimir organizes your playbooks using **7 core entities**:
 
 ## What Can Mimir Do?
 
-### 🤖 Answer Playbook Questions via MCP
+### Answer Playbook Questions via MCP
 
 Your AI assistant can query Mimir directly from your IDE (powered by FastMCP):
 
@@ -29,7 +29,7 @@ You: "How do I build a TSX component per FDD playbook?"
 AI: → Queries Mimir → Returns activity guidance and relevant Howtos
 ```
 
-### 📋 Generate Work Plans
+### Generate Work Plans
 
 Automatically create task breakdowns in GitHub or Jira:
 
@@ -38,7 +38,7 @@ You: "Plan implementation of scenario LOG1.1 and Screen LOG per FDD"
 AI: → Generates work orders from playbook → Creates GitHub issues
 ```
 
-### 📊 Assess Project Progress
+### Assess Project Progress
 
 Check if you've completed all required artifacts for a phase:
 
@@ -47,7 +47,7 @@ You: "I'm supposed to finish inception phase next week. Did I produce all requir
 AI: → Scans codebase and issues → Reports status and gaps
 ```
 
-### 🔄 Evolve Through Experience
+### Evolve Through Experience
 
 When AI encounters issues during work, it can propose playbook improvements:
 
@@ -56,13 +56,13 @@ AI: → Detects repeated corrections → Creates Playbook Improvement Proposal (
 You: → Reviews PIP in web UI → Approves with notes → New playbook version created
 ```
 
-### 📚 Access Playbook Library
+### Access Playbook Library
 
 Download playbooks from HOMEBASE based on your access level:
 - **Family-based**: Software Engineering, UX Design, Testing, etc.
 - **Version tiers**: LITE (Basic), FULL (Standard), EXTENDED (Premium)
 
-## 🚀 Quick Start with Docker
+## Quick Start with Docker
 
 **Just want to run Mimir? Pull the container:**
 
@@ -110,9 +110,9 @@ For **Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
 
 **That's it!** Your data persists in `~/mimir-data` across container updates.
 
-> 📦 **Multi-platform support**: Works on Intel (amd64) and Apple Silicon (arm64) Macs  
-> 🔄 **Auto-updates**: Pull latest image and restart container to update  
-> 💾 **Data safety**: Database stored in mounted volume survives container restarts
+> **Multi-platform support**: Works on Intel (amd64) and Apple Silicon (arm64) Macs  
+> **Auto-updates**: Pull latest image and restart container to update  
+> **Data safety**: Database stored in mounted volume survives container restarts
 
 See [docs/DOCKER_QUICK_START.md](docs/DOCKER_QUICK_START.md) for more details.
 
