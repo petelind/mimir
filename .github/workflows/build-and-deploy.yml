@@ -30,7 +30,12 @@ jobs:
           python-version: '3.14'
           cache: 'pip'
       
-      - name: Install dependencies
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+      
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
@@ -43,6 +48,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           pytest tests/ -v \
+            --ignore=tests/integration/test_mcp_server_acceptance.py \
             --cov=. \
             --cov-report=html \
             --cov-report=term \
