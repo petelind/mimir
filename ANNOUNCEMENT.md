@@ -4,19 +4,11 @@ Mimir is a structured engineering playbook system that runs in your IDE through 
 
 The container comes with FeatureFactory, the playbook we use to build Mimir itself. It covers feature planning through deployment with 8 activities across 3 workflows. You can use it as-is to contribute to Mimir, or create your own playbooks by combining activities into custom workflows.
 
-Installation is straightforward - just prompt your IDE:
+Installation is straightforward - just tell your AI assistant:
 
-  docker pull acrmimir.azurecr.io/mimir:release-latest
-  docker run -d --name mimir -p 8000:8000 -v ~/mimir-data:/app/data -e MIMIR_USER=yourname acrmimir.azurecr.io/mimir:release-latest
+  "Pull and run acrmimir.azurecr.io/mimir:release-latest as a container named mimir on port 8000, with ~/mimir-data mounted to /app/data, and set MIMIR_USER to my username. Then add mimir to my MCP config using docker exec with args: exec, -i, -e, MIMIR_MCP_MODE=1, mimir, python, manage.py, mcp_server, --user=myusername. Restart the IDE after."
 
-Add to your MCP config:
-
-  "mimir": {
-    "command": "docker",
-    "args": ["exec", "-i", "-e", "MIMIR_MCP_MODE=1", "mimir", "python", "manage.py", "mcp_server", "--user=yourname"]
-  }
-
-Restart your IDE and ask: "Mimir, list all playbooks"
+Then ask: "Mimir, list all playbooks"
 
 The container handles everything - no Python setup, works on Intel and Apple Silicon, data persists across updates. Web interface at localhost:8000.
 
