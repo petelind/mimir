@@ -529,7 +529,7 @@ Both rule sets contain identical content with different formatting. **If you use
 
 ## License
 
-[License details here]
+https://github.com/phainestai/mimir#Apache-2.0-1-ov-file 
 
 ## Learning Resources
 
