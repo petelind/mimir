@@ -3,70 +3,26 @@
     "model": "auth.user",
     "pk": 1,
     "fields": {
-      "username": "maria_journey",
+      "username": "maria",
+      "email": "maria@example.com",
+      "password": "pbkdf2_sha256$260000$8gI8j9hLjKkYqN9Xm8fI8y$8gI8j9hLjKkYqN9Xm8fI8y8gI8j9hLjKkYqN9Xm8fI8y",
       "first_name": "Maria",
       "last_name": "Garcia",
-      "email": "maria@example.com",
-      "password": "pbkdf2_sha256$1000000$Mv4n2AaupXGSh39lmSQ8OK$6+weVol3jW0sEwO+htEj/sctwfGFNmpA3fX760CU78Y=",
-      "is_staff": false,
       "is_active": true,
-      "date_joined": "2024-01-01T00:00:00Z"
+      "is_staff": false,
+      "is_superuser": false,
+      "date_joined": "2025-11-28T20:00:00Z",
+      "last_login": "2025-11-28T20:05:00Z"
     }
   },
   {
-    "model": "auth.user",
-    "pk": 2,
-    "fields": {
-      "username": "alex_journey",
-      "first_name": "Alex",
-      "last_name": "Chen",
-      "email": "alex@example.com",
-      "password": "pbkdf2_sha256$1000000$zzVnkoGcPBEQqfiKNs6T6W$igjGkN4cGN7fTsg/slKpD1oDSSiudlG7W6ukN56zAbc=",
-      "is_staff": false,
-      "is_active": true,
-      "date_joined": "2024-01-01T00:00:00Z"
-    }
-  },
-  {
-    "model": "methodology.playbook",
+    "model": "accounts.useronboardingstate",
     "pk": 1,
     "fields": {
-      "name": "Agile Development",
-      "description": "A comprehensive guide to Agile software development methodologies.",
-      "category": "development",
-      "tags": [
-        "agile",
-        "scrum",
-        "kanban"
-      ],
-      "visibility": "private",
-      "status": "active",
-      "version": 1,
-      "source": "owned",
-      "author": 1,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
-    }
-  },
-  {
-    "model": "methodology.playbook",
-    "pk": 2,
-    "fields": {
-      "name": "User Guide Template",
-      "description": "Template for creating comprehensive user guides.",
-      "category": "documentation",
-      "tags": [
-        "template",
-        "guide",
-        "documentation"
-      ],
-      "visibility": "private",
-      "status": "draft",
-      "version": 1,
-      "source": "owned",
-      "author": 2,
-      "created_at": "2024-01-01T00:00:00Z",
-      "updated_at": "2024-01-01T00:00:00Z"
+      "user": 1,
+      "current_step": 0,
+      "is_completed": false,
+      "completed_at": null
     }
   }
 ]
