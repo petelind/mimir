@@ -11,12 +11,60 @@
             Dashboard
             <small class="text-muted ms-2">Welcome back, {{ user.username }}!</small>
         </h1>
-        <div class="btn-group">
-            <button class="btn btn-outline-secondary">
-                <i class="fa-solid fa-gauge me-2"></i>
-                Dashboard
-            </button>
-            <button class="btn btn-outline-secondary">
+        <div class="d-flex gap-2">
+            <!-- Quick Actions Multi-Button -->
+            <div class="btn-group" role="group" aria-label="Quick Actions">
+                <a href="{% url 'playbook_create' %}" 
+                   class="btn btn-primary"
+                   data-testid="dashboard-quick-new-playbook-header"
+                   data-bs-toggle="tooltip" 
+                   data-bs-placement="bottom" 
+                   title="Create a new playbook">
+                    <i class="fa-solid fa-book-sparkles me-2"></i>
+                    New Playbook
+                </a>
+                <button type="button" 
+                        class="btn btn-primary dropdown-toggle dropdown-toggle-split" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        data-testid="dashboard-quick-actions-dropdown">
+                    <span class="visually-hidden">More Quick Actions</span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item disabled" 
+                           href="#"
+                           data-testid="quick-action-import-playbook-header"
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="right" 
+                           title="Import playbook from file (coming soon)">
+                            <i class="fa-solid fa-file-import me-2"></i>
+                            Import Playbook
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item disabled" 
+                           href="#"
+                           data-testid="quick-action-sync-homebase-header"
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="right" 
+                           title="Sync with Homebase repository (coming soon)">
+                            <i class="fa-solid fa-sync me-2"></i>
+                            Sync with Homebase
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Divider -->
+            <div class="vr"></div>
+            
+            <!-- Settings -->
+            <button class="btn btn-outline-secondary"
+                    data-testid="dashboard-settings-button"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="bottom" 
+                    title="Configure your Mimir settings">
                 <i class="fa-solid fa-gear me-2"></i>
                 Settings
             </button>
@@ -44,9 +92,6 @@
         <!-- Recent Activity Section -->
         {% include 'methodology/partials/recent_activity_section.html' %}
     </div>
-
-    <!-- Quick Actions Section -->
-    {% include 'methodology/partials/quick_actions_section.html' %}
 </div>
 
 <!-- Test identifiers -->

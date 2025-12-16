@@ -23,9 +23,9 @@ class TestDashboardNavigation:
         assert response.status_code == 200
         content = response.content.decode("utf-8")
 
-        # Quick action button must be present
-        assert "+ New Playbook" in content
-        assert 'data-testid="dashboard-quick-new-playbook"' in content
+        # Quick action button must be present in header
+        assert "New Playbook" in content
+        assert 'data-testid="dashboard-quick-new-playbook-header"' in content
 
         # Tooltip should explain the action
         assert 'data-bs-toggle="tooltip"' in content
@@ -37,3 +37,15 @@ class TestDashboardNavigation:
         # Link should go to playbook_create (FOB-PLAYBOOKS-CREATE_PLAYBOOK-1 entry point)
         create_url = reverse("playbook_create")
         assert create_url in content
+        
+        # Verify disabled buttons are present in header
+        assert 'data-testid="quick-action-import-playbook-header"' in content
+        assert 'data-testid="quick-action-sync-homebase-header"' in content
+        assert "Import Playbook" in content
+        assert "Sync with Homebase" in content
+        
+        # Verify Settings button is present
+        assert 'data-testid="dashboard-settings-button"' in content
+        
+        # Verify Dashboard button is NOT present on dashboard
+        assert 'Dashboard</button>' not in content or content.count('Dashboard</button>') == 0

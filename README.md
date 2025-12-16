@@ -4,7 +4,7 @@
 
 Mimir helps you work more effectively by providing structured playbooks that your AI assistant can access directly in your IDE. Get guidance, generate work plans, track progress, and continuously improve your development process.
 
-> 📖 For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
+> For architecture and design details, see [docs/architecture/SAO.md](docs/architecture/SAO.md)
 
 ## Core Entities
 
@@ -20,7 +20,7 @@ Mimir organizes your playbooks using **7 core entities**:
 
 ## What Can Mimir Do?
 
-### 🤖 Answer Playbook Questions via MCP
+### Answer Playbook Questions via MCP
 
 Your AI assistant can query Mimir directly from your IDE (powered by FastMCP):
 
@@ -29,7 +29,7 @@ You: "How do I build a TSX component per FDD playbook?"
 AI: → Queries Mimir → Returns activity guidance and relevant Howtos
 ```
 
-### 📋 Generate Work Plans
+### Generate Work Plans
 
 Automatically create task breakdowns in GitHub or Jira:
 
@@ -38,7 +38,7 @@ You: "Plan implementation of scenario LOG1.1 and Screen LOG per FDD"
 AI: → Generates work orders from playbook → Creates GitHub issues
 ```
 
-### 📊 Assess Project Progress
+### Assess Project Progress
 
 Check if you've completed all required artifacts for a phase:
 
@@ -47,7 +47,7 @@ You: "I'm supposed to finish inception phase next week. Did I produce all requir
 AI: → Scans codebase and issues → Reports status and gaps
 ```
 
-### 🔄 Evolve Through Experience
+### Evolve Through Experience
 
 When AI encounters issues during work, it can propose playbook improvements:
 
@@ -56,13 +56,116 @@ AI: → Detects repeated corrections → Creates Playbook Improvement Proposal (
 You: → Reviews PIP in web UI → Approves with notes → New playbook version created
 ```
 
-### 📚 Access Playbook Library
+### Access Playbook Library
 
 Download playbooks from HOMEBASE based on your access level:
 - **Family-based**: Software Engineering, UX Design, Testing, etc.
 - **Version tiers**: LITE (Basic), FULL (Standard), EXTENDED (Premium)
 
-## Installation
+## Quick Start with Docker
+
+**Just want to run Mimir? Pull the container:**
+
+```bash
+# Pull the latest release from Azure Container Registry
+docker pull acrmimir.azurecr.io/mimir:release-latest
+
+# Run with persistent storage
+docker run -d \
+  --name mimir \
+  -p 8000:8000 \
+  -v ~/mimir-data:/app/data \
+  -e MIMIR_USER=yourusername \
+  -e MIMIR_EMAIL=you@example.com \
+  acrmimir.azurecr.io/mimir:release-latest
+
+# Access the web interface
+open http://localhost:8000
+```
+
+**Configure MCP in your IDE:**
+
+For **Windsurf** (`~/.codeium/windsurf/mcp_config.json`):
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "-e",
+        "MIMIR_MCP_MODE=1",
+        "mimir",
+        "python",
+        "manage.py",
+        "mcp_server",
+        "--user=yourusername"
+      ]
+    }
+  }
+}
+```
+
+For **Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "mimir": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "-e",
+        "MIMIR_MCP_MODE=1",
+        "mimir",
+        "python",
+        "manage.py",
+        "mcp_server",
+        "--user=yourusername"
+      ]
+    }
+  }
+}
+```
+
+For **Cursor** (`.cursorrules` or workspace settings):
+```json
+{
+  "mcp": {
+    "servers": {
+      "mimir": {
+        "command": "docker",
+        "args": [
+          "exec",
+          "-i",
+          "-e",
+          "MIMIR_MCP_MODE=1",
+          "mimir",
+          "python",
+          "manage.py",
+          "mcp_server",
+          "--user=yourusername"
+        ]
+      }
+    }
+  }
+}
+```
+
+**Important:** Replace `yourusername` with the username you set in `MIMIR_USER` when starting the container.
+
+**That's it!** Your data persists in `~/mimir-data` across container updates.
+
+> **Multi-platform support**: Works on Intel (amd64) and Apple Silicon (arm64) Macs  
+> **Auto-updates**: Pull latest image and restart container to update  
+> **Data safety**: Database stored in mounted volume survives container restarts
+
+See [docs/DOCKER_QUICK_START.md](docs/DOCKER_QUICK_START.md) for more details.
+
+---
+
+## Installation (For Development)
 
 ### Prerequisites
 
@@ -93,8 +196,16 @@ Download playbooks from HOMEBASE based on your access level:
    ```bash
    python manage.py migrate
    ```
+   
+   **Note:** The default database (`mimir.db`) includes the **FeatureFactory** playbook, which was used to build Mimir itself. This playbook provides a complete feature development workflow with 8 activities covering planning, implementation, testing, and finalization.
 
-5. **Create admin user**
+5. **Create admin user (or use default)**
+   
+   The database comes with a default admin account:
+   - **Username:** `admin`
+   - **Password:** `admin`
+   
+   **For production or shared environments, create your own user:**
    ```bash
    python manage.py createsuperuser
    ```
@@ -201,7 +312,8 @@ Add Mimir to your MCP client configuration.
       ],
       "env": {
         "DJANGO_SETTINGS_MODULE": "mimir.settings",
-        "PYTHONPATH": "/absolute/path/to/mimir"
+        "PYTHONPATH": "/absolute/path/to/mimir",
+        "MIMIR_MCP_MODE": "true"
       }
     }
   }
@@ -222,7 +334,8 @@ Add Mimir to your MCP client configuration.
         ],
         "env": {
           "DJANGO_SETTINGS_MODULE": "mimir.settings",
-          "PYTHONPATH": "/absolute/path/to/mimir"
+          "PYTHONPATH": "/absolute/path/to/mimir",
+          "MIMIR_MCP_MODE": "true"
         }
       }
     }
@@ -278,77 +391,39 @@ All tools support async operations and validate user permissions automatically.
 
 ### Daily Development
 
-1. **Start your work session**
+1. **Configure your IDE** (one-time setup)
+   
+   Add Mimir to your IDE's MCP configuration (see section 2 above):
+   - **Windsurf:** `~/.codeium/windsurf/mcp_config.json`
+   - **Claude Desktop:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Cursor:** Workspace settings or `.cursorrules`
+   
+   Restart your IDE after configuration.
+
+2. **Start working with Mimir**
+   
+   Once configured, interact with Mimir through your IDE's AI assistant:
+   
+   ```
+   "Mimir, list available playbooks"
+   "Mimir, show me the Build Page workflow"
+   "Mimir, plan FOB-LOGIN-1 per BPE1 Plan Feature"
+   "Mimir, implement backend per BPE2"
+   ```
+
+3. **Optional: Web UI for management**
+   
+   Start the web interface to manage playbooks visually:
    ```bash
-   # Terminal 1: Web UI (leave running)
    python manage.py runserver 8000
    ```
-
-2. **Ask AI for guidance**
-   ```
-   "I need to implement a user profile page. What's the FDD process for this?"
-   ```
-
-3. **Generate work plan**
-   ```
-   "Plan this implementation and create GitHub issues"
-   ```
-
-4. **Get implementation help**
-   ```
-   "How should I structure the TSX component per playbook?"
-   ```
-
-### Weekly Review
-
-1. **Check playbook improvements**
-   - Open http://localhost:8000/pips/
-   - Review PIPs created by AI during the week
-   - Approve good suggestions, reject with reasoning
-
-2. **Sync from HOMEBASE**
-   ```bash
-   python manage.py sync_methodology --all
-   ```
-
-3. **Transmit approved PIPs**
-   - Select PIPs worth sharing
-   - Click "Transmit to HOMEBASE" in web UI
-   - HOMEBASE team reviews for global adoption
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```bash
-# HOMEBASE (playbook repository)
-MIMIR_HOMEBASE_URL=https://methodologies.example.com
-MIMIR_API_KEY=your_api_key_here
-
-# Database
-MIMIR_DB_PATH=mimir.db
-
-# AI Model (optional)
-OPENAI_API_KEY=your_openai_key  # For AI-driven features
-```
-
-### Playbook Sync
-
-```bash
-# Sync specific playbook
-python manage.py sync_methodology --name "FDD"
-
-# Sync entire family
-python manage.py sync_methodology --family "Software Engineering"
-
-# Sync all available for your access level
-python manage.py sync_methodology --all
-
-# Force re-download even if up to date
-python manage.py sync_methodology --all --force
-```
+   
+   Open http://localhost:8000 to:
+   - Browse and edit playbooks
+   - View workflows and activities
+   - Manage methodology content
+   
+   **Note:** While a Playbook is in draft status, you can work with it directly: update, extend, and even delete - via both MCP and GUI. Once it's released, it can be revised only via PIPs (Playbook Improvement Proposals).
 
 ## Troubleshooting
 
@@ -391,16 +466,6 @@ pkill -f "manage.py runserver"
 
 # Restart web server
 python manage.py runserver 8000
-```
-
-### No Playbooks Available
-
-```bash
-# Load sample data
-python manage.py loaddata sample_methodologies
-
-# Or sync from source
-python manage.py sync_methodology --family "Software Engineering"
 ```
 
 ## Project Structure
@@ -464,7 +529,7 @@ Both rule sets contain identical content with different formatting. **If you use
 
 ## License
 
-[License details here]
+https://github.com/phainestai/mimir#Apache-2.0-1-ov-file 
 
 ## Learning Resources
 

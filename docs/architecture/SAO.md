@@ -2154,6 +2154,95 @@ async def create_playbook(name: str, description: str, category: str) -> dict:
 
 **Data Privacy**: All work orders and execution data stay local
 
+## Activity Access Tracking
+
+### Overview
+
+The FOB dashboard "Recently Used" section shows activities (workflow tasks) that have been recently **accessed** (viewed via MCP) or **modified** (via GUI/MCP). This allows users to quickly return to activities they're actively working on.
+
+### Implementation
+
+**Activity Model Fields**:
+```python
+class Activity(models.Model):
+    # ... existing fields ...
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_accessed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp when activity was last accessed/viewed"
+    )
+```
+
+**Display Properties**:
+- `playbook`: Returns `workflow.playbook` for template display
+- `timestamp`: Returns `MAX(last_accessed_at, updated_at)` for sorting
+- `description`: Human-readable string with workflow context
+- `get_icon_class()`: Font Awesome icon for activity feed
+
+**Service Layer**:
+```python
+class ActivityService:
+    @staticmethod
+    def touch_activity_access(activity_id):
+        """Update last_accessed_at when activity is viewed."""
+        activity = Activity.objects.get(pk=activity_id)
+        activity.last_accessed_at = timezone.now()
+        activity.save(update_fields=['last_accessed_at'])
+    
+    @staticmethod
+    def get_recent_activities(user, limit=10):
+        """Get activities sorted by MAX(last_accessed_at, updated_at)."""
+        return Activity.objects.filter(
+            workflow__playbook__author=user
+        ).annotate(
+            recent_time=Greatest(
+                Coalesce('last_accessed_at', 'updated_at'),
+                'updated_at'
+            )
+        ).order_by('-recent_time')[:limit]
+```
+
+**MCP Integration**:
+The `get_activity` MCP tool calls `touch_activity_access()` after fetching activity data:
+```python
+async def get_activity(activity_id: int) -> dict:
+    activity = await fetch_activity(activity_id)
+    
+    # Track access (non-critical - don't fail main operation)
+    try:
+        await sync_to_async(ActivityService.touch_activity_access)(activity_id)
+    except Exception as e:
+        logger.warning(f'Failed to track access: {e}')
+        # Continue - access tracking is non-critical
+    
+    return activity_dict
+```
+
+### Exception Handling Strategy
+
+**Critical Operations** (must fail fast):
+- Fetching activity data
+- Updating activity content
+- Validating activity dependencies
+
+**Non-Critical Operations** (log and continue):
+- Access tracking (`touch_activity_access`)
+- Analytics/metrics collection
+- UI enhancements
+
+**Rationale**: Access tracking is a UX enhancement for the dashboard. If it fails, the main operation (viewing the activity) should still succeed. This prevents access tracking issues from breaking the core MCP functionality.
+
+### Testing
+
+Unit tests verify:
+- Display properties return correct values
+- `touch_activity_access` updates timestamp
+- `get_recent_activities` sorts by MAX(last_accessed_at, updated_at)
+- Exceptions are raised for invalid activity IDs
+- MCP tool continues on access tracking failure
+
 ## Future Considerations
 
 ### Multi-FOB Collaboration

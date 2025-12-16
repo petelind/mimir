@@ -15,6 +15,7 @@ User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Run the MCP (Model Context Protocol) server'
+    requires_system_checks = []  # Disable system checks to keep stdio clean for JSON-RPC
 
     def add_arguments(self, parser):
         parser.add_argument(

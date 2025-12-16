@@ -66,6 +66,11 @@ class Activity(models.Model):
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    last_accessed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp when activity was last accessed/viewed (for Recent Activity tracking)"
+    )
     
     class Meta:
         ordering = ['workflow', 'order', 'name']
@@ -186,3 +191,65 @@ class Activity(models.Model):
                 raise ValidationError(
                     'Circular dependency detected: predecessor and successor cannot be the same activity'
                 )
+    
+    # Display properties for activity feed
+    
+    @property
+    def playbook(self):
+        """
+        Get parent playbook for activity feed display.
+        
+        :returns: Parent Playbook instance
+        :rtype: Playbook
+        
+        Example:
+            >>> activity.playbook.name
+            'React Development Playbook'
+        """
+        return self.workflow.playbook
+    
+    @property
+    def timestamp(self):
+        """
+        Get most recent timestamp for activity feed display.
+        
+        Returns the more recent of last_accessed_at or updated_at to show
+        when activity was last used (accessed) or modified.
+        
+        :returns: Most recent timestamp (access or update)
+        :rtype: datetime
+        
+        Example:
+            >>> activity.timestamp
+            datetime.datetime(2024, 12, 4, 13, 58, 0)
+        """
+        if self.last_accessed_at and self.last_accessed_at > self.updated_at:
+            return self.last_accessed_at
+        return self.updated_at
+    
+    @property
+    def description(self):
+        """
+        Get human-readable description for activity feed.
+        
+        :returns: Formatted description with workflow context
+        :rtype: str
+        
+        Example:
+            >>> activity.description
+            'Design Component in Planning Phase workflow'
+        """
+        return f"{self.name} in {self.workflow.name} workflow"
+    
+    def get_icon_class(self):
+        """
+        Get Font Awesome icon class for activity feed display.
+        
+        :returns: Font Awesome icon class string
+        :rtype: str
+        
+        Example:
+            >>> activity.get_icon_class()
+            'fas fa-tasks'
+        """
+        return 'fas fa-tasks'
