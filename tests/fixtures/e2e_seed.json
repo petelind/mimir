@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "username": "admin",
-            "password": "pbkdf2_sha256$1000000$B63jt5B1OU2Z9NWZdV9SVS$tSmGk7wRVnMe90htbFkYn1CtBPYXiMoHNEwKLLzvTLg=",
+            "password": "pbkdf2_sha256$1200000$sSres5HkbDzGY4ZiZn6Ivk$aV047Z8RMEPWZdIlOYDAteNoyLOpDz/yUV5VqjO1HRw=",
             "email": "admin@example.com",
             "is_staff": true,
             "is_active": true,
