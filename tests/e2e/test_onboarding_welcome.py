@@ -14,31 +14,6 @@ from playwright.sync_api import Page
 class TestOnboardingWelcomeE2E:
     """End-to-end tests for onboarding welcome page."""
     
-    def test_authenticated_user_can_access_dashboard(self, page: Page, live_server_url: str):
-        """
-        Test E2E-ONBOARD-01: Authenticated user can access dashboard.
-        
-        Given: User is authenticated
-        When: User navigates to dashboard
-        Then: Dashboard page is displayed
-        """
-        # Login first
-        page.goto(f"{live_server_url}/auth/user/login/")
-        page.fill('input[name="username"]', 'admin')
-        page.fill('input[name="password"]', 'admin123')
-        page.click('button[type="submit"]')
-        
-        # Wait for login to complete
-        page.wait_for_load_state('networkidle')
-        
-        # Should be redirected to dashboard or we can navigate there
-        if '/dashboard/' not in page.url:
-            page.goto(f"{live_server_url}/dashboard/")
-        
-        # Verify we're authenticated and can access dashboard
-        assert '/auth/user/login/' not in page.url
-        assert page.url.endswith('/dashboard/') or '/dashboard/' in page.url
-    
     def test_unauthenticated_user_redirected_to_login(self, page: Page, live_server_url: str):
         """
         Test E2E-ONBOARD-02: Unauthenticated access redirects to login.

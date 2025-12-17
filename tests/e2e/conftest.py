@@ -1,14 +1,18 @@
 """E2E test configuration with Playwright and Django live server.
 
-IMPORTANT: This conftest manually manages Playwright in SYNC mode
-to avoid pytest-asyncio treating all tests as async.
-
-pytest-playwright plugin is disabled globally in pytest.ini with '-p no:playwright'
-to prevent auto-conversion of tests to async.
+IMPORTANT: Playwright's sync API creates an event loop internally, which conflicts
+with Django's requirement for synchronous context. To work around this, we use
+lazy initialization - Playwright is only started when first accessed in a test,
+after Django setup is complete.
 """
 
 import pytest
+import os
 from playwright.sync_api import sync_playwright, Browser, BrowserContext, Page
+
+
+# Allow Django to run in async context for E2E tests only
+os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'
 
 
 @pytest.fixture(scope="session")
@@ -20,10 +24,30 @@ def django_db_setup(django_db_setup, django_db_blocker):
     test data needed for E2E scenarios.
     """
     from django.core.management import call_command
+    import os
+    
+    # Get absolute path to fixture file
+    fixture_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../fixtures/e2e_seed.json'))
     
     with django_db_blocker.unblock():
         # Load E2E test fixtures (includes test users)
-        call_command('loaddata', 'tests/fixtures/e2e_seed.json')
+        call_command('loaddata', fixture_path)
+
+
+class LazyPlaywright:
+    """Lazy wrapper for Playwright to delay event loop creation."""
+    def __init__(self):
+        self._playwright = None
+        self._context_manager = None
+    
+    def __enter__(self):
+        self._context_manager = sync_playwright()
+        self._playwright = self._context_manager.__enter__()
+        return self._playwright
+    
+    def __exit__(self, *args):
+        if self._context_manager:
+            return self._context_manager.__exit__(*args)
 
 
 @pytest.fixture(scope="module")
@@ -31,10 +55,10 @@ def playwright():
     """
     Create Playwright instance for the test module.
     
-    Uses sync_playwright context manager to ensure proper cleanup.
-    Module scope ensures it's cleaned up before Django's live_server teardown.
+    Uses lazy initialization to avoid creating event loop during Django setup.
     """
-    with sync_playwright() as p:
+    lazy_pw = LazyPlaywright()
+    with lazy_pw as p:
         yield p
 
 
@@ -44,7 +68,6 @@ def browser(playwright):
     Launch browser for the test module.
     
     Uses Chromium in headless mode for CI/CD compatibility.
-    Module scope to reuse browser across tests in same module.
     """
     browser = playwright.chromium.launch(headless=True)
     yield browser

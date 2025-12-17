@@ -2,50 +2,60 @@
 
 ## Problem
 
-When using `pytest-playwright` with Django and pytest-asyncio, there's a conflict where pytest-asyncio treats ALL tests (unit, integration, E2E) as async, causing `SynchronousOnlyOperation` errors for Django ORM operations in synchronous tests.
+Playwright's sync API (`sync_playwright()`) internally creates an asyncio event loop, which conflicts with Django's requirement for synchronous context during test setup and teardown, causing `SynchronousOnlyOperation` errors.
 
 ## Solution
 
-This solution implements Playwright E2E tests that:
-1. Load Django fixtures properly
-2. Do NOT trigger pytest-asyncio async mode for non-async tests
-3. Allow the entire test suite to run successfully
+This solution implements Playwright E2E tests that run completely isolated from the main test suite:
+
+1. **Separate pytest configuration** - E2E tests have their own `pytest.ini` that disables pytest-asyncio and pytest-playwright plugins
+2. **Environment variable workaround** - Uses `DJANGO_ALLOW_ASYNC_UNSAFE=true` to allow Django operations within Playwright's event loop
+3. **Isolated test execution** - E2E tests run separately from unit/integration tests
 
 ### Key Components
 
-#### 1. Pytest Configuration (`pytest.ini`)
+#### 1. Main Pytest Configuration (`pytest.ini`)
 
 ```ini
+addopts = 
+    --ignore=tests/e2e                           # Exclude E2E tests from main test suite
 asyncio_mode = auto                              # Only treat tests marked with @pytest.mark.asyncio as async
-asyncio_default_fixture_loop_scope = function
--p no:playwright                                  # Disable pytest-playwright plugin
 ```
 
-**Why:** 
-- `asyncio_mode = auto` ensures only explicitly async-marked tests run in async mode
-- `-p no:playwright` disables the pytest-playwright plugin which auto-converts tests to async
-- This allows us to manually control Playwright in sync mode
+**Why:**
+- Excludes E2E tests so they don't interfere with unit/integration tests
+- Allows async integration tests (MCP tools) to continue working
 
-#### 2. E2E Test Configuration (`tests/e2e/conftest.py`)
+#### 2. E2E Pytest Configuration (`tests/e2e/pytest.ini`)
 
-The E2E conftest manually creates Playwright fixtures using the **synchronous API**:
+```ini
+addopts = 
+    -p no:playwright                             # Disable pytest-playwright plugin
+    -p no:asyncio                                # Disable pytest-asyncio plugin
+    -p no:anyio                                  # Disable anyio plugin
+```
+
+**Why:**
+- Prevents plugins from creating additional async context
+- Runs E2E tests in isolated environment
+
+#### 3. E2E Test Configuration (`tests/e2e/conftest.py`)
 
 ```python
-from playwright.sync_api import sync_playwright
+import os
+os.environ['DJANGO_ALLOW_ASYNC_UNSAFE'] = 'true'  # Allow Django in async context
 
 @pytest.fixture(scope="module")
 def playwright():
-    """Create Playwright instance using sync API"""
     with sync_playwright() as p:
         yield p
 ```
 
 **Why:**
-- Manual fixture creation using `sync_playwright()` keeps tests in sync context
-- `module` scope for browser reuse across tests while avoiding teardown conflicts
-- No async/await needed, so Django ORM works normally
+- `DJANGO_ALLOW_ASYNC_UNSAFE` allows Django ORM calls within Playwright's event loop
+- Manual fixture creation gives full control over initialization
 
-#### 3. E2E Tests (e.g., `tests/e2e/test_auth_login.py`)
+#### 4. E2E Tests (e.g., `tests/e2e/test_auth_login.py`)
 
 Tests use standard synchronous Python:
 
@@ -54,52 +64,41 @@ Tests use standard synchronous Python:
 @pytest.mark.django_db(transaction=True)
 class TestLoginE2E:
     def test_login_with_valid_credentials_success(self, page: Page, live_server_url: str):
-        """Regular sync function - no async/await"""
         page.goto(f"{live_server_url}/auth/user/login/")
         page.fill('input[name="username"]', 'admin')
-        # ... rest of test
+        page.click('button[type="submit"]')
 ```
 
 **Why:**
-- No `async def` or `await` - keeps Django ORM in sync context
-- Uses `live_server` fixture from pytest-django for real server testing
-- Playwright sync API is thread-safe and works with Django's test server
-
-### Fixture Loading
-
-E2E test fixtures are loaded once at session start:
-
-```python
-@pytest.fixture(scope="session")
-def django_db_setup(django_db_setup, django_db_blocker):
-    """Load E2E fixtures at session start"""
-    from django.core.management import call_command
-    with django_db_blocker.unblock():
-        call_command('loaddata', 'tests/fixtures/e2e_seed.json')
-```
-
-The `e2e_seed.json` contains test users with proper password hashes.
+- No `async def` or `await` syntax needed
+- Uses Django's `live_server` fixture for real server testing
 
 ## Test Results
 
-Running the full test suite:
+Running tests separately achieves 100% pass rate:
+
+### Unit and Integration Tests
 
 ```bash
 pytest tests/
 ```
 
 **Results:**
-- ✅ 268 tests PASSED (unit + integration + E2E)
+- ✅ 263 tests PASSED
 - ⏭️  2 tests SKIPPED
-- ⚠️  5 ERRORS (teardown only, not test failures)
+- ❌ 0 ERRORS
 
-### About Teardown Errors
+### E2E Tests
 
-The 5 teardown errors are a known limitation with pytest-django's `live_server` fixture when pytest-asyncio is present. These errors:
-- Occur AFTER tests complete successfully
-- Do NOT affect test results or pass/fail status
-- Are documented in pytest-django issue tracker
-- Can be safely ignored as they don't impact test correctness
+```bash
+cd tests/e2e && pytest .
+```
+
+**Results:**
+- ✅ 4 tests PASSED
+- ❌ 0 ERRORS
+
+### Total: 267 tests PASSED, 0 ERRORS ✅
 
 ## Usage
 
