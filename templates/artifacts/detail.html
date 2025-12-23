@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ artifact.name }} - Artifact{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="artifact-detail">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ artifact.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 data-testid="artifact-name">
+                <i class="fa-solid fa-file"></i> {{ artifact.name }}
+                {% if artifact.is_required %}
+                    <span class="badge bg-danger ms-2">Required</span>
+                {% endif %}
+            </h2>
+            <p class="text-muted mb-0">
+                <span class="badge bg-secondary">{{ artifact.type }}</span>
+            </p>
+        </div>
+        {% if can_edit %}
+        <div class="btn-group">
+            <a href="{% url 'artifact_edit' pk=artifact.pk %}" 
+               class="btn btn-outline-primary"
+               data-testid="edit-btn">
+                <i class="fa-solid fa-edit"></i> Edit
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- Description -->
+            {% if artifact.description %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-align-left"></i> Description</h5>
+                </div>
+                <div class="card-body" data-testid="artifact-description">
+                    <p class="mb-0">{{ artifact.description }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Producer Activity -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-industry"></i> Producer Activity</h5>
+                </div>
+                <div class="card-body" data-testid="producer-info">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ producer.name }}</h6>
+                            <p class="text-muted small mb-0">
+                                <i class="fa-solid fa-folder"></i> {{ producer.workflow.name }}
+                            </p>
+                        </div>
+                        <div>
+                            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=producer.workflow.pk activity_pk=producer.pk %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                View Activity
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consumer Activities -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fa-solid fa-arrow-right"></i> Consumer Activities
+                        <span class="badge bg-secondary ms-2">{{ consumers.count }}</span>
+                    </h5>
+                </div>
+                <div class="card-body" data-testid="consumers-list">
+                    {% if consumers %}
+                        <ul class="list-group list-group-flush">
+                            {% for input in consumers %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ input.activity.name }}</h6>
+                                        <p class="text-muted small mb-0">
+                                            <i class="fa-solid fa-folder"></i> {{ input.activity.workflow.name }}
+                                            {% if input.is_required %}
+                                                <span class="badge bg-danger ms-2">Required</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary ms-2">Optional</span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=input.activity.workflow.pk activity_pk=input.activity.pk %}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted mb-0">No activities consume this artifact yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Template File -->
+            {% if artifact.template_file %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fa-solid fa-file-code"></i> Template File</h5>
+                </div>
+                <div class="card-body" data-testid="template-info">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <p class="mb-0">
+                                <i class="fa-solid fa-download"></i> 
+                                <strong>{{ artifact.get_template_filename }}</strong>
+                            </p>
+                        </div>
+                        <div>
+                            <a href="{{ artifact.template_file.url }}" 
+                               class="btn btn-sm btn-outline-primary"
+                               download>
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Metadata Card -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fa-solid fa-info-circle"></i> Metadata</h6>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Type:</dt>
+                        <dd class="col-sm-8">{{ artifact.type }}</dd>
+                        
+                        <dt class="col-sm-4">Required:</dt>
+                        <dd class="col-sm-8">
+                            {% if artifact.is_required %}
+                                <span class="badge bg-danger">Yes</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </dd>
+                        
+                        <dt class="col-sm-4">Created:</dt>
+                        <dd class="col-sm-8">{{ artifact.created_at|date:"M d, Y" }}</dd>
+                        
+                        <dt class="col-sm-4">Updated:</dt>
+                        <dd class="col-sm-8">{{ artifact.updated_at|date:"M d, Y" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
