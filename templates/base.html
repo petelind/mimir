@@ -90,9 +90,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" data-testid="nav-artifacts"
+                        <a class="nav-link {% if '/artifacts/' in request.path %}active{% endif %}" 
+                           href="{% url 'artifact_global_list' %}" 
+                           data-testid="nav-artifacts"
                            data-bs-toggle="tooltip" data-bs-placement="bottom"
-                           title="Coming soon: Manage artifacts and deliverables">
+                           title="View all artifacts across your playbooks"
+                           {% if '/artifacts/' in request.path %}aria-current="page"{% endif %}>
                             <i class="fas fa-gift"></i> Artifacts
                         </a>
                     </li>

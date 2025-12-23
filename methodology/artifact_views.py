@@ -16,6 +16,61 @@ from methodology.services.artifact_service import ArtifactService
 logger = logging.getLogger(__name__)
 
 
+# ==================== GLOBAL LIST ====================
+
+
+@login_required
+def artifact_global_list(request):
+    """
+    Global artifacts overview - all artifacts across all playbooks.
+    
+    Shows artifacts from all playbooks owned by the user.
+    Useful for seeing all deliverables across entire methodology portfolio.
+    
+    :param request: Django HttpRequest
+    :returns: HttpResponse with rendered global list template
+    
+    Template: artifacts/global_list.html
+    Context:
+        - artifacts: QuerySet of all artifacts
+        - playbook_count: int - Count of unique playbooks
+        - total_count: int - Total artifact count
+        - search_query: str or None
+    """
+    logger.info(f"User {request.user.username} accessing global artifacts list")
+    
+    # Get all artifacts from owned playbooks
+    artifacts = Artifact.objects.filter(
+        playbook__author=request.user,
+        playbook__source='owned'
+    ).select_related(
+        'playbook', 'produced_by', 'produced_by__workflow'
+    ).order_by('playbook__name', 'produced_by__workflow__order', 'produced_by__order')
+    
+    # Apply search if provided
+    search_query = request.GET.get('q', '').strip() or None
+    if search_query:
+        artifacts = artifacts.filter(name__icontains=search_query)
+    
+    # Calculate stats
+    total_count = artifacts.count()
+    playbook_count = artifacts.values('playbook').distinct().count()
+    
+    context = {
+        'artifacts': artifacts,
+        'total_count': total_count,
+        'playbook_count': playbook_count,
+        'search_query': search_query,
+    }
+    
+    logger.info(
+        f"Global artifacts list rendered: {total_count} artifacts "
+        f"from {playbook_count} playbooks"
+    )
+    
+    return render(request, 'artifacts/global_list.html', context)
+
+
 # ==================== CREATE ====================
 
 

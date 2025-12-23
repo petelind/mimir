@@ -5,6 +5,8 @@ from methodology import artifact_views
 
 # Artifact URLs
 urlpatterns = [
+    # Global artifacts list (navbar accessible)
+    path("artifacts/", artifact_views.artifact_global_list, name="artifact_global_list"),
     path(
         "playbooks/<int:playbook_pk>/artifacts/create/",
         artifact_views.artifact_create,
