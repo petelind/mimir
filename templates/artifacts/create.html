@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Create Artifact - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="artifact-create">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Artifact</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2>
+                <i class="fa-solid fa-plus"></i> Create Artifact
+            </h2>
+            <p class="text-muted">Add a new artifact to {{ playbook.name }}</p>
+        </div>
+    </div>
+
+    <!-- Create Form -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Artifact Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" data-testid="artifact-form">
+                        {% csrf_token %}
+                        
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">
+                                Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control {% if errors.name %}is-invalid{% endif %}" 
+                                   id="name" 
+                                   name="name" 
+                                   maxlength="200"
+                                   value="{{ form_data.name }}"
+                                   data-testid="name-input"
+                                   required>
+                            {% if errors.name %}
+                                <div class="invalid-feedback">{{ errors.name }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Unique name for this artifact (max 200 characters)</small>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                Description
+                            </label>
+                            <textarea class="form-control {% if errors.description %}is-invalid{% endif %}" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="4"
+                                      data-testid="description-input"
+                                      placeholder="Detailed description of the artifact">{{ form_data.description }}</textarea>
+                            {% if errors.description %}
+                                <div class="invalid-feedback">{{ errors.description }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Optional: Detailed description of the artifact</small>
+                        </div>
+
+                        <!-- Type -->
+                        <div class="mb-3">
+                            <label for="type" class="form-label">
+                                Type <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" 
+                                    id="type" 
+                                    name="type"
+                                    data-testid="type-select"
+                                    required>
+                                {% for value, label in artifact_types %}
+                                    <option value="{{ value }}" {% if form_data.type == value or value == "Document" and not form_data.type %}selected{% endif %}>
+                                        {{ label }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Type of artifact</small>
+                        </div>
+
+                        <!-- Producer Activity -->
+                        <div class="mb-3">
+                            <label for="produced_by" class="form-label">
+                                Producer Activity <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" 
+                                    id="produced_by" 
+                                    name="produced_by"
+                                    data-testid="producer-select"
+                                    required>
+                                <option value="">Select producer activity...</option>
+                                {% for activity in activities %}
+                                    <option value="{{ activity.pk }}" {% if form_data.produced_by == activity.pk|stringformat:"s" %}selected{% endif %}>
+                                        {{ activity.workflow.name }} - {{ activity.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Activity that produces this artifact as output</small>
+                        </div>
+
+                        <!-- Is Required -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       id="is_required" 
+                                       name="is_required"
+                                       data-testid="required-checkbox"
+                                       {% if form_data.is_required %}checked{% endif %}>
+                                <label class="form-check-label" for="is_required">
+                                    Mark as required artifact
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">Whether this artifact is required for the methodology</small>
+                        </div>
+
+                        <!-- Template File -->
+                        <div class="mb-3">
+                            <label for="template_file" class="form-label">
+                                Template File
+                            </label>
+                            <input type="file" 
+                                   class="form-control" 
+                                   id="template_file" 
+                                   name="template_file"
+                                   data-testid="template-input">
+                            <small class="form-text text-muted">Optional: Upload a template file for this artifact</small>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'playbook_detail' pk=playbook.pk %}" 
+                               class="btn btn-secondary"
+                               data-testid="cancel-btn">
+                                <i class="fa-solid fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" 
+                                    class="btn btn-primary"
+                                    data-testid="save-btn">
+                                <i class="fa-solid fa-save"></i> Create Artifact
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Sidebar -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fa-solid fa-info-circle"></i> About Artifacts</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small">
+                        <strong>Artifacts</strong> are outputs produced by activities that can be consumed 
+                        as inputs by downstream activities in the workflow.
+                    </p>
+                    <p class="small mb-0">
+                        Examples include documentation, code files, diagrams, templates, and data files.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
