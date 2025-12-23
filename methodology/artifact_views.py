@@ -299,3 +299,191 @@ def _render_edit_form(request, artifact, form_data, errors):
         "errors": errors,
     }
     return render(request, "artifacts/edit.html", context)
+
+
+# ==================== LIST ====================
+
+
+@login_required
+def artifact_list(request, playbook_id):
+    """
+    Display artifacts list for playbook with search/filter.
+
+    :param request: Django HttpRequest with GET params
+    :param playbook_id: Playbook ID as int from URL
+    :returns: HttpResponse with rendered template
+
+    Template: artifacts/list.html
+    Context:
+        - playbook: Playbook instance
+        - artifacts: QuerySet of Artifact instances (filtered)
+        - search_query: str or None. Example: "API"
+        - type_filter: str or None. Example: "Document"
+        - required_filter: bool or None. Example: True
+        - activity_filter: int or None (activity ID)
+        - activities: QuerySet of Activity instances for filter dropdown
+        - total_count: int - total artifacts before filtering
+        - filtered_count: int - artifacts after filtering
+
+    GET Parameters:
+        - q: Search query for name/description
+        - type: Type filter
+        - required: Required filter ("true"/"false")
+        - activity: Activity ID filter
+    """
+    logger.info(
+        f"User {request.user.username} accessing artifact list for playbook {playbook_id}"
+    )
+
+    # Get playbook with permission check
+    playbook = get_object_or_404(Playbook, pk=playbook_id)
+
+    # Check if user has access
+    if playbook.source == "owned" and playbook.author != request.user:
+        logger.warning(
+            f"User {request.user.username} attempted to access artifact list without permission"
+        )
+        messages.error(request, "You don't have permission to view this playbook.")
+        return redirect("playbook_list")
+
+    # Extract filters from GET parameters
+    search_query = request.GET.get("q", "").strip() or None
+    type_filter = request.GET.get("type", "").strip() or None
+    required_param = request.GET.get("required", "").strip()
+    activity_param = request.GET.get("activity", "").strip()
+
+    # Parse required filter
+    required_filter = None
+    if required_param == "true":
+        required_filter = True
+    elif required_param == "false":
+        required_filter = False
+
+    # Parse activity filter
+    activity_filter = None
+    if activity_param:
+        try:
+            activity_filter = int(activity_param)
+        except ValueError:
+            pass
+
+    # Get total count before filtering
+    total_count = Artifact.objects.filter(playbook=playbook).count()
+
+    # Search and filter artifacts
+    artifacts = ArtifactService.search_artifacts(
+        playbook=playbook,
+        search_query=search_query,
+        type_filter=type_filter,
+        required_filter=required_filter,
+        activity_filter=activity_filter,
+    )
+
+    # Get activities for filter dropdown
+    activities = (
+        Activity.objects.filter(workflow__playbook=playbook)
+        .select_related("workflow")
+        .order_by("workflow__order", "order")
+    )
+
+    context = {
+        "playbook": playbook,
+        "artifacts": artifacts,
+        "search_query": search_query,
+        "type_filter": type_filter,
+        "required_filter": required_filter,
+        "activity_filter": activity_filter,
+        "activities": activities,
+        "total_count": total_count,
+        "filtered_count": artifacts.count(),
+        "artifact_types": Artifact.ARTIFACT_TYPES,
+    }
+
+    logger.info(
+        f"Artifact list rendered: {artifacts.count()} artifacts "
+        f"(filters: q={search_query}, type={type_filter}, "
+        f"required={required_filter}, activity={activity_filter})"
+    )
+
+    return render(request, "artifacts/list.html", context)
+
+
+# ==================== DELETE ====================
+
+
+@login_required
+def artifact_delete(request, pk):
+    """
+    Delete artifact with confirmation modal.
+
+    :param request: Django HttpRequest with GET/POST
+    :param pk: Artifact ID as int from URL
+    :returns: HttpResponse with modal or redirect
+
+    GET: Returns delete confirmation modal
+    POST: Deletes artifact and redirects to list
+
+    Template: artifacts/_delete_modal.html (for GET)
+    Context:
+        - artifact: Artifact instance
+        - consumer_count: int - number of consuming activities
+        - consumers: QuerySet of ArtifactInput instances
+        - has_template: bool - whether artifact has template file
+    """
+    logger.info(f"User {request.user.username} accessing artifact delete for {pk}")
+
+    # Get artifact with permission check
+    artifact = get_object_or_404(
+        Artifact.objects.select_related("produced_by", "playbook").prefetch_related(
+            "inputs__activity", "inputs__activity__workflow"
+        ),
+        pk=pk,
+    )
+
+    # Check edit permission
+    if not artifact.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted to delete artifact without permission"
+        )
+        messages.error(request, "You don't have permission to delete this artifact.")
+        return redirect("artifact_detail", pk=pk)
+
+    if request.method == "POST":
+        # Confirm deletion
+        playbook_id = artifact.playbook.id
+        artifact_name = artifact.name
+
+        try:
+            result = ArtifactService.delete_artifact(artifact)
+            logger.info(
+                f"User {request.user.username} deleted artifact '{artifact_name}': {result}"
+            )
+            messages.success(
+                request,
+                f"Artifact '{artifact_name}' deleted successfully! "
+                f"({result['consumers_cleared']} consumer(s) cleared)",
+            )
+            return redirect("artifact_list", playbook_id=playbook_id)
+
+        except Exception as e:
+            logger.error(f"Failed to delete artifact {pk}: {str(e)}")
+            messages.error(request, f"Failed to delete artifact: {str(e)}")
+            return redirect("artifact_detail", pk=pk)
+
+    # GET request - show confirmation modal
+    consumers = ArtifactService.get_artifact_consumers(artifact)
+    consumer_count = consumers.count()
+    has_template = bool(artifact.template_file)
+
+    context = {
+        "artifact": artifact,
+        "consumer_count": consumer_count,
+        "consumers": consumers,
+        "has_template": has_template,
+    }
+
+    logger.info(
+        f"Delete modal displayed: consumers={consumer_count}, has_template={has_template}"
+    )
+
+    return render(request, "artifacts/_delete_modal.html", context)
