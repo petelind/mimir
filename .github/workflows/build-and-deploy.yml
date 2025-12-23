@@ -100,7 +100,7 @@ jobs:
     name: Build and Push Docker Image
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'release'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'release'
     
     steps:
       - name: Checkout code
