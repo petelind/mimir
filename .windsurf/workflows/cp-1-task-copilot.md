@@ -16,6 +16,11 @@ c) and commits "feat(name): add small_increment" after each major block
 Propose how you want to split into issue into subissues:
 a) create a "parent story" for the entire scenario
 b) add linked stories under it (use "Related to:") - to implement util method(s) and its tests (example: "methods take any string with suspected date and returns datetime"), main success scenario (example: "clicks ASSIGN and its linked to the user"), extensions to the main scenario (example: "or clicks FIND button - then lookup dialog opens where user can pick and assign one of his team mates"), ane extra services (example: "maps Tasks oData fields to the Objective fields")
+c) in issue description explain branch strategy:
+* create a new branch for the entire EPIC (eg features/epic_name)
+* create a new branch for each linked story (eg features/epic_name/story_name)
+* merge linked stories into the epic branch (eg features/epic_name/story_name -> features/epic_name)
+* merge epic after user acceptance into main branch (eg features/epic_name -> main)
 
 4. Accept user guidance - go with your proposal, modify it, or go single story.
 
@@ -29,4 +34,6 @@ b) checkboxes to update progress instructions so we clearly see checks performed
 
 8. Present issue content to the user for review and approval. Incorporate changes if any.
 
-9. Assign issue to copilot. If there are multiple linked issues - tell copilot which tasks to start with and how to proceed, one by one.
+9. Make sure that all branches/files necessary for the implementation are checked in, committed and pushed to the remote repository.
+
+10. Assign issue to copilot. If there are multiple linked issues - tell copilot which tasks to start with and how to proceed, one by one.
