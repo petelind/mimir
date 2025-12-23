@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Artifacts - Mimir{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">
+            <i class="fas fa-gift text-primary me-2"></i>
+            Artifacts
+            <small class="text-muted ms-2">({{ total_count }} total)</small>
+        </h1>
+        <div class="d-flex gap-2">
+            <a href="{% url 'playbook_list' %}" 
+               class="btn btn-outline-primary"
+               data-testid="artifacts-view-playbooks"
+               data-bs-toggle="tooltip" 
+               data-bs-placement="bottom" 
+               title="View playbooks to create artifacts">
+                <i class="fa-solid fa-book me-2"></i>
+                View Playbooks
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Total Artifacts</h6>
+                    <h3 class="card-title mb-0">{{ total_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Playbooks</h6>
+                    <h3 class="card-title mb-0">{{ playbook_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-10">
+                    <input type="text" 
+                           class="form-control" 
+                           name="q" 
+                           placeholder="Search artifacts by name..."
+                           value="{{ search_query|default:'' }}"
+                           data-testid="artifacts-search-input">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" 
+                            class="btn btn-primary w-100"
+                            data-testid="artifacts-search-button"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Search artifacts">
+                        <i class="fa-solid fa-search me-2"></i>
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Artifacts List -->
+    {% if artifacts %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover" data-testid="artifacts-global-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Playbook</th>
+                            <th>Produced By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for artifact in artifacts %}
+                        <tr data-testid="artifact-row-{{ artifact.id }}">
+                            <td>
+                                <strong>{{ artifact.name }}</strong>
+                                {% if artifact.description %}
+                                <br><small class="text-muted">{{ artifact.description|truncatewords:15 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ artifact.artifact_type }}</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'playbook_detail' artifact.playbook.pk %}"
+                                   data-testid="artifact-playbook-link-{{ artifact.id }}">
+                                    {{ artifact.playbook.name }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if artifact.produced_by %}
+                                <a href="{% url 'activity_detail' artifact.produced_by.pk %}"
+                                   data-testid="artifact-activity-link-{{ artifact.id }}">
+                                    {{ artifact.produced_by.workflow.abbreviation }}-{{ artifact.produced_by.order }}: {{ artifact.produced_by.name }}
+                                </a>
+                                {% else %}
+                                <span class="text-muted">Not assigned</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'artifact_detail' artifact.pk %}" 
+                                       class="btn btn-sm btn-outline-primary"
+                                       data-testid="artifact-view-{{ artifact.id }}"
+                                       data-bs-toggle="tooltip" 
+                                       data-bs-placement="top" 
+                                       title="View artifact details">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'artifact_edit' artifact.pk %}" 
+                                       class="btn btn-sm btn-outline-secondary"
+                                       data-testid="artifact-edit-{{ artifact.id }}"
+                                       data-bs-toggle="tooltip" 
+                                       data-bs-placement="top" 
+                                       title="Edit artifact">
+                                        <i class="fa-solid fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-gift fa-4x text-muted mb-3"></i>
+            <h4>No Artifacts Yet</h4>
+            <p class="text-muted">
+                {% if search_query %}
+                No artifacts found matching "{{ search_query }}".
+                <br>
+                <a href="{% url 'artifact_global_list' %}">Clear search</a>
+                {% else %}
+                Create your first playbook and add artifacts to track deliverables.
+                {% endif %}
+            </p>
+            {% if not search_query %}
+            <a href="{% url 'playbook_list' %}" 
+               class="btn btn-primary"
+               data-testid="artifacts-empty-view-playbooks">
+                <i class="fa-solid fa-book me-2"></i>
+                View Playbooks
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Test identifier -->
+<div data-testid="artifacts-global-list-loaded" style="display: none;">FOB-ARTIFACTS-GLOBAL-LIST-1</div>
+{% endblock %}

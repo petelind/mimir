@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Input Artifacts - {{ activity.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="manage-inputs">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=activity.workflow.pk %}">{{ activity.workflow.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=activity.workflow.pk activity_pk=activity.pk %}">{{ activity.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Manage Input Artifacts</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 data-testid="page-title">
+                <i class="fa-solid fa-arrow-down-to-bracket"></i> Manage Input Artifacts
+            </h2>
+            <p class="text-muted mb-0">for {{ activity.name }}</p>
+        </div>
+        <div>
+            <a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=activity.workflow.pk activity_pk=activity.pk %}" 
+               class="btn btn-outline-secondary"
+               data-testid="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Back to Activity
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0">{{ current_inputs.count }}</h3>
+                    <p class="text-muted mb-0">Total Inputs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0 text-danger">{{ required_count }}</h3>
+                    <p class="text-muted mb-0">Required</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0 text-secondary">{{ optional_count }}</h3>
+                    <p class="text-muted mb-0">Optional</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Inputs -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-list"></i> Current Input Artifacts
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if current_inputs %}
+                <div class="table-responsive">
+                    <table class="table table-hover" data-testid="current-inputs-table">
+                        <thead>
+                            <tr>
+                                <th>Artifact Name</th>
+                                <th>Type</th>
+                                <th>Required</th>
+                                <th>Producer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for input in current_inputs %}
+                                <tr data-testid="input-row-{{ input.id }}">
+                                    <td>
+                                        <a href="{% url 'artifact_detail' pk=input.artifact.pk %}">
+                                            {{ input.artifact.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ input.artifact.type }}</span>
+                                    </td>
+                                    <td>
+                                        {% if input.is_required %}
+                                            <span class="badge bg-danger">Required</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Optional</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ input.artifact.produced_by.name }}</small>
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-testid="btn-toggle-required-{{ input.id }}"
+                                                hx-post="{% url 'artifact_toggle_input_required' input_id=input.id %}"
+                                                hx-target="#input-row-{{ input.id }}"
+                                                hx-swap="outerHTML"
+                                                title="Toggle required/optional">
+                                            <i class="fa-solid fa-toggle-on"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-testid="btn-remove-input-{{ input.id }}"
+                                                hx-delete="{% url 'artifact_remove_consumer' artifact_id=input.artifact.pk input_id=input.id %}"
+                                                hx-confirm="Remove this input artifact?"
+                                                hx-target="closest tr"
+                                                hx-swap="outerHTML swap:1s"
+                                                title="Remove input">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info mb-0" data-testid="empty-state">
+                    <i class="fa-solid fa-info-circle"></i> No input artifacts yet. Add some below!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add New Inputs -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-plus"></i> Add Input Artifacts
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if available_artifacts %}
+                <form method="post" action="{% url 'activity_bulk_add_inputs' activity_id=activity.pk %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="artifact-select" class="form-label">Select Artifacts to Add:</label>
+                        <select id="artifact-select" 
+                                name="artifact_ids" 
+                                class="form-select" 
+                                multiple 
+                                size="10"
+                                data-testid="select-available-artifact">
+                            {% for artifact in available_artifacts %}
+                                <option value="{{ artifact.id }}">
+                                    {{ artifact.name }} ({{ artifact.type }}) - Produced by: {{ artifact.produced_by.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Hold Ctrl/Cmd to select multiple artifacts</div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" 
+                               class="form-check-input" 
+                               id="all-required" 
+                               name="all_required" 
+                               value="true" 
+                               checked
+                               data-testid="checkbox-new-input-required">
+                        <label class="form-check-label" for="all-required">
+                            Mark all as required
+                        </label>
+                    </div>
+
+                    <button type="submit" 
+                            class="btn btn-primary"
+                            data-testid="btn-add-input">
+                        <i class="fa-solid fa-plus"></i> Add Selected Inputs
+                    </button>
+                </form>
+            {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="fa-solid fa-info-circle"></i> No artifacts available to add. All artifacts are either already inputs or would create circular dependencies.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bulk Operations -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-copy"></i> Bulk Operations
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'activity_copy_inputs' activity_id=activity.pk %}" class="row g-3">
+                {% csrf_token %}
+                <div class="col-auto">
+                    <label for="source-activity" class="form-label">Copy inputs from:</label>
+                    <select id="source-activity" 
+                            name="source_activity_id" 
+                            class="form-select"
+                            data-testid="select-source-activity">
+                        <option value="">-- Select Activity --</option>
+                        {% for artifact in available_artifacts %}
+                            {% with producer=artifact.produced_by %}
+                                <option value="{{ producer.pk }}">{{ producer.name }}</option>
+                            {% endwith %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto align-self-end">
+                    <button type="submit" 
+                            class="btn btn-secondary"
+                            data-testid="btn-copy-inputs">
+                        <i class="fa-solid fa-copy"></i> Copy Inputs
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include HTMX -->
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!-- Input Row Partial for HTMX updates -->
+<tr id="input-row-{{ input.id }}" data-testid="input-row-{{ input.id }}">
+    <td>
+        <a href="{% url 'artifact_detail' pk=input.artifact.pk %}">
+            {{ input.artifact.name }}
+        </a>
+    </td>
+    <td>
+        <span class="badge bg-secondary">{{ input.artifact.type }}</span>
+    </td>
+    <td>
+        {% if input.is_required %}
+            <span class="badge bg-danger">Required</span>
+        {% else %}
+            <span class="badge bg-secondary">Optional</span>
+        {% endif %}
+    </td>
+    <td>
+        <small>{{ input.artifact.produced_by.name }}</small>
+    </td>
+    <td>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary"
+                data-testid="btn-toggle-required-{{ input.id }}"
+                hx-post="{% url 'artifact_toggle_input_required' input_id=input.id %}"
+                hx-target="#input-row-{{ input.id }}"
+                hx-swap="outerHTML"
+                title="Toggle required/optional">
+            <i class="fa-solid fa-toggle-on"></i>
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-outline-danger"
+                data-testid="btn-remove-input-{{ input.id }}"
+                hx-delete="{% url 'artifact_remove_consumer' artifact_id=input.artifact.pk input_id=input.id %}"
+                hx-confirm="Remove this input artifact?"
+                hx-target="closest tr"
+                hx-swap="outerHTML swap:1s"
+                title="Remove input">
+            <i class="fa-solid fa-times"></i>
+        </button>
+    </td>
+</tr>

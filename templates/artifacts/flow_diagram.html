@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Artifact Flow Diagram - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4" data-testid="flow-diagram">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Artifact Flow Diagram</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h2 data-testid="page-title">
+                <i class="fa-solid fa-diagram-project"></i> Artifact Flow Diagram
+            </h2>
+            <p class="text-muted mb-0">{{ playbook.name }}</p>
+        </div>
+        <div>
+            <a href="{% url 'playbook_detail' pk=playbook.pk %}" 
+               class="btn btn-outline-secondary"
+               data-testid="btn-back">
+                <i class="fa-solid fa-arrow-left"></i> Back to Playbook
+            </a>
+        </div>
+    </div>
+
+    <!-- Flow Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0">{{ artifacts.count }}</h3>
+                    <p class="text-muted mb-0">Total Artifacts</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0">{{ flow_data.nodes|length }}</h3>
+                    <p class="text-muted mb-0">Flow Nodes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-0">{{ flow_data.edges|length }}</h3>
+                    <p class="text-muted mb-0">Flow Connections</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flow Visualization -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-diagram-project"></i> Flow Diagram
+            </h5>
+        </div>
+        <div class="card-body">
+            <div id="flow-diagram-container" style="min-height: 500px; border: 1px solid #dee2e6; border-radius: 0.375rem; padding: 20px;">
+                <svg id="flow-diagram" width="100%" height="600"></svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flow Details -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-list"></i> Flow Details
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if artifacts %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Artifact</th>
+                                <th>Type</th>
+                                <th>Producer</th>
+                                <th>Consumers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for artifact in artifacts %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'artifact_detail' pk=artifact.pk %}">
+                                            {{ artifact.name }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ artifact.type }}</span>
+                                    </td>
+                                    <td>
+                                        <small>{{ artifact.produced_by.name }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ artifact.get_consumer_count }} consumer(s)</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info mb-0">
+                    <i class="fa-solid fa-info-circle"></i> No artifacts in this playbook yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- D3.js for diagram rendering -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+    // Simple force-directed graph for artifact flow
+    const flowData = {{ flow_data|safe }};
+    
+    const width = document.getElementById('flow-diagram').clientWidth;
+    const height = 600;
+    
+    const svg = d3.select("#flow-diagram")
+        .attr("width", width)
+        .attr("height", height);
+    
+    // Create force simulation
+    const simulation = d3.forceSimulation(flowData.nodes)
+        .force("link", d3.forceLink(flowData.edges).id(d => d.id).distance(150))
+        .force("charge", d3.forceManyBody().strength(-300))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(60));
+    
+    // Draw edges
+    const link = svg.append("g")
+        .selectAll("line")
+        .data(flowData.edges)
+        .enter()
+        .append("line")
+        .attr("stroke", d => d.type === "produces" ? "#0d6efd" : "#6c757d")
+        .attr("stroke-width", d => d.required ? 3 : 1.5)
+        .attr("marker-end", "url(#arrowhead)");
+    
+    // Add arrowhead marker
+    svg.append("defs")
+        .append("marker")
+        .attr("id", "arrowhead")
+        .attr("viewBox", "-0 -5 10 10")
+        .attr("refX", 25)
+        .attr("refY", 0)
+        .attr("orient", "auto")
+        .attr("markerWidth", 8)
+        .attr("markerHeight", 8)
+        .append("path")
+        .attr("d", "M 0,-5 L 10,0 L 0,5")
+        .attr("fill", "#6c757d");
+    
+    // Draw nodes
+    const node = svg.append("g")
+        .selectAll("g")
+        .data(flowData.nodes)
+        .enter()
+        .append("g")
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+    
+    node.append("circle")
+        .attr("r", d => d.type === "activity" ? 40 : 30)
+        .attr("fill", d => d.type === "activity" ? "#0dcaf0" : "#ffc107");
+    
+    node.append("text")
+        .text(d => d.label)
+        .attr("text-anchor", "middle")
+        .attr("dy", -45)
+        .style("font-size", "12px")
+        .style("font-weight", "bold");
+    
+    node.append("text")
+        .text(d => d.type === "activity" ? "Activity" : d.artifact_type || "Artifact")
+        .attr("text-anchor", "middle")
+        .attr("dy", 50)
+        .style("font-size", "10px")
+        .style("fill", "#6c757d");
+    
+    // Update positions on tick
+    simulation.on("tick", () => {
+        link
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+        
+        node.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+    
+    // Drag functions
+    function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+    }
+    
+    function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+    }
+    
+    function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!-- Consumers List Partial for HTMX updates -->
+<div data-testid="consumers-list">
+    {% if consumers %}
+        <ul class="list-group list-group-flush">
+            {% for input in consumers %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1">{{ input.activity.name }}</h6>
+                        <p class="text-muted small mb-0">
+                            <i class="fa-solid fa-folder"></i> {{ input.activity.workflow.name }}
+                            {% if input.is_required %}
+                                <span class="badge bg-danger ms-2">Required</span>
+                            {% else %}
+                                <span class="badge bg-secondary ms-2">Optional</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="btn-group">
+                        <a href="{% url 'activity_detail' playbook_pk=artifact.playbook.pk workflow_pk=input.activity.workflow.pk activity_pk=input.activity.pk %}" 
+                           class="btn btn-sm btn-outline-primary"
+                           title="View activity">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                hx-delete="{% url 'artifact_remove_consumer' artifact_id=artifact.pk input_id=input.id %}"
+                                hx-confirm="Remove this consumer?"
+                                hx-target="closest li"
+                                hx-swap="outerHTML swap:1s"
+                                title="Remove consumer">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted mb-0">No activities consume this artifact yet.</p>
+    {% endif %}
+</div>
