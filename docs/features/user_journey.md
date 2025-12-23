@@ -36,6 +36,9 @@ Runs an independent UX consulting practice. Needs to organize her personal workf
 - **7 Core Entities**: Playbook, Workflow, Phase, Activity, Artifact, Role, Howto
 - **Phase is OPTIONAL**: Workflows MAY contain Phases for grouping Activities, but Phase is not required. A Workflow can organize Activities with or without Phase grouping.
 - **Artifact**: Formerly called "Deliverable" in some contexts. Use "Artifact" consistently for outputs produced by Activities.
+  - **Producer/Consumer Model**: Each artifact is produced by exactly one activity (output) and can be consumed by multiple downstream activities (inputs)
+  - **Flow Tracking**: Artifacts create dependencies between activities - an activity may require specific artifacts as inputs before it can execute
+  - **Examples**: API Specification (produced by "Design API" → consumed by "Implement API", "Test API", "Document API")
 
 ---
 

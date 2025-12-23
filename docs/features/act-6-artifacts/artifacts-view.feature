@@ -45,3 +45,21 @@ Feature: FOB-ARTIFACTS-VIEW_ARTIFACT-1 View Artifact Details
     Given Maria is viewing the artifact
     When she clicks [Delete Artifact]
     Then the FOB-ARTIFACTS-DELETE_ARTIFACT-1 modal appears
+  # ============================================================
+  # ARTIFACT FLOW - See artifacts-flow.feature for complete flow scenarios
+  # ============================================================
+
+  Scenario: ART-VIEW-08 View artifact producer activity
+    Given the artifact is produced by activity "Design Component API"
+    When Maria views the artifact detail page
+    Then she sees "Produced by" section
+    And she sees "Design Component API" with clickable link
+    And clicking the link navigates to activity detail page
+
+  Scenario: ART-VIEW-09 View artifact consumer activities
+    Given the artifact is consumed by 3 activities
+    When Maria views the artifact detail page
+    Then she sees "Consumed by" section
+    And she sees list of 3 consumer activities
+    And each shows whether it's required or optional input
+    And each activity link is clickable

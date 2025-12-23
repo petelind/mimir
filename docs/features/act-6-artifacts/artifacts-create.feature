@@ -12,15 +12,18 @@ Feature: FOB-ARTIFACTS-CREATE_ARTIFACT-1 Create Artifact
     When she clicks [Create New Artifact]
     Then she is redirected to FOB-ARTIFACTS-CREATE_ARTIFACT-1
     And the Parent Playbook field shows "React Frontend v1.2" (read-only)
+    And she sees "Produced by Activity" dropdown
 
   Scenario: ART-CREATE-02 Create artifact successfully
     Given Maria is on the create artifact form
     When she enters "Component Design Document" in Name
     And she enters "Detailed component architecture and patterns" in Description
     And she selects "Document" as Type
+    And she selects "Design Component API" as producing activity
     And she clicks [Create Artifact]
     Then the artifact is created
     And she sees success notification
+    And the artifact is marked as output of "Design Component API"
 
   Scenario: ART-CREATE-03 Validate required fields
     Given Maria is on the create artifact form
@@ -56,3 +59,6 @@ Feature: FOB-ARTIFACTS-CREATE_ARTIFACT-1 Create Artifact
     Then she sees "Discard changes?" confirmation
     When she confirms
     Then no artifact is created
+  # ============================================================
+  # NOTE: For artifact input/output flow scenarios, see artifacts-flow.feature
+  # ============================================================
