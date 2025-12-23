@@ -1,0 +1,97 @@
+<!-- Delete Confirmation Modal -->
+<div class="modal fade show" 
+     id="deleteModal" 
+     tabindex="-1" 
+     aria-labelledby="deleteModalLabel" 
+     aria-modal="true" 
+     role="dialog"
+     style="display: block; background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Delete Artifact?
+                </h5>
+                <button type="button" 
+                        class="btn-close btn-close-white" 
+                        data-bs-dismiss="modal" 
+                        aria-label="Close"
+                        onclick="document.getElementById('delete-modal-container').innerHTML = ''">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <i class="fa-solid fa-triangle-exclamation text-danger" style="font-size: 48px;"></i>
+                </div>
+                
+                <p class="text-center mb-3">
+                    You are about to delete the artifact <strong>{{ artifact.name }}</strong>.
+                </p>
+
+                {% if consumer_count > 0 %}
+                <div class="alert alert-warning" data-testid="consumer-warning">
+                    <i class="fa-solid fa-warning"></i>
+                    <strong>Warning:</strong> This artifact is used by {{ consumer_count }} {{ consumer_count|pluralize:"activity,activities" }}:
+                    <ul class="mt-2 mb-0">
+                        {% for consumer in consumers %}
+                        <li>{{ consumer.activity.name }} ({{ consumer.activity.workflow.name }})</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="mt-2 mb-0"><small>Activity links will be removed.</small></p>
+                </div>
+                {% endif %}
+
+                {% if has_template %}
+                <div class="alert alert-info" data-testid="template-warning">
+                    <i class="fa-solid fa-file"></i>
+                    <strong>Note:</strong> Template file will also be deleted.
+                </div>
+                {% endif %}
+
+                <p class="text-danger text-center mb-0">
+                    <i class="fa-solid fa-exclamation-circle"></i>
+                    <strong>This action cannot be undone.</strong>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" 
+                        class="btn btn-secondary" 
+                        data-testid="btn-cancel-delete"
+                        data-bs-toggle="tooltip"
+                        title="Keep artifact"
+                        onclick="document.getElementById('delete-modal-container').innerHTML = ''">
+                    <i class="fa-solid fa-times"></i> Cancel
+                </button>
+                <form method="post" 
+                      action="{% url 'artifact_delete' artifact.id %}" 
+                      style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="btn btn-danger"
+                            data-testid="btn-confirm-delete"
+                            data-bs-toggle="tooltip"
+                            title="Permanently delete artifact">
+                        <i class="fa-solid fa-trash"></i> Delete Artifact
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize modal
+    var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+    
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Clear modal container when closed
+    document.getElementById('deleteModal').addEventListener('hidden.bs.modal', function () {
+        document.getElementById('delete-modal-container').innerHTML = '';
+    });
+</script>

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Artifacts - {{ playbook.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" data-testid="artifacts-list">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Artifacts</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-start mb-4" data-testid="artifacts-header">
+        <div>
+            <h2>
+                <i class="fa-solid fa-gift"></i> Artifacts in {{ playbook.name }}
+            </h2>
+            <p class="text-muted">
+                Showing <span id="filtered-count">{{ filtered_count }}</span> of <span id="total-count">{{ total_count }}</span> artifacts
+            </p>
+        </div>
+        <div class="btn-group">
+            <a href="{% url 'playbook_detail' pk=playbook.pk %}" 
+               class="btn btn-success"
+               data-testid="btn-create-artifact"
+               data-bs-toggle="tooltip"
+               title="Create new artifact">
+                <i class="fa-solid fa-plus"></i> Create New Artifact
+            </a>
+            <a href="{% url 'playbook_detail' pk=playbook.pk %}" 
+               class="btn btn-outline-secondary"
+               data-bs-toggle="tooltip"
+               title="Back to playbook">
+                <i class="fa-solid fa-arrow-left"></i> Back to Playbook
+            </a>
+        </div>
+    </div>
+
+    <!-- Search and Filters Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filters-form" hx-get="{% url 'artifact_list' playbook.pk %}" hx-target="#artifacts-table" hx-trigger="change, submit">
+                <div class="row g-3">
+                    <!-- Search Input -->
+                    <div class="col-md-4">
+                        <label for="search-input" class="form-label">Search</label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="search-input" 
+                               name="q"
+                               data-testid="input-search-artifacts"
+                               placeholder="Search artifacts..."
+                               value="{{ search_query|default:'' }}"
+                               hx-get="{% url 'artifact_list' playbook.pk %}"
+                               hx-target="#artifacts-table"
+                               hx-trigger="keyup changed delay:500ms"
+                               hx-include="[name='type'], [name='required'], [name='activity']">
+                    </div>
+
+                    <!-- Type Filter -->
+                    <div class="col-md-3">
+                        <label for="type-filter" class="form-label">Type</label>
+                        <select class="form-select" 
+                                id="type-filter" 
+                                name="type"
+                                data-testid="select-type-filter"
+                                hx-get="{% url 'artifact_list' playbook.pk %}"
+                                hx-target="#artifacts-table"
+                                hx-include="[name='q'], [name='required'], [name='activity']">
+                            <option value="">All Types</option>
+                            {% for type in artifact_types %}
+                            <option value="{{ type }}" {% if type == type_filter %}selected{% endif %}>{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Required Filter -->
+                    <div class="col-md-2">
+                        <label for="required-filter" class="form-label">Required</label>
+                        <select class="form-select" 
+                                id="required-filter" 
+                                name="required"
+                                data-testid="select-required-filter"
+                                hx-get="{% url 'artifact_list' playbook.pk %}"
+                                hx-target="#artifacts-table"
+                                hx-include="[name='q'], [name='type'], [name='activity']">
+                            <option value="">All</option>
+                            <option value="true" {% if required_filter == True %}selected{% endif %}>Required Only</option>
+                            <option value="false" {% if required_filter == False %}selected{% endif %}>Optional Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Activity Filter -->
+                    <div class="col-md-3">
+                        <label for="activity-filter" class="form-label">Activity</label>
+                        <select class="form-select" 
+                                id="activity-filter" 
+                                name="activity"
+                                data-testid="select-activity-filter"
+                                hx-get="{% url 'artifact_list' playbook.pk %}"
+                                hx-target="#artifacts-table"
+                                hx-include="[name='q'], [name='type'], [name='required']">
+                            <option value="">All Activities</option>
+                            {% for activity in activities %}
+                            <option value="{{ activity.id }}" {% if activity.id == activity_filter %}selected{% endif %}>
+                                {{ activity.workflow.name }} › {{ activity.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Artifacts Table -->
+    <div id="artifacts-table">
+        {% include 'artifacts/_table.html' %}
+    </div>
+</div>
+
+<!-- Delete Modal Container -->
+<div id="delete-modal-container"></div>
+
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
+{% endblock %}

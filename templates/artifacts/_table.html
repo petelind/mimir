@@ -1,0 +1,134 @@
+{% if filtered_count > 0 %}
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0" data-testid="artifacts-table">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 25%">Name</th>
+                        <th style="width: 10%">Type</th>
+                        <th style="width: 25%">Produced by</th>
+                        <th style="width: 10%">Required</th>
+                        <th style="width: 10%">Consumers</th>
+                        <th style="width: 20%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artifact in artifacts %}
+                    <tr data-testid="artifact-row-{{ artifact.id }}">
+                        <!-- Name -->
+                        <td>
+                            <strong>{{ artifact.name }}</strong>
+                            {% if artifact.description %}
+                            <br>
+                            <small class="text-muted">{{ artifact.description|truncatewords:10 }}</small>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Type -->
+                        <td>
+                            <span class="badge bg-info" data-testid="artifact-type-{{ artifact.id }}">
+                                {{ artifact.type }}
+                            </span>
+                        </td>
+                        
+                        <!-- Produced by Activity -->
+                        <td>
+                            <a href="#" class="text-decoration-none">
+                                <small class="text-muted">{{ artifact.activity.workflow.name }}</small><br>
+                                {{ artifact.activity.name }}
+                            </a>
+                        </td>
+                        
+                        <!-- Required -->
+                        <td>
+                            {% if artifact.is_required %}
+                            <span class="badge bg-danger" data-testid="artifact-required-{{ artifact.id }}">
+                                Required
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary" data-testid="artifact-optional-{{ artifact.id }}">
+                                Optional
+                            </span>
+                            {% endif %}
+                        </td>
+                        
+                        <!-- Consumers Count -->
+                        <td>
+                            <span class="badge bg-primary" data-testid="artifact-consumers-{{ artifact.id }}">
+                                {{ artifact.consumer_count }} {{ artifact.consumer_count|pluralize:"consumer,consumers" }}
+                            </span>
+                        </td>
+                        
+                        <!-- Actions -->
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <!-- View Button (placeholder for future) -->
+                                <a href="#" 
+                                   class="btn btn-outline-primary"
+                                   data-testid="btn-view-artifact-{{ artifact.id }}"
+                                   data-bs-toggle="tooltip"
+                                   title="View artifact details">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                
+                                <!-- Edit Button (placeholder for future) -->
+                                <a href="#" 
+                                   class="btn btn-outline-secondary"
+                                   data-testid="btn-edit-artifact-{{ artifact.id }}"
+                                   data-bs-toggle="tooltip"
+                                   title="Edit artifact">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                
+                                <!-- Delete Button -->
+                                <button type="button"
+                                        class="btn btn-outline-danger"
+                                        data-testid="btn-delete-artifact-{{ artifact.id }}"
+                                        data-bs-toggle="tooltip"
+                                        title="Delete artifact"
+                                        hx-get="{% url 'artifact_delete' artifact.id %}"
+                                        hx-target="#delete-modal-container"
+                                        hx-swap="innerHTML">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <!-- Empty State -->
+    <div class="card">
+        <div class="card-body text-center py-5" data-testid="empty-state">
+            <i class="fa-solid fa-gift fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">No artifacts yet</h4>
+            <p class="text-muted mb-4">
+                {% if search_query or type_filter or required_filter or activity_filter %}
+                    No artifacts match your search criteria.
+                {% else %}
+                    Start by creating your first artifact.
+                {% endif %}
+            </p>
+            {% if not search_query and not type_filter and not required_filter and not activity_filter %}
+            <a href="{% url 'playbook_detail' pk=playbook.pk %}" 
+               class="btn btn-success"
+               data-testid="btn-create-first-artifact">
+                <i class="fa-solid fa-plus"></i> Create First Artifact
+            </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    // Re-initialize tooltips after HTMX swap
+    document.addEventListener('htmx:afterSwap', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
