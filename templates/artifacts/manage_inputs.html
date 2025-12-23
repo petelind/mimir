@@ -10,7 +10,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'playbook_list' %}">Playbooks</a></li>
             <li class="breadcrumb-item"><a href="{% url 'playbook_detail' pk=playbook.pk %}">{{ playbook.name }}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk workflow_pk=activity.workflow.pk %}">{{ activity.workflow.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'workflow_detail' playbook_pk=playbook.pk pk=activity.workflow.pk %}">{{ activity.workflow.name }}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'activity_detail' playbook_pk=playbook.pk workflow_pk=activity.workflow.pk activity_pk=activity.pk %}">{{ activity.name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">Manage Input Artifacts</li>
         </ol>

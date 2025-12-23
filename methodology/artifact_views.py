@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 
-from methodology.models import Playbook, Activity, Artifact
+from methodology.models import Playbook, Activity, Artifact, ArtifactInput
 from methodology.services.artifact_service import ArtifactService
 
 logger = logging.getLogger(__name__)
