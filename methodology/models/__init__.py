@@ -2,5 +2,7 @@ from .playbook import Playbook
 from .playbook_version import PlaybookVersion
 from .workflow import Workflow
 from .activity import Activity
+from .artifact import Artifact
+from .artifact_input import ArtifactInput
 
-__all__ = ['Playbook', 'PlaybookVersion', 'Workflow', 'Activity']
+__all__ = ['Playbook', 'PlaybookVersion', 'Workflow', 'Activity', 'Artifact', 'ArtifactInput']
