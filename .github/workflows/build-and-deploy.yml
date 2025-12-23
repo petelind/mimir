@@ -1,12 +1,9 @@
 name: Build and Deploy Mimir
 
 on:
-  push:
-    branches: 
-      - main
-      - 'release/**'
   pull_request:
-    branches: [release/**]
+    branches: 
+      - 'release/**'
   release:
     types: [published]
 
@@ -100,7 +97,7 @@ jobs:
     name: Build and Push Docker Image
     needs: test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'release'
+    if: github.event_name == 'release'
     
     steps:
       - name: Checkout code
