@@ -118,7 +118,15 @@ class Artifact(models.Model):
             )
 
         # Auto-set playbook from producer activity if not set
+        # Use _id to avoid database query, then load the full object if needed
         if self.produced_by_id and not self.playbook_id:
+            # Need to load produced_by to access its workflow
+            if not self.produced_by:
+                from methodology.models import Activity
+
+                self.produced_by = Activity.objects.select_related(
+                    "workflow__playbook"
+                ).get(pk=self.produced_by_id)
             self.playbook = self.produced_by.workflow.playbook
 
     def save(self, *args, **kwargs):

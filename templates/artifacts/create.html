@@ -102,7 +102,7 @@
                                     required>
                                 <option value="">Select producer activity...</option>
                                 {% for activity in activities %}
-                                    <option value="{{ activity.pk }}" {% if form_data.produced_by == activity.pk|stringformat:"s" %}selected{% endif %}>
+                                    <option value="{{ activity.pk }}" {% if form_data.produced_by|stringformat:"s" == activity.pk|stringformat:"s" %}selected{% endif %}>
                                         {{ activity.workflow.name }} - {{ activity.name }}
                                     </option>
                                 {% endfor %}

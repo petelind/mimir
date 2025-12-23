@@ -72,12 +72,14 @@ class ArtifactInput(models.Model):
         :raises ValidationError: If validation fails
         """
         # Prevent circular dependency: artifact cannot be input to its producer
-        if self.artifact.produced_by_id == self.activity_id:
-            raise ValidationError(
-                {
-                    "activity": f"Circular dependency: '{self.artifact.name}' is produced by '{self.activity.name}' and cannot be its input"
-                }
-            )
+        # Use _id attributes to avoid database queries
+        if self.artifact_id and self.activity_id:
+            if self.artifact.produced_by_id == self.activity_id:
+                raise ValidationError(
+                    {
+                        "activity": f"Circular dependency: '{self.artifact.name}' is produced by '{self.activity.name}' and cannot be its input"
+                    }
+                )
 
     def save(self, *args, **kwargs):
         """

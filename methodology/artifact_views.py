@@ -72,7 +72,7 @@ def artifact_create(request, playbook_pk):
             return _render_create_form(request, playbook, request.POST, {})
 
         try:
-            produced_by = Activity.objects.get(
+            produced_by = Activity.objects.select_related("workflow").get(
                 pk=int(produced_by_id), workflow__playbook=playbook
             )
         except (Activity.DoesNotExist, ValueError):
@@ -110,6 +110,7 @@ def artifact_create(request, playbook_pk):
 def _render_create_form(request, playbook, form_data, errors):
     """Helper to render create form with context."""
     # Get all activities in playbook for producer selection
+    # Use select_related to avoid N+1 queries
     activities = (
         Activity.objects.filter(workflow__playbook=playbook)
         .select_related("workflow")
