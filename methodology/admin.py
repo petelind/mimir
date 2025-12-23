@@ -1,7 +1,7 @@
 """Admin configuration for methodology models."""
 
 from django.contrib import admin
-from methodology.models import Playbook, PlaybookVersion, Workflow, Activity
+from methodology.models import Playbook, PlaybookVersion, Workflow, Activity, Artifact, ArtifactInput
 
 
 @admin.register(Playbook)
@@ -55,3 +55,20 @@ class ActivityAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(Artifact)
+class ArtifactAdmin(admin.ModelAdmin):
+    """Admin configuration for Artifact model."""
+    list_display = ('name', 'type', 'produced_by', 'playbook', 'is_required', 'created_at')
+    list_filter = ('type', 'is_required', 'playbook')
+    search_fields = ('name', 'description')
+    readonly_fields = ('created_at', 'updated_at')
+
+
+@admin.register(ArtifactInput)
+class ArtifactInputAdmin(admin.ModelAdmin):
+    """Admin configuration for ArtifactInput model."""
+    list_display = ('artifact', 'activity', 'is_required', 'created_at')
+    list_filter = ('is_required',)
+    search_fields = ('artifact__name', 'activity__name')
