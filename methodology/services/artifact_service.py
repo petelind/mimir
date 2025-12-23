@@ -464,3 +464,276 @@ class ArtifactService:
             .select_related("artifact", "artifact__produced_by")
             .order_by("artifact__name")
         )
+
+    @staticmethod
+    def add_consumer(artifact, activity, is_required=True):
+        """
+        Add activity as consumer of artifact.
+
+        :param artifact: Artifact instance
+        :param activity: Activity instance to add as consumer
+        :param is_required: Whether input is required as bool. Example: True
+        :returns: Created ArtifactInput instance
+        :raises ValidationError: If circular dependency or duplicate
+
+        Example:
+            >>> ArtifactService.add_consumer(api_spec, implement_activity, is_required=True)
+            <ArtifactInput: API Spec → Implement Component (Required)>
+        """
+        # This is an alias for add_artifact_input for better semantic clarity
+        return ArtifactService.add_artifact_input(artifact, activity, is_required)
+
+    @staticmethod
+    def remove_consumer(artifact, activity):
+        """
+        Remove activity as consumer of artifact.
+
+        :param artifact: Artifact instance
+        :param activity: Activity instance to remove
+        :returns: int - number of deleted inputs (0 or 1)
+
+        Example:
+            >>> ArtifactService.remove_consumer(api_spec, test_activity)
+            1
+        """
+        try:
+            artifact_input = ArtifactInput.objects.get(artifact=artifact, activity=activity)
+            artifact_input.delete()
+            logger.info(
+                f"Removed activity {activity.id} as consumer of artifact {artifact.id}"
+            )
+            return 1
+        except ArtifactInput.DoesNotExist:
+            logger.warning(
+                f"Artifact {artifact.id} is not an input to activity {activity.id}"
+            )
+            return 0
+
+    @staticmethod
+    def get_available_inputs(activity):
+        """
+        Get artifacts available as inputs for activity.
+
+        Excludes:
+        - Artifacts produced by this activity (circular)
+        - Artifacts already inputs to this activity
+
+        :param activity: Activity instance
+        :returns: QuerySet of Artifact instances
+
+        Example:
+            >>> ArtifactService.get_available_inputs(implement_activity)
+            <QuerySet [<Artifact: API Spec>, <Artifact: Design Doc>]>
+        """
+        # Get all artifacts in the same playbook
+        playbook = activity.workflow.playbook
+        
+        # Exclude artifacts produced by this activity (to prevent circular)
+        # and artifacts already inputs to this activity
+        existing_input_ids = ArtifactInput.objects.filter(activity=activity).values_list(
+            "artifact_id", flat=True
+        )
+        
+        available = (
+            Artifact.objects.filter(playbook=playbook)
+            .exclude(produced_by=activity)
+            .exclude(id__in=existing_input_ids)
+            .select_related("produced_by", "produced_by__workflow")
+            .order_by("produced_by__order", "name")
+        )
+        
+        logger.info(
+            f"Found {available.count()} available artifacts for activity {activity.id}"
+        )
+        
+        return available
+
+    @staticmethod
+    def validate_flow(artifact, consumer_activity):
+        """
+        Validate artifact can be input to consumer activity.
+
+        :param artifact: Artifact instance
+        :param consumer_activity: Activity instance
+        :returns: Dict with validation results
+        :raises ValidationError: If circular dependency
+
+        Example:
+            >>> ArtifactService.validate_flow(api_spec, implement_activity)
+            {'valid': True, 'warnings': ['Temporal ordering: artifact produced after consumed']}
+        """
+        warnings = []
+        
+        # Check circular dependency
+        if artifact.produced_by_id == consumer_activity.id:
+            logger.warning(
+                f"Circular dependency detected: artifact {artifact.id} produced by activity {consumer_activity.id}"
+            )
+            raise ValidationError(
+                f"Circular dependency: '{artifact.name}' is produced by '{consumer_activity.name}' "
+                f"and cannot be its input"
+            )
+        
+        # Check temporal ordering (producer.order vs consumer.order)
+        producer_activity = artifact.produced_by
+        if producer_activity.order > consumer_activity.order:
+            warning_msg = (
+                f"Temporal ordering: artifact is produced by a later activity "
+                f"(order {producer_activity.order}) but consumed by an earlier activity "
+                f"(order {consumer_activity.order})"
+            )
+            warnings.append(warning_msg)
+            logger.warning(
+                f"Temporal ordering issue for artifact {artifact.id}: "
+                f"producer order {producer_activity.order} > consumer order {consumer_activity.order}"
+            )
+        
+        logger.info(
+            f"Flow validation for artifact {artifact.id} -> activity {consumer_activity.id}: "
+            f"valid=True, warnings={len(warnings)}"
+        )
+        
+        return {
+            'valid': True,
+            'warnings': warnings,
+        }
+
+    @staticmethod
+    def get_flow_chain(artifact):
+        """
+        Get complete flow chain for artifact.
+
+        :param artifact: Artifact instance
+        :returns: Dict with producer and consumers
+
+        Example:
+            >>> ArtifactService.get_flow_chain(api_spec)
+            {
+                'artifact': api_spec,
+                'producer': <Activity: Design API>,
+                'consumers': [
+                    {'activity': <Activity: Implement API>, 'required': True},
+                    {'activity': <Activity: Test API>, 'required': True},
+                    {'activity': <Activity: Document API>, 'required': False}
+                ]
+            }
+        """
+        # Get producer
+        producer = artifact.produced_by
+        
+        # Get all consumers with their requirement status
+        consumers_qs = ArtifactService.get_artifact_consumers(artifact)
+        consumers = [
+            {
+                'activity': consumer_input.activity,
+                'required': consumer_input.is_required,
+                'input_id': consumer_input.id,
+            }
+            for consumer_input in consumers_qs
+        ]
+        
+        logger.info(
+            f"Retrieved flow chain for artifact {artifact.id}: "
+            f"producer={producer.id}, consumers={len(consumers)}"
+        )
+        
+        return {
+            'artifact': artifact,
+            'producer': producer,
+            'consumers': consumers,
+        }
+
+    @staticmethod
+    def generate_flow_data(playbook):
+        """
+        Generate flow data for visualization.
+
+        :param playbook: Playbook instance
+        :returns: Dict with nodes and edges for diagram
+
+        Example:
+            >>> ArtifactService.generate_flow_data(playbook)
+            {
+                'nodes': [
+                    {'id': 'activity_1', 'label': 'Design API', 'type': 'activity'},
+                    {'id': 'artifact_1', 'label': 'API Spec', 'type': 'artifact'},
+                    {'id': 'activity_2', 'label': 'Implement API', 'type': 'activity'}
+                ],
+                'edges': [
+                    {'from': 'activity_1', 'to': 'artifact_1', 'type': 'produces'},
+                    {'from': 'artifact_1', 'to': 'activity_2', 'type': 'consumed_by', 'required': True}
+                ]
+            }
+        """
+        nodes = []
+        edges = []
+        
+        # Get all artifacts in playbook with related data
+        artifacts = (
+            Artifact.objects.filter(playbook=playbook)
+            .select_related("produced_by", "produced_by__workflow")
+            .prefetch_related("inputs__activity", "inputs__activity__workflow")
+        )
+        
+        # Track unique activities
+        activity_ids = set()
+        
+        # Build nodes and edges
+        for artifact in artifacts:
+            # Add artifact node
+            nodes.append({
+                'id': f'artifact_{artifact.id}',
+                'label': artifact.name,
+                'type': 'artifact',
+                'artifact_type': artifact.type,
+            })
+            
+            # Add producer activity node if not already added
+            producer = artifact.produced_by
+            if producer.id not in activity_ids:
+                nodes.append({
+                    'id': f'activity_{producer.id}',
+                    'label': producer.name,
+                    'type': 'activity',
+                    'order': producer.order,
+                })
+                activity_ids.add(producer.id)
+            
+            # Add edge from producer to artifact
+            edges.append({
+                'from': f'activity_{producer.id}',
+                'to': f'artifact_{artifact.id}',
+                'type': 'produces',
+            })
+            
+            # Add consumer edges
+            for artifact_input in artifact.inputs.all():
+                consumer = artifact_input.activity
+                
+                # Add consumer activity node if not already added
+                if consumer.id not in activity_ids:
+                    nodes.append({
+                        'id': f'activity_{consumer.id}',
+                        'label': consumer.name,
+                        'type': 'activity',
+                        'order': consumer.order,
+                    })
+                    activity_ids.add(consumer.id)
+                
+                # Add edge from artifact to consumer
+                edges.append({
+                    'from': f'artifact_{artifact.id}',
+                    'to': f'activity_{consumer.id}',
+                    'type': 'consumed_by',
+                    'required': artifact_input.is_required,
+                })
+        
+        logger.info(
+            f"Generated flow data for playbook {playbook.id}: "
+            f"nodes={len(nodes)}, edges={len(edges)}"
+        )
+        
+        return {
+            'nodes': nodes,
+            'edges': edges,
+        }

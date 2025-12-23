@@ -522,3 +522,466 @@ def _render_delete_modal(request, artifact):
     }
 
     return render(request, "artifacts/_delete_modal.html", context)
+
+
+# ==================== FLOW MANAGEMENT ====================
+
+
+@login_required
+def activity_manage_inputs(request, activity_id):
+    """
+    Manage input artifacts for activity.
+
+    :param request: Django HttpRequest with GET/POST
+    :param activity_id: Activity ID as int from URL
+    :returns: HttpResponse with rendered template
+
+    Template: artifacts/manage_inputs.html
+    Context:
+        - activity: Activity instance
+        - current_inputs: QuerySet of ArtifactInput instances
+        - available_artifacts: QuerySet of Artifact instances (not already inputs)
+        - required_count: int - count of required inputs
+        - optional_count: int - count of optional inputs
+        - missing_required: List of required inputs that don't exist yet
+    """
+    from methodology.models import Activity
+    
+    logger.info(
+        f"User {request.user.username} managing inputs for activity {activity_id}"
+    )
+
+    # Get activity with permission check
+    activity = get_object_or_404(
+        Activity.objects.select_related("workflow", "workflow__playbook"),
+        pk=activity_id,
+    )
+
+    # Check edit permission
+    if not activity.workflow.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted to manage inputs without permission"
+        )
+        messages.error(
+            request, "You don't have permission to manage inputs for this activity."
+        )
+        return redirect("activity_detail", pk=activity_id)
+
+    # Get current inputs
+    current_inputs = ArtifactService.get_activity_inputs(activity)
+    
+    # Get available artifacts (excluding circular and existing)
+    available_artifacts = ArtifactService.get_available_inputs(activity)
+    
+    # Calculate counts
+    required_count = current_inputs.filter(is_required=True).count()
+    optional_count = current_inputs.filter(is_required=False).count()
+
+    context = {
+        "activity": activity,
+        "playbook": activity.workflow.playbook,
+        "current_inputs": current_inputs,
+        "available_artifacts": available_artifacts,
+        "required_count": required_count,
+        "optional_count": optional_count,
+    }
+
+    logger.info(
+        f"Manage inputs page rendered: {current_inputs.count()} current, "
+        f"{available_artifacts.count()} available"
+    )
+
+    return render(request, "artifacts/manage_inputs.html", context)
+
+
+@login_required
+def artifact_add_consumer(request, artifact_id):
+    """
+    Add activity as consumer of artifact (HTMX endpoint).
+
+    :param request: Django HttpRequest with POST data
+    :param artifact_id: Artifact ID as int
+    :returns: HttpResponse with updated consumers list partial
+
+    POST Parameters:
+        - activity_id: Activity ID to add as consumer
+        - is_required: "true" or "false"
+
+    Template: artifacts/_consumers_list.html (partial)
+    """
+    if request.method != "POST":
+        return redirect("artifact_detail", pk=artifact_id)
+
+    logger.info(
+        f"User {request.user.username} adding consumer to artifact {artifact_id}"
+    )
+
+    # Get artifact with permission check
+    artifact = get_object_or_404(
+        Artifact.objects.select_related("produced_by", "playbook"),
+        pk=artifact_id,
+    )
+
+    if not artifact.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted to add consumer without permission"
+        )
+        messages.error(request, "You don't have permission to modify this artifact.")
+        return redirect("artifact_detail", pk=artifact_id)
+
+    # Get activity and is_required from POST
+    activity_id = request.POST.get("activity_id")
+    is_required = request.POST.get("is_required", "true").lower() == "true"
+
+    if not activity_id:
+        messages.error(request, "Activity ID is required.")
+        return redirect("artifact_detail", pk=artifact_id)
+
+    try:
+        from methodology.models import Activity
+        activity = Activity.objects.get(pk=int(activity_id))
+
+        # Add consumer with validation
+        ArtifactService.add_consumer(artifact, activity, is_required)
+        
+        logger.info(
+            f"Added activity {activity_id} as consumer to artifact {artifact_id} "
+            f"(required={is_required})"
+        )
+        messages.success(
+            request,
+            f"Added '{activity.name}' as consumer of '{artifact.name}'",
+        )
+
+    except Activity.DoesNotExist:
+        logger.error(f"Activity {activity_id} not found")
+        messages.error(request, "Activity not found.")
+    except ValidationError as e:
+        logger.warning(f"Failed to add consumer: {str(e)}")
+        messages.error(request, str(e))
+    except ValueError:
+        logger.error(f"Invalid activity ID: {activity_id}")
+        messages.error(request, "Invalid activity ID.")
+
+    # Get updated consumers
+    consumers = ArtifactService.get_artifact_consumers(artifact)
+
+    context = {
+        "artifact": artifact,
+        "consumers": consumers,
+    }
+
+    return render(request, "artifacts/_consumers_list.html", context)
+
+
+@login_required
+def artifact_remove_consumer(request, artifact_id, input_id):
+    """
+    Remove consumer relationship (HTMX endpoint).
+
+    :param request: Django HttpRequest with DELETE/POST
+    :param artifact_id: Artifact ID as int
+    :param input_id: ArtifactInput ID as int
+    :returns: HttpResponse with updated consumers list partial
+
+    Template: artifacts/_consumers_list.html (partial)
+    """
+    if request.method not in ["POST", "DELETE"]:
+        return redirect("artifact_detail", pk=artifact_id)
+
+    logger.info(
+        f"User {request.user.username} removing consumer {input_id} from artifact {artifact_id}"
+    )
+
+    # Get artifact with permission check
+    artifact = get_object_or_404(
+        Artifact.objects.select_related("produced_by", "playbook"),
+        pk=artifact_id,
+    )
+
+    if not artifact.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted to remove consumer without permission"
+        )
+        messages.error(request, "You don't have permission to modify this artifact.")
+        return redirect("artifact_detail", pk=artifact_id)
+
+    try:
+        ArtifactService.remove_artifact_input(input_id)
+        logger.info(f"Removed consumer {input_id} from artifact {artifact_id}")
+        messages.success(request, "Consumer removed successfully.")
+
+    except ArtifactInput.DoesNotExist:
+        logger.error(f"ArtifactInput {input_id} not found")
+        messages.error(request, "Consumer relationship not found.")
+
+    # Get updated consumers
+    consumers = ArtifactService.get_artifact_consumers(artifact)
+
+    context = {
+        "artifact": artifact,
+        "consumers": consumers,
+    }
+
+    return render(request, "artifacts/_consumers_list.html", context)
+
+
+@login_required
+def artifact_toggle_input_required(request, input_id):
+    """
+    Toggle required status of input (HTMX endpoint).
+
+    :param request: Django HttpRequest with POST
+    :param input_id: ArtifactInput ID as int
+    :returns: HttpResponse with updated input row partial
+
+    Template: artifacts/_input_row.html (partial)
+    """
+    if request.method != "POST":
+        return redirect("playbook_list")
+
+    logger.info(
+        f"User {request.user.username} toggling required status for input {input_id}"
+    )
+
+    try:
+        artifact_input = ArtifactInput.objects.select_related(
+            "artifact", "activity", "activity__workflow__playbook"
+        ).get(pk=input_id)
+
+        # Check permission
+        if not artifact_input.activity.workflow.playbook.is_owned_by(request.user):
+            logger.warning(
+                f"User {request.user.username} attempted to toggle without permission"
+            )
+            messages.error(request, "You don't have permission to modify this input.")
+            return redirect("playbook_list")
+
+        # Toggle required status
+        artifact_input.is_required = not artifact_input.is_required
+        artifact_input.save()
+
+        logger.info(
+            f"Toggled input {input_id} required status to {artifact_input.is_required}"
+        )
+        messages.success(
+            request,
+            f"Input marked as {'required' if artifact_input.is_required else 'optional'}.",
+        )
+
+    except ArtifactInput.DoesNotExist:
+        logger.error(f"ArtifactInput {input_id} not found")
+        messages.error(request, "Input not found.")
+        return redirect("playbook_list")
+
+    context = {
+        "input": artifact_input,
+    }
+
+    return render(request, "artifacts/_input_row.html", context)
+
+
+@login_required
+def artifact_flow_diagram(request, playbook_id):
+    """
+    Generate artifact flow diagram for playbook.
+
+    :param request: Django HttpRequest
+    :param playbook_id: Playbook ID as int
+    :returns: HttpResponse with SVG diagram or HTML page
+
+    Template: artifacts/flow_diagram.html
+    Context:
+        - playbook: Playbook instance
+        - artifacts: QuerySet of Artifact instances with flow data
+        - flow_data: Dict for diagram rendering
+    """
+    logger.info(
+        f"User {request.user.username} viewing flow diagram for playbook {playbook_id}"
+    )
+
+    # Get playbook with permission check
+    playbook = get_object_or_404(Playbook, pk=playbook_id)
+
+    if playbook.source == "owned" and playbook.author != request.user:
+        logger.warning(
+            f"User {request.user.username} attempted to view flow diagram without permission"
+        )
+        messages.error(request, "You don't have permission to view this playbook.")
+        return redirect("playbook_list")
+
+    # Get artifacts
+    artifacts = Artifact.objects.filter(playbook=playbook).select_related(
+        "produced_by", "produced_by__workflow"
+    ).prefetch_related("inputs__activity")
+
+    # Generate flow data
+    flow_data = ArtifactService.generate_flow_data(playbook)
+
+    context = {
+        "playbook": playbook,
+        "artifacts": artifacts,
+        "flow_data": flow_data,
+    }
+
+    logger.info(
+        f"Flow diagram rendered: {len(flow_data['nodes'])} nodes, "
+        f"{len(flow_data['edges'])} edges"
+    )
+
+    return render(request, "artifacts/flow_diagram.html", context)
+
+
+@login_required
+def activity_bulk_add_inputs(request, activity_id):
+    """
+    Add multiple inputs at once (HTMX endpoint).
+
+    :param request: Django HttpRequest with POST data
+    :param activity_id: Activity ID as int
+    :returns: HttpResponse with updated inputs list
+
+    POST Parameters:
+        - artifact_ids: List of artifact IDs
+        - all_required: "true" or "false" - apply to all
+    """
+    if request.method != "POST":
+        return redirect("activity_detail", pk=activity_id)
+
+    from methodology.models import Activity
+
+    logger.info(
+        f"User {request.user.username} bulk adding inputs to activity {activity_id}"
+    )
+
+    # Get activity with permission check
+    activity = get_object_or_404(
+        Activity.objects.select_related("workflow", "workflow__playbook"),
+        pk=activity_id,
+    )
+
+    if not activity.workflow.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted bulk add without permission"
+        )
+        messages.error(
+            request, "You don't have permission to manage inputs for this activity."
+        )
+        return redirect("activity_detail", pk=activity_id)
+
+    # Get artifact IDs from POST
+    artifact_ids = request.POST.getlist("artifact_ids")
+    all_required = request.POST.get("all_required", "true").lower() == "true"
+
+    if not artifact_ids:
+        messages.error(request, "No artifacts selected.")
+        return redirect("activity_manage_inputs", activity_id=activity_id)
+
+    # Add each artifact as input
+    added_count = 0
+    for artifact_id in artifact_ids:
+        try:
+            artifact = Artifact.objects.get(pk=int(artifact_id))
+            ArtifactService.add_consumer(artifact, activity, all_required)
+            added_count += 1
+        except (Artifact.DoesNotExist, ValidationError, ValueError) as e:
+            logger.warning(f"Failed to add artifact {artifact_id}: {str(e)}")
+
+    logger.info(
+        f"Bulk added {added_count} inputs to activity {activity_id} "
+        f"(all_required={all_required})"
+    )
+    
+    if added_count > 0:
+        messages.success(request, f"Added {added_count} input artifact(s).")
+    else:
+        messages.error(request, "No artifacts were added.")
+
+    return redirect("activity_manage_inputs", activity_id=activity_id)
+
+
+@login_required
+def activity_copy_inputs(request, activity_id):
+    """
+    Copy inputs from another activity.
+
+    :param request: Django HttpRequest with POST data
+    :param activity_id: Target activity ID
+    :returns: HttpResponse with updated inputs list
+
+    POST Parameters:
+        - source_activity_id: Activity ID to copy from
+    """
+    if request.method != "POST":
+        return redirect("activity_detail", pk=activity_id)
+
+    from methodology.models import Activity
+
+    logger.info(
+        f"User {request.user.username} copying inputs to activity {activity_id}"
+    )
+
+    # Get target activity with permission check
+    target_activity = get_object_or_404(
+        Activity.objects.select_related("workflow", "workflow__playbook"),
+        pk=activity_id,
+    )
+
+    if not target_activity.workflow.playbook.is_owned_by(request.user):
+        logger.warning(
+            f"User {request.user.username} attempted to copy inputs without permission"
+        )
+        messages.error(
+            request, "You don't have permission to manage inputs for this activity."
+        )
+        return redirect("activity_detail", pk=activity_id)
+
+    # Get source activity ID
+    source_activity_id = request.POST.get("source_activity_id")
+
+    if not source_activity_id:
+        messages.error(request, "Source activity is required.")
+        return redirect("activity_manage_inputs", activity_id=activity_id)
+
+    try:
+        source_activity = Activity.objects.get(pk=int(source_activity_id))
+
+        # Get source inputs
+        source_inputs = ArtifactService.get_activity_inputs(source_activity)
+
+        # Copy each input
+        copied_count = 0
+        for source_input in source_inputs:
+            try:
+                ArtifactService.add_consumer(
+                    source_input.artifact,
+                    target_activity,
+                    source_input.is_required,
+                )
+                copied_count += 1
+            except ValidationError as e:
+                logger.warning(
+                    f"Failed to copy input {source_input.id}: {str(e)}"
+                )
+
+        logger.info(
+            f"Copied {copied_count} inputs from activity {source_activity_id} "
+            f"to activity {activity_id}"
+        )
+        
+        if copied_count > 0:
+            messages.success(
+                request,
+                f"Copied {copied_count} input(s) from '{source_activity.name}'.",
+            )
+        else:
+            messages.warning(request, "No inputs were copied.")
+
+    except Activity.DoesNotExist:
+        logger.error(f"Source activity {source_activity_id} not found")
+        messages.error(request, "Source activity not found.")
+    except ValueError:
+        logger.error(f"Invalid source activity ID: {source_activity_id}")
+        messages.error(request, "Invalid source activity ID.")
+
+    return redirect("activity_manage_inputs", activity_id=activity_id)
